@@ -38,6 +38,11 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.*
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.kyilmaz.neuronetworkingtitle.ui.theme.BubblyBlue
+import com.kyilmaz.neuronetworkingtitle.ui.theme.BubblyOrange
+import com.kyilmaz.neuronetworkingtitle.ui.theme.BubblyPink
+import com.kyilmaz.neuronetworkingtitle.ui.theme.BubblyPurple
+import com.kyilmaz.neuronetworkingtitle.ui.theme.BubblyTeal
 import com.kyilmaz.neuronetworkingtitle.ui.theme.NeuroNetWorkingTitleTheme
 
 // --- REVENUECAT IMPORTS ---
@@ -73,7 +78,11 @@ data class User(
 val CURRENT_USER = User("me", "MyProfile", "https://api.dicebear.com/7.x/avataaars/svg?seed=Me", true)
 
 val SPECTRUM_GRADIENT = listOf(
-    Color(0xFFFFB7B2), Color(0xFFFFDAC1), Color(0xFFE2F0CB), Color(0xFFB5EAD7), Color(0xFFC7CEEA)
+    BubblyPink,
+    BubblyOrange,
+    BubblyTeal,
+    BubblyBlue,
+    BubblyPurple
 )
 
 val MOCK_NOTIFICATIONS = listOf(
