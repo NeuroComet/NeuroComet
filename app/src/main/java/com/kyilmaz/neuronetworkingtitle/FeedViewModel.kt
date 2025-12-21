@@ -1,5 +1,6 @@
 package com.kyilmaz.neuronetworkingtitle
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.util.Log
@@ -347,7 +348,7 @@ class FeedViewModel : ViewModel() {
             type = "text/plain"
         }
         val shareIntent = Intent.createChooser(sendIntent, null)
-        if (context !is android.app.Activity) {
+        if (context !is Activity) {
             shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
         context.startActivity(shareIntent)
