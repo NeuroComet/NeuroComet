@@ -43,6 +43,9 @@ import com.kyilmaz.neuronetworkingtitle.ui.theme.BubblyOrange
 import com.kyilmaz.neuronetworkingtitle.ui.theme.BubblyPink
 import com.kyilmaz.neuronetworkingtitle.ui.theme.BubblyPurple
 import com.kyilmaz.neuronetworkingtitle.ui.theme.BubblyTeal
+import com.kyilmaz.neuronetworkingtitle.ui.theme.NeonPink
+import com.kyilmaz.neuronetworkingtitle.ui.theme.NeonPurple
+import com.kyilmaz.neuronetworkingtitle.ui.theme.NeonTeal
 import com.kyilmaz.neuronetworkingtitle.ui.theme.NeuroNetWorkingTitleTheme
 
 // --- REVENUECAT IMPORTS ---
@@ -83,6 +86,12 @@ val SPECTRUM_GRADIENT = listOf(
     BubblyTeal,
     BubblyBlue,
     BubblyPurple
+)
+
+val SPECTRUM_GRADIENT_DARK = listOf(
+    NeonPink,
+    NeonTeal,
+    NeonPurple
 )
 
 val MOCK_NOTIFICATIONS = listOf(
@@ -329,7 +338,10 @@ fun FeedScreen(
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
     var showCreatePostDialog by remember { mutableStateOf(false) }
-    val logoBrush = remember { Brush.linearGradient(SPECTRUM_GRADIENT) }
+    val isDarkTheme = isSystemInDarkTheme()
+    val logoBrush = remember(isDarkTheme) {
+        Brush.linearGradient(if (isDarkTheme) SPECTRUM_GRADIENT_DARK else SPECTRUM_GRADIENT)
+    }
 
     Scaffold(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
