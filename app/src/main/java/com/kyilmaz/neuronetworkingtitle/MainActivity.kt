@@ -340,7 +340,7 @@ fun FeedScreen(
     var showCreatePostDialog by remember { mutableStateOf(false) }
     val isDarkTheme = isSystemInDarkTheme()
     val logoBrush = remember(isDarkTheme) {
-        Brush.linearGradient(if (isDarkTheme) SPECTRUM_GRADIENT_DARK else SPECTRUM_GRADIENT)
+        Brush.linearGradient(if (isDarkTheme) SPECTRUM_GRADIENT else SPECTRUM_GRADIENT_DARK)
     }
 
     Scaffold(
