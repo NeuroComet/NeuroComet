@@ -21,15 +21,15 @@
 </p>
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Comet/3D/comet_3d.png" alt="Comet" width="80"/>
-  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Brain/3D/brain_3d.png" alt="Brain" width="80"/>
-  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Infinity/3D/infinity_3d.png" alt="Infinity" width="80"/>
+  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Comet/3D/comet_3d.png" alt="Comet" width="50"/>
+  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Brain/3D/brain_3d.png" alt="Brain" width="50"/>
+  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Infinity/3D/infinity_3d.png" alt="Infinity" width="50"/>
 </p>
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Glowing%20star/3D/glowing_star_3d.png" alt="Star" width="30"/>
+  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Glowing%20star/3D/glowing_star_3d.png" alt="Star" width="20"/>
   <b>A social platform designed for neurodivergent minds</b>
-  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Glowing%20star/3D/glowing_star_3d.png" alt="Star" width="30"/>
+  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Glowing%20star/3D/glowing_star_3d.png" alt="Star" width="20"/>
   <br/>
   <sub>Built with accessibility, safety, and mental wellness as core priorities</sub>
 </p>
@@ -54,9 +54,9 @@
 ---
 
 <h2 align="center">
-  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Sparkles/3D/sparkles_3d.png" alt="Sparkles" width="35"/>
+  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Sparkles/3D/sparkles_3d.png" alt="Sparkles" width="24"/>
   What is NeuroComet?
-  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Sparkles/3D/sparkles_3d.png" alt="Sparkles" width="35"/>
+  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Sparkles/3D/sparkles_3d.png" alt="Sparkles" width="24"/>
 </h2>
 
 <p align="center">
@@ -72,9 +72,9 @@
 ---
 
 <h2 align="center">
-  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Sparkles/3D/sparkles_3d.png" alt="Sparkles" width="35"/>
+  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Sparkles/3D/sparkles_3d.png" alt="Sparkles" width="24"/>
   Features
-  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Sparkles/3D/sparkles_3d.png" alt="Sparkles" width="35"/>
+  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Sparkles/3D/sparkles_3d.png" alt="Sparkles" width="24"/>
 </h2>
 
 <p align="center">
@@ -339,9 +339,9 @@ Powerful developer options for testing and debugging:
 ---
 
 <h2 align="center">
-  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Hammer%20and%20wrench/3D/hammer_and_wrench_3d.png" alt="Tools" width="35"/>
+  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Hammer%20and%20wrench/3D/hammer_and_wrench_3d.png" alt="Tools" width="24"/>
   Tech Stack
-  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Hammer%20and%20wrench/3D/hammer_and_wrench_3d.png" alt="Tools" width="35"/>
+  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Hammer%20and%20wrench/3D/hammer_and_wrench_3d.png" alt="Tools" width="24"/>
 </h2>
 
 <p align="center">
@@ -375,9 +375,9 @@ Powerful developer options for testing and debugging:
 ---
 
 <h2 align="center">
-  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Rocket/3D/rocket_3d.png" alt="Rocket" width="35"/>
+  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Rocket/3D/rocket_3d.png" alt="Rocket" width="24"/>
   Getting Started
-  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Rocket/3D/rocket_3d.png" alt="Rocket" width="35"/>
+  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Rocket/3D/rocket_3d.png" alt="Rocket" width="24"/>
 </h2>
 
 <p align="center">
@@ -454,14 +454,17 @@ app/src/main/
 │   ├── StoryScreen.kt            # Story viewer
 │   ├── StoryViewer.kt            # Story playback
 │   │
-│   ├── # Messaging & Practice Calls
+│   ├── # Messaging
 │   ├── DmScreens.kt              # Direct messages UI
 │   ├── ChatViewModel.kt          # Chat state management
-│   ├── PracticeCallsScreen.kt    # AI practice calls
-│   ├── calling/                  # WebRTC voice/video calls
+│   ├── calling/                  # Voice/video calls
+│   │   ├── PracticeCallScreen.kt # AI practice calls
+│   │   ├── WebRTCCallManager.kt  # WebRTC integration
+│   │   └── GeminiCallSimulator.kt # AI call simulation
 │   │
 │   ├── # Splash & Onboarding
 │   ├── SplashScreen.kt           # Animated splash screens
+│   ├── SplashConfigs.kt          # Splash configuration per state
 │   ├── TutorialSystem.kt         # Interactive app tutorial
 │   │
 │   ├── # Settings & Themes
@@ -471,6 +474,7 @@ app/src/main/
 │   ├── Theming.kt                # Theme definitions
 │   ├── NeuroState.kt             # Neuro-centric states
 │   ├── IconCustomization.kt      # App icon customization
+│   ├── FontSettingsScreen.kt     # Font customization
 │   │
 │   ├── # Safety
 │   ├── ParentalControls.kt       # Parental control logic
@@ -576,9 +580,9 @@ Developer options are available for testing and debugging. To enable:
 ---
 
 <h2 align="center">
-  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Mobile%20phone/3D/mobile_phone_3d.png" alt="Phone" width="35"/>
+  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Mobile%20phone/3D/mobile_phone_3d.png" alt="Phone" width="24"/>
   Screenshots
-  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Mobile%20phone/3D/mobile_phone_3d.png" alt="Phone" width="35"/>
+  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Mobile%20phone/3D/mobile_phone_3d.png" alt="Phone" width="24"/>
 </h2>
 
 <p align="center">
@@ -598,9 +602,9 @@ Developer options are available for testing and debugging. To enable:
 ---
 
 <h2 align="center">
-  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Handshake/3D/handshake_3d.png" alt="Handshake" width="35"/>
+  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Handshake/3D/handshake_3d.png" alt="Handshake" width="24"/>
   Contributing
-  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Handshake/3D/handshake_3d.png" alt="Handshake" width="35"/>
+  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Handshake/3D/handshake_3d.png" alt="Handshake" width="24"/>
 </h2>
 
 <p align="center">
@@ -662,21 +666,21 @@ For support, please open an issue on GitHub or contact the development team.
 </p>
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Comet/3D/comet_3d.png" alt="Comet" width="50"/>
+  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Comet/3D/comet_3d.png" alt="Comet" width="40"/>
   <br/>
   <b>Made with</b>
-  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Beating%20heart/3D/beating_heart_3d.png" alt="Heart" width="25"/>
+  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Beating%20heart/3D/beating_heart_3d.png" alt="Heart" width="20"/>
   <b>for the neurodivergent community</b>
 </p>
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Sparkles/3D/sparkles_3d.png" alt="Sparkles" width="30"/>
-  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Brain/3D/brain_3d.png" alt="Brain" width="30"/>
-  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Infinity/3D/infinity_3d.png" alt="Infinity" width="30"/>
+  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Sparkles/3D/sparkles_3d.png" alt="Sparkles" width="20"/>
+  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Brain/3D/brain_3d.png" alt="Brain" width="20"/>
+  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Infinity/3D/infinity_3d.png" alt="Infinity" width="20"/>
   <b><i>Every mind shines bright!</i></b>
-  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Infinity/3D/infinity_3d.png" alt="Infinity" width="30"/>
-  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Brain/3D/brain_3d.png" alt="Brain" width="30"/>
-  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Sparkles/3D/sparkles_3d.png" alt="Sparkles" width="30"/>
+  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Infinity/3D/infinity_3d.png" alt="Infinity" width="20"/>
+  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Brain/3D/brain_3d.png" alt="Brain" width="20"/>
+  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Sparkles/3D/sparkles_3d.png" alt="Sparkles" width="20"/>
 </p>
 
 <p align="center">
