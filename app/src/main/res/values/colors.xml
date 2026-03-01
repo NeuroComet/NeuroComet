@@ -11,22 +11,22 @@
     <!-- App Icon Background Colors -->
 
     <!-- Default NeuroComet - Purple/Blue gradient base color -->
-    <color name="neuro_comet_icon_background">#FF667eea</color>
+    <color name="neuro_comet_icon_background_color">#FF667eea</color>
 
     <!-- Calm Waters - Soothing blue tones for relaxation -->
-    <color name="icon_calm_background">#FF2F80ED</color>
+    <color name="icon_calm_background_color">#FF2F80ED</color>
 
     <!-- Focus Mode - Dark teal for minimal distraction -->
-    <color name="icon_focus_background">#FF1a1a2e</color>
+    <color name="icon_focus_background_color">#FF1a1a2e</color>
 
     <!-- Energy Burst - Vibrant pink for motivation -->
-    <color name="icon_energy_background">#FFf5576c</color>
+    <color name="icon_energy_background_color">#FFf5576c</color>
 
     <!-- Sensory Friendly - Muted gray gentle on eyes -->
-    <color name="icon_sensory_background">#FF4a4a4a</color>
+    <color name="icon_sensory_background_color">#FF4a4a4a</color>
 
     <!-- Neurodiversity Pride - Rainbow gradient base (gold/orange) -->
-    <color name="icon_pride_background">#FFff6b6b</color>
+    <color name="icon_pride_background_color">#FFff6b6b</color>
 
     <!-- Widget colors -->
     <color name="widget_background">#F5F5F5</color>

@@ -46,6 +46,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.derivedStateOf
@@ -136,6 +137,25 @@ import coil.request.ImageRequest
 // Explicit imports for symbols in the same package (to address compiler ambiguity in various contexts)
 import com.kyilmaz.neurocomet.SafetyState
 import com.kyilmaz.neurocomet.ContentFiltering
+import com.kyilmaz.neurocomet.ads.BannerAd
+import com.kyilmaz.neurocomet.ads.GoogleAdsManager
+import androidx.compose.ui.graphics.luminance
+import androidx.compose.material.icons.outlined.AutoAwesome
+import androidx.compose.material.icons.outlined.People
+import androidx.compose.material.icons.outlined.TrendingUp
+import androidx.compose.material.icons.outlined.Favorite
+import androidx.compose.material.icons.outlined.Celebration
+import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material.icons.outlined.AddBox
+
+// Feed filter options - uses MaterialTheme.colorScheme for dynamic colors
+enum class FeedFilter(val label: String, val icon: androidx.compose.ui.graphics.vector.ImageVector) {
+    FOR_YOU("For You", Icons.Outlined.AutoAwesome),
+    FOLLOWING("Following", Icons.Outlined.People),
+    TRENDING("Trending", Icons.Outlined.TrendingUp),
+    SUPPORT("Support", Icons.Outlined.Favorite),
+    WINS("Wins", Icons.Outlined.Celebration)
+}
 
 /**
  * Emotional tone detection for neurodivergent-friendly content awareness.
@@ -148,16 +168,16 @@ enum class EmotionalTone(
     val textColor: Color,
     val showWarning: Boolean = false
 ) {
-    NEUTRAL("💭", R.string.tone_neutral, Color(0xFF9E9E9E), Color(0xFF616161)),
-    HAPPY("😊", R.string.tone_happy, Color(0xFF81C784), Color(0xFF2E7D32)),
-    EXCITED("🎉", R.string.tone_excited, Color(0xFFFFD54F), Color(0xFFF57F17)),
-    SAD("💙", R.string.tone_sad, Color(0xFF64B5F6), Color(0xFF1565C0), true),
-    ANXIOUS("🫂", R.string.tone_anxious, Color(0xFFCE93D8), Color(0xFF7B1FA2), true),
-    FRUSTRATED("😤", R.string.tone_frustrated, Color(0xFFFFAB91), Color(0xFFD84315), true),
-    SUPPORTIVE("💜", R.string.tone_supportive, Color(0xFFB39DDB), Color(0xFF512DA8)),
-    QUESTION("❓", R.string.tone_question, Color(0xFF80DEEA), Color(0xFF00838F)),
-    CELEBRATION("✨", R.string.tone_celebration, Color(0xFFF48FB1), Color(0xFFC2185B)),
-    INFORMATIVE("📚", R.string.tone_informative, Color(0xFF90CAF9), Color(0xFF1976D2))
+    NEUTRAL("💭", R.string.tone_neutral, Color(0xFFE8E8E8), Color(0xFF555555)),
+    HAPPY("😊", R.string.tone_happy, Color(0xFFCCEDD0), Color(0xFF1B6B25)),
+    EXCITED("🎉", R.string.tone_excited, Color(0xFFFFE4B0), Color(0xFF7A4F00)),
+    SAD("💙", R.string.tone_sad, Color(0xFFCBDDF2), Color(0xFF1E5285), true),
+    ANXIOUS("🫂", R.string.tone_anxious, Color(0xFFDFCEEB), Color(0xFF5C2D7E), true),
+    FRUSTRATED("😤", R.string.tone_frustrated, Color(0xFFF5CFC5), Color(0xFF8B2C1A), true),
+    SUPPORTIVE("💜", R.string.tone_supportive, Color(0xFFD5CFF0), Color(0xFF3F2D7A)),
+    QUESTION("❓", R.string.tone_question, Color(0xFFC2E6E9), Color(0xFF1A5F66)),
+    CELEBRATION("✨", R.string.tone_celebration, Color(0xFFF5CAD9), Color(0xFF852E50)),
+    INFORMATIVE("📚", R.string.tone_informative, Color(0xFFC5D9EF), Color(0xFF1A4E7A))
 }
 
 /**
@@ -979,46 +999,43 @@ fun FeedScreen(
     isMockInterfaceEnabled: Boolean,
     animationSettings: AnimationSettings = AnimationSettings(),
     modifier: Modifier = Modifier,
-    safetyState: SafetyState = SafetyState()
+    safetyState: SafetyState = SafetyState(),
+    enableNewFeedLayout: Boolean = false,
+    onSettingsClick: () -> Unit = {}
 ) {
     val context = LocalContext.current
     val parentalState = remember { ParentalControlsSettings.getState(context) }
     val isPostingBlocked = shouldBlockFeature(parentalState, BlockableFeature.POSTING) != null
+    val isDark = MaterialTheme.colorScheme.background.luminance() < 0.5f
 
     var showCreatePostDialog by remember { mutableStateOf(false) }
     var showCreateStoryDialog by remember { mutableStateOf(false) }
     var showPostingBlockedMessage by remember { mutableStateOf(false) }
+    var selectedFilter by remember { mutableStateOf(FeedFilter.FOR_YOU) }
 
     // Animation flags
     val animateLogos = animationSettings.shouldAnimate(AnimationType.LOGO)
     val animateStories = animationSettings.shouldAnimate(AnimationType.STORY)
 
-    Column(modifier = modifier.fillMaxSize()) {
-        // App Bar / Header with status bar padding
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .statusBarsPadding()  // Prevent overlap with status bar
-                .padding(horizontal = 16.dp, vertical = 8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            // Use the neurodivergent-centric logo
-            NeuroCometLogo(animateLogos = animateLogos)
-
-            IconButton(onClick = {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+    ) {
+        // Modern Header matching Flutter design
+        FeedHeader(
+            animateLogos = animateLogos,
+            isPostingBlocked = isPostingBlocked,
+            onCreatePost = {
                 if (isPostingBlocked) {
                     showPostingBlockedMessage = true
                 } else {
                     showCreatePostDialog = true
                 }
-            }) {
-                Icon(Icons.Default.Create, contentDescription = stringResource(R.string.create_post_title))
-            }
-        }
-
-        // Horizontal divider
-        HorizontalDivider()
+            },
+            onSettings = onSettingsClick,
+            isDark = isDark
+        )
 
         // Get navbar height for bottom padding
         val navBarPadding = WindowInsets.navigationBars.asPaddingValues()
@@ -1056,95 +1073,542 @@ fun FeedScreen(
                     )
                 }
             }
-        }
+        } else {
+            // Main content
+            LazyColumn(
+                state = lazyListState,
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(
+                    top = 0.dp,
+                    bottom = 80.dp + navBarHeight
+                ),
+                flingBehavior = ScrollableDefaults.flingBehavior()
+            ) {
+                // Enhanced Stories Section
+                item(key = "stories_section") {
+                    EnhancedStoriesSection(
+                        stories = stories,
+                        currentUser = currentUser,
+                        isMockInterfaceEnabled = isMockInterfaceEnabled,
+                        animateStories = animateStories && !isFeedScrolling,
+                        onViewStory = onViewStory,
+                        onAddStoryClick = { showCreateStoryDialog = true },
+                        isDark = isDark
+                    )
+                }
 
-        // Main content - always render (will be empty when loading)
-        LazyColumn(
-            state = lazyListState,
-            modifier = Modifier.fillMaxSize(),
-            // Bottom padding includes navbar height so content scrolls behind it
-            contentPadding = PaddingValues(
-                top = 8.dp,
-                bottom = 80.dp + navBarHeight // FAB/bottom bar + navbar
-            ),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            // Use default fling behavior which is optimized for the display refresh rate
-            flingBehavior = ScrollableDefaults.flingBehavior()
-        ) {
-            // Stories Row at the top
-            item(key = "stories_row") {
-                StoriesRow(
-                    stories = stories,
-                    currentUser = currentUser,
-                    isMockInterfaceEnabled = isMockInterfaceEnabled,
-                    animateStories = animateStories && !isFeedScrolling,
-                    onViewStory = onViewStory,
-                    onAddStoryClick = { showCreateStoryDialog = true } // Pass callback to open story dialog
-                )
-            }
+                // Quick Actions Row
+                item(key = "quick_actions") {
+                    QuickActionsRow(
+                        onCreatePost = {
+                            if (isPostingBlocked) {
+                                showPostingBlockedMessage = true
+                            } else {
+                                showCreatePostDialog = true
+                            }
+                        },
+                        onCreateStory = { showCreateStoryDialog = true },
+                        isDark = isDark
+                    )
+                }
 
-            // Divider before feed starts
-            item(key = "feed_divider") { HorizontalDivider() }
+                // Filter Pills
+                item(key = "filter_pills") {
+                    FeedFilterPills(
+                        selectedFilter = selectedFilter,
+                        onFilterSelected = { selectedFilter = it },
+                        isDark = isDark
+                    )
+                }
 
-            // Feed Posts - using stable keys for efficient recomposition
-            items(
-                items = posts,
-                key = { post -> post.id ?: post.hashCode() }
-            ) { post ->
-                BubblyPostCard(
-                    post = post,
-                    onLike = { post.id?.let(onLikePost) },
-                    onDelete = { post.id?.let(onDeletePost) },
-                    onReplyPost = { onReplyPost(post) },
-                    onShare = onSharePost,
-                    isMockInterfaceEnabled = isMockInterfaceEnabled, // Passed down
-                    safetyState = safetyState,
-                    onProfileClick = onProfileClick
-                )
+                // Section Header
+                item(key = "section_header") {
+                    FeedSectionHeader(
+                        title = selectedFilter.label,
+                        icon = selectedFilter.icon,
+                        count = posts.size,
+                        isDark = isDark
+                    )
+                }
+
+                // Feed Posts with Banner Ads
+                val showAds = GoogleAdsManager.shouldShowAds()
+
+                itemsIndexed(
+                    items = posts,
+                    key = { _, post -> post.id ?: post.hashCode() }
+                ) { index, post ->
+                    // Show banner ad after post at index 4, 9, 14, etc. (every 5 posts)
+                    if (showAds && index > 0 && index % 5 == 4) {
+                        BannerAd(
+                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+                            adKey = "feed_banner_$index"
+                        )
+                    }
+
+                    BubblyPostCard(
+                        post = post,
+                        onLike = { post.id?.let(onLikePost) },
+                        onDelete = { post.id?.let(onDeletePost) },
+                        onReplyPost = { onReplyPost(post) },
+                        onShare = onSharePost,
+                        isMockInterfaceEnabled = isMockInterfaceEnabled,
+                        safetyState = safetyState,
+                        onProfileClick = onProfileClick
+                    )
+                }
             }
         }
     }
 
-    @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE", "UNUSED_VALUE")
-    run {
-        // In kids mode, disable creating posts/stories unless app is in mock mode.
-        if (showCreatePostDialog) {
-            EnhancedCreatePostDialog(
-                onDismiss = { showCreatePostDialog = false },
-                onPost = { content, tone, imageUrl, videoUrl ->
-                    onAddPost(content, tone, imageUrl, videoUrl)
-                    showCreatePostDialog = false
-                },
-                isPremium = isPremium,
-                safetyState = safetyState
-            )
-        }
+    // Dialogs
+    if (showCreatePostDialog) {
+        EnhancedCreatePostDialog(
+            onDismiss = { showCreatePostDialog = false },
+            onPost = { content, tone, imageUrl, videoUrl ->
+                onAddPost(content, tone, imageUrl, videoUrl)
+                showCreatePostDialog = false
+            },
+            isPremium = isPremium,
+            safetyState = safetyState
+        )
+    }
 
-        if (showCreateStoryDialog) {
-            CreateStoryDialog(
-                onDismiss = { showCreateStoryDialog = false },
-                onPost = { _contentType, contentUri, duration, _textOverlay, _linkPreview ->
-                    // For now, pass the content URI as the image URL
-                    // The enhanced version would handle all content types
-                    onAddStory(contentUri, duration)
-                    showCreateStoryDialog = false
-                },
-                safetyState = safetyState
-            )
-        }
+    if (showCreateStoryDialog) {
+        CreateStoryDialog(
+            onDismiss = { showCreateStoryDialog = false },
+            onPost = { _contentType, contentUri, duration, _textOverlay, _linkPreview ->
+                onAddStory(contentUri, duration)
+                showCreateStoryDialog = false
+            },
+            safetyState = safetyState
+        )
+    }
 
-        if (showPostingBlockedMessage) {
-            AlertDialog(
-                onDismissRequest = { showPostingBlockedMessage = false },
-                title = { Text(stringResource(R.string.posting_restricted_title)) },
-                text = { Text(stringResource(R.string.posting_restricted_message)) },
-                confirmButton = {
-                    TextButton(onClick = { showPostingBlockedMessage = false }) {
-                        Text(stringResource(R.string.button_ok))
-                    }
+    if (showPostingBlockedMessage) {
+        AlertDialog(
+            onDismissRequest = { showPostingBlockedMessage = false },
+            title = { Text(stringResource(R.string.posting_restricted_title)) },
+            text = { Text(stringResource(R.string.posting_restricted_message)) },
+            confirmButton = {
+                TextButton(onClick = { showPostingBlockedMessage = false }) {
+                    Text(stringResource(R.string.button_ok))
                 }
+            }
+        )
+    }
+}
+
+// ============================================================================
+// MODERN FEED HEADER - Matching Flutter design
+// ============================================================================
+
+@Composable
+private fun FeedHeader(
+    animateLogos: Boolean,
+    isPostingBlocked: Boolean,
+    onCreatePost: () -> Unit,
+    onSettings: () -> Unit,
+    isDark: Boolean
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.background)
+            .statusBarsPadding()
+            .padding(horizontal = 16.dp, vertical = 12.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        // Logo
+        NeuroCometLogo(animateLogos = animateLogos)
+
+        // Action buttons
+        Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+            FeedHeaderIconButton(
+                icon = Icons.Outlined.AddBox,
+                onClick = onCreatePost,
+                contentDescription = "Create Post",
+                isDark = isDark
+            )
+            FeedHeaderIconButton(
+                icon = Icons.Outlined.Settings,
+                onClick = onSettings,
+                contentDescription = "Settings",
+                isDark = isDark
             )
         }
+    }
+}
+
+@Composable
+private fun FeedHeaderIconButton(
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    onClick: () -> Unit,
+    contentDescription: String?,
+    isDark: Boolean
+) {
+    Surface(
+        modifier = Modifier
+            .clip(RoundedCornerShape(12.dp))
+            .clickable(onClick = onClick),
+        shape = RoundedCornerShape(12.dp),
+        color = if (isDark) Color.White.copy(alpha = 0.08f) else Color.Black.copy(alpha = 0.05f)
+    ) {
+        Box(
+            modifier = Modifier.padding(10.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = contentDescription,
+                modifier = Modifier.size(24.dp),
+                tint = if (isDark) Color.White.copy(alpha = 0.7f) else Color(0xFF666680)
+            )
+        }
+    }
+}
+
+// ============================================================================
+// ENHANCED STORIES SECTION - Matching Flutter design
+// ============================================================================
+
+@Composable
+private fun EnhancedStoriesSection(
+    stories: List<Story>,
+    currentUser: User,
+    isMockInterfaceEnabled: Boolean,
+    animateStories: Boolean,
+    onViewStory: (Story) -> Unit,
+    onAddStoryClick: () -> Unit,
+    isDark: Boolean
+) {
+    // Use a clean surface-level background instead of a gradient overlay.
+    // This avoids the ugly tinted band that clashes across different themes.
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
+        // Stories list — StoriesRow already has its own header
+        StoriesRow(
+            stories = stories,
+            currentUser = currentUser,
+            isMockInterfaceEnabled = isMockInterfaceEnabled,
+            animateStories = animateStories,
+            onViewStory = onViewStory,
+            onAddStoryClick = onAddStoryClick
+        )
+
+        // Thin separator line to cleanly delineate the section
+        HorizontalDivider(
+            modifier = Modifier.padding(top = 8.dp),
+            thickness = 0.5.dp,
+            color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f)
+        )
+    }
+}
+
+// ============================================================================
+// QUICK ACTIONS ROW - Matching Flutter design
+// ============================================================================
+
+@Composable
+private fun QuickActionsRow(
+    onCreatePost: () -> Unit,
+    onCreateStory: () -> Unit,
+    isDark: Boolean
+) {
+    val primaryColor = MaterialTheme.colorScheme.primary
+    val tertiaryColor = MaterialTheme.colorScheme.tertiary
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 12.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        // "What's on your mind?" card
+        Surface(
+            modifier = Modifier
+                .weight(1f)
+                .clip(RoundedCornerShape(28.dp))
+                .clickable(onClick = onCreatePost),
+            shape = RoundedCornerShape(28.dp),
+            color = MaterialTheme.colorScheme.surface,
+            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
+        ) {
+            Row(
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(36.dp)
+                        .background(
+                            brush = Brush.linearGradient(
+                                colors = listOf(primaryColor, tertiaryColor)
+                            ),
+                            shape = CircleShape
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Create,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onPrimary,
+                        modifier = Modifier.size(18.dp)
+                    )
+                }
+                Spacer(Modifier.width(12.dp))
+                Text(
+                    text = "What's on your mind?",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
+
+        Spacer(Modifier.width(12.dp))
+
+        // Quick action buttons
+        QuickActionButton(
+            icon = Icons.Default.Add,
+            color = MaterialTheme.colorScheme.secondary,
+            onClick = onCreatePost
+        )
+        Spacer(Modifier.width(8.dp))
+        QuickActionButton(
+            icon = Icons.Outlined.AutoAwesome,
+            color = MaterialTheme.colorScheme.tertiary,
+            onClick = onCreateStory
+        )
+    }
+}
+
+@Composable
+private fun QuickActionButton(
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    color: Color,
+    onClick: () -> Unit
+) {
+    Surface(
+        modifier = Modifier
+            .size(48.dp)
+            .clip(CircleShape)
+            .clickable(onClick = onClick),
+        shape = CircleShape,
+        color = color.copy(alpha = 0.15f)
+    ) {
+        Box(contentAlignment = Alignment.Center) {
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                tint = color,
+                modifier = Modifier.size(24.dp)
+            )
+        }
+    }
+}
+
+// ============================================================================
+// FEED FILTER PILLS - Matching Flutter/Notifications design
+// ============================================================================
+
+@Composable
+private fun FeedFilterPills(
+    selectedFilter: FeedFilter,
+    onFilterSelected: (FeedFilter) -> Unit,
+    isDark: Boolean
+) {
+    LazyRow(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
+        horizontalArrangement = Arrangement.spacedBy(10.dp),
+        contentPadding = PaddingValues(horizontal = 16.dp)
+    ) {
+        items(FeedFilter.entries.size) { index ->
+            val filter = FeedFilter.entries[index]
+            FeedFilterPill(
+                filter = filter,
+                isSelected = selectedFilter == filter,
+                onClick = { onFilterSelected(filter) },
+                isDark = isDark
+            )
+        }
+    }
+}
+
+@Composable
+private fun FeedFilterPill(
+    filter: FeedFilter,
+    isSelected: Boolean,
+    onClick: () -> Unit,
+    @Suppress("unused") isDark: Boolean
+) {
+    // Selected pill uses a vivid gradient background instead of a flat primary
+    // which can appear washed-out in pastel-dominant themes.
+    val selectedBackground = Brush.linearGradient(
+        colors = listOf(
+            Color(0xFF6C63FF), // Vivid indigo
+            Color(0xFF7C4DFF)  // Deep purple
+        )
+    )
+
+    Surface(
+        modifier = Modifier
+            .clip(RoundedCornerShape(24.dp))
+            .clickable(onClick = onClick),
+        shape = RoundedCornerShape(24.dp),
+        color = if (isSelected) {
+            Color.Transparent
+        } else {
+            MaterialTheme.colorScheme.surfaceContainerHighest
+        },
+        border = if (!isSelected) {
+            BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
+        } else null
+    ) {
+        Row(
+            modifier = Modifier
+                .then(
+                    if (isSelected) Modifier.background(selectedBackground, RoundedCornerShape(24.dp))
+                    else Modifier
+                )
+                .padding(horizontal = 16.dp, vertical = 10.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(6.dp)
+        ) {
+            Icon(
+                imageVector = filter.icon,
+                contentDescription = null,
+                modifier = Modifier.size(18.dp),
+                tint = if (isSelected) Color.White else MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Text(
+                text = filter.label,
+                style = MaterialTheme.typography.labelLarge,
+                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+                color = if (isSelected) Color.White else MaterialTheme.colorScheme.onSurface
+            )
+        }
+    }
+}
+
+// ============================================================================
+// FEED SECTION HEADER - Matching Flutter design with gradient accent
+// ============================================================================
+
+@Composable
+private fun FeedSectionHeader(
+    title: String,
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    count: Int,
+    isDark: Boolean
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 12.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        val primaryColor = MaterialTheme.colorScheme.primary
+        val tertiaryColor = MaterialTheme.colorScheme.tertiary
+
+        // Gradient accent bar
+        Box(
+            modifier = Modifier
+                .width(4.dp)
+                .height(24.dp)
+                .background(
+                    brush = Brush.verticalGradient(
+                        colors = listOf(primaryColor, tertiaryColor)
+                    ),
+                    shape = RoundedCornerShape(2.dp)
+                )
+        )
+        Spacer(Modifier.width(12.dp))
+        Icon(
+            imageVector = icon,
+            contentDescription = null,
+            modifier = Modifier.size(20.dp),
+            tint = primaryColor
+        )
+        Spacer(Modifier.width(8.dp))
+        Text(
+            text = title,
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onBackground
+        )
+        Spacer(Modifier.width(8.dp))
+        Surface(
+            shape = RoundedCornerShape(10.dp),
+            color = MaterialTheme.colorScheme.surfaceVariant
+        ) {
+            Text(
+                text = "$count posts",
+                style = MaterialTheme.typography.labelSmall,
+                fontWeight = FontWeight.SemiBold,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+            )
+        }
+    }
+}
+
+// ============================================================================
+// DIALOGS
+// ============================================================================
+
+@Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE", "UNUSED_VALUE")
+@Composable
+private fun FeedDialogs(
+    showCreatePostDialog: Boolean,
+    showCreateStoryDialog: Boolean,
+    showPostingBlockedMessage: Boolean,
+    onDismissCreatePost: () -> Unit,
+    onDismissCreateStory: () -> Unit,
+    onDismissBlocked: () -> Unit,
+    onPost: (String, String, String?, String?) -> Unit,
+    onAddStory: (String, Long) -> Unit,
+    isPremium: Boolean,
+    safetyState: SafetyState
+) {
+    if (showCreatePostDialog) {
+        EnhancedCreatePostDialog(
+            onDismiss = onDismissCreatePost,
+            onPost = { content, tone, imageUrl, videoUrl ->
+                onPost(content, tone, imageUrl, videoUrl)
+                onDismissCreatePost()
+            },
+            isPremium = isPremium,
+            safetyState = safetyState
+        )
+    }
+
+    if (showCreateStoryDialog) {
+        CreateStoryDialog(
+            onDismiss = onDismissCreateStory,
+            onPost = { _contentType, contentUri, duration, _textOverlay, _linkPreview ->
+                onAddStory(contentUri, duration)
+                onDismissCreateStory()
+            },
+            safetyState = safetyState
+        )
+    }
+
+    if (showPostingBlockedMessage) {
+        AlertDialog(
+            onDismissRequest = onDismissBlocked,
+            title = { Text(stringResource(R.string.posting_restricted_title)) },
+            text = { Text(stringResource(R.string.posting_restricted_message)) },
+            confirmButton = {
+                TextButton(onClick = onDismissBlocked) {
+                    Text(stringResource(R.string.button_ok))
+                }
+            }
+        )
     }
 }
 
@@ -1174,6 +1638,9 @@ fun BubblyPostCard(
     val clipboardManager = LocalClipboardManager.current
     val context = LocalContext.current
 
+    // Read content preferences to respect hide-like-counts setting
+    val contentPrefs = remember { SocialSettingsManager.getContentPreferences(context) }
+
     // Pre-compute strings for Toast messages
     val bookmarkedText = stringResource(R.string.post_bookmarked)
     val unbookmarkedText = stringResource(R.string.post_unbookmarked)
@@ -1196,8 +1663,8 @@ fun BubblyPostCard(
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         border = BorderStroke(
-            width = 1.5.dp,
-            color = MaterialTheme.colorScheme.outlineVariant
+            width = 2.dp,
+            color = MaterialTheme.colorScheme.outline
         )
     ) {
         Column(
@@ -1599,7 +2066,7 @@ fun BubblyPostCard(
                             tint = if (post.isLikedByMe) Color(0xFFE91E63) else MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
-                    if (post.likes > 0) {
+                    if (post.likes > 0 && !contentPrefs.hideLikeCounts) {
                         Text(
                             text = formatCount(post.likes),
                             style = MaterialTheme.typography.labelMedium,
@@ -1647,18 +2114,18 @@ fun BubblyPostCard(
             if (emotionalTone != EmotionalTone.NEUTRAL && !safetyState.isKidsMode) {
                 Spacer(Modifier.height(10.dp))
                 Surface(
-                    shape = RoundedCornerShape(16.dp),
-                    color = emotionalTone.backgroundColor.copy(alpha = 0.2f),
-                    border = BorderStroke(1.dp, emotionalTone.backgroundColor.copy(alpha = 0.4f))
+                    shape = RoundedCornerShape(12.dp),
+                    color = emotionalTone.backgroundColor,
+                    border = BorderStroke(1.dp, emotionalTone.textColor.copy(alpha = 0.35f))
                 ) {
                     Row(
-                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
+                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 7.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(6.dp)
                     ) {
                         Text(
                             text = emotionalTone.emoji,
-                            fontSize = 14.sp
+                            fontSize = 13.sp
                         )
                         Text(
                             text = stringResource(emotionalTone.labelResId),
@@ -1668,14 +2135,14 @@ fun BubblyPostCard(
                         )
                         if (emotionalTone.showWarning) {
                             Text(
-                                text = "•",
-                                color = emotionalTone.textColor.copy(alpha = 0.6f),
-                                fontSize = 8.sp
+                                text = "·",
+                                color = emotionalTone.textColor.copy(alpha = 0.65f),
+                                style = MaterialTheme.typography.labelMedium
                             )
                             Text(
                                 text = "sensitive",
                                 style = MaterialTheme.typography.labelSmall,
-                                color = emotionalTone.textColor.copy(alpha = 0.7f)
+                                color = emotionalTone.textColor.copy(alpha = 0.75f)
                             )
                         }
                     }
@@ -1983,24 +2450,42 @@ fun StoriesRow(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 4.dp),
+                .padding(horizontal = 16.dp, vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(6.dp)
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Text(
-                    "✨",
-                    fontSize = 16.sp
-                )
+                // Gradient icon badge — vivid colors for clear visibility
+                Box(
+                    modifier = Modifier
+                        .size(24.dp)
+                        .background(
+                            brush = Brush.linearGradient(
+                                colors = listOf(
+                                    Color(0xFF6C63FF), // Vivid indigo
+                                    Color(0xFF7C4DFF), // Deep purple
+                                    Color(0xFFB388FF)  // Lavender accent
+                                )
+                            ),
+                            shape = RoundedCornerShape(7.dp)
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.AutoAwesome,
+                        contentDescription = null,
+                        tint = Color.White,
+                        modifier = Modifier.size(14.dp)
+                    )
+                }
                 Text(
                     stringResource(R.string.moments_title),
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    letterSpacing = 0.15.sp
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface
                 )
             }
 
@@ -2090,21 +2575,17 @@ fun NeuroMomentItem(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // Clean gradient colors
-    val primaryColor = MaterialTheme.colorScheme.primary
-    val tertiaryColor = MaterialTheme.colorScheme.tertiary
-
-    val unviewedGradient = remember(primaryColor, tertiaryColor) {
+    // Clean gradient colors — cohesive vivid palette for story rings
+    val unviewedGradient = remember {
         listOf(
-            primaryColor,
+            Color(0xFF6C63FF), // Vivid indigo
             Color(0xFF7C4DFF), // Deep purple
-            tertiaryColor,
-            Color(0xFF00BCD4), // Cyan accent
-            primaryColor
+            Color(0xFFB388FF), // Lavender
+            Color(0xFF6C63FF)  // Loop back for seamless sweep
         )
     }
     
-    val viewedColor = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
+    val viewedColor = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f)
     val addButtonColor = MaterialTheme.colorScheme.primary
 
     // Only animate gradient rotation when enabled and story is unseen
@@ -2202,7 +2683,7 @@ fun NeuroMomentItem(
                             Icons.Default.AccountCircle,
                             contentDescription = stringResource(R.string.story_user_story_content_description, username),
                             modifier = Modifier.fillMaxSize(),
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.65f)
                         )
                     } else {
                         val context = LocalContext.current
@@ -2216,7 +2697,7 @@ fun NeuroMomentItem(
                             contentDescription = stringResource(R.string.story_user_story_content_description, username),
                             modifier = Modifier
                                 .fillMaxSize()
-                                .graphicsLayer { alpha = if (isViewed) 0.6f else 1f },
+                                .graphicsLayer { alpha = if (isViewed) 0.75f else 1f },
                             contentScale = ContentScale.Crop
                         )
                     }
@@ -2255,16 +2736,10 @@ fun NeuroMomentItem(
         // Username - clean, legible, and centered
         Text(
             text = username,
-            style = MaterialTheme.typography.labelSmall.copy(
-                shadow = androidx.compose.ui.graphics.Shadow(
-                    color = MaterialTheme.colorScheme.surface.copy(alpha = 0.8f),
-                    offset = Offset(0f, 0.5f),
-                    blurRadius = 1f
-                )
-            ),
+            style = MaterialTheme.typography.labelSmall,
             fontWeight = FontWeight.SemiBold,
             color = if (isViewed) {
-                MaterialTheme.colorScheme.onSurface.copy(alpha = 0.75f)
+                MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
             } else {
                 MaterialTheme.colorScheme.onSurface
             },
@@ -2273,23 +2748,16 @@ fun NeuroMomentItem(
             textAlign = androidx.compose.ui.text.style.TextAlign.Center,
             modifier = Modifier.fillMaxWidth(),
             fontSize = 11.sp,
-            lineHeight = 13.sp,
-            letterSpacing = 0.1.sp
+            lineHeight = 13.sp
         )
 
         // Time indicator - balanced, subtle but readable
         if (!isAddButton && !timeAgo.isNullOrEmpty()) {
             Text(
                 text = timeAgo,
-                style = MaterialTheme.typography.labelSmall.copy(
-                    shadow = androidx.compose.ui.graphics.Shadow(
-                        color = MaterialTheme.colorScheme.surface.copy(alpha = 0.6f),
-                        offset = Offset(0f, 0.5f),
-                        blurRadius = 0.5f
-                    )
-                ),
-                fontWeight = FontWeight.Medium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.75f),
+                style = MaterialTheme.typography.labelSmall,
+                fontWeight = FontWeight.Normal,
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
                 maxLines = 1,
                 textAlign = androidx.compose.ui.text.style.TextAlign.Center,
                 modifier = Modifier.fillMaxWidth(),

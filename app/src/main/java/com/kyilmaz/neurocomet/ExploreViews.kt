@@ -54,6 +54,21 @@ enum class ExploreViewType(
     LARGE_CARDS(Icons.Filled.ViewCarousel, "Large", "Big cards, accessibility friendly")
 }
 
+/**
+ * Data class representing an explore topic for category views.
+ */
+data class ExploreTopic(
+    val id: String,
+    val nameRes: Int,
+    val descriptionRes: Int,
+    val emoji: String,
+    val gradientColors: List<Color> = emptyList(),
+    val memberCount: Int = 0,
+    val postCount: Int = 0,
+    val isPopular: Boolean = false,
+    val isNew: Boolean = false
+)
+
 // ═══════════════════════════════════════════════════════════════
 // VIEW TYPE SELECTOR
 // ═══════════════════════════════════════════════════════════════
@@ -1025,10 +1040,10 @@ fun generateMockExplorePostsWithMedia(): List<Post> {
             isLikedByMe = false,
             userAvatar = avatarUrl("hyperfocuscode"),
             mediaItems = listOf(
-                MediaItem("https://picsum.photos/seed/workspace1/800/800", MediaType.IMAGE),
-                MediaItem("https://picsum.photos/seed/workspace2/800/800", MediaType.IMAGE),
-                MediaItem("https://picsum.photos/seed/workspace3/800/800", MediaType.IMAGE),
-                MediaItem("https://picsum.photos/seed/workspace4/800/800", MediaType.IMAGE)
+                MediaItem("https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?w=800", MediaType.IMAGE),
+                MediaItem("https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800", MediaType.IMAGE),
+                MediaItem("https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=800", MediaType.IMAGE),
+                MediaItem("https://images.unsplash.com/photo-1593062096033-9a26b09da705?w=800", MediaType.IMAGE)
             )
         ),
         // Post with single image
@@ -1043,7 +1058,7 @@ fun generateMockExplorePostsWithMedia(): List<Post> {
             isLikedByMe = true,
             userAvatar = avatarUrl("sensoryseeker"),
             mediaItems = listOf(
-                MediaItem("https://picsum.photos/seed/stimtoys/800/600", MediaType.IMAGE)
+                MediaItem("https://images.unsplash.com/photo-1612538498456-e861df91d4d0?w=800", MediaType.IMAGE)
             )
         ),
         // Text-only post
@@ -1069,8 +1084,19 @@ fun generateMockExplorePostsWithMedia(): List<Post> {
             shares = 34,
             isLikedByMe = true,
             userAvatar = avatarUrl("dinolover99"),
-            mediaItems = (1..10).map { i ->
-                MediaItem("https://picsum.photos/seed/journey$i/600/600", MediaType.IMAGE)
+            mediaItems = listOf(
+                "photo-1519389950473-47ba0277781c",
+                "photo-1514905552197-0610a4d8fd73",
+                "photo-1605367705882-e1e4a6a72f2b",
+                "photo-1563281746-48bb472c5e64",
+                "photo-1544197150-b99a580bb7a8",
+                "photo-1569091791842-7cfb64e04797",
+                "photo-1535338454528-1b44e3b4cf42",
+                "photo-1524492926121-16fc4b98bcf6",
+                "photo-1580894742597-87bc8789db3d",
+                "photo-1509281373149-e957c6296406"
+            ).map { id ->
+                MediaItem("https://images.unsplash.com/$id?w=600", MediaType.IMAGE)
             }
         ),
         // Post with video
@@ -1088,7 +1114,7 @@ fun generateMockExplorePostsWithMedia(): List<Post> {
                 MediaItem(
                     url = "https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4",
                     type = MediaType.VIDEO,
-                    thumbnailUrl = "https://picsum.photos/seed/morningvid/800/450"
+                    thumbnailUrl = "https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?w=800"
                 )
             )
         ),
@@ -1104,14 +1130,14 @@ fun generateMockExplorePostsWithMedia(): List<Post> {
             isLikedByMe = false,
             userAvatar = avatarUrl("lesbianluna"),
             mediaItems = listOf(
-                MediaItem("https://picsum.photos/seed/art1/800/800", MediaType.IMAGE),
-                MediaItem("https://picsum.photos/seed/art2/800/800", MediaType.IMAGE),
+                MediaItem("https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=800", MediaType.IMAGE),
+                MediaItem("https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?w=800", MediaType.IMAGE),
                 MediaItem(
                     url = "https://example.com/timelapse.mp4",
                     type = MediaType.VIDEO,
-                    thumbnailUrl = "https://picsum.photos/seed/artvideo/800/800"
+                    thumbnailUrl = "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=800"
                 ),
-                MediaItem("https://picsum.photos/seed/art3/800/800", MediaType.IMAGE)
+                MediaItem("https://images.unsplash.com/photo-1547891654-e66ed7ebb968?w=800", MediaType.IMAGE)
             )
         ),
         // Post with maximum images (20)
@@ -1125,10 +1151,191 @@ fun generateMockExplorePostsWithMedia(): List<Post> {
             shares = 45,
             isLikedByMe = true,
             userAvatar = avatarUrl("transtechie"),
-            mediaItems = (1..20).map { i ->
-                MediaItem("https://picsum.photos/seed/sticker$i/400/400", MediaType.IMAGE)
+            mediaItems = listOf(
+                "photo-1558618666-fcd25c85cd64",
+                "photo-1513542789411-b6a5d4f31634",
+                "photo-1534670007418-fbb7f6cf32c3",
+                "photo-1504805572947-34fad45aed93",
+                "photo-1531346878377-a5be20888e57",
+                "photo-1509281373149-e957c6296406",
+                "photo-1487611459768-bd414656ea10",
+                "photo-1552862750-746b8f9e7240",
+                "photo-1526925539354-3adb5b94e4ae",
+                "photo-1498050108023-c5249f4df085",
+                "photo-1542831371-29b0f74f9713",
+                "photo-1515879218367-8fd44bd4ec0e",
+                "photo-1461749280684-dccba630e2f6",
+                "photo-1517694712202-14dd9538aa97",
+                "photo-1523800503107-5bc3ba2a6f81",
+                "photo-1519389950473-47ba0277781c",
+                "photo-1550063873-ab792950096b",
+                "photo-1531297484001-80022131f5a1",
+                "photo-1544197150-b99a580bb7a8",
+                "photo-1485988412941-77a35537dae4"
+            ).map { id ->
+                MediaItem("https://images.unsplash.com/$id?w=400", MediaType.IMAGE)
             }
         )
     )
+}
+
+// ═══════════════════════════════════════════════════════════════
+// TOPIC DETAIL SCREEN
+// ═══════════════════════════════════════════════════════════════
+
+/**
+ * Topic detail screen showing posts and info for a specific topic/category.
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TopicDetailScreen(
+    topicName: String,
+    onBack: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Column {
+                        Text(
+                            text = topicName.replaceFirstChar { it.uppercase() },
+                            style = MaterialTheme.typography.titleLarge
+                        )
+                        Text(
+                            text = "Explore this topic",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                },
+                navigationIcon = {
+                    IconButton(onClick = onBack) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "Back"
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surface
+                )
+            )
+        }
+    ) { paddingValues ->
+        LazyColumn(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(paddingValues),
+            contentPadding = PaddingValues(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            item {
+                // Topic info card
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(16.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f)
+                    )
+                ) {
+                    Column(
+                        modifier = Modifier.padding(16.dp)
+                    ) {
+                        Text(
+                            text = "#$topicName",
+                            style = MaterialTheme.typography.headlineMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = "Join the conversation about $topicName. Connect with others who share your interests.",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(24.dp)
+                        ) {
+                            Column {
+                                Text(
+                                    text = "12.3K",
+                                    style = MaterialTheme.typography.titleMedium,
+                                    fontWeight = FontWeight.Bold
+                                )
+                                Text(
+                                    text = "Posts",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                            Column {
+                                Text(
+                                    text = "4.5K",
+                                    style = MaterialTheme.typography.titleMedium,
+                                    fontWeight = FontWeight.Bold
+                                )
+                                Text(
+                                    text = "Members",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+
+            item {
+                Text(
+                    text = "Recent Posts",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+
+            // Placeholder for posts
+            items(5) { index ->
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Column(
+                        modifier = Modifier.padding(16.dp)
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .size(40.dp)
+                                    .clip(CircleShape)
+                                    .background(MaterialTheme.colorScheme.primaryContainer)
+                            )
+                            Spacer(modifier = Modifier.width(12.dp))
+                            Column {
+                                Text(
+                                    text = "User ${index + 1}",
+                                    style = MaterialTheme.typography.titleSmall,
+                                    fontWeight = FontWeight.SemiBold
+                                )
+                                Text(
+                                    text = "${index + 1}h ago",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                        }
+                        Spacer(modifier = Modifier.height(12.dp))
+                        Text(
+                            text = "This is a sample post about #$topicName. Share your thoughts and connect with the community! 💭",
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    }
+                }
+            }
+        }
+    }
 }
 

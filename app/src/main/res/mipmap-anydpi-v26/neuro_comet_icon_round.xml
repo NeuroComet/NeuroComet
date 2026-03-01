@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Default NeuroComet Icon Round - Purple/blue gradient -->
 <adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
-    <background android:drawable="@drawable/neuro_comet_icon_background"/>
+    <background android:drawable="@color/neuro_comet_icon_background"/>
     <foreground android:drawable="@mipmap/neuro_comet_icon_foreground"/>
-    <monochrome android:drawable="@drawable/neuro_comet_icon_monochrome"/>
+    <monochrome android:drawable="@mipmap/neuro_comet_icon_monochrome"/>
 </adaptive-icon>

@@ -46,15 +46,17 @@ object NetworkConfig {
     @Suppress("UNUSED_PARAMETER")
     fun initialize(context: Context) {
         try {
-            // Try to get base URL from BuildConfig
+            // Try to get base URL from BuildConfig — the value is obfuscated,
+            // so we must decrypt it first using SecurityUtils.
             val configuredUrl = try {
-                BuildConfig.SUPABASE_URL
+                val raw = BuildConfig.SUPABASE_URL
+                if (raw.isNotBlank()) SecurityUtils.decrypt(raw) else ""
             } catch (e: Exception) {
-                Log.d(TAG, "Could not read SUPABASE_URL from BuildConfig")
+                Log.d(TAG, "Could not read/decrypt SUPABASE_URL from BuildConfig")
                 ""
             }
 
-            if (configuredUrl.isNotBlank()) {
+            if (configuredUrl.isNotBlank() && configuredUrl != "null") {
                 _baseUrl = configuredUrl.removeSuffix("/")
                 Log.i(TAG, "Using configured base URL")
             } else {

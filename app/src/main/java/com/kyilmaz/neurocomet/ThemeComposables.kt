@@ -577,6 +577,40 @@ val DarkLargeTextColorScheme = darkColorScheme(
 )
 
 // ============================================================================
+// CINNAMON BUN THEME 🥐
+// A warm, cozy, comforting theme inspired by the feeling of freshly baked
+// cinnamon buns. Perfect for creating a safe, nurturing environment.
+// ============================================================================
+
+val LightCinnamonBunColorScheme = lightColorScheme(
+    primary = Color(0xFFA0522D), onPrimary = Color.White, // Warm cinnamon brown
+    secondary = Color(0xFFD2691E), onSecondary = Color.White, // Chocolate brown
+    tertiary = Color(0xFFF4A460), onTertiary = Color(0xFF3E2723), // Sandy brown/caramel
+    background = Color(0xFFFFF8F0), onBackground = Color(0xFF3E2723), // Cream/vanilla
+    surface = Color(0xFFFFFAF5), onSurface = Color(0xFF3E2723),
+    surfaceVariant = Color(0xFFFFECD9), onSurfaceVariant = Color(0xFF5D4037), // Light caramel
+    primaryContainer = Color(0xFFFFE4C9), onPrimaryContainer = Color(0xFF5D4037),
+    secondaryContainer = Color(0xFFFFDCC0), onSecondaryContainer = Color(0xFF4E342E),
+    tertiaryContainer = Color(0xFFFFE8D6), onTertiaryContainer = Color(0xFF5D4037),
+    surfaceContainerHigh = Color(0xFFFFE0C0), // Warm caramel for received messages
+    outline = Color(0xFFD7A574), error = Color(0xFFB71C1C), onError = Color.White
+)
+
+val DarkCinnamonBunColorScheme = darkColorScheme(
+    primary = Color(0xFFDEB887), onPrimary = Color(0xFF3E2723), // Burlywood
+    secondary = Color(0xFFF4A460), onSecondary = Color(0xFF3E2723), // Sandy brown
+    tertiary = Color(0xFFFFE4C4), onTertiary = Color(0xFF4E342E), // Bisque
+    background = Color(0xFF1A1412), onBackground = Color(0xFFFFE8D6), // Deep warm brown
+    surface = Color(0xFF2A1F1A), onSurface = Color(0xFFFFE8D6),
+    surfaceVariant = Color(0xFF3D2E25), onSurfaceVariant = Color(0xFFDEB887),
+    primaryContainer = Color(0xFF5D4037), onPrimaryContainer = Color(0xFFFFE4C4),
+    secondaryContainer = Color(0xFF4E342E), onSecondaryContainer = Color(0xFFF4A460),
+    tertiaryContainer = Color(0xFF6D4C41), onTertiaryContainer = Color(0xFFFFE8D6),
+    surfaceContainerHigh = Color(0xFF4A3830), // Warm brown for received messages
+    outline = Color(0xFFA0522D), error = Color(0xFFEF9A9A), onError = Color(0xFF3E2723)
+)
+
+// ============================================================================
 // SECRET THEME: RAINBOW BRAIN 🦄
 // A celebration of neurodivergent minds with vibrant, joyful colors
 // ============================================================================
@@ -645,6 +679,9 @@ fun getColorSchemeForState(state: NeuroState, isDarkMode: Boolean): ColorScheme 
         NeuroState.MOOD_HAPPY -> if (isDarkMode) DarkMoodHappyColorScheme else LightMoodHappyColorScheme
         NeuroState.MOOD_OVERWHELMED -> if (isDarkMode) DarkMoodOverwhelmedColorScheme else LightMoodOverwhelmedColorScheme
         NeuroState.MOOD_CREATIVE -> if (isDarkMode) DarkMoodCreativeColorScheme else LightMoodCreativeColorScheme
+
+        // Comfort/Cozy themes
+        NeuroState.CINNAMON_BUN -> if (isDarkMode) DarkCinnamonBunColorScheme else LightCinnamonBunColorScheme
 
         // Secret Theme
         NeuroState.RAINBOW_BRAIN -> if (isDarkMode) DarkRainbowBrainColorScheme else LightRainbowBrainColorScheme

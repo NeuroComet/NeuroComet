@@ -180,6 +180,9 @@ CREATE TABLE IF NOT EXISTS posts (
     image_url TEXT,
     video_url TEXT,
     likes INTEGER DEFAULT 0,
+    comments INTEGER DEFAULT 0,
+    shares INTEGER DEFAULT 0,
+    category TEXT,
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
@@ -272,10 +275,141 @@ CREATE INDEX IF NOT EXISTS idx_stories_user_id ON stories(user_id);
 CREATE INDEX IF NOT EXISTS idx_stories_expires_at ON stories(expires_at);
 ```
 
-### 5.2 Enable Row Level Security (RLS)
+### 5.2 Add Missing Columns to Existing Tables
+
+The app code references some columns not in the base schema. Run these to add them:
 
 ```sql
--- Enable RLS on all tables
+-- Users table: add columns for account management and profile banner
+ALTER TABLE users ADD COLUMN IF NOT EXISTS banner_url TEXT;
+ALTER TABLE users ADD COLUMN IF NOT EXISTS is_active BOOLEAN DEFAULT true;
+ALTER TABLE users ADD COLUMN IF NOT EXISTS deletion_scheduled_at TIMESTAMPTZ;
+
+-- Messages table: add columns for message types and media
+ALTER TABLE messages ADD COLUMN IF NOT EXISTS type TEXT DEFAULT 'text';
+ALTER TABLE messages ADD COLUMN IF NOT EXISTS media_url TEXT;
+
+-- Posts table: add columns if upgrading from an older schema
+ALTER TABLE posts ADD COLUMN IF NOT EXISTS comments INTEGER DEFAULT 0;
+ALTER TABLE posts ADD COLUMN IF NOT EXISTS shares INTEGER DEFAULT 0;
+ALTER TABLE posts ADD COLUMN IF NOT EXISTS category TEXT;
+```
+
+### 5.3 Create Additional Required Tables
+
+The app uses these tables for social features. Run each block separately:
+
+#### Block 7: Follows Table
+```sql
+CREATE TABLE IF NOT EXISTS follows (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    follower_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    following_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE(follower_id, following_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_follows_follower ON follows(follower_id);
+CREATE INDEX IF NOT EXISTS idx_follows_following ON follows(following_id);
+```
+
+#### Block 8: Blocked Users Table
+```sql
+CREATE TABLE IF NOT EXISTS blocked_users (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    blocker_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    blocked_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE(blocker_id, blocked_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_blocked_blocker ON blocked_users(blocker_id);
+CREATE INDEX IF NOT EXISTS idx_blocked_blocked ON blocked_users(blocked_id);
+```
+
+#### Block 9: Muted Users Table
+```sql
+CREATE TABLE IF NOT EXISTS muted_users (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    muter_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    muted_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE(muter_id, muted_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_muted_muter ON muted_users(muter_id);
+```
+
+#### Block 10: Bookmarks Table
+```sql
+CREATE TABLE IF NOT EXISTS bookmarks (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    post_id BIGINT NOT NULL REFERENCES posts(id) ON DELETE CASCADE,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE(user_id, post_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_bookmarks_user ON bookmarks(user_id);
+CREATE INDEX IF NOT EXISTS idx_bookmarks_post ON bookmarks(post_id);
+```
+
+#### Block 11: Notifications Table
+```sql
+CREATE TABLE IF NOT EXISTS notifications (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    actor_id UUID REFERENCES users(id) ON DELETE SET NULL,
+    type TEXT NOT NULL,           -- 'like', 'comment', 'follow', 'mention', etc.
+    message TEXT,
+    target_id TEXT,               -- ID of the post/comment/etc. that triggered it
+    target_type TEXT,             -- 'post', 'comment', 'story', etc.
+    is_read BOOLEAN DEFAULT false,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_notifications_user ON notifications(user_id);
+CREATE INDEX IF NOT EXISTS idx_notifications_read ON notifications(user_id, is_read);
+CREATE INDEX IF NOT EXISTS idx_notifications_created ON notifications(created_at DESC);
+```
+
+#### Block 12: Reports Table
+```sql
+CREATE TABLE IF NOT EXISTS reports (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    reporter_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    content_type TEXT NOT NULL,   -- 'post', 'comment', 'user', 'message'
+    content_id TEXT NOT NULL,
+    reason TEXT NOT NULL,
+    additional_info TEXT,
+    status TEXT DEFAULT 'pending', -- 'pending', 'reviewed', 'resolved', 'dismissed'
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_reports_status ON reports(status);
+CREATE INDEX IF NOT EXISTS idx_reports_reporter ON reports(reporter_id);
+```
+
+#### Block 13: Post Comments Table
+```sql
+CREATE TABLE IF NOT EXISTS post_comments (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    post_id BIGINT NOT NULL,
+    user_id TEXT NOT NULL,
+    content TEXT NOT NULL,
+    parent_comment_id UUID,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_comments_post ON post_comments(post_id);
+CREATE INDEX IF NOT EXISTS idx_comments_user ON post_comments(user_id);
+CREATE INDEX IF NOT EXISTS idx_comments_parent ON post_comments(parent_comment_id);
+```
+
+### 5.4 Enable RLS on All Tables
+
+```sql
+-- Enable RLS on original tables
 ALTER TABLE users ENABLE ROW LEVEL SECURITY;
 ALTER TABLE posts ENABLE ROW LEVEL SECURITY;
 ALTER TABLE post_likes ENABLE ROW LEVEL SECURITY;
@@ -284,9 +418,18 @@ ALTER TABLE conversation_participants ENABLE ROW LEVEL SECURITY;
 ALTER TABLE messages ENABLE ROW LEVEL SECURITY;
 ALTER TABLE message_reactions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE stories ENABLE ROW LEVEL SECURITY;
+
+-- Enable RLS on new tables
+ALTER TABLE follows ENABLE ROW LEVEL SECURITY;
+ALTER TABLE blocked_users ENABLE ROW LEVEL SECURITY;
+ALTER TABLE muted_users ENABLE ROW LEVEL SECURITY;
+ALTER TABLE bookmarks ENABLE ROW LEVEL SECURITY;
+ALTER TABLE notifications ENABLE ROW LEVEL SECURITY;
+ALTER TABLE reports ENABLE ROW LEVEL SECURITY;
+ALTER TABLE post_comments ENABLE ROW LEVEL SECURITY;
 ```
 
-### 5.3 Create RLS Policies
+### 5.5 Create RLS Policies
 
 **IMPORTANT:** First, drop any existing policies to avoid conflicts. Run this block first:
 
@@ -311,6 +454,28 @@ DROP POLICY IF EXISTS "Users can remove own reactions" ON message_reactions;
 DROP POLICY IF EXISTS "Active stories are viewable" ON stories;
 DROP POLICY IF EXISTS "Users can create own stories" ON stories;
 DROP POLICY IF EXISTS "Users can delete own stories" ON stories;
+
+-- New table policies
+DROP POLICY IF EXISTS "Anyone can view follows" ON follows;
+DROP POLICY IF EXISTS "Authenticated users can follow" ON follows;
+DROP POLICY IF EXISTS "Users can unfollow" ON follows;
+DROP POLICY IF EXISTS "Users can view own blocks" ON blocked_users;
+DROP POLICY IF EXISTS "Users can block" ON blocked_users;
+DROP POLICY IF EXISTS "Users can unblock" ON blocked_users;
+DROP POLICY IF EXISTS "Users can view own mutes" ON muted_users;
+DROP POLICY IF EXISTS "Users can mute" ON muted_users;
+DROP POLICY IF EXISTS "Users can unmute" ON muted_users;
+DROP POLICY IF EXISTS "Users can view own bookmarks" ON bookmarks;
+DROP POLICY IF EXISTS "Users can create bookmarks" ON bookmarks;
+DROP POLICY IF EXISTS "Users can remove bookmarks" ON bookmarks;
+DROP POLICY IF EXISTS "Users can view own notifications" ON notifications;
+DROP POLICY IF EXISTS "Anyone can create notifications" ON notifications;
+DROP POLICY IF EXISTS "Users can update own notifications" ON notifications;
+DROP POLICY IF EXISTS "Anyone can create reports" ON reports;
+DROP POLICY IF EXISTS "Users can view own reports" ON reports;
+DROP POLICY IF EXISTS "Anyone can view comments" ON post_comments;
+DROP POLICY IF EXISTS "Anyone can create comments" ON post_comments;
+DROP POLICY IF EXISTS "Users can delete own comments" ON post_comments;
 ```
 
 **Now create the policies (run each one separately):**
@@ -496,6 +661,127 @@ WITH CHECK (user_id = auth.uid());
 CREATE POLICY "Users can delete own stories" 
 ON stories FOR DELETE 
 USING (user_id = auth.uid());
+```
+
+**Policies for new tables (run each one separately):**
+
+```sql
+-- FOLLOWS: Anyone can see follows
+CREATE POLICY "Anyone can view follows" ON follows FOR SELECT USING (true);
+```
+
+```sql
+-- FOLLOWS: Authenticated users can follow
+CREATE POLICY "Authenticated users can follow" ON follows FOR INSERT
+WITH CHECK (follower_id = auth.uid());
+```
+
+```sql
+-- FOLLOWS: Users can unfollow
+CREATE POLICY "Users can unfollow" ON follows FOR DELETE
+USING (follower_id = auth.uid());
+```
+
+```sql
+-- BLOCKED USERS: Users can view their own blocks
+CREATE POLICY "Users can view own blocks" ON blocked_users FOR SELECT
+USING (blocker_id = auth.uid());
+```
+
+```sql
+-- BLOCKED USERS: Users can block
+CREATE POLICY "Users can block" ON blocked_users FOR INSERT
+WITH CHECK (blocker_id = auth.uid());
+```
+
+```sql
+-- BLOCKED USERS: Users can unblock
+CREATE POLICY "Users can unblock" ON blocked_users FOR DELETE
+USING (blocker_id = auth.uid());
+```
+
+```sql
+-- MUTED USERS: Users can view own mutes
+CREATE POLICY "Users can view own mutes" ON muted_users FOR SELECT
+USING (muter_id = auth.uid());
+```
+
+```sql
+-- MUTED USERS: Users can mute
+CREATE POLICY "Users can mute" ON muted_users FOR INSERT
+WITH CHECK (muter_id = auth.uid());
+```
+
+```sql
+-- MUTED USERS: Users can unmute
+CREATE POLICY "Users can unmute" ON muted_users FOR DELETE
+USING (muter_id = auth.uid());
+```
+
+```sql
+-- BOOKMARKS: Users can view own bookmarks
+CREATE POLICY "Users can view own bookmarks" ON bookmarks FOR SELECT
+USING (user_id = auth.uid());
+```
+
+```sql
+-- BOOKMARKS: Users can create bookmarks
+CREATE POLICY "Users can create bookmarks" ON bookmarks FOR INSERT
+WITH CHECK (user_id = auth.uid());
+```
+
+```sql
+-- BOOKMARKS: Users can remove bookmarks
+CREATE POLICY "Users can remove bookmarks" ON bookmarks FOR DELETE
+USING (user_id = auth.uid());
+```
+
+```sql
+-- NOTIFICATIONS: Users can view own notifications
+CREATE POLICY "Users can view own notifications" ON notifications FOR SELECT
+USING (user_id = auth.uid());
+```
+
+```sql
+-- NOTIFICATIONS: System can create notifications (permissive for dev)
+CREATE POLICY "Anyone can create notifications" ON notifications FOR INSERT
+WITH CHECK (true);
+```
+
+```sql
+-- NOTIFICATIONS: Users can update own notifications (mark read)
+CREATE POLICY "Users can update own notifications" ON notifications FOR UPDATE
+USING (user_id = auth.uid());
+```
+
+```sql
+-- REPORTS: Authenticated users can create reports
+CREATE POLICY "Anyone can create reports" ON reports FOR INSERT
+WITH CHECK (true);
+```
+
+```sql
+-- REPORTS: Users can view own reports
+CREATE POLICY "Users can view own reports" ON reports FOR SELECT
+USING (reporter_id = auth.uid());
+```
+
+```sql
+-- POST COMMENTS: Anyone can view comments
+CREATE POLICY "Anyone can view comments" ON post_comments FOR SELECT
+USING (true);
+```
+
+```sql
+-- POST COMMENTS: Anyone can create comments (permissive for dev)
+CREATE POLICY "Anyone can create comments" ON post_comments FOR INSERT
+WITH CHECK (true);
+```
+
+```sql
+-- POST COMMENTS: Users can delete own comments
+CREATE POLICY "Users can delete own comments" ON post_comments FOR DELETE
+USING (user_id = auth.uid()::text);
 ```
 
 ### Troubleshooting RLS Policies

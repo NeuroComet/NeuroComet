@@ -223,6 +223,27 @@ val MOCK_USERS = listOf(
         avatarUrl = avatarUrl("lesbianluna"),
         isVerified = false,
         personality = "Lesbian artist with autism. Creates cozy, sensory-friendly digital art. Cat mom x3. She/They 🧡🤍💗"
+    ),
+    User(
+        id = "OldFriend",
+        name = "OldFriend",
+        avatarUrl = avatarUrl("oldfriend"),
+        isVerified = false,
+        personality = "A longtime friend from an online support group. Moved on to a different platform."
+    ),
+    User(
+        id = "EventBot",
+        name = "Event Bot",
+        avatarUrl = avatarUrl("eventbot"),
+        isVerified = true,
+        personality = "Automated event notifications for NeuroComet community events."
+    ),
+    User(
+        id = "Therapy_Bot",
+        name = "Therapy Bot",
+        avatarUrl = avatarUrl("therapybot"),
+        isVerified = true,
+        personality = "AI-powered mental health check-in companion. Provides gentle prompts and resource links."
     )
 )
 
@@ -361,5 +382,8 @@ data class Conversation(
     val participants: List<String>, // User IDs involved in the conversation
     val messages: List<DirectMessage>,
     val lastMessageTimestamp: String,
-    var unreadCount: Int = 0
+    var unreadCount: Int = 0,
+    val isGroup: Boolean = false,
+    val isArchived: Boolean = false,
+    val groupName: String? = null
 )

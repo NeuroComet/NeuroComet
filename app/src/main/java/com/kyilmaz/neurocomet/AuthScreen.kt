@@ -696,16 +696,23 @@ private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawFluidInfinityPa
 
 /**
  * Floating orbs background animation
+ * Automatically reduces complexity on emulators to prevent jank
  */
 @Composable
 private fun FloatingOrbsBackground(modifier: Modifier = Modifier) {
+    // Reduce animation complexity on emulators
+    val isEmulator = remember { PerformanceOptimizations.isEmulator() }
+
+    // Use slower animations on emulators (reduces GPU load)
+    val durationMultiplier = if (isEmulator) 2 else 1
+
     val infiniteTransition = rememberInfiniteTransition(label = "orbs")
 
     val offset1 by infiniteTransition.animateFloat(
         initialValue = 0f,
         targetValue = 360f,
         animationSpec = infiniteRepeatable(
-            animation = tween(20000, easing = LinearEasing),
+            animation = tween(20000 * durationMultiplier, easing = LinearEasing),
             repeatMode = RepeatMode.Restart
         ),
         label = "offset1"
@@ -715,19 +722,30 @@ private fun FloatingOrbsBackground(modifier: Modifier = Modifier) {
         initialValue = 0f,
         targetValue = 360f,
         animationSpec = infiniteRepeatable(
-            animation = tween(15000, easing = LinearEasing),
+            animation = tween(15000 * durationMultiplier, easing = LinearEasing),
             repeatMode = RepeatMode.Restart
         ),
         label = "offset2"
     )
 
-    Canvas(modifier = modifier.alpha(0.3f)) {
-        val orbs = listOf(
-            Triple(Color(0xFF732982), 150.dp.toPx(), offset1),
-            Triple(Color(0xFF24408E), 100.dp.toPx(), -offset2),
-            Triple(Color(0xFF4ECDC4), 80.dp.toPx(), offset1 * 0.7f),
-            Triple(Color(0xFFFF8C00), 120.dp.toPx(), -offset1 * 0.5f)
-        )
+    // Reduce number of orbs on emulators
+    val orbAlpha = if (isEmulator) 0.2f else 0.3f
+
+    Canvas(modifier = modifier.alpha(orbAlpha)) {
+        val orbs = if (isEmulator) {
+            // Only 2 orbs on emulator
+            listOf(
+                Triple(Color(0xFF732982), 150.dp.toPx(), offset1),
+                Triple(Color(0xFF24408E), 100.dp.toPx(), -offset2)
+            )
+        } else {
+            listOf(
+                Triple(Color(0xFF732982), 150.dp.toPx(), offset1),
+                Triple(Color(0xFF24408E), 100.dp.toPx(), -offset2),
+                Triple(Color(0xFF4ECDC4), 80.dp.toPx(), offset1 * 0.7f),
+                Triple(Color(0xFFFF8C00), 120.dp.toPx(), -offset1 * 0.5f)
+            )
+        }
 
         orbs.forEachIndexed { index, (color, radius, offset) ->
             val angle = Math.toRadians((offset + index * 90).toDouble())

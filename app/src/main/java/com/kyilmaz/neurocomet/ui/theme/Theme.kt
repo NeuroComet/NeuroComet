@@ -195,14 +195,17 @@ fun NeuroCometWorkingTitleTheme(
 
     val view = LocalView.current
     if (!view.isInEditMode) {
-        val window = (view.context as Activity).window
-        val insetsController = remember(window, view) {
-            WindowCompat.getInsetsController(window, view)
-        }
+        val activity = view.context as? Activity
+        if (activity != null) {
+            val window = activity.window
+            val insetsController = remember(window, view) {
+                WindowCompat.getInsetsController(window, view)
+            }
 
-        SideEffect {
-            insetsController.isAppearanceLightStatusBars = !darkTheme
-            insetsController.isAppearanceLightNavigationBars = !darkTheme
+            SideEffect {
+                insetsController.isAppearanceLightStatusBars = !darkTheme
+                insetsController.isAppearanceLightNavigationBars = !darkTheme
+            }
         }
     }
 

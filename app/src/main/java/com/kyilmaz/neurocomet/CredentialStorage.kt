@@ -519,6 +519,14 @@ object SessionManager {
             .apply()
     }
 
+    /**
+     * Clear all stored credentials and preferences.
+     */
+    fun clearAll(context: Context) {
+        CredentialStorage.getPrefs(context).edit().clear().apply()
+        CredentialStorage.clearAuthToken(context)
+    }
+
     private fun CredentialStorage.getPrefs(context: Context): SharedPreferences {
         return context.getSharedPreferences("neurocomet_secure_prefs", Context.MODE_PRIVATE)
     }

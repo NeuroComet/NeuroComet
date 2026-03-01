@@ -2,8 +2,14 @@ package com.kyilmaz.neurocomet
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -18,18 +24,21 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.navigationBars
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Chat
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.DoneAll
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.PersonAdd
@@ -40,20 +49,24 @@ import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material.icons.filled.WavingHand
 import androidx.compose.material.icons.outlined.AlternateEmail
 import androidx.compose.material.icons.outlined.Notifications
+import androidx.compose.material.icons.rounded.AlternateEmail
+import androidx.compose.material.icons.rounded.Favorite
+import androidx.compose.material.icons.rounded.MarkEmailUnread
+import androidx.compose.material.icons.rounded.Notifications
+import androidx.compose.material.icons.rounded.PersonAdd
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilterChip
-import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.material3.SwipeToDismissBox
+import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
+import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -67,7 +80,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -81,22 +96,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 /**
- * Production-ready Notifications Screen
- *
- * Features:
- * - Pull-to-refresh
- * - Filter chips with horizontal scroll
- * - Time-based grouping (Today, Yesterday, This Week, Earlier)
- * - Read/unread visual states
- * - Smooth animations
- * - Accessibility support
- * - Empty states per filter
+ * Premium Notifications Screen matching Flutter design
+ * Uses Material You dynamic colors from wallpaper
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -114,8 +122,8 @@ fun NotificationsScreen(
     var isRefreshing by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
     val pullRefreshState = rememberPullToRefreshState()
+    val isDark = MaterialTheme.colorScheme.background.luminance() < 0.5f
 
-    // Derived states for performance
     val unreadCount by remember(safeList) {
         derivedStateOf { safeList.count { !it.isRead } }
     }
@@ -139,12 +147,7 @@ fun NotificationsScreen(
     Scaffold(
         modifier = modifier,
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
-        topBar = {
-            NotificationsTopBar(
-                unreadCount = unreadCount,
-                onMarkAllAsRead = if (unreadCount > 0) onMarkAllAsRead else null
-            )
-        }
+        containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
         PullToRefreshBox(
             isRefreshing = isRefreshing,
@@ -165,12 +168,22 @@ fun NotificationsScreen(
                 modifier = Modifier.fillMaxSize(),
                 contentPadding = PaddingValues(bottom = 100.dp)
             ) {
-                // Filter chips
+                // Modern header matching Flutter
+                item(key = "header") {
+                    NotificationsHeader(
+                        unreadCount = unreadCount,
+                        onMarkAllAsRead = if (unreadCount > 0) onMarkAllAsRead else null,
+                        isDark = isDark
+                    )
+                }
+
+                // Filter pills
                 item(key = "filters") {
-                    NotificationFilterRow(
+                    NotificationFilterPills(
                         selectedFilter = selectedFilter,
                         onFilterSelected = { selectedFilter = it },
-                        unreadCount = unreadCount
+                        unreadCount = unreadCount,
+                        isDark = isDark
                     )
                 }
 
@@ -179,14 +192,19 @@ fun NotificationsScreen(
                     item(key = "empty") {
                         NotificationsEmptyState(
                             filter = selectedFilter,
-                            onRefresh = onRefresh
+                            onRefresh = onRefresh,
+                            isDark = isDark
                         )
                     }
                 } else {
                     groupedNotifications.forEach { (groupTitle, items) ->
                         // Section header
                         item(key = "header_$groupTitle") {
-                            SectionHeader(title = groupTitle)
+                            AnimatedSectionHeader(
+                                title = groupTitle,
+                                count = items.size,
+                                isDark = isDark
+                            )
                         }
 
                         // Notification items
@@ -194,16 +212,52 @@ fun NotificationsScreen(
                             items = items,
                             key = { _, item -> item.id }
                         ) { index, notification ->
-                            NotificationCard(
-                                notification = notification,
-                                onClick = {
-                                    if (!notification.isRead) {
-                                        onMarkAsRead?.invoke(notification.id)
-                                    }
-                                    onNotificationClick?.invoke(notification)
-                                },
-                                animationDelay = index * 50
+                            val dismissState = rememberSwipeToDismissBoxState(
+                                confirmValueChange = { value ->
+                                    if (value != SwipeToDismissBoxValue.Settled) {
+                                        onDismissNotification?.invoke(notification.id)
+                                        true
+                                    } else false
+                                }
                             )
+                            SwipeToDismissBox(
+                                state = dismissState,
+                                backgroundContent = {
+                                    val color by animateColorAsState(
+                                        when (dismissState.targetValue) {
+                                            SwipeToDismissBoxValue.Settled -> Color.Transparent
+                                            else -> MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.8f)
+                                        }, label = "dismissBackground"
+                                    )
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxSize()
+                                            .clip(RoundedCornerShape(16.dp))
+                                            .background(color)
+                                            .padding(horizontal = 24.dp),
+                                        contentAlignment = Alignment.CenterEnd
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Default.Delete,
+                                            contentDescription = "Dismiss",
+                                            tint = MaterialTheme.colorScheme.onErrorContainer,
+                                            modifier = Modifier.scale(if (dismissState.progress > 0.5f) 1.2f else 1f)
+                                        )
+                                    }
+                                }
+                            ) {
+                                EnhancedNotificationTile(
+                                    notification = notification,
+                                    onClick = {
+                                        if (!notification.isRead) {
+                                            onMarkAsRead?.invoke(notification.id)
+                                        }
+                                        onNotificationClick?.invoke(notification)
+                                    },
+                                    isDark = isDark,
+                                    animationDelay = index * 50
+                                )
+                            }
                         }
                     }
                 }
@@ -213,138 +267,338 @@ fun NotificationsScreen(
 }
 
 // ============================================================================
-// TOP APP BAR
+// MODERN HEADER - Matching Flutter design
 // ============================================================================
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun NotificationsTopBar(
+private fun NotificationsHeader(
     unreadCount: Int,
-    onMarkAllAsRead: (() -> Unit)?
+    onMarkAllAsRead: (() -> Unit)?,
+    isDark: Boolean
 ) {
-    val unreadText = stringResource(R.string.notifications_unread_count, unreadCount)
-    val markAllReadText = stringResource(R.string.notifications_mark_all_read)
+    val primaryColor = MaterialTheme.colorScheme.primary
+    val secondaryColor = MaterialTheme.colorScheme.tertiary
 
-    TopAppBar(
-        modifier = Modifier.statusBarsPadding(),
-        title = {
-            Column {
-                Text(
-                    text = stringResource(R.string.notifications_title),
-                    style = MaterialTheme.typography.headlineMedium,
-                    fontWeight = FontWeight.Bold
-                )
-                AnimatedVisibility(visible = unreadCount > 0) {
-                    Text(
-                        text = unreadText,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                }
-            }
-        },
-        actions = {
-            if (onMarkAllAsRead != null) {
-                IconButton(
-                    onClick = onMarkAllAsRead,
-                    modifier = Modifier.semantics {
-                        contentDescription = markAllReadText
-                    }
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.CheckCircle,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary
-                    )
-                }
-            }
-        },
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.background
-        )
-    )
-}
-
-// ============================================================================
-// FILTER CHIPS
-// ============================================================================
-
-enum class NotificationFilter(val labelRes: Int) {
-    ALL(R.string.filter_all),
-    UNREAD(R.string.filter_unread),
-    MENTIONS(R.string.filter_mentions),
-    LIKES(R.string.filter_likes),
-    FOLLOWS(R.string.filter_follows)
-}
-
-@Composable
-private fun NotificationFilterRow(
-    selectedFilter: NotificationFilter,
-    onFilterSelected: (NotificationFilter) -> Unit,
-    unreadCount: Int
-) {
-    LazyRow(
+    Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        contentPadding = PaddingValues(horizontal = 16.dp)
+            .background(MaterialTheme.colorScheme.background)
+            .statusBarsPadding()
+            .padding(start = 20.dp, end = 20.dp, top = 16.dp, bottom = 8.dp)
     ) {
-        items(NotificationFilter.entries) { filter ->
-            val filterLabel = stringResource(filter.labelRes)
-            val displayLabel = when {
-                filter == NotificationFilter.UNREAD && unreadCount > 0 -> "$filterLabel ($unreadCount)"
-                else -> filterLabel
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = stringResource(R.string.notifications_title),
+                        style = MaterialTheme.typography.headlineMedium,
+                        fontWeight = FontWeight.Bold,
+                        letterSpacing = (-0.5).sp,
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
+                    if (unreadCount > 0) {
+                        Spacer(Modifier.width(12.dp))
+                        AnimatedUnreadBadge(count = unreadCount)
+                    }
+                }
+                Spacer(Modifier.height(4.dp))
+                Text(
+                    text = if (unreadCount > 0) {
+                        "You have $unreadCount new ${if (unreadCount == 1) "notification" else "notifications"}"
+                    } else {
+                        "You're all caught up! ✨"
+                    },
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
             }
 
-            FilterChip(
-                selected = selectedFilter == filter,
-                onClick = { onFilterSelected(filter) },
-                label = {
-                    Text(
-                        text = displayLabel,
-                        style = MaterialTheme.typography.labelMedium
-                    )
-                },
-                colors = FilterChipDefaults.filterChipColors(
-                    selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
-                    selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer
+            if (onMarkAllAsRead != null) {
+                MarkAllReadButton(
+                    onClick = onMarkAllAsRead,
+                    isDark = isDark
+                )
+            }
+        }
+    }
+}
+
+/**
+ * Animated unread badge with pulsing effect - uses dynamic colors
+ */
+@Composable
+private fun AnimatedUnreadBadge(count: Int) {
+    val primaryColor = MaterialTheme.colorScheme.primary
+    val tertiaryColor = MaterialTheme.colorScheme.tertiary
+
+    val infiniteTransition = rememberInfiniteTransition(label = "pulse")
+    val scale by infiniteTransition.animateFloat(
+        initialValue = 1f,
+        targetValue = 1.1f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(1500, easing = FastOutSlowInEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "pulseScale"
+    )
+
+    Box(
+        modifier = Modifier
+            .scale(scale)
+            .background(
+                brush = Brush.linearGradient(
+                    colors = listOf(primaryColor, tertiaryColor)
                 ),
-                modifier = Modifier.semantics {
-                    role = Role.Tab
-                    contentDescription = "Filter notifications by $filterLabel"
-                }
+                shape = RoundedCornerShape(20.dp)
+            )
+            .padding(horizontal = 10.dp, vertical = 4.dp)
+    ) {
+        Text(
+            text = if (count > 99) "99+" else count.toString(),
+            color = MaterialTheme.colorScheme.onPrimary,
+            fontWeight = FontWeight.Bold,
+            fontSize = 12.sp
+        )
+    }
+}
+
+/**
+ * Mark all read button - uses dynamic colors
+ */
+@Composable
+private fun MarkAllReadButton(
+    onClick: () -> Unit,
+    isDark: Boolean
+) {
+    val primaryColor = MaterialTheme.colorScheme.primary
+
+    Surface(
+        modifier = Modifier
+            .clip(RoundedCornerShape(12.dp))
+            .clickable(onClick = onClick),
+        shape = RoundedCornerShape(12.dp),
+        color = primaryColor.copy(alpha = 0.15f)
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(6.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Default.DoneAll,
+                contentDescription = null,
+                modifier = Modifier.size(18.dp),
+                tint = primaryColor
+            )
+            Text(
+                text = "Mark all read",
+                style = MaterialTheme.typography.labelLarge,
+                fontWeight = FontWeight.SemiBold,
+                color = primaryColor
             )
         }
     }
 }
 
 // ============================================================================
-// SECTION HEADER
+// FILTER PILLS - Matching Flutter design
 // ============================================================================
 
+enum class NotificationFilter(val labelRes: Int, val icon: ImageVector) {
+    ALL(R.string.filter_all, Icons.Rounded.Notifications),
+    UNREAD(R.string.filter_unread, Icons.Rounded.MarkEmailUnread),
+    MENTIONS(R.string.filter_mentions, Icons.Rounded.AlternateEmail),
+    LIKES(R.string.filter_likes, Icons.Rounded.Favorite),
+    FOLLOWS(R.string.filter_follows, Icons.Rounded.PersonAdd)
+}
+
 @Composable
-private fun SectionHeader(title: String) {
-    Text(
-        text = title,
-        style = MaterialTheme.typography.titleSmall,
-        fontWeight = FontWeight.Bold,
-        color = MaterialTheme.colorScheme.primary,
-        modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
-    )
+private fun NotificationFilterPills(
+    selectedFilter: NotificationFilter,
+    onFilterSelected: (NotificationFilter) -> Unit,
+    unreadCount: Int,
+    isDark: Boolean
+) {
+    LazyRow(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 8.dp),
+        horizontalArrangement = Arrangement.spacedBy(10.dp),
+        contentPadding = PaddingValues(horizontal = 20.dp)
+    ) {
+        items(NotificationFilter.entries) { filter ->
+            val count = when (filter) {
+                NotificationFilter.UNREAD -> if (unreadCount > 0) unreadCount else null
+                else -> null
+            }
+
+            FilterPill(
+                filter = filter,
+                count = count,
+                isSelected = selectedFilter == filter,
+                onClick = { onFilterSelected(filter) },
+                isDark = isDark
+            )
+        }
+    }
+}
+
+@Composable
+private fun FilterPill(
+    filter: NotificationFilter,
+    count: Int?,
+    isSelected: Boolean,
+    onClick: () -> Unit,
+    isDark: Boolean
+) {
+    val label = stringResource(filter.labelRes)
+    val primaryColor = MaterialTheme.colorScheme.primary
+
+    Surface(
+        modifier = Modifier
+            .clip(RoundedCornerShape(20.dp))
+            .clickable(onClick = onClick),
+        shape = RoundedCornerShape(20.dp),
+        color = if (isSelected) {
+            primaryColor
+        } else {
+            MaterialTheme.colorScheme.surfaceVariant
+        },
+        border = if (!isSelected) {
+            BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
+        } else null
+    ) {
+        Row(
+            modifier = Modifier.padding(
+                horizontal = if (isSelected) 16.dp else 14.dp,
+                vertical = 10.dp
+            ),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(6.dp)
+        ) {
+            Icon(
+                imageVector = filter.icon,
+                contentDescription = null,
+                modifier = Modifier.size(16.dp),
+                tint = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Text(
+                text = label,
+                style = MaterialTheme.typography.labelLarge,
+                fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Medium,
+                color = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
+            )
+            if (count != null) {
+                Box(
+                    modifier = Modifier
+                        .background(
+                            color = if (isSelected) MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.2f) else primaryColor.copy(alpha = 0.15f),
+                            shape = RoundedCornerShape(10.dp)
+                        )
+                        .padding(horizontal = 6.dp, vertical = 2.dp)
+                ) {
+                    Text(
+                        text = count.toString(),
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = if (isSelected) MaterialTheme.colorScheme.onPrimary else primaryColor
+                    )
+                }
+            }
+        }
+    }
 }
 
 // ============================================================================
-// NOTIFICATION ROW - Android-native style (not iOS-like cards)
+// SECTION HEADER - Matching Flutter design with gradient accent
 // ============================================================================
 
 @Composable
-private fun NotificationCard(
+private fun AnimatedSectionHeader(
+    title: String,
+    count: Int,
+    isDark: Boolean
+) {
+    val primaryColor = MaterialTheme.colorScheme.primary
+    val tertiaryColor = MaterialTheme.colorScheme.tertiary
+
+    var isVisible by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        delay(100)
+        isVisible = true
+    }
+
+    val alpha by animateFloatAsState(
+        targetValue = if (isVisible) 1f else 0f,
+        animationSpec = tween(400),
+        label = "headerAlpha"
+    )
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .alpha(alpha)
+            .padding(start = 20.dp, end = 20.dp, top = 20.dp, bottom = 8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        // Gradient accent bar
+        Box(
+            modifier = Modifier
+                .width(4.dp)
+                .height(18.dp)
+                .background(
+                    brush = Brush.verticalGradient(
+                        colors = listOf(primaryColor, tertiaryColor)
+                    ),
+                    shape = RoundedCornerShape(2.dp)
+                )
+        )
+        Spacer(Modifier.width(10.dp))
+        Text(
+            text = title,
+            style = MaterialTheme.typography.titleSmall,
+            fontWeight = FontWeight.Bold,
+            letterSpacing = 0.5.sp,
+            color = MaterialTheme.colorScheme.onBackground
+        )
+        Spacer(Modifier.width(8.dp))
+        Box(
+            modifier = Modifier
+                .background(
+                    color = MaterialTheme.colorScheme.surfaceVariant,
+                    shape = RoundedCornerShape(10.dp)
+                )
+                .padding(horizontal = 8.dp, vertical = 2.dp)
+        ) {
+            Text(
+                text = count.toString(),
+                style = MaterialTheme.typography.labelSmall,
+                fontWeight = FontWeight.SemiBold,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+    }
+}
+
+// ============================================================================
+// ENHANCED NOTIFICATION TILE - Matching Flutter design
+// ============================================================================
+
+@Composable
+private fun EnhancedNotificationTile(
     notification: NotificationItem,
     onClick: () -> Unit,
+    isDark: Boolean,
     animationDelay: Int = 0
 ) {
     var isVisible by remember { mutableStateOf(false) }
+    val primaryColor = MaterialTheme.colorScheme.primary
+    val tertiaryColor = MaterialTheme.colorScheme.tertiary
 
     LaunchedEffect(Unit) {
         delay(animationDelay.toLong())
@@ -354,64 +608,104 @@ private fun NotificationCard(
     val alpha by animateFloatAsState(
         targetValue = if (isVisible) 1f else 0f,
         animationSpec = tween(300),
-        label = "rowAlpha"
+        label = "tileAlpha"
     )
 
     val (icon, iconColor) = getNotificationStyle(notification.type)
+    val hasUnread = !notification.isRead
 
-    val backgroundColor by animateColorAsState(
-        targetValue = if (notification.isRead)
-            Color.Transparent
-        else
-            MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.12f),
-        animationSpec = tween(200),
-        label = "rowBg"
-    )
-
-    // Android-native row style - no cards, just rows with dividers
-    Column(
+    Surface(
         modifier = Modifier
             .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 4.dp)
             .alpha(alpha)
+            .clip(RoundedCornerShape(16.dp))
+            .clickable(onClick = onClick),
+        shape = RoundedCornerShape(16.dp),
+        color = if (hasUnread) {
+            primaryColor.copy(alpha = 0.08f)
+        } else {
+            MaterialTheme.colorScheme.surface
+        }
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(backgroundColor)
-                .clickable(
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = androidx.compose.material3.ripple(),
-                    onClick = onClick
-                )
-                .padding(horizontal = 16.dp, vertical = 12.dp)
-                .semantics {
-                    contentDescription = buildString {
-                        append(notification.title)
-                        append(". ")
-                        append(notification.message)
-                        append(". ")
-                        append(notification.timestamp)
-                        if (!notification.isRead) append(". Unread")
-                    }
-                    role = Role.Button
-                },
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 12.dp),
             verticalAlignment = Alignment.Top,
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            // Avatar / Icon
-            NotificationAvatar(
-                avatarUrl = notification.avatarUrl,
-                icon = icon,
-                iconColor = iconColor,
-                notificationType = notification.type
-            )
+            // Avatar with type badge
+            Box {
+                if (hasUnread) {
+                    // Gradient ring for unread
+                    Box(
+                        modifier = Modifier
+                            .size(54.dp)
+                            .background(
+                                brush = Brush.linearGradient(
+                                    colors = listOf(primaryColor, tertiaryColor)
+                                ),
+                                shape = CircleShape
+                            )
+                    )
+                }
+
+                // Avatar or icon container
+                Box(
+                    modifier = Modifier
+                        .padding(if (hasUnread) 2.dp else 0.dp)
+                        .size(50.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    if (notification.avatarUrl != null) {
+                        AsyncImage(
+                            model = ImageRequest.Builder(LocalContext.current)
+                                .data(notification.avatarUrl)
+                                .crossfade(true)
+                                .build(),
+                            contentDescription = null,
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .size(50.dp)
+                                .clip(CircleShape)
+                        )
+                        // Type badge overlay
+                        Box(
+                            modifier = Modifier
+                                .align(Alignment.BottomEnd)
+                                .size(18.dp)
+                                .clip(CircleShape)
+                                .background(iconColor),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = icon,
+                                contentDescription = null,
+                                tint = Color.White,
+                                modifier = Modifier.size(10.dp)
+                            )
+                        }
+                    } else {
+                        // Icon only
+                        Box(
+                            modifier = Modifier
+                                .size(50.dp)
+                                .clip(CircleShape)
+                                .background(iconColor.copy(alpha = 0.15f)),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = icon,
+                                contentDescription = null,
+                                tint = iconColor,
+                                modifier = Modifier.size(24.dp)
+                            )
+                        }
+                    }
+                }
+            }
 
             // Content
-            Column(
-                modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(2.dp)
-            ) {
-                // Title row with timestamp
+            Column(modifier = Modifier.weight(1f)) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -420,159 +714,100 @@ private fun NotificationCard(
                     Text(
                         text = notification.title,
                         style = MaterialTheme.typography.bodyMedium,
-                        fontWeight = if (notification.isRead) FontWeight.Normal else FontWeight.SemiBold,
+                        fontWeight = if (hasUnread) FontWeight.Bold else FontWeight.Medium,
                         color = MaterialTheme.colorScheme.onSurface,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.weight(1f, fill = false)
                     )
-
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(6.dp)
-                    ) {
-                        Text(
-                            text = notification.timestamp,
-                            style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.outline
+                    Spacer(Modifier.width(8.dp))
+                    Text(
+                        text = notification.timestamp,
+                        style = MaterialTheme.typography.labelSmall,
+                        fontWeight = if (hasUnread) FontWeight.SemiBold else FontWeight.Normal,
+                        color = if (hasUnread) primaryColor else MaterialTheme.colorScheme.outline
+                    )
+                }
+                Spacer(Modifier.height(4.dp))
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = notification.message,
+                        style = MaterialTheme.typography.bodySmall,
+                        fontWeight = if (hasUnread) FontWeight.Medium else FontWeight.Normal,
+                        color = if (hasUnread) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.weight(1f)
+                    )
+                    if (hasUnread) {
+                        Spacer(Modifier.width(8.dp))
+                        Box(
+                            modifier = Modifier
+                                .size(8.dp)
+                                .background(primaryColor, CircleShape)
                         )
-
-                        // Unread indicator next to timestamp (Android style)
-                        if (!notification.isRead) {
-                            Box(
-                                modifier = Modifier
-                                    .size(8.dp)
-                                    .clip(CircleShape)
-                                    .background(MaterialTheme.colorScheme.primary)
-                            )
-                        }
                     }
                 }
-
-                // Message
-                Text(
-                    text = notification.message,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                    lineHeight = MaterialTheme.typography.bodySmall.lineHeight
-                )
-            }
-        }
-
-        // Subtle divider between items (Android pattern)
-        HorizontalDivider(
-            modifier = Modifier.padding(start = 76.dp), // Align with content after avatar
-            thickness = 0.5.dp,
-            color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
-        )
-    }
-}
-
-@Composable
-private fun NotificationAvatar(
-    avatarUrl: String?,
-    icon: ImageVector,
-    iconColor: Color,
-    notificationType: NotificationType
-) {
-    // 48dp avatar with 12dp spacing = 60dp, plus 16dp padding = 76dp for divider alignment
-    Box(
-        modifier = Modifier.size(48.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        if (avatarUrl != null) {
-            // User avatar with type badge
-            AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(avatarUrl)
-                    .crossfade(true)
-                    .build(),
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .size(48.dp)
-                    .clip(CircleShape)
-            )
-
-            // Type badge overlay
-            Box(
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .size(18.dp)
-                    .clip(CircleShape)
-                    .background(iconColor),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = icon,
-                    contentDescription = null,
-                    tint = Color.White,
-                    modifier = Modifier.size(10.dp)
-                )
-            }
-        } else {
-            // Icon only (system notifications)
-            Box(
-                modifier = Modifier
-                    .size(48.dp)
-                    .clip(CircleShape)
-                    .background(iconColor.copy(alpha = 0.12f)),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = icon,
-                    contentDescription = null,
-                    tint = iconColor,
-                    modifier = Modifier.size(22.dp)
-                )
             }
         }
     }
 }
 
 // ============================================================================
-// EMPTY STATE
+// EMPTY STATE - Matching Flutter design
 // ============================================================================
 
 @Composable
 private fun NotificationsEmptyState(
     filter: NotificationFilter,
-    onRefresh: (() -> Unit)?
+    onRefresh: (() -> Unit)?,
+    isDark: Boolean
 ) {
-    val (icon, title, message) = when (filter) {
-        NotificationFilter.ALL -> Triple(
+    val primaryColor = MaterialTheme.colorScheme.primary
+    val successColor = Color(0xFF4CAF50)
+
+    val (icon, emoji, title, message, color) = when (filter) {
+        NotificationFilter.ALL -> listOf(
             Icons.Outlined.Notifications,
-            "No notifications yet",
-            "When someone interacts with you, you'll see it here."
+            "🌟",
+            "Your notification center",
+            "When someone interacts with your posts or follows you, you'll see it here.",
+            primaryColor
         )
-        NotificationFilter.UNREAD -> Triple(
+        NotificationFilter.UNREAD -> listOf(
             Icons.Default.CheckCircle,
-            "All caught up! ✨",
-            "You've read all your notifications. Nice work!"
+            "✨",
+            "All caught up!",
+            "You've read all your notifications. Great job staying on top of things!",
+            successColor
         )
-        NotificationFilter.MENTIONS -> Triple(
+        NotificationFilter.MENTIONS -> listOf(
             Icons.Outlined.AlternateEmail,
+            "💬",
             "No mentions yet",
-            "When someone mentions you, it'll appear here."
+            "When someone mentions you in a post or comment, you'll find it here.",
+            MaterialTheme.colorScheme.secondary
         )
-        NotificationFilter.LIKES -> Triple(
+        NotificationFilter.LIKES -> listOf(
             Icons.Default.Favorite,
+            "💜",
             "No likes yet",
-            "When someone likes your content, you'll see it here."
+            "When someone appreciates your content with a like, it'll show up here.",
+            Color(0xFFE91E63)
         )
-        NotificationFilter.FOLLOWS -> Triple(
+        NotificationFilter.FOLLOWS -> listOf(
             Icons.Default.PersonAdd,
+            "🤝",
             "No new followers",
-            "When someone follows you, they'll appear here."
+            "When someone new follows you to join your journey, they'll appear here.",
+            MaterialTheme.colorScheme.tertiary
         )
     }
 
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(350.dp)
+            .height(400.dp)
             .padding(32.dp),
         contentAlignment = Alignment.Center
     ) {
@@ -580,25 +815,33 @@ private fun NotificationsEmptyState(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
+            // Emoji
+            Text(
+                text = emoji as String,
+                fontSize = 48.sp
+            )
+            Spacer(Modifier.height(16.dp))
+
+            // Icon container
             Box(
                 modifier = Modifier
                     .size(80.dp)
                     .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.surfaceVariant),
+                    .background((color as Color).copy(alpha = 0.1f)),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
-                    imageVector = icon,
+                    imageVector = icon as ImageVector,
                     contentDescription = null,
                     modifier = Modifier.size(40.dp),
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
+                    tint = color
                 )
             }
 
             Spacer(Modifier.height(24.dp))
 
             Text(
-                text = title,
+                text = title as String,
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
@@ -608,7 +851,7 @@ private fun NotificationsEmptyState(
             Spacer(Modifier.height(8.dp))
 
             Text(
-                text = message,
+                text = message as String,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center,
@@ -736,14 +979,6 @@ private fun NotificationsScreenPreview() {
                     type = NotificationType.MENTION,
                     isRead = true,
                     avatarUrl = avatarUrl("calm")
-                ),
-                NotificationItem(
-                    id = "6",
-                    title = "Safety reminder",
-                    message = "Remember to take breaks! You've been active for a while. 💙",
-                    timestamp = "3d ago",
-                    type = NotificationType.SYSTEM,
-                    isRead = true
                 )
             ),
             onRefresh = {},

@@ -14,6 +14,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -54,7 +55,7 @@ val MOCK_FEED_POSTS = listOf(
         shares = 89,
         isLikedByMe = true,
         userAvatar = "https://i.pravatar.cc/150?u=focusqueen",
-        imageUrl = "https://images.unsplash.com/photo-1593062096033-9a26b09da705?w=800"
+        imageUrl = "https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?w=800"
     ),
     Post(
         id = 102L,
@@ -88,7 +89,7 @@ val MOCK_FEED_POSTS = listOf(
         shares = 445,
         isLikedByMe = true,
         userAvatar = "https://i.pravatar.cc/150?u=stimhappy",
-        imageUrl = "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800"
+        imageUrl = "https://images.unsplash.com/photo-1612538498456-e861df91d4d0?w=800"
     ),
     Post(
         id = 105L,
@@ -132,7 +133,11 @@ data class FeedUiState(
     val conversations: List<Conversation> = emptyList(),
     val activeConversation: Conversation? = null,
     val isDinoBanned: Boolean = false,
-    val notifications: List<NotificationItem> = emptyList()
+    val notifications: List<NotificationItem> = emptyList(),
+    // Content preferences (synced from Settings)
+    val hideLikeCounts: Boolean = false,
+    val hideViewCounts: Boolean = false,
+    val dataSaverMode: Boolean = false
 )
 
 class FeedViewModel(application: Application) : AndroidViewModel(application) {
@@ -147,8 +152,47 @@ class FeedViewModel(application: Application) : AndroidViewModel(application) {
 
     private var realPremiumStatus = false
 
-    var simulateError = false
-    var simulateInfiniteLoading = false
+    // ── Feature flags (from DevOptions) ──────────────────────
+    private val _enableNewFeedLayout = MutableStateFlow(false)
+    val enableNewFeedLayout: StateFlow<Boolean> = _enableNewFeedLayout.asStateFlow()
+
+    private val _enableAdvancedSearch = MutableStateFlow(false)
+    val enableAdvancedSearch: StateFlow<Boolean> = _enableAdvancedSearch.asStateFlow()
+
+    private val _enableAiSuggestions = MutableStateFlow(false)
+    val enableAiSuggestions: StateFlow<Boolean> = _enableAiSuggestions.asStateFlow()
+
+    /**
+     * Update feature flags from DevOptions. Called by MainActivity whenever
+     * the [DevOptions] change so that toggling flags in the dev menu
+     * actually takes effect in the feed and other consuming screens.
+     */
+    fun setFeatureFlags(
+        enableNewFeedLayout: Boolean = false,
+        enableAdvancedSearch: Boolean = false,
+        enableAiSuggestions: Boolean = false
+    ) {
+        _enableNewFeedLayout.value = enableNewFeedLayout
+        _enableAdvancedSearch.value = enableAdvancedSearch
+        _enableAiSuggestions.value = enableAiSuggestions
+    }
+
+    /**
+     * Apply content preferences from Settings → Content Preferences screen.
+     * Called by MainActivity when settings change.
+     */
+    fun applyContentPreferences(
+        hideLikeCounts: Boolean = false,
+        hideViewCounts: Boolean = false,
+        dataSaverMode: Boolean = false
+    ) {
+        _uiState.update { it.copy(
+            hideLikeCounts = hideLikeCounts,
+            hideViewCounts = hideViewCounts,
+            dataSaverMode = dataSaverMode
+        ) }
+    }
+
 
     private val _userStories = MutableStateFlow<List<Story>>(emptyList())
     private val _userConversations = MutableStateFlow<List<Conversation>>(_localizedConversations)
@@ -336,11 +380,64 @@ class FeedViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun retryDirectMessage(convId: String, msgId: String) {
-        _uiState.update { it.copy(errorMessage = "Message $msgId in conversation $convId retry logic not implemented (mock).") }
+        viewModelScope.launch {
+            // Find the failed message in the conversation
+            val conversation = _userConversations.value.find { it.id == convId }
+            val failedMessage = conversation?.messages?.find { it.id == msgId }
+
+            if (failedMessage == null) {
+                _uiState.update { it.copy(errorMessage = "Message not found for retry.") }
+                return@launch
+            }
+
+            // Remove the failed message
+            _userConversations.update { list ->
+                list.map { conv ->
+                    if (conv.id == convId) {
+                        conv.copy(messages = conv.messages.filter { it.id != msgId })
+                    } else conv
+                }
+            }
+
+            // Resend with a new ID and timestamp
+            val recipientId = failedMessage.recipientId
+            sendDirectMessage(recipientId, failedMessage.content)
+        }
     }
 
     fun reportMessage(messageId: String) {
-        _uiState.update { it.copy(errorMessage = "Message $messageId reported (mock).") }
+        viewModelScope.launch {
+            // Mark the message as reported in all conversations
+            _userConversations.update { list ->
+                list.map { conv ->
+                    conv.copy(
+                        messages = conv.messages.map { msg ->
+                            if (msg.id == messageId) {
+                                msg.copy(moderationStatus = ModerationStatus.FLAGGED)
+                            } else msg
+                        }
+                    )
+                }
+            }
+
+            // Update active conversation if it contains the message
+            _uiState.update { state ->
+                state.copy(
+                    activeConversation = state.activeConversation?.let { conv ->
+                        conv.copy(
+                            messages = conv.messages.map { msg ->
+                                if (msg.id == messageId) {
+                                    msg.copy(moderationStatus = ModerationStatus.FLAGGED)
+                                } else msg
+                            }
+                        )
+                    },
+                    errorMessage = null
+                )
+            }
+
+            fetchConversations()
+        }
     }
 
     /**
@@ -484,15 +581,23 @@ class FeedViewModel(application: Application) : AndroidViewModel(application) {
     fun fetchPosts() {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, errorMessage = null) }
-            // No artificial delay - instant loading
 
-            if (simulateError) {
+            val opts = devOptions()
+
+            if (opts.simulateOffline) {
+                _uiState.update { it.copy(isLoading = false, errorMessage = "No network connection (simulated offline)") }
+                return@launch
+            }
+            if (opts.simulateLoadingError) {
                 _uiState.update { it.copy(isLoading = false, errorMessage = "Simulated server error (HTTP 500)") }
                 return@launch
             }
-            if (simulateInfiniteLoading) {
+            if (opts.infiniteLoading) {
                 // keep loading forever
                 return@launch
+            }
+            if (opts.networkLatencyMs > 0) {
+                delay(opts.networkLatencyMs)
             }
 
             // Combine localized explore posts with localized feed posts
@@ -503,52 +608,27 @@ class FeedViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     /**
-     * Resets all mock data to initial state for testing purposes.
-     * - Resets all post likes to their original values
-     * - Resets DM reactions
-     * - Clears user-created content
-     * - Resets strike counts and bans
+     * Resets all mock data to their initial localized states.
+     * Use this during development/testing to restore original content.
      */
     fun resetMockData() {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
-            // No artificial delay
+            delay(500) // Visual feedback for reset
 
-            // Reset posts to original mock data (fresh copies with original like counts)
-            // All posts are localized
-            val freshPosts = (_localizedPosts + _localizedFeedPosts).map { it.copy() }
-
-            // Reset conversations to original mock data (fresh copies with empty reactions)
-            val freshConversations = _localizedConversations.map { conv ->
-                conv.copy(
-                    messages = conv.messages.map { msg ->
-                        msg.copy(reactions = emptyList(), isRead = false)
-                    },
-                    unreadCount = conv.messages.count { it.senderId != "me" }
-                )
-            }
-            _userConversations.value = freshConversations
-
-            // Reset strike counts
-            _userStrikeCount.value = emptyMap()
-
-            // Reset user-created stories
             _userStories.value = emptyList()
+            _userConversations.value = MockDataProvider.getLocalizedConversations(getApplication())
 
-            // Update UI state
-            _uiState.update {
-                it.copy(
-                    posts = freshPosts,
-                    conversations = freshConversations,
-                    activeConversation = null,
-                    isDinoBanned = false,
+            _uiState.update { state ->
+                state.copy(
+                    posts = MockDataProvider.getLocalizedFeedPosts(getApplication()) + MOCK_FEED_POSTS,
+                    notifications = MockDataProvider.getLocalizedNotifications(getApplication()),
+                    conversations = MockDataProvider.getLocalizedConversations(getApplication()),
+                    stories = emptyList(),
                     isLoading = false,
-                    errorMessage = "Mock data has been reset!"
+                    isDinoBanned = false
                 )
             }
-
-            // Refresh stories
-            fetchStories()
         }
     }
 
@@ -645,32 +725,41 @@ class FeedViewModel(application: Application) : AndroidViewModel(application) {
 
     fun toggleLike(postId: Long) {
         // Update UI immediately for responsive feel
-        _uiState.update { currentState ->
-            val updatedPosts = currentState.posts.map { post ->
-                if (post.id == postId) {
-                    val nowLiked = !post.isLikedByMe
-                    val newLikeCount = (post.likes + if (nowLiked) 1 else -1).coerceAtLeast(0)
+        try {
+            _uiState.update { currentState ->
+                val updatedPosts = currentState.posts.map { post ->
+                    if (post.id == postId) {
+                        val nowLiked = !post.isLikedByMe
+                        val newLikeCount = (post.likes + if (nowLiked) 1 else -1).coerceAtLeast(0)
 
-                    // Log the like action for debugging
-                    android.util.Log.d("NeuroComet", "👍 Like toggled: Post #$postId | Liked: $nowLiked | Count: $newLikeCount")
+                        // Log the like action for debugging
+                        android.util.Log.d("NeuroComet", "👍 Like toggled: Post #$postId | Liked: $nowLiked | Count: $newLikeCount")
 
-                    post.copy(
-                        isLikedByMe = nowLiked,
-                        likes = newLikeCount
-                    )
-                } else post
+                        post.copy(
+                            isLikedByMe = nowLiked,
+                            likes = newLikeCount
+                        )
+                    } else post
+                }
+                currentState.copy(posts = updatedPosts)
             }
-            currentState.copy(posts = updatedPosts)
+        } catch (e: Exception) {
+            android.util.Log.e("NeuroComet", "❌ Failed to update like UI state", e)
+            return // Don't attempt network call if UI update failed
         }
 
         // Persist to Supabase in background
         viewModelScope.launch {
-            val result = LikesRepository.toggleLike(postId, CURRENT_USER_ID_MOCK)
-            result.onSuccess { isNowLiked ->
-                android.util.Log.d("NeuroComet", "✅ Like persisted to Supabase: Post #$postId | Liked: $isNowLiked")
-            }.onFailure { error ->
-                android.util.Log.w("NeuroComet", "⚠️ Like not persisted (local only): ${error.message}")
-                // Like still works locally, just not synced to server
+            try {
+                val result = LikesRepository.toggleLike(postId, CURRENT_USER_ID_MOCK)
+                result.onSuccess { isNowLiked ->
+                    android.util.Log.d("NeuroComet", "✅ Like persisted to Supabase: Post #$postId | Liked: $isNowLiked")
+                }.onFailure { error ->
+                    android.util.Log.w("NeuroComet", "⚠️ Like not persisted (local only): ${error.message}")
+                    // Like still works locally, just not synced to server
+                }
+            } catch (e: Exception) {
+                android.util.Log.w("NeuroComet", "⚠️ Like persist failed (local only): ${e.message}")
             }
         }
     }
@@ -810,6 +899,22 @@ class FeedViewModel(application: Application) : AndroidViewModel(application) {
     fun deleteNotification(notificationId: String) = dismissNotification(notificationId)
 
     fun addNotification(notification: NotificationItem) {
+        // Check notification settings — only add if the category is enabled
+        val notifSettings = SocialSettingsManager.getNotificationSettings(getApplication())
+        if (!notifSettings.pushEnabled) return
+        val allowed = when (notification.type) {
+            NotificationType.LIKE -> notifSettings.likesEnabled
+            NotificationType.COMMENT -> notifSettings.commentsEnabled
+            NotificationType.FOLLOW -> notifSettings.followsEnabled
+            NotificationType.MENTION -> notifSettings.mentionsEnabled
+            NotificationType.REPOST -> true
+            NotificationType.SYSTEM -> true
+            NotificationType.BADGE -> true
+            NotificationType.WELCOME -> true
+            NotificationType.SAFETY_ALERT -> true
+        }
+        if (!allowed) return
+
         _notifications.update { listOf(notification) + it }
         _uiState.update { it.copy(notifications = _notifications.value) }
     }

@@ -25,6 +25,8 @@ import java.util.*
  *
  * This utility helps identify which strings exist in each language
  * and which are still missing (falling back to English).
+ *
+ * COMPREHENSIVE VERSION: Dynamically discovers ALL string resources using reflection.
  */
 
 // Supported languages in the app (including neurodivergent-majority regions)
@@ -64,137 +66,104 @@ val SUPPORTED_LANGUAGES = listOf(
     "uk" to "Українська"
 )
 
-// Key string resources to check (representative sample for core UI)
-val CORE_STRINGS_TO_CHECK: List<Pair<Int, String>> = listOf(
-    // Core UI
-    Pair(R.string.app_name, "app_name"),
-    Pair(R.string.nav_feed, "nav_feed"),
-    Pair(R.string.nav_explore, "nav_explore"),
-    Pair(R.string.nav_messages, "nav_messages"),
-    Pair(R.string.nav_notifications, "nav_notifications"),
-    Pair(R.string.nav_settings, "nav_settings"),
+/**
+ * String categories for organized checking
+ */
+enum class StringCategory(val prefix: String, val displayName: String) {
+    NAVIGATION("nav_", "Navigation"),
+    AUTH("auth_", "Authentication"),
+    SETTINGS("settings_", "Settings"),
+    EXPLORE("explore_", "Explore"),
+    GAMES("game", "Games"),
+    FEEDBACK("feedback_", "Feedback"),
+    MESSAGES("message", "Messages/DM"),
+    STORY("story", "Stories"),
+    PROFILE("profile_", "Profile"),
+    POST("post_", "Posts"),
+    COMMENT("comment_", "Comments"),
+    NEURO_STATE("neuro_state_", "Neuro States"),
+    BADGE("badge_", "Badges"),
+    PARENTAL("parental_", "Parental Controls"),
+    SUBSCRIPTION("subscription_", "Subscription"),
+    DEV("dev_", "Developer"),
+    DEBUG("debug_", "Debug"),
+    ACCESSIBILITY("accessibility_", "Accessibility"),
+    THEME("theme_", "Themes"),
+    FONT("font_", "Fonts"),
+    NOTIFICATION("notification_", "Notifications"),
+    CALL("call_", "Calls"),
+    SAFETY("safety_", "Safety"),
+    CONTENT("content_", "Content"),
+    COMMON("common_", "Common"),
+    ERROR("error_", "Errors"),
+    SUCCESS("success_", "Success Messages"),
+    TUTORIAL("tutorial_", "Tutorial"),
+    WIDGET("widget_", "Widgets"),
+    OTHER("", "Other/Misc")
+}
 
-    // Auth
-    Pair(R.string.auth_sign_in, "auth_sign_in"),
-    Pair(R.string.auth_sign_up, "auth_sign_up"),
-    Pair(R.string.auth_email_label, "auth_email_label"),
-    Pair(R.string.auth_password_label, "auth_password_label"),
-    Pair(R.string.auth_create_account, "auth_create_account"),
+/**
+ * Dynamically discover ALL string resources using reflection
+ */
+fun getAllStringResources(): List<Pair<Int, String>> {
+    val stringFields = R.string::class.java.fields
+    return stringFields.mapNotNull { field ->
+        try {
+            val resId = field.getInt(null)
+            val name = field.name
+            Pair(resId, name)
+        } catch (_: Exception) {
+            null
+        }
+    }.sortedBy { it.second }
+}
 
-    // Settings
-    Pair(R.string.settings_section_appearance, "settings_section_appearance"),
-    Pair(R.string.settings_section_privacy, "settings_section_privacy"),
-    Pair(R.string.settings_section_notifications, "settings_section_notifications"),
-    Pair(R.string.settings_section_accessibility, "settings_section_accessibility"),
+/**
+ * Get string resources by category
+ */
+fun getStringsByCategory(category: StringCategory): List<Pair<Int, String>> {
+    val allStrings = getAllStringResources()
+    return if (category == StringCategory.OTHER) {
+        // Get strings that don't match any other category prefix
+        val allPrefixes = StringCategory.entries
+            .filter { it != StringCategory.OTHER }
+            .map { it.prefix }
+        allStrings.filter { (_, name) ->
+            allPrefixes.none { prefix -> name.startsWith(prefix) }
+        }
+    } else {
+        allStrings.filter { (_, name) -> name.startsWith(category.prefix) }
+    }
+}
 
-    // Explore
-    Pair(R.string.explore_title, "explore_title"),
-    Pair(R.string.explore_autism, "explore_autism"),
-    Pair(R.string.explore_adhd, "explore_adhd"),
-    Pair(R.string.explore_anxiety, "explore_anxiety"),
-    Pair(R.string.explore_sensory, "explore_sensory"),
+/**
+ * Get count of strings per category
+ */
+fun getStringCountByCategory(): Map<StringCategory, Int> {
+    return StringCategory.entries.associateWith { category ->
+        getStringsByCategory(category).size
+    }
+}
 
-    // Games
-    Pair(R.string.games_hub_title, "games_hub_title"),
-    Pair(R.string.game_bubble_pop, "game_bubble_pop"),
-    Pair(R.string.game_fidget_spinner, "game_fidget_spinner"),
+// Legacy lists for backward compatibility - now dynamically generated
+val CORE_STRINGS_TO_CHECK: List<Pair<Int, String>> by lazy {
+    val categories = listOf(
+        StringCategory.NAVIGATION,
+        StringCategory.AUTH,
+        StringCategory.EXPLORE,
+        StringCategory.GAMES,
+        StringCategory.FEEDBACK
+    )
+    categories.flatMap { getStringsByCategory(it) }
+}
 
-    // Feedback
-    Pair(R.string.feedback_hub_title, "feedback_hub_title"),
-    Pair(R.string.feedback_report_bug_title, "feedback_report_bug_title"),
-    Pair(R.string.feedback_request_feature_title, "feedback_request_feature_title")
-)
+val DEV_OPTIONS_STRINGS_TO_CHECK: List<Pair<Int, String>> by lazy {
+    getStringsByCategory(StringCategory.DEV) + getStringsByCategory(StringCategory.DEBUG)
+}
 
-// Developer section string resources to check (includes all developer-related strings)
-val DEV_OPTIONS_STRINGS_TO_CHECK: List<Pair<Int, String>> = listOf(
-    // Developer Section Header
-    Pair(R.string.settings_section_developer, "settings_section_developer"),
-    Pair(R.string.settings_developer_subtitle, "settings_developer_subtitle"),
-    Pair(R.string.settings_developer_options_group, "settings_developer_options_group"),
-    Pair(R.string.settings_dev_options_desc, "settings_dev_options_desc"),
-
-    // Developer Settings Toggles
-    Pair(R.string.settings_force_verify_title, "settings_force_verify_title"),
-    Pair(R.string.settings_force_verify_subtitle, "settings_force_verify_subtitle"),
-    Pair(R.string.settings_fake_premium_title, "settings_fake_premium_title"),
-    Pair(R.string.settings_fake_premium_subtitle, "settings_fake_premium_subtitle"),
-    Pair(R.string.settings_fake_premium, "settings_fake_premium"),
-    Pair(R.string.settings_fake_premium_enabled, "settings_fake_premium_enabled"),
-    Pair(R.string.settings_fake_premium_disabled, "settings_fake_premium_disabled"),
-    Pair(R.string.settings_mock_interface_title, "settings_mock_interface_title"),
-    Pair(R.string.settings_mock_interface_subtitle, "settings_mock_interface_subtitle"),
-    Pair(R.string.settings_simulate_badge_title, "settings_simulate_badge_title"),
-    Pair(R.string.settings_simulate_badge_subtitle, "settings_simulate_badge_subtitle"),
-
-    // Nuke Database
-    Pair(R.string.settings_nuke_db_title, "settings_nuke_db_title"),
-    Pair(R.string.settings_nuke_db_subtitle, "settings_nuke_db_subtitle"),
-    Pair(R.string.settings_nuke_db_dialog_title, "settings_nuke_db_dialog_title"),
-    Pair(R.string.settings_nuke_db_dialog_text, "settings_nuke_db_dialog_text"),
-    Pair(R.string.settings_nuke_db_dialog_confirm, "settings_nuke_db_dialog_confirm"),
-    Pair(R.string.settings_nuke_db_dialog_cancel, "settings_nuke_db_dialog_cancel"),
-
-    // Language Test
-    Pair(R.string.settings_language_test_title, "settings_language_test_title"),
-    Pair(R.string.settings_language_test_subtitle, "settings_language_test_subtitle"),
-
-    // Dev Options Screen
-    Pair(R.string.dev_options_title, "dev_options_title"),
-    Pair(R.string.dev_phone_format_test, "dev_phone_format_test"),
-    Pair(R.string.dev_phone_format_test_desc, "dev_phone_format_test_desc"),
-    Pair(R.string.dev_phone_format_style, "dev_phone_format_style"),
-    Pair(R.string.dev_phone_test_input, "dev_phone_test_input"),
-    Pair(R.string.dev_phone_format_pattern, "dev_phone_format_pattern"),
-
-    // Credential Storage Dev Options
-    Pair(R.string.dev_credential_title, "dev_credential_title"),
-    Pair(R.string.dev_credential_test_save, "dev_credential_test_save"),
-    Pair(R.string.dev_credential_test_retrieve, "dev_credential_test_retrieve"),
-    Pair(R.string.dev_credential_clear_all, "dev_credential_clear_all"),
-    Pair(R.string.dev_credential_session_status, "dev_credential_session_status"),
-    Pair(R.string.dev_credential_biometric_status, "dev_credential_biometric_status"),
-    Pair(R.string.dev_credential_create_session, "dev_credential_create_session"),
-    Pair(R.string.dev_credential_end_session, "dev_credential_end_session"),
-    Pair(R.string.dev_credential_extend_session, "dev_credential_extend_session"),
-
-    // Debug Tools
-    Pair(R.string.debug_tools_title, "debug_tools_title"),
-    Pair(R.string.debug_performance_overlay, "debug_performance_overlay"),
-    Pair(R.string.debug_performance_desc, "debug_performance_desc"),
-    Pair(R.string.debug_reset_counters, "debug_reset_counters")
-)
-
-// General settings string resources to check
-val GENERAL_SETTINGS_STRINGS_TO_CHECK: List<Pair<Int, String>> = listOf(
-    // Profile Group
-    Pair(R.string.settings_profile_group, "settings_profile_group"),
-    Pair(R.string.settings_badges_title, "settings_badges_title"),
-    Pair(R.string.settings_badges_subtitle, "settings_badges_subtitle"),
-
-    // Visual Comfort Group
-    Pair(R.string.settings_visual_comfort_group, "settings_visual_comfort_group"),
-    Pair(R.string.settings_text_size_title, "settings_text_size_title"),
-    Pair(R.string.settings_dark_mode_title, "settings_dark_mode_title"),
-    Pair(R.string.settings_dark_mode_enabled, "settings_dark_mode_enabled"),
-    Pair(R.string.settings_dark_mode_disabled, "settings_dark_mode_disabled"),
-    Pair(R.string.settings_high_contrast_title, "settings_high_contrast_title"),
-    Pair(R.string.settings_high_contrast_subtitle_enabled, "settings_high_contrast_subtitle_enabled"),
-    Pair(R.string.settings_high_contrast_subtitle_disabled, "settings_high_contrast_subtitle_disabled"),
-    Pair(R.string.settings_neuro_centric_theme_title, "settings_neuro_centric_theme_title"),
-
-    // Premium & Account
-    Pair(R.string.settings_go_premium_title, "settings_go_premium_title"),
-    Pair(R.string.settings_go_premium_subtitle, "settings_go_premium_subtitle"),
-    Pair(R.string.settings_account_group, "settings_account_group"),
-    Pair(R.string.settings_logout, "settings_logout"),
-
-    // Verification & Security
-    Pair(R.string.settings_verified_human_title, "settings_verified_human_title"),
-    Pair(R.string.settings_verified_human_subtitle_verified, "settings_verified_human_subtitle_verified"),
-    Pair(R.string.settings_verified_human_subtitle_unverified, "settings_verified_human_subtitle_unverified"),
-    Pair(R.string.settings_2fa_title, "settings_2fa_title"),
-    Pair(R.string.settings_2fa_subtitle, "settings_2fa_subtitle")
-)
+val GENERAL_SETTINGS_STRINGS_TO_CHECK: List<Pair<Int, String>> by lazy {
+    getStringsByCategory(StringCategory.SETTINGS)
+}
 
 data class LanguageStatus(
     val languageCode: String,
@@ -252,49 +221,59 @@ fun checkLanguageStrings(
             if (localizedValue != englishValue) {
                 translatedCount++
             } else {
-                // These strings are often intentionally the same across languages
+                // Terms that are often the same or very similar across languages
+                // This prevents false positives in translation checking
                 val internationalTerms = setOf(
-                    "app_name",                     // Brand name
+                    // Brand/App names
+                    "app_name",                     // Brand name - NeuroComet
+
+                    // Navigation - often kept in English or similar
                     "nav_feed",                     // "Feed" is used in many languages
-                    "nav_explore",                  // "Explore/Explorer" is similar in many languages
-                    "nav_messages",                 // "Messages" is same in many languages
-                    "explore_title",                // "Explore/Explorer" is similar in many languages
+                    "nav_explore",                  // "Explore/Explorer" is similar
+
+                    // Medical/Technical terms - internationally recognized
                     "explore_adhd",                 // ADHD is used internationally
-                    "explore_autism",               // Autism/Autisme is similar in many languages
-                    "explore_anxiety",              // Anxiety/Anxiété is similar in many languages
-                    "explore_sensory",              // Sensory/Sensoriel is similar in many languages
+                    "explore_autism",               // Autism/Autisme is similar
+                    "explore_anxiety",              // Anxiety is similar in many languages
+                    "explore_sensory",              // Sensory is similar
+
+                    // Tech terms - often kept in English
+                    "auth_email_label",             // Email/E-mail is universal
                     "game_fidget_spinner",          // Fidget Spinner is used globally
-                    "auth_email_label",             // Email/E-mail is similar in many languages
-                    "auth_password_label",          // Password is similar in many languages
-                    "auth_sign_in",                 // Sign In is used in many languages
-                    "auth_sign_up",                 // Sign Up is used in many languages
-                    "auth_create_account",          // Create Account is similar in many languages
-                    "game_bubble_pop",              // Often kept as English or similar
-                    "games_hub_title",              // Games Hub or similar
-                    "feedback_hub_title",           // Feedback Hub or similar
-                    "feedback_report_bug_title",    // Bug is often kept in English
-                    "feedback_request_feature_title", // Feature is often kept in English
-                    "settings_section_notifications", // Notifications is same in many languages
-                    "settings_section_appearance",  // Appearance is similar in many languages
-                    "settings_section_privacy",     // Privacy is similar in many languages
-                    "settings_section_accessibility", // Accessibility is similar in many languages
-                    // General Settings - often similar across languages
-                    "settings_profile_group",       // Profile/Profil is similar
-                    "settings_badges_title",        // Badge is used internationally
-                    "settings_account_group",       // Account is similar in many languages
-                    "settings_logout",              // Logout is used in many languages
-                    "settings_go_premium_title",    // Premium is international
-                    "settings_2fa_title",           // 2FA/Two-Factor is often similar
-                    // Developer Section - technical terms often kept in English
-                    "settings_fake_premium_title",  // "Fake Premium" is technical
-                    "settings_fake_premium",        // "Fake Premium" mode
-                    "settings_mock_interface_title", // "Mock" is technical jargon
-                    "debug_tools_title",            // "Debug" is universal dev term
-                    "debug_performance_overlay",    // "Overlay" is technical
-                    "debug_reset_counters"          // "Counters" is technical
+
+                    // Developer/Debug terms - always English in dev contexts
+                    "debug_tools_title",
+                    "debug_performance_overlay",
+                    "debug_reset_counters",
+                    "dev_options_title",
+                    "dev_phone_format_test",
+                    "dev_credential_title",
+                    "settings_mock_interface_title",
+                    "settings_fake_premium",
+                    "settings_fake_premium_title",
+
+                    // Premium/subscription - international marketing terms
+                    "settings_go_premium_title",
+                    "subscription_premium",
+
+                    // Two-factor auth - technical abbreviation
+                    "settings_2fa_title",
+
+                    // Numbers/formats that don't change
+                    "app_version",
+
+                    // Emoji-based strings that are universal
+                    // (strings that are primarily emojis)
                 )
 
-                if (name in internationalTerms) {
+                // Also consider strings that contain only symbols, numbers, or emojis
+                val isSymbolicOrEmpty = englishValue.all {
+                    it.isWhitespace() ||
+                    !it.isLetter() ||
+                    isEmojiCodePoint(it.code)
+                }
+
+                if (name in internationalTerms || isSymbolicOrEmpty) {
                     translatedCount++ // These can be same
                 } else {
                     missingStrings.add(name)
@@ -315,36 +294,133 @@ fun checkLanguageStrings(
 }
 
 /**
- * String checker category enum
+ * Helper to check if a code point is an emoji
  */
-enum class StringCheckerCategory(val title: String, val icon: @Composable () -> Unit) {
-    CORE("Core UI", { Icon(Icons.Outlined.Translate, contentDescription = null) }),
-    GENERAL_SETTINGS("General Settings", { Icon(Icons.Outlined.Settings, contentDescription = null) }),
-    DEV_OPTIONS("Developer Section", { Icon(Icons.Outlined.Code, contentDescription = null) })
+private fun isEmojiCodePoint(codePoint: Int): Boolean {
+    return codePoint in 0x1F600..0x1F64F || // Emoticons
+           codePoint in 0x1F300..0x1F5FF || // Misc Symbols and Pictographs
+           codePoint in 0x1F680..0x1F6FF || // Transport and Map
+           codePoint in 0x1F1E0..0x1F1FF || // Flags
+           codePoint in 0x2600..0x26FF ||   // Misc symbols
+           codePoint in 0x2700..0x27BF ||   // Dingbats
+           codePoint in 0xFE00..0xFE0F ||   // Variation Selectors
+           codePoint in 0x1F900..0x1F9FF || // Supplemental Symbols and Pictographs
+           codePoint in 0x1FA00..0x1FA6F || // Chess Symbols
+           codePoint in 0x1FA70..0x1FAFF || // Symbols and Pictographs Extended-A
+           codePoint in 0x231A..0x231B ||   // Watch, Hourglass
+           codePoint in 0x23E9..0x23F3 ||   // Various symbols
+           codePoint in 0x23F8..0x23FA ||   // Various symbols
+           codePoint in 0x25AA..0x25AB ||   // Squares
+           codePoint in 0x25B6..0x25C0 ||   // Play buttons
+           codePoint in 0x25FB..0x25FE ||   // Squares
+           codePoint in 0x2614..0x2615 ||   // Umbrella, Hot Beverage
+           codePoint in 0x2648..0x2653 ||   // Zodiac
+           codePoint in 0x267F..0x267F ||   // Wheelchair
+           codePoint in 0x2693..0x2693 ||   // Anchor
+           codePoint in 0x26A1..0x26A1 ||   // High Voltage
+           codePoint in 0x26AA..0x26AB ||   // Circles
+           codePoint in 0x26BD..0x26BE ||   // Soccer, Baseball
+           codePoint in 0x26C4..0x26C5 ||   // Snowman, Sun
+           codePoint in 0x26CE..0x26CE ||   // Ophiuchus
+           codePoint in 0x26D4..0x26D4 ||   // No Entry
+           codePoint in 0x26EA..0x26EA ||   // Church
+           codePoint in 0x26F2..0x26F3 ||   // Fountain, Golf
+           codePoint in 0x26F5..0x26F5 ||   // Sailboat
+           codePoint in 0x26FA..0x26FA ||   // Tent
+           codePoint in 0x26FD..0x26FD ||   // Fuel Pump
+           codePoint == 0x2702 ||            // Scissors
+           codePoint == 0x2705 ||            // Check Mark
+           codePoint in 0x2708..0x270D ||   // Airplane to Writing Hand
+           codePoint == 0x270F ||            // Pencil
+           codePoint == 0x2712 ||            // Black Nib
+           codePoint == 0x2714 ||            // Check Mark
+           codePoint == 0x2716 ||            // X Mark
+           codePoint in 0x271D..0x271D ||   // Latin Cross
+           codePoint in 0x2721..0x2721 ||   // Star of David
+           codePoint in 0x2728..0x2728 ||   // Sparkles
+           codePoint in 0x2733..0x2734 ||   // Eight Spoked Asterisk
+           codePoint in 0x2744..0x2744 ||   // Snowflake
+           codePoint in 0x2747..0x2747 ||   // Sparkle
+           codePoint in 0x274C..0x274C ||   // Cross Mark
+           codePoint in 0x274E..0x274E ||   // Cross Mark
+           codePoint in 0x2753..0x2755 ||   // Question Marks
+           codePoint in 0x2757..0x2757 ||   // Exclamation Mark
+           codePoint in 0x2763..0x2764 ||   // Heart Exclamation, Heart
+           codePoint in 0x2795..0x2797 ||   // Plus, Minus, Divide
+           codePoint in 0x27A1..0x27A1 ||   // Right Arrow
+           codePoint in 0x27B0..0x27B0 ||   // Curly Loop
+           codePoint in 0x27BF..0x27BF ||   // Double Curly Loop
+           codePoint in 0x2934..0x2935 ||   // Arrows
+           codePoint in 0x2B05..0x2B07 ||   // Arrows
+           codePoint in 0x2B1B..0x2B1C ||   // Squares
+           codePoint in 0x2B50..0x2B50 ||   // Star
+           codePoint in 0x2B55..0x2B55 ||   // Circle
+           codePoint in 0x3030..0x3030 ||   // Wavy Dash
+           codePoint in 0x303D..0x303D ||   // Part Alternation Mark
+           codePoint in 0x3297..0x3297 ||   // Circled Ideograph Congratulation
+           codePoint in 0x3299..0x3299      // Circled Ideograph Secret
+}
+
+/**
+ * String checker category enum - now uses comprehensive categories
+ */
+enum class StringCheckerCategory(val title: String, val icon: @Composable () -> Unit, val stringCategory: StringCategory?) {
+    ALL("All Strings", { Icon(Icons.Outlined.Translate, contentDescription = null) }, null),
+    NAVIGATION("Navigation", { Icon(Icons.Outlined.Navigation, contentDescription = null) }, StringCategory.NAVIGATION),
+    AUTH("Authentication", { Icon(Icons.Outlined.Login, contentDescription = null) }, StringCategory.AUTH),
+    SETTINGS("Settings", { Icon(Icons.Outlined.Settings, contentDescription = null) }, StringCategory.SETTINGS),
+    EXPLORE("Explore", { Icon(Icons.Outlined.Explore, contentDescription = null) }, StringCategory.EXPLORE),
+    GAMES("Games", { Icon(Icons.Outlined.SportsEsports, contentDescription = null) }, StringCategory.GAMES),
+    MESSAGES("Messages", { Icon(Icons.Outlined.Message, contentDescription = null) }, StringCategory.MESSAGES),
+    NEURO_STATES("Neuro States", { Icon(Icons.Outlined.Psychology, contentDescription = null) }, StringCategory.NEURO_STATE),
+    BADGES("Badges", { Icon(Icons.Outlined.MilitaryTech, contentDescription = null) }, StringCategory.BADGE),
+    PARENTAL("Parental", { Icon(Icons.Outlined.FamilyRestroom, contentDescription = null) }, StringCategory.PARENTAL),
+    DEV_OPTIONS("Developer", { Icon(Icons.Outlined.Code, contentDescription = null) }, StringCategory.DEV),
+    ACCESSIBILITY("Accessibility", { Icon(Icons.Outlined.Accessibility, contentDescription = null) }, StringCategory.ACCESSIBILITY),
+    NOTIFICATIONS("Notifications", { Icon(Icons.Outlined.Notifications, contentDescription = null) }, StringCategory.NOTIFICATION),
+    CALLS("Calls", { Icon(Icons.Outlined.Call, contentDescription = null) }, StringCategory.CALL),
+    TUTORIAL("Tutorial", { Icon(Icons.Outlined.School, contentDescription = null) }, StringCategory.TUTORIAL),
+    OTHER("Other", { Icon(Icons.Outlined.MoreHoriz, contentDescription = null) }, StringCategory.OTHER)
+}
+
+/**
+ * Get strings for a checker category
+ */
+fun getStringsForCheckerCategory(category: StringCheckerCategory): List<Pair<Int, String>> {
+    return if (category == StringCheckerCategory.ALL) {
+        getAllStringResources()
+    } else {
+        category.stringCategory?.let { getStringsByCategory(it) } ?: emptyList()
+    }
 }
 
 /**
  * Unified Language Strings Checker Card for Developer Section
- * Consolidates Core, General Settings, and Dev Options string checkers into one expandable menu
+ * COMPREHENSIVE VERSION: Dynamically discovers ALL string resources
+ * Organizes them by category for easy translation tracking
  */
 @Composable
 fun LanguageStringsCheckerCard() {
     val context = LocalContext.current
     var expanded by remember { mutableStateOf(false) }
-    var selectedCategory by remember { mutableStateOf(StringCheckerCategory.CORE) }
+    var selectedCategory by remember { mutableStateOf(StringCheckerCategory.ALL) }
     var languageStatuses by remember { mutableStateOf<Map<StringCheckerCategory, List<LanguageStatus>>>(emptyMap()) }
     var isLoading by remember { mutableStateOf(false) }
     var selectedLanguage by remember { mutableStateOf<LanguageStatus?>(null) }
+
+    // Cache the total string count
+    val totalStringCount = remember { getAllStringResources().size }
+    val categoryCounts = remember {
+        StringCheckerCategory.entries.associateWith { cat ->
+            getStringsForCheckerCategory(cat).size
+        }
+    }
 
     // Load data when expanded
     LaunchedEffect(expanded, selectedCategory) {
         if (expanded && !languageStatuses.containsKey(selectedCategory)) {
             isLoading = true
-            val stringsToCheck = when (selectedCategory) {
-                StringCheckerCategory.CORE -> CORE_STRINGS_TO_CHECK
-                StringCheckerCategory.GENERAL_SETTINGS -> GENERAL_SETTINGS_STRINGS_TO_CHECK
-                StringCheckerCategory.DEV_OPTIONS -> DEV_OPTIONS_STRINGS_TO_CHECK
-            }
+            val stringsToCheck = getStringsForCheckerCategory(selectedCategory)
             val statuses = SUPPORTED_LANGUAGES.map { (code, _) ->
                 checkLanguageStrings(context, code, stringsToCheck)
             }
@@ -379,15 +455,12 @@ fun LanguageStringsCheckerCard() {
                     Spacer(Modifier.width(12.dp))
                     Column {
                         Text(
-                            text = "Language Strings Checker",
+                            text = "Comprehensive String Checker",
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
-                        val totalStrings = CORE_STRINGS_TO_CHECK.size +
-                            GENERAL_SETTINGS_STRINGS_TO_CHECK.size +
-                            DEV_OPTIONS_STRINGS_TO_CHECK.size
                         Text(
-                            text = "$totalStrings total strings · ${SUPPORTED_LANGUAGES.size} languages",
+                            text = "$totalStringCount total strings · ${SUPPORTED_LANGUAGES.size} languages · ${StringCheckerCategory.entries.size} categories",
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -402,7 +475,7 @@ fun LanguageStringsCheckerCard() {
             // Expanded content
             AnimatedVisibility(visible = expanded) {
                 Column(modifier = Modifier.padding(top = 16.dp)) {
-                    // Category tabs
+                    // Category tabs - scrollable since we have many categories
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -411,22 +484,24 @@ fun LanguageStringsCheckerCard() {
                     ) {
                         StringCheckerCategory.entries.forEach { category ->
                             val isSelected = selectedCategory == category
-                            val stringCount = when (category) {
-                                StringCheckerCategory.CORE -> CORE_STRINGS_TO_CHECK.size
-                                StringCheckerCategory.GENERAL_SETTINGS -> GENERAL_SETTINGS_STRINGS_TO_CHECK.size
-                                StringCheckerCategory.DEV_OPTIONS -> DEV_OPTIONS_STRINGS_TO_CHECK.size
-                            }
+                            val stringCount = categoryCounts[category] ?: 0
 
-                            FilterChip(
-                                selected = isSelected,
-                                onClick = { selectedCategory = category },
-                                label = {
-                                    Text("${category.title} ($stringCount)")
-                                },
-                                leadingIcon = {
-                                    category.icon()
-                                }
-                            )
+                            // Only show categories that have strings
+                            if (stringCount > 0 || category == StringCheckerCategory.ALL) {
+                                FilterChip(
+                                    selected = isSelected,
+                                    onClick = { selectedCategory = category },
+                                    label = {
+                                        Text(
+                                            "${category.title} ($stringCount)",
+                                            maxLines = 1
+                                        )
+                                    },
+                                    leadingIcon = {
+                                        category.icon()
+                                    }
+                                )
+                            }
                         }
                     }
 

@@ -1,8 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <resources>
     <string name="app_name">NeuroComet</string>
-
-    <!-- Auth Screen -->
     <string name="auth_app_tagline">Een veilige plek voor elke geest ✨</string>
     <string name="auth_sign_in">Inloggen</string>
     <string name="auth_sign_up">Registreren</string>
@@ -24,8 +22,6 @@
     <string name="auth_2fa_verify">Verifiëren</string>
     <string name="auth_hide_password">Wachtwoord verbergen</string>
     <string name="auth_show_password">Wachtwoord tonen</string>
-
-    <!-- Auth Tutorial -->
     <string name="auth_tutorial_welcome_title">Welkom thuis 💜</string>
     <string name="auth_tutorial_welcome_desc">NeuroComet is een veilige, bevestigende ruimte voor neurodiverse en LGBTQ+ geesten. Je hoort hier precies zoals je bent—geen masker nodig.</string>
     <string name="auth_tutorial_comfort_title">Jouw comfort telt ∞</string>
@@ -46,8 +42,6 @@
     <string name="auth_tutorial_lets_go">Laten we gaan! ✨</string>
     <string name="auth_tutorial_step_count">%1$d van %2$d</string>
     <string name="auth_tutorial_tap_here">Tik hier</string>
-
-    <!-- Splash Screen -->
     <string name="splash_tagline_default">Een ruimte ontworpen voor jou</string>
     <string name="splash_tagline_hyperfocus">Afleidingsvrije zone</string>
     <string name="splash_tagline_overload">Lage stimulatie modus</string>
@@ -74,8 +68,6 @@
     <string name="splash_tagline_mood_overwhelmed">We nemen het rustig</string>
     <string name="splash_tagline_mood_creative">Laat ideeën stromen</string>
     <string name="splash_tagline_rainbow_brain">Omarm je regenboogbrein</string>
-
-    <!-- Splash Messages -->
     <string name="splash_msg_default_1">Welkom terug</string>
     <string name="splash_msg_default_2">Je ruimte wacht</string>
     <string name="splash_msg_default_3">Laten we beginnen</string>
@@ -156,8 +148,6 @@
     <string name="splash_msg_rainbow_3">✨ Neurodiversiteit is magie</string>
     <string name="splash_msg_rainbow_4">🧠 Je brein is prachtig</string>
     <string name="splash_msg_rainbow_5">💜 Anders zijn is krachtig</string>
-
-    <!-- NeuroState Categories -->
     <string name="neuro_category_basic">Basis Thema\'s</string>
     <string name="neuro_category_adhd">ADHD Thema\'s</string>
     <string name="neuro_category_autism">Autisme Thema\'s</string>
@@ -167,8 +157,6 @@
     <string name="neuro_category_blind">Blind en Slechtziend</string>
     <string name="neuro_category_mood">Hoe voel je je?</string>
     <string name="neuro_category_secret">🦄 Geheime Thema\'s</string>
-
-    <!-- NeuroState Names -->
     <string name="neuro_state_default">Standaard</string>
     <string name="neuro_state_hyperfocus">Hyperfocus</string>
     <string name="neuro_state_overload">Sensorische Overbelasting</string>
@@ -195,8 +183,6 @@
     <string name="neuro_state_mood_overwhelmed">Overweldigd Voelen</string>
     <string name="neuro_state_mood_creative">Creatief Voelen</string>
     <string name="neuro_state_rainbow_brain">Regenboog Brein</string>
-
-    <!-- NeuroState Descriptions -->
     <string name="neuro_state_default_desc">Standaard thema met gebalanceerde kleuren</string>
     <string name="neuro_state_hyperfocus_desc">Hoog contrast voor diepe concentratie</string>
     <string name="neuro_state_overload_desc">Gedempte, kalme kleuren om stimulatie te verminderen</string>
@@ -223,25 +209,17 @@
     <string name="neuro_state_mood_overwhelmed_desc">Vereenvoudigd, rustig palet</string>
     <string name="neuro_state_mood_creative_desc">Inspirerende kleuren om verbeelding aan te wakkeren</string>
     <string name="neuro_state_rainbow_brain_desc">Vier je prachtig unieke neurodiverse geest! 🌈🧠</string>
-
-    <!-- Accessibility Strings -->
     <string name="accessibility_selected">geselecteerd</string>
     <string name="accessibility_not_selected">niet geselecteerd</string>
     <string name="expand_category">%1$s uitvouwen</string>
     <string name="collapse_category">%1$s invouwen</string>
-
-    <!-- Easter Egg Dialog -->
     <string name="easter_egg_secret_unlocked">🎊 Geheim ontgrendeld! 🎊</string>
     <string name="easter_egg_welcome_back">🦄 Welkom terug! 🦄</string>
-
-    <!-- Navigation/Screen Titles -->
     <string name="nav_feed">Feed</string>
     <string name="nav_explore">Ontdekken</string>
     <string name="nav_messages">Berichten</string>
     <string name="nav_notifications">Meldingen</string>
     <string name="nav_settings">Instellingen</string>
-
-    <!-- Direct Messages (DM) -->
     <string name="dm_title">Berichten</string>
     <string name="dm_search_placeholder">Zoek in berichten</string>
     <string name="dm_empty_title">Nog geen gesprekken</string>
@@ -280,15 +258,11 @@
     <string name="dm_blocked_banner">Je hebt deze gebruiker geblokkeerd.</string>
     <string name="dm_rate_limited">Te veel berichten. Rustig aan alsjeblieft.</string>
     <string name="dm_send_failed">Bericht niet verzonden. Tik om opnieuw te proberen.</string>
-
-    <!-- Status Indicators -->
     <string name="status_online">Online</string>
     <string name="status_offline">Offline</string>
     <string name="status_blocked">Geblokkeerd</string>
     <string name="status_muted">Gedempt</string>
     <string name="status_away">Afwezig</string>
-
-    <!-- Settings Screen -->
     <string name="settings_profile_group">Profiel</string>
     <string name="settings_badges_title">Badges</string>
     <string name="settings_badges_subtitle">Bekijk je behaalde prestaties en doelen.</string>
@@ -330,8 +304,6 @@
     <string name="settings_nuke_db_dialog_cancel">Annuleren</string>
     <string name="settings_language_test_title">App Taal (Test)</string>
     <string name="settings_language_test_subtitle">Taal handmatig instellen. Vereist herstart van de app.</string>
-
-    <!-- Badges Screen -->
     <string name="badges_screen_title">Jouw Badges</string>
     <string name="badges_earned_section_title">Behaalde Badges</string>
     <string name="badges_locked_section_title">Vergrendelde Badges</string>
@@ -343,27 +315,19 @@
     <string name="badge_name_hyperfocus_master">HyperFocus Meester</string>
     <string name="badge_name_community_pillar">Gemeenschapspijler</string>
     <string name="badge_name_quiet_achiever">Stille Presteerder</string>
-
-    <!-- Comment Sheet -->
     <string name="comments_title">Reacties</string>
     <string name="comments_add_comment_placeholder">Voeg een reactie toe…</string>
     <string name="comments_send_button_description">Versturen</string>
-
-
-    <!-- Text Scale Factor Names -->
     <string name="text_scale_small">Klein</string>
     <string name="text_scale_medium">Gemiddeld</string>
     <string name="text_scale_large">Groot</string>
     <string name="text_scale_xlarge">Extra Groot</string>
-
-    <!-- Story & Post Creation -->
     <string name="create_post_title">Bericht maken</string>
     <string name="create_post_hint">Wat houdt je bezig?</string>
     <string name="create_post_image_url_hint">Optioneel: Afbeeldings-URL</string>
     <string name="create_post_video_url_hint">Optioneel: Video-URL</string>
     <string name="create_post_button">PLAATSEN</string>
     <string name="create_post_cancel">Annuleren</string>
-
     <string name="create_story_title">Nieuw Verhaal maken</string>
     <string name="create_story_image_url_hint">Afbeeldings-URL voor je verhaal</string>
     <string name="create_story_duration_hint">Duur in seconden (bijv., 5)</string>
@@ -372,13 +336,9 @@
     <string name="story_add_button_content_description">Verhaal toevoegen</string>
     <string name="story_your_story_label">Jouw Verhaal</string>
     <string name="story_user_story_content_description">Verhaal van %s</string>
-
-    <!-- Moments/Stories Section -->
     <string name="moments_title">Momenten</string>
     <string name="moments_new_count">%d nieuw</string>
     <string name="moments_your_story">Jouw verhaal</string>
-
-    <!-- Story Screen (Viewer) -->
     <string name="story_content_description">Verhaal inhoud</string>
     <string name="story_close_button_content_description">Verhaal sluiten</string>
     <string name="story_delete_button_content_description">Verhaal verwijderen</string>
@@ -386,20 +346,14 @@
     <string name="story_delete_dialog_text">Dit zal dit verhaal permanent verwijderen. Deze actie kan niet ongedaan worden gemaakt.</string>
     <string name="story_delete_dialog_confirm">VERWIJDEREN</string>
     <string name="story_delete_dialog_cancel">Annuleren</string>
-
-    <!-- Toast Messages -->
     <string name="simulate_badge_notification_toast">Gesimuleerd: Nieuwe Badge Melding!</string>
     <string name="notification_badge_earned_title">Badge behaald: %s</string>
     <string name="notification_badge_earned_message">Je hebt de prestatie behaald: %s</string>
-
-    <!-- Notification Custom View -->
     <string name="notification_icon_description">Melding icoon</string>
     <string name="notification_action_dismiss">Negeren</string>
     <string name="notification_action_reply">Beantwoorden</string>
     <string name="notification_action_view">Bekijken</string>
     <string name="notification_action_mark_read">Markeren als gelezen</string>
-
-    <!-- Generic content descriptions for FeedScreen -->
     <string name="user_avatar_content_description">Gebruiker Avatar</string>
     <string name="unknown_user_id">Onbekend</string>
     <string name="more_options_content_description">Meer opties</string>
@@ -407,8 +361,6 @@
     <string name="share_button_content_description">Delen</string>
     <string name="comment_button_content_description">Reageren</string>
     <string name="like_button_content_description">Vind ik leuk</string>
-
-    <!-- Post Actions -->
     <string name="post_following_indicator">• Volgt</string>
     <string name="post_follow_user">Volg @%s</string>
     <string name="post_unfollow_user">Ontvolg @%s</string>
@@ -430,18 +382,12 @@
     <string name="post_block_user">Blokkeer @%s</string>
     <string name="post_report_post">Bericht melden</string>
     <string name="post_delete_post">Bericht verwijderen</string>
-
-    <!-- Report Dialog -->
     <string name="report_dialog_title">Inhoud melden</string>
     <string name="report_dialog_reason_hint">Vertel ons meer (optioneel)</string>
     <string name="report_dialog_submit">Melding verzenden</string>
     <string name="report_dialog_cancel">Annuleren</string>
-
-    <!-- Premium Dialog -->
     <string name="premium_dialog_title">Premium</string>
     <string name="premium_dialog_message">Premium-upgrades zijn niet gekoppeld in deze demo-versie.</string>
-
-    <!-- Common Buttons -->
     <string name="button_ok">OK</string>
     <string name="button_cancel">Annuleren</string>
     <string name="button_yes">Ja</string>
@@ -450,8 +396,6 @@
     <string name="button_save">Opslaan</string>
     <string name="button_delete">Verwijderen</string>
     <string name="button_edit">Bewerken</string>
-
-    <!-- Menu Items -->
     <string name="menu_view_profile">Profiel bekijken</string>
     <string name="menu_search_chat">Zoeken in chat</string>
     <string name="menu_mute_notifications">Meldingen dempen</string>
@@ -462,8 +406,6 @@
     <string name="menu_copy_link">Link kopiëren</string>
     <string name="menu_hide">Verbergen</string>
     <string name="menu_report">Melden</string>
-
-    <!-- Toast Messages -->
     <string name="toast_profile_coming_soon">Profiel komt binnenkort! 👤</string>
     <string name="toast_search_coming_soon">Zoeken komt binnenkort! 🔍</string>
     <string name="toast_notifications_muted">Meldingen gedempt 🔕</string>
@@ -474,8 +416,6 @@
     <string name="toast_shared">Gedeeld!</string>
     <string name="toast_reported">Gemeld, bedankt!</string>
     <string name="toast_hidden">Verborgen uit feed</string>
-
-    <!-- Message Actions -->
     <string name="action_copy">Kopiëren</string>
     <string name="action_react">Reageren…</string>
     <string name="action_retry">Opnieuw proberen</string>
@@ -483,22 +423,16 @@
     <string name="action_unpin">Losmaken</string>
     <string name="action_archive">Archiveren</string>
     <string name="action_delete_chat">Chat verwijderen</string>
-
-    <!-- Explore Screen -->
     <string name="explore_title">Verkennen</string>
     <string name="explore_subtitle">Ontdek gemeenschappen en bronnen</string>
     <string name="explore_featured">Uitgelicht</string>
     <string name="explore_trending">Trending</string>
     <string name="explore_for_you">Voor jou</string>
     <string name="explore_search_placeholder">Zoek onderwerpen…</string>
-
-    <!-- Notifications Screen -->
     <string name="notifications_title">Meldingen</string>
     <string name="notifications_empty">Geen meldingen</string>
     <string name="notifications_mark_all_read">Alles als gelezen markeren</string>
     <string name="notifications_unread_count">%d ongelezen</string>
-
-    <!-- Feed Screen -->
     <string name="feed_title">Feed</string>
     <string name="feed_empty">Geen berichten</string>
     <string name="feed_refresh">Trek om te vernieuwen</string>
@@ -509,26 +443,18 @@
     <string name="feed_removed_from_saved">Verwijderd uit opgeslagen</string>
     <string name="feed_save_post">Bericht opslaan</string>
     <string name="feed_content_hidden_kids">Inhoud verborgen voor kindermodus</string>
-
-    <!-- Create Post Dialog -->
     <string name="create_post_tone_label">Toon</string>
     <string name="create_post_add_image">Afbeelding toevoegen</string>
     <string name="create_post_add_video">Video toevoegen</string>
     <string name="create_post_posting">Plaatsen…</string>
-
-    <!-- Hide Post -->
     <string name="post_hide">Bericht verbergen</string>
     <string name="post_hidden">Bericht verborgen</string>
-
-    <!-- Dev Options -->
     <string name="dev_options_title">Ontwikkelaarsopties</string>
     <string name="dev_phone_format_test">Telefoonnummer Opmaak</string>
     <string name="dev_phone_format_test_desc">Test automatische opmaak voor verschillende regio\'s</string>
     <string name="dev_phone_format_style">Opmaakstijl</string>
     <string name="dev_phone_test_input">Voer telefoonnummer in</string>
     <string name="dev_phone_format_pattern">Patroon</string>
-
-    <!-- Mock Notifications -->
     <string name="mock_notif_welcome_title">Welkom bij NeuroComet! 👋</string>
     <string name="mock_notif_welcome_msg">We zijn zo blij dat je hier bent. Dit is een veilige plek ontworpen voor neurodivergente geesten.</string>
     <string name="mock_notif_badge_title">Nieuwe badge verdiend</string>
@@ -542,13 +468,11 @@
     <string name="mock_notif_mention_title">Je bent genoemd</string>
     <string name="mock_notif_mention_msg">@%s noemde je: \"Bekijk deze toegankelijkheidstip!\"</string>
     <string name="mock_notif_repost_title">Je bericht is gedeeld</string>
-    <string name="mock_notif_repost_msg">%s deelde je bericht over ADHD-tips met %d volgers</string>
+    <string name="mock_notif_repost_msg" formatted="false">%s deelde je bericht over ADHD-tips met %d volgers</string>
     <string name="mock_notif_safety_title">Veiligheidsherinnering</string>
     <string name="mock_notif_safety_msg">Vergeet niet om pauzes te nemen! Je bent al een tijdje actief. 💙</string>
     <string name="mock_notif_filtered_title">Inhoud gefilterd</string>
     <string name="mock_notif_filtered_msg">We hebben inhoud verborgen die mogelijk niet geschikt is. Je kunt dit aanpassen in instellingen.</string>
-
-    <!-- Mock Posts - Kids -->
     <string name="mock_post_puzzle">🌈 Net mijn regenboogpuzzel afgemaakt! 1000 stukjes voltooid! Wie houdt er nog meer van puzzels? 🧩</string>
     <string name="mock_post_dinosaur">Vandaag leerde ik dat dinosauriërs miljoenen jaren geleden leefden! 🦕 T-Rex is mijn favoriet!</string>
     <string name="mock_post_cat">Mijn kat leerde vandaag een nieuw trucje! Ze kan nu high-fiven! 🐱✋ Zo trots op haar!</string>
@@ -557,42 +481,30 @@
     <string name="mock_post_dog">🐕 Mijn hond is mijn beste helper! Hij zit bij me als ik huiswerk maak en dat maakt me rustig! 🐾</string>
     <string name="mock_post_reading">📖 Leestijd is het BESTE! Ik ben bij hoofdstuk 10 van mijn favoriete boekenreeks! Wie houdt er nog meer van lezen? 📚</string>
     <string name="mock_post_art">🎨 Tekenles was zo leuk vandaag! We schilderden zonsondergangen en de mijne heeft ALLE kleuren! 🌅</string>
-
-    <!-- Mock Posts - Teen -->
     <string name="mock_post_hyperfocus">Net een doorbraak gehad in mijn project! Hyperfocus is een superkracht als je het kunt sturen. Nachtelijke codeersessies voelen anders.</string>
     <string name="mock_post_weighted_vest">Mijn nieuwe verzwaarde vest uitproberen vandaag. Direct rust, sterk aanbevolen voor sensorische regulatie! Helpt ook bij mijn angst tijdens examens.</string>
     <string name="mock_post_dating_adhd">Daten met ADHD is wild. Hyperfocussen op iemand nieuws en dan 3 dagen compleet vergeten te antwoorden 😅 Iemand anders?</string>
     <string name="mock_post_school_stress">Schoolstress is nu echt. Tussentoetsen + sociale angst = een week in mijn kamer willen verstoppen. Gelukkig helpen mijn noise-cancelling koptelefoon.</string>
-
-    <!-- Mock Posts - Adult -->
     <string name="mock_post_quiet_space">Heb een rustige ruimte nodig. Ga in Overbelasting Modus voor de rest van de middag. Tot morgen. #StilleModus</string>
     <string name="mock_post_organizing">Net klaar met het sorteren van al mijn projectbestanden in gecategoriseerde mappen. De visuele orde is immens bevredigend. Mijn therapeut zegt dat dit een gezond copingmechanisme is.</string>
     <string name="mock_post_workplace">Werkplekaanpassingen zijn eindelijk op hun plek! Kostte 6 maanden advocacy maar mijn rustige werkplek is goedgekeurd. HR was verrassend ondersteunend toen ik de documentatie leverde.</string>
     <string name="mock_post_adulting">Volwassen zijn met ADHD: Vergat weer de huur te betalen, maar herinnerde op de een of andere manier elke dialoogregel van een film die ik 10 jaar geleden zag. Mijn huisbaas is niet geamuseerd.</string>
     <string name="mock_post_late_diagnosis">PSA: Als volwassene gediagnosticeerd worden is valide. Kreeg de mijne op 34 en opeens heeft mijn hele leven zin. De rouw om \"wat had kunnen zijn\" is echt maar ook de opluchting om jezelf eindelijk te begrijpen.</string>
-
-    <!-- Mock DM Conversations -->
     <string name="mock_dm_hey">Hey! Ik hou van je berichten over sensorische tips! 💜</string>
     <string name="mock_dm_thanks">Heel erg bedankt! Jouw content is ook super nuttig!</string>
     <string name="mock_dm_question">Snelle vraag over dat fidget speeltje dat je aanraadde?</string>
     <string name="mock_dm_sure">Natuurlijk, graag gedaan! Wat wil je weten?</string>
-
-    <!-- Additional Feed Posts -->
     <string name="mock_post_workspace">✨ Eindelijk mijn sensorisch-vriendelijke werkplek ingericht! Noise-cancelling koptelefoon, zachte verlichting en mijn verzwaarde schootkussen. Game changer voor focus! 🎧💡</string>
     <string name="mock_post_brain_different">Herinnering: Je brein werkt anders, niet verkeerd. 🧠💜 Omarm je unieke manier van de wereld verwerken!</string>
     <string name="mock_post_body_doubling">Net body doubling ontdekt op NeuroComet en WOW. 3 uur achter elkaar gestudeerd met mijn virtuele studiebuddy! 📚🎉 Vindt iemand anders dit ook nuttig?</string>
     <string name="mock_post_stim_toys">Mijn stim speeltjes collectie groeit! 🌈 Deze fidget tools hebben me zo geholpen in vergaderingen. Geen schaamte voor stimmen! ✨</string>
     <string name="mock_post_launch_pad">Pro tip: Maak een \'lanceerplatform\' bij je deur met alles wat je nodig hebt voor de dag. Sleutels, portemonnee, medicijnen, snacks - alles op één plek! 🚀 ADHD life hack #247</string>
     <string name="mock_post_lunch_win">Overwinning van vandaag: Ik herinnerde me om te lunchen! 🎊 Telefoonalarmen zetten voor basisbehoeften is zelfzorg. Laat niemand je anders vertellen. 💪</string>
-
-    <!-- Notification Filters -->
     <string name="filter_all">Alles</string>
     <string name="filter_unread">Ongelezen</string>
     <string name="filter_mentions">Vermeldingen</string>
     <string name="filter_likes">Vind-ik-leuks</string>
     <string name="filter_follows">Volgers</string>
-
-    <!-- Mock DM Messages -->
     <string name="mock_dm_conv1_msg1">Hey, hoe voel je je vandaag?</string>
     <string name="mock_dm_conv1_msg2">Goed, bedankt! Gewoon relaxen.</string>
     <string name="mock_dm_conv2_msg1">Heb je die nieuwe oplichting post gezien? Trap er niet in!</string>
@@ -625,14 +537,10 @@
     <string name="mock_dm_conv8_msg1">Lage energie dag vandaag 😴 Hoe gaat het bij jou?</string>
     <string name="mock_dm_conv8_msg2">Zelfde hier. Besloten om alle niet-essentiële plannen te annuleren.</string>
     <string name="mock_dm_conv8_msg3">Slim! Zelfzorg is niet egoïstisch. Rust lekker uit! 💜</string>
-
-    <!-- Explore Categories -->
     <string name="explore_adhd">ADHD</string>
     <string name="explore_autism">Autisme</string>
     <string name="explore_sensory">Sensorisch</string>
     <string name="explore_anxiety">Angst</string>
-
-    <!-- Settings Sections -->
     <string name="settings_section_account">Account</string>
     <string name="settings_section_premium">Premium</string>
     <string name="settings_section_appearance">Uiterlijk en Weergave</string>
@@ -642,8 +550,6 @@
     <string name="settings_section_safety">Veiligheid en Welzijn</string>
     <string name="settings_section_support">Hulp en Ondersteuning</string>
     <string name="settings_section_about">Over</string>
-
-    <!-- Settings Items -->
     <string name="settings_my_profile">Mijn Profiel</string>
     <string name="settings_my_profile_desc">Bekijk en bewerk je profiel, energiestatus en voorkeuren</string>
     <string name="settings_premium_active">Premium Actief ✨</string>
@@ -695,8 +601,6 @@
     <string name="settings_terms">Servicevoorwaarden</string>
     <string name="settings_privacy_policy">Privacybeleid</string>
     <string name="settings_licenses">Open Source Licenties</string>
-
-    <!-- Explore Section Titles -->
     <string name="explore_section_daily_living">Dagelijks Leven</string>
     <string name="explore_section_sensory">Sensorisch en Regulatie</string>
     <string name="explore_section_social">Sociaal en Communicatie</string>
@@ -704,8 +608,6 @@
     <string name="explore_section_interests">Speciale Interesses en Hobby\'s</string>
     <string name="explore_section_health">Gezondheid en Welzijn</string>
     <string name="explore_section_family">Familie en Ouderschap</string>
-
-    <!-- Explore Topic Names -->
     <string name="explore_topic_adhd_hacks">ADHD Hacks</string>
     <string name="explore_topic_adhd_hacks_desc">Productiviteitstips, tijdsbeheer en lifehacks voor ADHD-breinen</string>
     <string name="explore_topic_safe_foods">Veilig Eten</string>
@@ -754,8 +656,6 @@
     <string name="explore_topic_parenting_desc">Neurodiverse ouders en ND kinderen opvoeden</string>
     <string name="explore_topic_late_diagnosed">Laat Gediagnosticeerd</string>
     <string name="explore_topic_late_diagnosed_desc">Ervaringen met diagnose als volwassene en identiteitsverkenning</string>
-
-    <!-- LGBTQ+ Explore Topics -->
     <string name="explore_section_lgbtq">LGBTQ+ en Identiteit</string>
     <string name="explore_topic_lgbtq_nd">LGBTQ+ en Neurodivers</string>
     <string name="explore_topic_lgbtq_nd_desc">De kruising van queer en neurodiverse identiteiten vieren</string>
@@ -769,15 +669,11 @@
     <string name="explore_topic_nonbinary_desc">Non-binaire, genderqueer en gender-fluid gemeenschap</string>
     <string name="explore_topic_coming_out">Coming Out Verhalen</string>
     <string name="explore_topic_coming_out_desc">Coming out reizen delen en acceptatie vinden</string>
-
-    <!-- Explore Stats -->
     <string name="explore_members">%s leden</string>
     <string name="explore_posts">%s berichten</string>
     <string name="explore_popular">Populair</string>
     <string name="explore_new">Nieuw</string>
     <string name="explore_see_all">Alles bekijken</string>
-
-    <!-- Quick Tips & Tricks -->
     <string name="tips_title">Snelle Tips en Trucs</string>
     <string name="tips_tap_expand">Tik om %d handige tips te zien</string>
     <string name="tips_tap_collapse">Tik om in te klappen</string>
@@ -792,7 +688,7 @@
     <string name="tip_readability_title">Betere Leesbaarheid</string>
     <string name="tip_readability_desc">Probeer Lexend of Atkinson Hyperlegible lettertypen - ontworpen voor neurodiverse lezers</string>
     <string name="tip_calm_title">Rustige Ervaring</string>
-    <string name="tip_calm_desc">Schakel alle animaties uit in Instellingen > Animaties en gebruik het Kalm of Overbelasting thema</string>
+    <string name="tip_calm_desc">Schakel alle animaties uit in Instellingen &gt; Animaties en gebruik het Kalm of Overbelasting thema</string>
     <string name="tip_focus_title">Blijf Gefocust</string>
     <string name="tip_focus_desc">Gebruik ADHD Taakmodus thema + Hyperfocus voor minimale afleidingen</string>
     <string name="tip_kids_title">Bescherm Kinderen</string>
@@ -802,21 +698,15 @@
     <string name="tip_themes_title">25+ Thema\'s</string>
     <string name="tip_themes_desc">Ontdek thema\'s voor ADHD, Autisme, Angst, Kleurenblindheid, Slechtziendheid en je huidige stemming</string>
     <string name="tip_fonts_title">12+ Lettertypen</string>
-    <string name="tip_fonts_desc">Kies uit dyslexie-vriendelijke, ADHD-vriendelijke en toegankelijkheidslettertypen in Instellingen > Lettertype en Lezen</string>
-
-    <!-- App Tutorial -->
+    <string name="tip_fonts_desc">Kies uit dyslexie-vriendelijke, ADHD-vriendelijke en toegankelijkheidslettertypen in Instellingen &gt; Lettertype en Lezen</string>
     <string name="tutorial_title">App Tutorial</string>
     <string name="tutorial_description">Bekijk de startgids opnieuw</string>
-
-    <!-- Developer Section -->
     <string name="settings_section_developer">Ontwikkelaar</string>
     <string name="settings_developer_subtitle">Debug- en testtools</string>
     <string name="settings_fake_premium">Nep Premium Modus</string>
     <string name="settings_fake_premium_enabled">Premium functies ontgrendeld voor testen</string>
     <string name="settings_fake_premium_disabled">Activeer om premium functies te testen</string>
     <string name="settings_dev_options_desc">Geavanceerde opties voor testen en debuggen</string>
-
-    <!-- NeuroGames - Stim-vriendelijke Spellen -->
     <string name="games_hub_title">NeuroSpellen</string>
     <string name="games_subtitle">Stim-vriendelijk plezier voor je hersenen</string>
     <string name="games_play_now">Speel Spellen</string>
@@ -829,8 +719,6 @@
     <string name="games_requires_achievements">Vereist %d prestaties</string>
     <string name="games_coming_soon">Binnenkort</string>
     <string name="games_coming_soon_message">Dit spel is nog in ontwikkeling. Kom snel terug!</string>
-
-    <!-- Individuele Spellen -->
     <string name="game_bubble_pop">Bubbels Poppen</string>
     <string name="game_bubble_pop_desc">Pop bevredigende bubbels voor een kalmerende stim-ervaring</string>
     <string name="game_bubble_pop_hint">Tik op de bubbels om ze te poppen! ✨</string>
@@ -842,10 +730,13 @@
     <string name="game_color_flow_hint">Tik ergens om de kleuren te veranderen</string>
     <string name="game_pattern_tap">Patroon Tikken</string>
     <string name="game_pattern_tap_desc">Tik patronen in volgorde - geweldig voor focustraining</string>
+    <string name="game_pattern_tap_hint">Bekijk het patroon en tik de tegels in volgorde! 🎯</string>
     <string name="game_infinity_draw">Oneindig Tekenen</string>
     <string name="game_infinity_draw_desc">Teken eindeloze patronen die nooit vervagen - pure stim-gelukzaligheid</string>
+    <string name="game_infinity_draw_hint">Sleep je vinger om te tekenen - maak wat je wilt! ✨</string>
     <string name="game_sensory_rain">Zintuiglijke Regen</string>
     <string name="game_sensory_rain_desc">Bekijk prachtige regendruppels vallen met rustgevende beelden</string>
+    <string name="game_sensory_rain_hint">Pas de schuifregelaar aan voor meer regen. Tik om rimpelingen te maken! 🌧️</string>
     <string name="game_breathing_bubbles">Ademhalingsbellen</string>
     <string name="game_breathing_bubbles_desc">Volg de bel om rustige ademhaling te oefenen</string>
     <string name="game_breathing_bubbles_hint">Adem in als de bel groeit, uit als hij krimpt 🫧</string>
@@ -855,24 +746,33 @@
     <string name="game_sound_garden">Geluidstuin</string>
     <string name="game_sound_garden_desc">Creëer sfeervolle geluidslandschappen door geluidsbloemen te planten</string>
     <string name="game_sound_garden_hint">Tik om te planten, houd ingedrukt om te verwijderen. Laag geluiden! 🌸</string>
-
-    <!-- Games in Ontwikkeling -->
     <string name="game_stim_sequencer">Stim Sequencer</string>
     <string name="game_stim_sequencer_desc">Maak je eigen bevredigende ritmepatronen</string>
+    <string name="game_stim_sequencer_hint">Tik op pads om je beat te maken! Houd ingedrukt om te wissen 🎵</string>
     <string name="game_emotion_garden">Emotietuin</string>
     <string name="game_emotion_garden_desc">Kweek bloemen die je gevoelens vertegenwoordigen</string>
+    <string name="game_emotion_garden_hint">Tik om een emotiebloem te planten, kijk hoe het groeit! 🌸</string>
     <string name="game_safe_space">Veilige Ruimte Bouwer</string>
     <string name="game_safe_space_desc">Ontwerp je eigen kalmerende virtuele kamer</string>
+    <string name="game_safe_space_hint">Voeg items toe om je perfecte rustige ruimte te creëren 🏠</string>
     <string name="game_worry_jar">Zorgenpot</string>
     <string name="game_worry_jar_desc">Schrijf zorgen op en kijk hoe ze wegdrijven</string>
+    <string name="game_worry_jar_hint">Typ een zorg en laat het los in de pot ✨</string>
+    <string name="game_constellation_connect">Sterrenbeeld Verbinden</string>
+    <string name="game_constellation_connect_desc">Teken lijnen tussen sterren om sterrenbeelden te maken</string>
+    <string name="game_constellation_connect_hint">Verbind de sterren om patronen te onthullen ⭐</string>
+    <string name="game_zen_sand">Zen Zandtuin</string>
+    <string name="game_zen_sand_desc">Teken kalmerende patronen in virtueel zand</string>
+    <string name="game_zen_sand_hint">Trek je vinger om rimpelingen te maken 🏝️</string>
+    <string name="game_mood_mixer">Stemmingsmixer</string>
+    <string name="game_mood_mixer_desc">Meng kleuren om bij je huidige stemming te passen</string>
+    <string name="game_mood_mixer_hint">Sleep kleuren samen om nieuwe gevoelens te creëren 🎨</string>
     <string name="game_coming_soon">Binnenkort</string>
     <string name="game_in_development">🚧 In Ontwikkeling</string>
-
-    <!-- Topic Detail Scherm -->
     <string name="topic_not_found">Onderwerp niet gevonden</string>
     <string name="topic_share">Onderwerp Delen</string>
     <string name="topic_more_options_soon">Meer opties binnenkort! ⚙️</string>
-    <string name="topic_members_posts">%s leden • %s berichten</string>
+    <string name="topic_members_posts" formatted="false">%s leden • %s berichten</string>
     <string name="topic_joined">Lid geworden</string>
     <string name="topic_join_community">Word Lid van Community</string>
     <string name="topic_tab_posts">Berichten</string>
@@ -880,8 +780,6 @@
     <string name="topic_tab_events">Evenementen</string>
     <string name="topic_tab_members">Leden</string>
     <string name="topic_share_text">Bekijk de %s community op NeuroComet! 🧠✨</string>
-
-    <!-- Topic Bronnen Sectie -->
     <string name="topic_resources_title">Bronnen</string>
     <string name="resource_getting_started">Startgids</string>
     <string name="resource_getting_started_desc">Leer de basis en community richtlijnen</string>
@@ -916,8 +814,6 @@
     <string name="resource_reading">Aanbevolen Lectuur</string>
     <string name="resource_reading_desc">Boeken en artikelen aanbevolen door leden</string>
     <string name="resource_reading_count">45 items</string>
-
-    <!-- Topic Evenementen Sectie -->
     <string name="topic_events_title">Aankomende Evenementen</string>
     <string name="event_weekly_chat">Wekelijkse Community Chat</string>
     <string name="event_weekly_chat_time">Elke zaterdag om 15:00 EST</string>
@@ -937,8 +833,6 @@
     <string name="event_live">LIVE</string>
     <string name="event_rsvp">RSVP</string>
     <string name="event_join">Deelnemen</string>
-
-    <!-- Topic Leden Sectie -->
     <string name="topic_members_title">Community Leden</string>
     <string name="member_role_moderator">Moderator</string>
     <string name="member_role_contributor">Top Bijdrager</string>
@@ -948,20 +842,13 @@
     <string name="member_role_new">Nieuw Lid</string>
     <string name="member_follow">Volgen</string>
     <string name="member_share">Delen</string>
-
-    <!-- Tijd Geleden Strings -->
     <string name="time_minutes_ago">%dm geleden</string>
     <string name="time_hours_ago">%du geleden</string>
     <string name="time_days_ago">%dd geleden</string>
-
-    <!-- Feedback Hub -->
     <string name="feedback_hub_title">Feedback Hub</string>
     <string name="feedback_report_bug_title">Bug Melden</string>
     <string name="feedback_request_feature_title">Functie Aanvragen</string>
     <string name="feedback_send_title">Feedback Verzenden</string>
-
-
-    <!-- Credential Storage Dev Options -->
     <string name="dev_credential_title">Inloggegevens Opslag</string>
     <string name="dev_credential_test_save">Test Opslaan</string>
     <string name="dev_credential_test_retrieve">Test Ophalen</string>
@@ -971,10 +858,744 @@
     <string name="dev_credential_create_session">Testsessie Aanmaken</string>
     <string name="dev_credential_end_session">Sessie Beëindigen</string>
     <string name="dev_credential_extend_session">Sessie Verlengen</string>
-
-    <!-- Debug Tools -->
     <string name="debug_tools_title">Debug Tools</string>
     <string name="debug_performance_overlay">Prestatie Overlay</string>
     <string name="debug_performance_desc">Toont FPS, geheugen en scroll statistieken</string>
     <string name="debug_reset_counters">Tellers Resetten</string>
+    <string name="post_stim_1_author">StimSquad</string>
+    <string name="post_stim_1_content">Nieuwe stim speelgoed review! Deze getextureerde fidget ring is ZO bevredigend. Stil genoeg voor vergaderingen, stimmig genoeg voor regulatie ✨</string>
+    <string name="post_stim_2_author">BlijeFladderaar</string>
+    <string name="post_stim_2_content">Normaliseer stimmen in het openbaar! Ik stond te wiegen in de supermarkt en een kind zei \'ze danst!\' Maakte mijn dag 💃</string>
+    <string name="post_stim_3_author">KauwSam</string>
+    <string name="post_stim_3_content">Voor mijn orale stimmers - kauwbare kettingen gevonden die eruitzien als echte sieraden. Discreet EN functioneel!</string>
+    <string name="post_stim_4_author">SpinnerSofie</string>
+    <string name="post_stim_4_content">Beweging is medicijn! Als ik niet openlijk kan stimmen, tik ik met mijn tenen onder mijn bureau. Subtiel maar helpt 🦶</string>
+    <string name="post_stim_5_author">SensorischZoeker</string>
+    <string name="post_stim_5_content">Een \'stim kit\' gebouwd voor mijn tas: kneedgum, getextureerde kaarten, fidget kubus. Altijd voorbereid op regulatiebehoeften!</string>
+    <string name="post_sensory_1_author">OverweldigdOllie</string>
+    <string name="post_sensory_1_content">Loop oordoppen VERANDERDEN MIJN LEVEN. Ik hoor nog steeds gesprekken maar het neemt de scherpte weg van overprikkelde omgevingen 🎧</string>
+    <string name="post_sensory_2_author">LichtgevoeligLuna</string>
+    <string name="post_sensory_2_content">Warmgetinte lampen + dimmers maakten mijn huis een veilige haven. Harde tl-lampen zijn verboden!</string>
+    <string name="post_sensory_3_author">LabelHaterTaylor</string>
+    <string name="post_sensory_3_content">Een uur besteed aan het verwijderen van alle kleding labels vandaag. Elke seconde waard. Waarom maken merken ze zo krassig?! 👕</string>
+    <string name="post_sensory_4_author">GeurGevoeligAlex</string>
+    <string name="post_sensory_4_content">Ongeparfumeerd alles is de weg. Een lijst gemaakt van echt geurvrije producten, deel het graag!</string>
+    <string name="post_sensory_5_author">StilleQuinn</string>
+    <string name="post_sensory_5_content">Een \'sensorische kaart\' van mijn stad gemaakt - stille cafés, laag-stimwinkels, toegankelijke vluchtwegen. Super handig! 🗺️</string>
+    <string name="post_meltdown_1_author">HerstelRen</string>
+    <string name="post_meltdown_1_content">Herinnering: Meltdowns zijn geen \'slecht gedrag\' - het is zenuwstelsel overbelasting. Wees lief voor jezelf erna 💙</string>
+    <string name="post_meltdown_2_author">CopingCarla</string>
+    <string name="post_meltdown_2_content">Mijn meltdown kit: noise-cancelling koptelefoon, zonnebril, verzwaarde schootdeken, water, en een \'veilig persoon\' contact</string>
+    <string name="post_meltdown_3_author">PreventiePat</string>
+    <string name="post_meltdown_3_content">Mijn waarschuwingssignalen leren: prikkelbaarheid piek, geluidsovergevoeligheid, fysieke spanning. Vroeg opvangen helpt!</string>
+    <string name="post_meltdown_4_author">VeiligePlekSam</string>
+    <string name="post_meltdown_4_content">Een \'rusthoek\' gemaakt in mijn huis met gedimde lichten, zachte texturen, en GEEN eisen. Essentiële herstelzone 🏠</string>
+    <string name="post_meltdown_5_author">SteunendeSue</string>
+    <string name="post_meltdown_5_content">Zelfzorg na meltdown: rust, hydratatie, troosteten, en absoluut GEEN zelfkritiek. Herstel kost tijd 🌸</string>
+    <string name="post_special_1_author">DinoDave</string>
+    <string name="post_special_1_content">Drie uur onderzoek naar dinosaurus verenevolultie en ik heb NERGENS spijt van! Wie wil horen over Archaeopteryx? 🦕</string>
+    <string name="post_special_2_author">TreinTracker</string>
+    <string name="post_special_2_content">Mijn speciale interesse is treinschema\'s. Ik kan je elke halte vertellen op 47 metrolijnen. Vraag me alles! 🚂</string>
+    <string name="post_special_3_author">PaddenstoelMike</string>
+    <string name="post_special_3_content">Schimmels zijn ONGELOFELIJK. Wist je dat er een paddenstoel is die plastic kan afbreken? Mycelium is de toekomst! 🍄</string>
+    <string name="post_special_4_author">VerhaalVerkenner</string>
+    <string name="post_special_4_content">Als je speciale interesse lore heeft, WORD je de wiki. 400 uur in dit spel en nog steeds aan het leren! 🎮</string>
+    <string name="post_special_5_author">SterGeslagen</string>
+    <string name="post_special_5_content">Ruimtefeiten komen eraan! Een dag op Venus is langer dan een jaar op Venus. Mind = geblazen elke keer dat ik eraan denk ✨</string>
+    <string name="post_lgbtq_1_author">RegenboogBrein</string>
+    <string name="post_lgbtq_1_content">De overlap tussen LGBTQ+ en ND gemeenschappen is ZO echt! Mensen vinden die BEIDE identiteiten begrijpen is alles 🏳️‍🌈♾️</string>
+    <string name="post_lgbtq_2_author">TrotsEnAutistisch</string>
+    <string name="post_lgbtq_2_content">Blij om queer EN neurodiverse te zijn! Beide zijn deel van wie ik ben, en beide zijn geldig en mooi ✨</string>
+    <string name="post_lgbtq_3_author">IntersectieAlex</string>
+    <string name="post_lgbtq_3_content">Onderzoek toont aan dat ND mensen vaker LGBTQ+ zijn. We breken de mal op zoveel manieren! 💜</string>
+    <string name="post_lgbtq_4_author">GemeenschapCarla</string>
+    <string name="post_lgbtq_4_content">Deze ruimte die AL mijn delen accepteert zonder vragen is helend. Dank je voor het er zijn 🙏</string>
+    <string name="post_lgbtq_5_author">GeallieerdeAndy</string>
+    <string name="post_lgbtq_5_content">Of je nu identiteit uitzoekt, al uit bent, of gewoon steunt - je hoort hier! 🏳️‍🌈</string>
+    <string name="post_default_1_author">GemeenschapsLid</string>
+    <string name="post_default_1_content">Welkom bij deze gemeenschap! Deel je ervaringen en steun elkaar. We zitten hier samen in 💙</string>
+    <string name="post_default_2_author">HulpvaardHelen</string>
+    <string name="post_default_2_content">Onthoud: ieders reis is anders. Wat voor één persoon werkt, werkt misschien niet voor een ander, en dat is oké!</string>
+    <string name="post_default_3_author">BronRon</string>
+    <string name="post_default_3_content">Geweldige bronnen in de vastgepinde post! Bekijk ze als je nieuw bent hier 📚</string>
+    <string name="post_default_4_author">SteunendeSue</string>
+    <string name="post_default_4_content">Dit is een oordeelvrije zone. Stel vragen, deel worstelingen, vier overwinningen. We hebben je! 🌟</string>
+    <string name="post_default_5_author">VerwelkomendWill</string>
+    <string name="post_default_5_content">Nieuwe leden: stel jezelf voor! Wat brengt je hier? Wat hoop je te leren of delen?</string>
+    <string name="profile_my_profile">Mijn Profiel</string>
+    <string name="profile_edit">Profiel Bewerken</string>
+    <string name="profile_share">Profiel Delen</string>
+    <string name="profile_more_options">Meer Opties</string>
+    <string name="profile_verified">Geverifieerd</string>
+    <string name="profile_following">Volgend</string>
+    <string name="profile_follow">Volgen</string>
+    <string name="profile_message">Bericht</string>
+    <string name="profile_mutual_friends">Gemeenschappelijke Vrienden</string>
+    <string name="post_trans_1_author">TransEnTrots</string>
+    <string name="post_trans_1_content">Trans EN autistisch zijn betekent identiteit op meerdere niveaus verwerken. Het is complex maar mooi 🏳️‍⚧️</string>
+    <string name="post_trans_2_author">GenderVerkenner</string>
+    <string name="post_trans_2_content">ND-breinen ervaren gender vaak anders. Onze reizen zijn geldig zelfs als ze niet \'typisch\' zijn 💙💗🤍</string>
+    <string name="post_trans_3_author">SteunendRuimte</string>
+    <string name="post_trans_3_content">Naam- en voornaamwoord-stickers in mijn profiel! Respect is hier niet onderhandelbaar 🏳️‍⚧️</string>
+    <string name="post_trans_4_author">TransitieTips</string>
+    <string name="post_trans_4_content">Navigeren door de gezondheidszorg als trans EN ND kan extra uitdagend zijn. Laten we bronnen en steun delen! 💪</string>
+    <string name="post_trans_5_author">AuthentiekIk</string>
+    <string name="post_trans_5_content">Eindelijk leven als mijn ware zelf. De ND-gemeenschap was ongelooflijk gastvrij. Dankbaar 💜</string>
+    <string name="post_pride_1_author">PrideParade</string>
+    <string name="post_pride_1_content">Pride-maand is misschien juni, maar we vieren het HELE jaar! Queer vreugde is ND-vriendelijke vreugde 🌈✨</string>
+    <string name="post_pride_2_author">QueerGemeenschap</string>
+    <string name="post_pride_2_content">Sensorisch-vriendelijke pride-evenementen zijn het BESTE! Pride met oordoppen en zonnebril! 🎉🏳️‍🌈</string>
+    <string name="post_pride_3_author">LiefdeIsLiefde</string>
+    <string name="post_pride_3_content">Onthoud: je hoeft je identiteit aan niemand te \'bewijzen\'. Je ervaring is geldig! 💖</string>
+    <string name="post_pride_4_author">VreugdeVolQueer</string>
+    <string name="post_pride_4_content">Vieren queer vreugde vandaag! Wat maakt jou blij over deel uitmaken van deze gemeenschap? 🎊</string>
+    <string name="post_pride_5_author">PrideGeschiedenis</string>
+    <string name="post_pride_5_content">LGBTQ+-geschiedenis leren was mijn speciale interesse deze maand. Zoveel te vieren en eren! 📚🏳️‍🌈</string>
+    <string name="post_ace_1_author">AceRuimte</string>
+    <string name="post_ace_1_content">Aseksueel EN autistisch - de \'dubbele A\'-club! Beide begrijpen was een reis van zelfontdekking 🖤🤍💜</string>
+    <string name="post_ace_2_author">AroAceVibes</string>
+    <string name="post_ace_2_content">Aromantisch spectrum representatie doet ertoe! QPR\'s, gekozen families en vriendschapgerichte levens zijn mooi 💚</string>
+    <string name="post_ace_3_author">SpectrumVerkenner</string>
+    <string name="post_ace_3_content">Gray-ace, demi, aego - zoveel manieren om aantrekking te ervaren (of niet). Allemaal geldig! 🖤🩶🤍💜</string>
+    <string name="post_ace_4_author">NormaliseerAce</string>
+    <string name="post_ace_4_content">Aantrekking niet op de \'typische\' manier ervaren maakt ons niet kapot. Anders is gewoon anders 💜</string>
+    <string name="post_ace_5_author">AceTrots</string>
+    <string name="post_ace_5_content">Ace-week bronnen komen eraan! Educatieve content en gemeenschapsverhalen om te delen 🖤🩶🤍💜</string>
+    <string name="post_nb_1_author">NonBinairNinja</string>
+    <string name="post_nb_1_content">Non-binair en neurodivergent! Gender is een constructie die ik vrolijk deconstrueer 💛🤍💜🖤</string>
+    <string name="post_nb_2_author">ZijHenHun</string>
+    <string name="post_nb_2_content">Hen/hun voornaamwoorden alsjeblieft! Onze gemeenschap respecteert ieders identiteit 💜</string>
+    <string name="post_nb_3_author">GenderFluid</string>
+    <string name="post_nb_3_content">Sommige dagen meer femme, sommige dagen meer masc, sommige dagen ??? En alles is geldig! ✨</string>
+    <string name="post_nb_4_author">EnbyVerkenner</string>
+    <string name="post_nb_4_content">Genderbevestigende kleding vinden die ook sensorisch-vriendelijk is, is een avontuur! Deel je vondsten! 👕</string>
+    <string name="post_nb_5_author">IdentiteitsReis</string>
+    <string name="post_nb_5_content">Het kostte me jaren om mijn gender te begrijpen. ND-brein + genderverkenning = complex maar de moeite waard 💛🤍💜🖤</string>
+    <string name="post_coming_1_author">KwamUitCarla</string>
+    <string name="post_coming_1_content">Coming out als ND én queer aan mijn familie was eng maar bevrijdend. Jij doet het op JOUW tijdlijn! 🚪💜</string>
+    <string name="post_coming_2_author">VeiligHaven</string>
+    <string name="post_coming_2_content">Deze gemeenschap is een veilige plek om te verkennen. Je hoeft nog niet alle antwoorden te hebben 💙</string>
+    <string name="post_coming_3_author">ReisVerhalen</string>
+    <string name="post_coming_3_content">Coming out-verhalen delen helpt anderen zich minder alleen te voelen. Reageer met de jouwe als je je comfortabel voelt! 🌈</string>
+    <string name="post_coming_4_author">NogAanHetUitzoeken</string>
+    <string name="post_coming_4_content">Niet zeker over labels nog en dat is oké! Vragen stellen is deel van de reis, niet het einde 💜</string>
+    <string name="post_coming_5_author">GekozenFamilie</string>
+    <string name="post_coming_5_content">Gekozen familie wanneer bio familie het niet begrijpt. De ND+LGBTQ+-gemeenschap staat achter je 🏠💜</string>
+    <string name="messages_empty_title">No conversations yet</string>
+    <string name="messages_empty_subtitle">When you message someone, it will show up here.</string>
+    <string name="messages_empty_hint">Tip: Try Explore → tap a profile → Message (mock).</string>
+    <string name="messages_no_results_title">No results</string>
+    <string name="messages_no_results_subtitle">Try a different search or switch back to All.</string>
+    <string name="messages_filtering_unread">You\'re filtering to Unread.</string>
+    <string name="dm_search_conversations_placeholder">Search conversations</string>
+    <string name="dm_reply_to_placeholder">Reply to %s…</string>
+    <string name="create_post_share_thoughts">Share your thoughts with the community…</string>
+    <string name="image_editor_type_text">Type your text…</string>
+    <string name="image_editor_enter_text">Enter your text…</string>
+    <string name="settings_logout">Uitloggen</string>
+    <string name="settings_youre_awesome">Je bent geweldig! 🙌</string>
+    <string name="settings_not_authenticated">Gebruiker niet geauthenticeerd.</string>
+    <string name="create_story_caption_label">Caption (optional)</string>
+    <string name="create_story_caption_placeholder">Add a caption…</string>
+    <string name="create_story_understood">Understood</string>
+    <string name="create_story_posting">Posting…</string>
+    <string name="create_story_url_label">URL</string>
+    <string name="create_story_url_placeholder">https://…</string>
+    <string name="create_story_message_label">Your message</string>
+    <string name="create_story_message_placeholder">What\'s on your mind?</string>
+    <string name="create_story_share_link">Share a link with a preview</string>
+    <string name="create_story_create_text">Create a text story</string>
+    <string name="create_story_text_preview">Your text here…</string>
+    <string name="create_story_background_color">Background Color</string>
+    <string name="create_story_gradient_backgrounds">Gradient Backgrounds</string>
+    <string name="emoji_thumbs_up" translatable="false">👍</string>
+    <string name="emoji_heart" translatable="false">❤️</string>
+    <string name="emoji_smile" translatable="false">😊</string>
+    <string name="emoji_hands" translatable="false">🙌</string>
+    <string name="emoji_more" translatable="false">+</string>
+    <string name="post_save">Save Post</string>
+    <string name="post_unsave">Remove from Saved</string>
+    <string name="post_share">Share</string>
+    <string name="post_share_via">Share via…</string>
+    <string name="post_share_post_via">Share post via</string>
+    <string name="post_share_story">Share Story</string>
+    <string name="post_share_topic">Share Topic</string>
+    <string name="create_post_close">Close</string>
+    <string name="create_post_how_feeling">How are you feeling?</string>
+    <string name="create_post_placeholder">Waar denk je aan?</string>
+    <string name="create_post_add_media">Add Media</string>
+    <string name="create_post_image_url">Image URL</string>
+    <string name="create_post_video_url">Video URL</string>
+    <string name="create_post_content_warning">Content Warning</string>
+    <string name="create_post_content_warning_desc">This post may contain sensitive content</string>
+    <string name="create_post_post">Plaatsen</string>
+    <string name="create_post_chars_remaining">%d characters remaining</string>
+    <string name="create_post_chars_over">%d characters over limit</string>
+    <string name="premium_lifetime_member">You\'re a Lifetime Member!</string>
+    <string name="premium_now_premium">You\'re Now Premium!</string>
+    <string name="premium_welcome_back">Welcome Back, Premium Member!</string>
+    <string name="premium_welcome">Welcome to Premium!</string>
+    <string name="posting_restricted_title">Posting Restricted</string>
+    <string name="posting_restricted_message">Posting has been disabled by parental controls. Ask a parent or guardian to change this setting.</string>
+    <string name="share_sheet_title">Share Post</string>
+    <string name="share_sheet_copy_link">Copy Link</string>
+    <string name="share_sheet_copy_link_desc">Copy post link to clipboard</string>
+    <string name="share_sheet_share_via">Share via…</string>
+    <string name="share_sheet_share_via_desc">Share to other apps</string>
+    <string name="share_sheet_send_dm">Send in DM</string>
+    <string name="share_sheet_send_dm_desc">Share directly to a friend</string>
+    <string name="share_sheet_repost">Repost</string>
+    <string name="share_sheet_repost_desc">Share to your feed</string>
+    <string name="post_action_like">Like</string>
+    <string name="post_action_comment">Comment</string>
+    <string name="post_action_share">Share</string>
+    <string name="post_action_save">Save</string>
+    <string name="post_likes_count">%d likes</string>
+    <string name="post_comments_shares_count" formatted="false">%d comments • %d shares</string>
+    <string name="post_content_hidden_kids">Content hidden for kids mode</string>
+    <string name="delete_post_title">Delete Post?</string>
+    <string name="delete_post_message">This action cannot be undone. Are you sure you want to delete this post?</string>
+    <string name="time_just_now">Zojuist</string>
+    <string name="time_format_minutes">%d min geleden</string>
+    <string name="time_format_hours">%d uur geleden</string>
+    <string name="time_format_days">%d dagen geleden</string>
+    <string name="tone_neutral">Neutral</string>
+    <string name="tone_happy">Positive vibes</string>
+    <string name="tone_excited">Exciting!</string>
+    <string name="tone_sad">Emotional content</string>
+    <string name="tone_anxious">May feel intense</string>
+    <string name="tone_frustrated">Venting</string>
+    <string name="tone_supportive">Supportive</string>
+    <string name="tone_question">Seeking help</string>
+    <string name="tone_celebration">Celebrating!</string>
+    <string name="tone_informative">Informative</string>
+    <string name="tone_may_be_intense">May be intense</string>
+    <string name="settings_app_icon">App Icon</string>
+    <string name="settings_app_icon_desc">Choose your favorite icon style</string>
+    <string name="icon_style_default">Default Comet</string>
+    <string name="icon_style_default_desc">The classic NeuroComet icon</string>
+    <string name="icon_style_calm">Calm Waters</string>
+    <string name="icon_style_calm_desc">Soothing blue tones for relaxation</string>
+    <string name="icon_style_focus">Focus Mode</string>
+    <string name="icon_style_focus_desc">Minimal design to reduce distractions</string>
+    <string name="icon_style_energy">Energy Burst</string>
+    <string name="icon_style_energy_desc">Vibrant colors for motivation</string>
+    <string name="icon_style_sensory">Sensory Friendly</string>
+    <string name="icon_style_sensory_desc">Muted tones gentle on the eyes</string>
+    <string name="icon_style_pride">Neurodiversity Pride</string>
+    <string name="icon_style_pride_desc">Celebrate neurodivergent identity</string>
+    <string name="icon_customization_title">Choose Your Icon</string>
+    <string name="icon_customization_subtitle">Pick an icon that matches your mood and needs</string>
+    <string name="icon_applied">Icon applied! Restart your launcher if it doesn\'t update. 🎨</string>
+    <string name="privacy_muted_word_label">Word or phrase</string>
+    <string name="parental_pin_label">PIN</string>
+    <string name="parental_pin_confirm_label">Confirm PIN</string>
+    <string name="parental_pin_current_label">Current PIN</string>
+    <string name="parental_pin_new_label">New PIN</string>
+    <string name="parental_pin_confirm_new_label">Confirm New PIN</string>
+    <string name="parental_pin_enter_confirm">Enter PIN to confirm</string>
+    <string name="explore_online_now">%d online now</string>
+    <string name="social_show_online_status">Show Online Status</string>
+    <string name="social_show_online_status_desc">Let others see when you\'re active</string>
+    <string name="community_back">Terug</string>
+    <string name="community_share">Community delen</string>
+    <string name="community_more_options">Meer opties</string>
+    <string name="community_join">Word lid van community</string>
+    <string name="community_leave">Community verlaten</string>
+    <string name="community_joined_toast">Je bent lid geworden van %s</string>
+    <string name="community_left_toast">Je hebt %s verlaten</string>
+    <string name="community_mute_notifications">Meldingen dempen</string>
+    <string name="community_turn_on_notifications">Meldingen aanzetten</string>
+    <string name="community_notifications_on_toast">Meldingen aan voor %s</string>
+    <string name="community_notifications_muted_toast">Meldingen gedempt voor %s</string>
+    <string name="community_save">Community opslaan</string>
+    <string name="community_saved_toast">%s opgeslagen in bladwijzers</string>
+    <string name="community_link_copied">Link naar klembord gekopieerd</string>
+    <string name="community_rules">Communityregels</string>
+    <string name="community_rules_coming_soon">Communityregels komen binnenkort</string>
+    <string name="community_report">Community rapporteren</string>
+    <string name="community_reported_toast">Rapport ingediend. Bedankt!</string>
+    <string name="community_compose">Schrijven</string>
+    <string name="post_adhd_1_author">FocusedFinn</string>
+    <string name="post_adhd_1_content">🧠 Just discovered the power of body doubling! Working alongside someone (even virtually) helps me stay on task so much better.</string>
+    <string name="post_adhd_2_author">TimeBlindTina</string>
+    <string name="post_adhd_2_content">Anyone else use timers for EVERYTHING? I set 25-min work blocks and it\'s a game changer. Pomodoro for the win! 🍅</string>
+    <string name="post_adhd_3_author">HyperfocusHarry</string>
+    <string name="post_adhd_3_content">TIP: Put your phone in another room during deep work. Out of sight = out of mind. Finally finishing projects!</string>
+    <string name="post_adhd_4_author">ScatterbrainSally</string>
+    <string name="post_adhd_4_content">External scaffolding is my superpower! Visual reminders, apps, alarms - my environment remembers so I don\'t have to 📝</string>
+    <string name="post_adhd_5_author">ImpulsiveIvy</string>
+    <string name="post_adhd_5_content">Started using \'implementation intentions\' - instead of \'I\'ll exercise\' I say \'At 7am, I put on shoes and walk\'. Works! 🏃‍♀️</string>
+    <string name="post_safefood_1_author">TextureSensitive</string>
+    <string name="post_safefood_1_content">Found a new safe food! These rice crackers have the perfect crunch without being too loud. Sharing the brand in comments 🍘</string>
+    <string name="post_safefood_2_author">BeigeFoodClub</string>
+    <string name="post_safefood_2_content">Reminder that \'safe foods\' are valid! Sometimes plain pasta is self-care. No shame in eating what works for you 🍝</string>
+    <string name="post_safefood_3_author">SensoryChef</string>
+    <string name="post_safefood_3_content">I made a sensory-friendly recipe book! All recipes avoid common texture triggers. Would anyone want me to share it?</string>
+    <string name="post_safefood_4_author">PickyEaterPete</string>
+    <string name="post_safefood_4_content">Does anyone else have \'safe restaurants\'? Places where you know exactly what to order and it\'s always consistent?</string>
+    <string name="post_safefood_5_author">MealPrepMolly</string>
+    <string name="post_safefood_5_content">Batch cooking my safe foods on Sunday = less decision fatigue all week! Currently rotating 5 meals I actually enjoy 💪</string>
+    <string name="post_sleep_1_author">NightOwlNate</string>
+    <string name="post_sleep_1_content">Finally found a weighted blanket that doesn\'t make me overheat! Deep pressure + cool fabric = actually sleeping 😴</string>
+    <string name="post_sleep_2_author">RestlessRachel</string>
+    <string name="post_sleep_2_content">Wind-down routine that works for my brain: dim lights, no screens 1hr before, same playlist every night. Consistency is key!</string>
+    <string name="post_sleep_3_author">InsomniaIan</string>
+    <string name="post_sleep_3_content">Anyone else\'s brain do the \'remember every embarrassing moment\' thing at 2am? Started journaling before bed to \'close tabs\'</string>
+    <string name="post_sleep_4_author">SleepySteph</string>
+    <string name="post_sleep_4_content">White noise vs brown noise vs pink noise - which works for you? I\'m team brown noise, it\'s like a hug for my ears 🔊</string>
+    <string name="post_sleep_5_author">DreamyDan</string>
+    <string name="post_sleep_5_content">Started using blackout curtains AND a sleep mask. Totally dark room = finally getting deep sleep cycles!</string>
+    <string name="post_social_1_author">ConvoCoach</string>
+    <string name="post_social_1_content">Scripts for small talk! \'How\'s your day going?\' → \'Any fun weekend plans?\' → \'That sounds nice!\' Memorized patterns help! 💬</string>
+    <string name="post_social_2_author">FriendshipFred</string>
+    <string name="post_social_2_content">Quality over quantity. Having 2-3 close friends who \'get it\' is worth more than 100 acquaintances 👥</string>
+    <string name="post_social_3_author">AwkwardAndy</string>
+    <string name="post_social_3_content">It\'s okay to leave social events early! \'I had a great time, heading out now\' - no long explanation needed 👋</string>
+    <string name="post_social_4_author">BoundaryBella</string>
+    <string name="post_social_4_content">\'I need to think about that\' is a complete sentence. No pressure to respond immediately!</string>
+    <string name="post_social_5_author">ParallelPaul</string>
+    <string name="post_social_5_content">Parallel play is valid adult friendship! Gaming together, crafting in the same room - connection without constant interaction</string>
+    <string name="post_mask_1_author">UnmaskingUri</string>
+    <string name="post_mask_1_content">Finally dropping the mask at home. It\'s exhausting pretending to be \'normal\' all day. Safe spaces matter 🎭</string>
+    <string name="post_mask_2_author">BurnoutBeth</string>
+    <string name="post_mask_2_content">Masking led to burnout. Now I\'m slowly learning who I am without the performance. It\'s scary but freeing</string>
+    <string name="post_mask_3_author">AuthenticAva</string>
+    <string name="post_mask_3_content">Found friends who accept the real me - stims, infodumps, and all. They say I\'m \'more interesting\' unmasked! ✨</string>
+    <string name="post_mask_4_author">ExhaustedEli</string>
+    <string name="post_mask_4_content">The price of masking: migraines, fatigue, identity confusion. Is \'fitting in\' worth my wellbeing? Reconsidering…</string>
+    <string name="post_mask_5_author">GrowingGrace</string>
+    <string name="post_mask_5_content">Started stimming publicly. Heart raced at first, but literally no one cared. The fear was bigger than reality 💪</string>
+    <string name="post_mental_1_author">AnxietyAlly</string>
+    <string name="post_mental_1_content">ADHD + anxiety is a rough combo. Tips that help me: structured routines, movement breaks, and lots of self-compassion 🧘</string>
+    <string name="post_mental_2_author">DepressionDiana</string>
+    <string name="post_mental_2_content">Some days, just existing is an achievement. Be proud of the small wins. You\'re doing better than you think 💙</string>
+    <string name="post_mental_3_author">TherapyTom</string>
+    <string name="post_mental_3_content">Finally found a neurodivergent-affirming therapist! They understand that \'just try harder\' isn\'t helpful. Game changer!</string>
+    <string name="post_mental_4_author">HealingHannah</string>
+    <string name="post_mental_4_content">Journaling prompts for rough days: What\'s draining me? What\'s one kind thing I can do for myself right now?</string>
+    <string name="post_mental_5_author">CopingChris</string>
+    <string name="post_mental_5_content">Medication isn\'t a failure - it\'s a tool. Just like glasses for vision. No shame in chemical support 💊</string>
+    <string name="post_work_1_author">AccommodationAce</string>
+    <string name="post_work_1_content">Got my workplace accommodations approved! Noise-canceling headphones, flexible hours, written instructions. Know your rights! 💼</string>
+    <string name="post_work_2_author">StudentSara</string>
+    <string name="post_work_2_content">College disability services changed everything. Extra time, quiet testing rooms, note-taking support. Ask for help! 🎓</string>
+    <string name="post_work_3_author">RemoteRick</string>
+    <string name="post_work_3_content">WFH is my dream. No fluorescent lights, no open offices, no surprise social interactions. Productivity skyrocketed!</string>
+    <string name="post_work_4_author">MeetingMary</string>
+    <string name="post_work_4_content">Cameras off in meetings when I need them. Standing during calls. These \'small\' accommodations make huge differences</string>
+    <string name="post_work_5_author">CareerCoach</string>
+    <string name="post_work_5_content">Neurodivergent-friendly career paths: programming, research, art, writing, data analysis. Play to your strengths! 📈</string>
+    <string name="post_late_1_author">LateBloomLisa</string>
+    <string name="post_late_1_content">Diagnosed at 35. Everything suddenly makes sense - the struggles, the differences, the \'quirks\'. Grief and relief mixed 🔍</string>
+    <string name="post_late_2_author">MidlifeMike</string>
+    <string name="post_late_2_content">Spent decades thinking I was broken. Turns out I\'m just wired differently. Late diagnosis is still valid diagnosis 💜</string>
+    <string name="post_late_3_author">IdentityCrisis</string>
+    <string name="post_late_3_content">Unmasking after 40 years is HARD. Who am I without the performance? Slowly rediscovering myself</string>
+    <string name="post_late_4_author">GriefAndGrowth</string>
+    <string name="post_late_4_content">Grieving the support I could have had growing up. But also grateful for finally understanding myself 🌱</string>
+    <string name="post_late_5_author">NewChapter</string>
+    <string name="post_late_5_content">It\'s never too late to learn about yourself. Late-diagnosed at 52, and life is finally making sense!</string>
+    <string name="profile_posts">Berichten</string>
+    <string name="profile_followers">Volgers</string>
+    <string name="profile_communication_preferences">Communication &amp; Preferences</string>
+    <string name="profile_how_to_communicate">How to communicate with me</string>
+    <string name="profile_special_interests">Special Interests ✨</string>
+    <string name="profile_interests_subtitle">These topics bring them joy - ask about them!</string>
+    <string name="profile_badges_achievements">Badges &amp; Achievements</string>
+    <string name="profile_no_badges_yet">No badges yet</string>
+    <string name="profile_share_first_post">Share your first post!</string>
+    <string name="profile_no_posts_yet">No posts yet</string>
+    <string name="profile_posts_will_appear">When you share photos or videos, they\'ll appear here.</string>
+    <string name="profile_about">About</string>
+    <string name="profile_joined">Joined</string>
+    <string name="profile_website">Website</string>
+    <string name="profile_earned">Earned</string>
+    <string name="profile_how_feeling">How are you feeling?</string>
+    <string name="profile_selected">Selected</string>
+    <string name="profile_cancel">Cancel</string>
+    <string name="profile_got_it">Got it!</string>
+    <string name="comments_close">Reacties sluiten</string>
+    <string name="comments_replying_to">Reageren op %s</string>
+    <string name="comments_no_comments_yet">Nog geen reacties</string>
+    <string name="comments_be_first">Wees de eerste die je gedachten deelt!</string>
+    <string name="comments_send_comment">Reactie verzenden</string>
+    <string name="comments_view_all">Bekijk alle %d reacties</string>
+    <string name="share_category_text">Check out the %1$s community on NeuroComet! 🧠✨\n\nJoin a supportive space for neurodivergent individuals.\n\nhttps://NeuroComet.app/community/%2$s</string>
+    <string name="share_category_subject">%s - NeuroComet Community</string>
+    <string name="share_category_chooser">Share %s</string>
+    <string name="share_story_text">Check out %1$s\'s story! %2$s</string>
+    <string name="share_story_chooser">Share Story</string>
+    <string name="share_explore_topic_text">Check out the %1$s community on NeuroComet! %2$s\n\n%3$s\n\n👥 %4$s members\n📝 %5$s posts\n\nJoin the conversation: NeuroComet.app/explore/%6$s</string>
+    <string name="share_explore_topic_subject">%1$s %2$s - NeuroComet Community</string>
+    <string name="share_explore_topic_chooser">Share %s</string>
+    <string name="story_reply">Reply</string>
+    <string name="story_like">Like</string>
+    <string name="story_liked">Liked</string>
+    <string name="security_rooted_device">This app cannot run on rooted devices for your security.</string>
+    <string name="security_debug_not_allowed">Debugging is not allowed in production builds.</string>
+    <string name="security_tampering_detected">Security framework tampering detected.</string>
+    <string name="security_integrity_failed">App integrity verification failed.</string>
+    <string name="security_emulator_not_allowed">This app cannot run on emulators.</string>
+    <string name="security_check_failed">Security check failed. This app cannot run on this device.</string>
+    <string name="security_status_excellent">✅ Device security: Excellent</string>
+    <string name="security_status_good">✅ Device security: Good</string>
+    <string name="security_status_fair">⚠️ Device security: Fair - Some features may be restricted</string>
+    <string name="security_status_at_risk">🔴 Device security: At risk - Security features enabled</string>
+    <string name="security_status_critical">🚨 Device security: Critical - App restrictions active</string>
+    <string name="theme_settings_title">Theme Settings</string>
+    <string name="theme_settings_subtitle">Choose a theme that works for you</string>
+    <string name="theme_current_theme">Current Theme</string>
+    <string name="theme_quick_settings">Quick Settings</string>
+    <string name="theme_dynamic_colors">Dynamic Colors</string>
+    <string name="theme_dynamic_colors_active">Dynamic Colors Active</string>
+    <string name="theme_dynamic_colors_hint">Disable Dynamic Colors in Quick Settings below to use custom themes.</string>
+    <string name="theme_dynamic_colors_desc">Use colors from your device wallpaper (Material You)</string>
+    <string name="theme_dynamic_colors_unavailable">Requires Android 12 or higher</string>
+    <string name="theme_disabled_dynamic_active">Disabled (Dynamic Colors active)</string>
+    <string name="theme_rainbow_unlocked">🦄 You\'ve unlocked the Rainbow Brain theme!\nScroll down to Secret Themes to try it!</string>
+    <string name="theme_made_with_love">Made with 💜 for every unique mind</string>
+    <string name="easter_egg_rainbow_unlocked">🦄 You\'ve unlocked the Rainbow Brain theme!\nFind it in Theme Settings → Secret Themes</string>
+    <string name="ads_loading">Advertentie laden…</string>
+    <string name="ads_premium_no_ads">Geen advertenties - Premium lid</string>
+    <string name="ads_watch_to_support">Bekijk een korte advertentie om NeuroComet te steunen</string>
+    <string name="ads_rewarded_complete">Bedankt! Je hebt een beloning verdiend.</string>
+    <string name="ads_disabled_kids">Advertenties zijn uitgeschakeld in Kindermodus</string>
+    <string name="ads_error_load_failed">Advertentie laden mislukt</string>
+    <string name="widget_focus_timer">Focus Timer</string>
+    <string name="widget_energy_level">Energy Level</string>
+    <string name="widget_social_battery">Social Battery</string>
+    <string name="widget_task_checklist">Today\'s Tasks</string>
+    <string name="widget_calm_corner">Calm Corner</string>
+    <string name="widget_daily_checkin">How are you feeling?</string>
+    <string name="widget_sensory_status">Sensory Status</string>
+    <string name="widget_minutes_remaining">minutes remaining</string>
+    <string name="widget_add_task">Add Task</string>
+    <string name="image_edit_title">Edit Image</string>
+    <string name="image_edit_filters">Filters</string>
+    <string name="image_edit_adjust">Adjust</string>
+    <string name="image_edit_text">Text</string>
+    <string name="image_edit_stickers">Stickers</string>
+    <string name="image_edit_draw">Draw</string>
+    <string name="image_edit_crop">Crop</string>
+    <string name="image_edit_brightness">Brightness</string>
+    <string name="image_edit_contrast">Contrast</string>
+    <string name="image_edit_saturation">Saturation</string>
+    <string name="image_edit_add_text">Add text…</string>
+    <string name="image_edit_drawing_on">Drawing mode on</string>
+    <string name="image_edit_undo">Undo</string>
+    <string name="image_edit_done">Done</string>
+    <string name="explore_view_grid">Grid</string>
+    <string name="explore_view_compact">Compact</string>
+    <string name="explore_view_standard">Standard</string>
+    <string name="explore_view_large">Large</string>
+    <string name="post_media_count" formatted="false">%d of %d</string>
+    <string name="post_max_media_reached">Maximum %d items allowed</string>
+    <string name="post_add_more_media">Add more</string>
+    <string name="post_remove_media">Remove</string>
+    <string name="post_video_indicator">Video</string>
+    <string name="post_photos_count">%d photos</string>
+    <string name="widget_energy_name">Energy Level</string>
+    <string name="widget_energy_description">Track your energy and social battery level from your home screen</string>
+    <string name="widget_focus_timer_name">Focus Timer</string>
+    <string name="widget_focus_timer_description">Start en beheer focussessies direct vanaf je startscherm</string>
+    <string name="widget_mood_name">Stemmings Tracker</string>
+    <string name="widget_mood_description">Snelle stemmingschecks vanaf je startscherm</string>
+    <string name="widget_spoon_name">Lepelteller</string>
+    <string name="widget_spoon_description">Volg je dagelijkse energielepels met de lepeltheorie</string>
+    <string name="widget_affirmation_name">Dagelijkse Affirmatie</string>
+    <string name="widget_affirmation_description">Neurodivergent-bevestigende dagelijkse berichten om je dag op te fleuren</string>
+    <string name="widget_stim_break_name">Stim Pauze</string>
+    <string name="widget_stim_break_description">Volg en herinner jezelf aan sensorische regulatiepauzes</string>
+    <string name="pull_to_refresh">Trek om te vernieuwen</string>
+    <string name="release_to_refresh">Laat los om te vernieuwen</string>
+    <string name="refreshing">Vernieuwen…</string>
+    <string name="refresh_complete">Vernieuwen voltooid</string>
+    <string name="location_permission_title">Locatie Toegang</string>
+    <string name="location_permission_desc">Gebruikt voor locatie delen en vinden van communityleden in de buurt</string>
+    <string name="location_high_accuracy">Hoge Nauwkeurigheid</string>
+    <string name="location_balanced">Gebalanceerd</string>
+    <string name="location_low_power">Batterijbesparing</string>
+    <string name="sensor_accelerometer">Accelerometer</string>
+    <string name="sensor_magnetometer">Magnetometer</string>
+    <string name="sensor_barometer">Barometer</string>
+    <string name="sensor_monitoring">Sensor Monitoring</string>
+    <string name="error_something_went_wrong">Er ging iets mis</string>
+    <string name="error_content_unavailable">Inhoud niet beschikbaar</string>
+    <string name="error_try_again">Opnieuw proberen</string>
+    <string name="error_go_home">Naar Home</string>
+    <string name="error_get_help">Hulp Krijgen</string>
+    <string name="error_data_safe">Geen zorgen, je gegevens zijn veilig!</string>
+    <string name="error_temporary">Dit is slechts een tijdelijk probleem. De app werkt aan zelfherstel!</string>
+    <string name="error_taking_longer">Duurt langer dan verwacht</string>
+    <string name="error_still_loading">De inhoud wordt nog geladen. Je kunt wachten of opnieuw proberen.</string>
+    <string name="error_offline">Je bent offline</string>
+    <string name="error_check_connection">Controleer je verbinding en probeer opnieuw</string>
+    <string name="error_feature_unavailable">%s niet beschikbaar</string>
+    <string name="error_empty_title">Nog niets hier</string>
+    <string name="error_empty_message">Deze ruimte wacht om gevuld te worden!</string>
+    <string name="error_show_details">Technische Details Tonen</string>
+    <string name="error_hide_details">Details Verbergen</string>
+    <string name="feedback_submit_tab">Versturen</string>
+    <string name="feedback_requests_tab">Verzoeken</string>
+    <string name="feedback_roadmap_tab">Routekaart</string>
+    <string name="feedback_remaining">Je hebt nog %d inzendingen over vandaag</string>
+    <string name="feedback_report_bug_desc">Iets kapot gevonden? Laat het ons weten zodat we het kunnen repareren.</string>
+    <string name="feedback_request_feature_desc">Een idee om NeuroComet te verbeteren? We horen het graag!</string>
+    <string name="feedback_send_desc">Deel je gedachten, suggesties, of zeg gewoon hoi!</string>
+    <string name="feedback_community_note">Alle feedback wordt beoordeeld door ons team. We prioriteren functies op basis van communitystemmen en impact op neurodivergente gebruikers.</string>
+    <string name="feedback_bug_submitted_title">Bugrapport Verstuurd</string>
+    <string name="feedback_bug_submitted_msg">Bedankt dat je ons helpt NeuroComet te verbeteren! We zullen dit probleem onderzoeken.</string>
+    <string name="feedback_feature_submitted_title">Functieverzoek Verstuurd</string>
+    <string name="feedback_feature_submitted_msg">Je idee is ingediend! De community kan er nu op stemmen.</string>
+    <string name="feedback_thank_you_title">Bedankt!</string>
+    <string name="feedback_thank_you_msg">Je feedback helpt ons NeuroComet beter te maken voor iedereen.</string>
+    <string name="feedback_bug_title_label">Bug Titel</string>
+    <string name="feedback_bug_title_hint">Korte beschrijving van het probleem</string>
+    <string name="feedback_steps_label">Stappen om te Reproduceren</string>
+    <string name="feedback_steps_hint">1. Ga naar…\n2. Tik op…\n3. De bug verschijnt</string>
+    <string name="feedback_severity_label">Ernst</string>
+    <string name="feedback_include_device_info">Apparaatinformatie toevoegen</string>
+    <string name="feedback_feature_title_label">Functie Titel</string>
+    <string name="feedback_feature_title_hint">Wat zou je willen zien?</string>
+    <string name="feedback_feature_desc_label">Beschrijving</string>
+    <string name="feedback_feature_desc_hint">Beschrijf hoe deze functie je zou helpen…</string>
+    <string name="feedback_category_label">Categorie</string>
+    <string name="feedback_general_label">Je gedachten (optioneel)</string>
+    <string name="feedback_general_hint">Vertel ons wat je denkt…</string>
+    <string name="feedback_submit_bug">Bugrapport Versturen</string>
+    <string name="feedback_submit_request">Verzoek Versturen</string>
+    <string name="feedback_submit">Versturen</string>
+    <string name="feedback_coming_soon">Binnenkort</string>
+    <string name="feedback_recently_shipped">Recent Uitgebracht</string>
+    <string name="feedback_sort_top_voted">Meest Gestemd</string>
+    <string name="feedback_sort_newest">Nieuwste</string>
+    <string name="feedback_status_submitted">Verstuurd</string>
+    <string name="feedback_status_review">In Beoordeling</string>
+    <string name="feedback_status_planned">Gepland</string>
+    <string name="feedback_status_progress">In Uitvoering</string>
+    <string name="feedback_status_completed">Voltooid</string>
+    <string name="feedback_status_declined">Afgewezen</string>
+    <string name="feedback_severity_low">Laag</string>
+    <string name="feedback_severity_medium">Gemiddeld</string>
+    <string name="feedback_severity_high">Hoog</string>
+    <string name="feedback_severity_critical">Kritiek</string>
+    <string name="feedback_votes">%d stemmen</string>
+    <string name="comments_empty">Nog geen reacties</string>
+    <string name="comments_load_more">Meer laden</string>
+    <string name="comments_replies">%d reacties</string>
+    <string name="comments_reply">Reageren</string>
+    <string name="community_members">%d leden</string>
+    <string name="community_posts">%d berichten</string>
+    <string name="create_post_add_link">Link toevoegen</string>
+    <string name="create_post_add_poll">Poll toevoegen</string>
+    <string name="create_post_discard">Verwijderen</string>
+    <string name="create_post_discard_message">Je bericht gaat verloren.</string>
+    <string name="create_post_discard_title">Bericht verwijderen?</string>
+    <string name="explore_bipolar">Bipolair</string>
+    <string name="explore_communities">Communities</string>
+    <string name="explore_depression">Depressie</string>
+    <string name="explore_dyslexia">Dyslexie</string>
+    <string name="explore_lgbtq">LGBTQ+</string>
+    <string name="explore_nonbinary">Non-binair</string>
+    <string name="explore_ocd">OCS</string>
+    <string name="explore_people">Mensen</string>
+    <string name="explore_ptsd">PTSS</string>
+    <string name="explore_topics">Onderwerpen</string>
+    <string name="explore_trans">Transgender</string>
+    <string name="feed_empty_subtitle">Volg mensen en communities</string>
+    <string name="feed_empty_title">Nog niets hier</string>
+    <string name="feed_error">Fout bij laden</string>
+    <string name="feed_loading">Laden…</string>
+    <string name="feed_retry">Opnieuw proberen</string>
+    <string name="feedback_category">Categorie</string>
+    <string name="feedback_description">Beschrijving</string>
+    <string name="feedback_description_placeholder">Beschrijf in detail…</string>
+    <string name="feedback_severity">Ernst</string>
+    <string name="feedback_thanks">Bedankt voor je feedback!</string>
+    <string name="neuro_category_dyslexia">Dyslexie</string>
+    <string name="notification_commented">reageerde op je bericht</string>
+    <string name="notification_followed">volgt je nu</string>
+    <string name="notification_liked_post">vond je bericht leuk</string>
+    <string name="notification_mentioned">vermeldde je</string>
+    <string name="notification_replied">reageerde op je reactie</string>
+    <string name="notifications_mark_read">Markeer als gelezen</string>
+    <string name="notifications_settings">Meldingsinstellingen</string>
+    <string name="post_comment">Reageren</string>
+    <string name="post_copy_link">Link kopiëren</string>
+    <string name="post_edit">Bewerken</string>
+    <string name="post_like">Like</string>
+    <string name="post_unlike">Unlike</string>
+    <string name="settings_about">Over de app</string>
+    <string name="settings_contact">Contact opnemen</string>
+    <string name="settings_help">Hulp &amp; Ondersteuning</string>
+    <string name="settings_rate_app">App beoordelen</string>
+    <string name="settings_share_app">App delen</string>
+    <string name="settings_terms_of_service">Servicevoorwaarden</string>
+    <string name="time_months_ago">%d maanden geleden</string>
+    <string name="time_weeks_ago">%d weken geleden</string>
+    <string name="time_years_ago">%d jaar geleden</string>
+    <string name="avatar_title">Profielfoto</string>
+    <string name="avatar_customize">Avatar Aanpassen</string>
+    <string name="avatar_choose_photo">Foto Kiezen</string>
+    <string name="avatar_take_selfie">Selfie Maken</string>
+    <string name="avatar_from_gallery">Van Galerij</string>
+    <string name="avatar_remove_photo">Foto Verwijderen</string>
+    <string name="avatar_use_default">Standaard Avatar Gebruiken</string>
+    <string name="avatar_create_custom">Aangepaste Avatar Maken</string>
+    <string name="avatar_edit">Avatar Bewerken</string>
+    <string name="avatar_save">Avatar Opslaan</string>
+    <string name="avatar_cancel">Annuleren</string>
+    <string name="avatar_preview">Voorbeeld</string>
+    <string name="avatar_saved_success">Avatar opgeslagen! ✨</string>
+    <string name="avatar_upload_failed">Upload mislukt. Probeer opnieuw.</string>
+    <string name="avatar_permission_camera">Cameratoestemming nodig voor selfie</string>
+    <string name="avatar_permission_gallery">Opslagtoestemming nodig voor galerij</string>
+    <string name="avatar_crop_title">Foto Bijsnijden</string>
+    <string name="avatar_crop_hint">Knijp om te zoomen, sleep om aan te passen</string>
+    <string name="avatar_style_title">Avatar Stijl</string>
+    <string name="avatar_style_photo">Foto</string>
+    <string name="avatar_style_illustrated">Geïllustreerd</string>
+    <string name="avatar_style_pixel">Pixel Art</string>
+    <string name="avatar_style_abstract">Abstract</string>
+    <string name="avatar_background_title">Achtergrond</string>
+    <string name="avatar_background_solid">Effen Kleur</string>
+    <string name="avatar_background_gradient">Verloop</string>
+    <string name="avatar_background_pride">Pride Vlag</string>
+    <string name="avatar_background_pattern">Patroon</string>
+    <string name="avatar_accessories_title">Accessoires</string>
+    <string name="avatar_accessories_none">Geen</string>
+    <string name="avatar_accessories_glasses">Bril</string>
+    <string name="avatar_accessories_hat">Hoed</string>
+    <string name="avatar_accessories_headphones">Koptelefoon</string>
+    <string name="avatar_frame_title">Kader</string>
+    <string name="avatar_frame_none">Geen Kader</string>
+    <string name="avatar_frame_circle">Cirkel</string>
+    <string name="avatar_frame_rounded">Afgerond</string>
+    <string name="avatar_frame_pride">Pride Kader</string>
+    <string name="avatar_frame_neurodivergent">Oneindigheid Kader ∞</string>
+    <string name="avatar_colors_title">Kleuren</string>
+    <string name="avatar_skin_tone">Huidskleur</string>
+    <string name="avatar_hair_color">Haarkleur</string>
+    <string name="avatar_eye_color">Oogkleur</string>
+    <string name="avatar_expression_title">Expressie</string>
+    <string name="avatar_expression_happy">Blij</string>
+    <string name="avatar_expression_calm">Kalm</string>
+    <string name="avatar_expression_confident">Zelfverzekerd</string>
+    <string name="avatar_expression_playful">Speels</string>
+    <string name="avatar_randomize">Willekeurig</string>
+    <string name="avatar_reset">Resetten</string>
+    <string name="avatar_premium_feature">Premium Functie ✨</string>
+    <string name="avatar_premium_unlock">Ontgrendel meer opties met Premium!</string>
+    <string name="story_swipe_to_close">Swipe down to close</string>
+    <string name="story_release_to_close">Release to close</string>
+    <string name="story_image_content_description">Story image</string>
+    <string name="story_paused">Paused</string>
+    <string name="story_send_reply_content_description">Send reply</string>
+    <string name="story_counter">%1$d of %2$d</string>
+    <string name="create_story_choose_type">Choose how to create your story:</string>
+    <string name="create_story_preview_content_description">Story preview</string>
+    <string name="create_story_share_button">Share Story</string>
+    <string name="time_seconds_short">%1$ds</string>
+    <string-array name="create_post_prompts">
+        <item>What\'s on your mind today?</item>
+        <item>Share a small win!</item>
+        <item>What are you grateful for?</item>
+        <item>Any new hyperfixations?</item>
+        <item>How is your energy level?</item>
+        <item>Learned anything new recently?</item>
+        <item>Vent space: let it out.</item>
+        <item>Share a sensory joy!</item>
+        <item>What\'s inspiring you right now?</item>
+        </string-array>
+    <string name="neuro_state_cinnamon_bun">Cinnamon Bun</string>
+    <string name="neuro_state_cinnamon_bun_desc">Warm, cozy, and comforting like a freshly baked treat 🥐</string>
+    <string name="splash_tagline_cinnamon_bun">Cozy and comforting</string>
+    <string name="splash_msg_cinnamon_bun_1">Warm and cozy</string>
+    <string name="splash_msg_cinnamon_bun_2">Sweet comfort</string>
+    <string name="splash_msg_cinnamon_bun_3">Safe and warm</string>
+    <string name="beta_welcome_title">Welcome to the Beta! 🚀</string>
+    <string name="beta_welcome_message">Thank you for testing NeuroComet! Your feedback helps us build a better app for the neurodivergent community.</string>
+    <string name="beta_feedback_prompt">Found a bug or have a suggestion?</string>
+    <string name="beta_feedback_button">Send Beta Feedback</string>
+    <string name="beta_version_notice">Beta Version %s</string>
+    <string name="settings_section_legal">Legal</string>
+    <string name="settings_privacy_policy_url">Privacy Policy</string>
+    <string name="settings_privacy_policy_desc">How we protect your data</string>
+    <string name="settings_terms_url">Terms of Service</string>
+    <string name="settings_terms_desc">Rules for using NeuroComet</string>
+    <string name="settings_licenses_desc">Open source libraries we use</string>
+    <string name="settings_about_app">About NeuroComet</string>
+    <string name="settings_about_app_desc">Version info, credits &amp; more</string>
+    <string name="about_title">About NeuroComet</string>
+    <string name="about_tagline">A safe space for every mind ✨</string>
+    <string name="about_description">NeuroComet is a social platform designed for neurodivergent and LGBTQ+ individuals. We believe every brain is beautiful and deserves a space to connect, share, and thrive.</string>
+    <string name="about_credits">Made with 💜 by the NeuroComet team</string>
+    <string name="about_version">Version %1$s (Build %2$d)</string>
+    <string name="about_copyright">© 2024–2026 NeuroComet. All rights reserved.</string>
+    <string name="whats_new_title">What\'s New</string>
+    <string name="whats_new_see_all">See all updates</string>
+    <string name="mood_happy">Happy</string>
+    <string name="mood_thoughtful">Thoughtful</string>
+    <string name="mood_tired">Tired</string>
+    <string name="mood_celebrating">Celebrating</string>
+    <string name="mood_motivated">Motivated</string>
+    <string name="mood_calm">Calm</string>
+    <string name="mood_mind_blown">Mind-blown</string>
+    <string name="mood_inspired">Inspired</string>
+        <string name="loading">Laden...</string>
+    <string name="action_save">Opslaan</string>
+    <string name="action_cancel">Annuleren</string>
+    <string name="action_delete">Verwijderen</string>
+    <string name="messaging_search_conversations">Gesprekken zoeken…</string>
+    <string name="messaging_no_results">Geen resultaten gevonden</string>
+    <string name="messaging_no_conversations_yet">Nog geen gesprekken</string>
+    <string name="messaging_start_conversation">Start een gesprek met iemand!</string>
+    <string name="messaging_start_your_conversation">Start je gesprek</string>
+    <string name="messaging_user_blocked">Gebruiker geblokkeerd</string>
+    <string name="messaging_unblock_to_send">Deblokkeer om te verzenden</string>
+    <string name="messaging_tap_to_retry">Tik om opnieuw te proberen</string>
+    <string name="messaging_quick_emoji">Snelle emoji</string>
+    <string name="messaging_close_search">Zoeken sluiten</string>
+    <string name="age_verify_your_age">Je leeftijd</string>
+    <string name="age_confirm">Bevestigen</string>
+    <string name="age_skip_for_now">Nu overslaan</string>
+    <string name="badges_badge_unlocked">🎉 Badge Ontgrendeld! 🎉</string>
+    <string name="badges_xp_earned">+%d XP verdiend</string>
+    <string name="badges_unlocked_count">%d ontgrendeld</string>
+    <string name="badges_close">Sluiten</string>
+    <string name="badges_awesome">Geweldig!</string>
+    <string name="badges_all">Alles</string>
+    <string name="category_no_posts">Geen berichten in \'%s\'</string>
+    <string name="category_be_first">Wees de eerste om te delen!</string>
+    <string name="create_moment">Moment Maken</string>
+    <string name="debug_tools">🔧 Debug Tools</string>
+    <string name="debug_performance_overlay_title">Prestatie Overlay</string>
+    <string name="dev_go_back">Go Back</string>
+    <string name="dev_developer_options">Developer Options</string>
+    <string name="dev_reset_mock_data">Reset All Mock Data</string>
+    <string name="dev_restart_app">Restart App (Show Splash)</string>
+    <string name="dev_reset_stay_signed_in">Reset Stay Signed In Prompt</string>
+    <string name="dev_loading_stress_test">Loading stress testing…</string>
+    <string name="dev_reset_audience">Reset Forced Audience</string>
+    <string name="dev_apply_audience">Apply Current Audience</string>
+    <string name="dev_force_under_13">Force Under 13</string>
+    <string name="dev_force_teen">Force Teen</string>
+    <string name="dev_force_adult">Force Adult</string>
+    <string name="dev_launch_age_popup">Launch Age Popup</string>
+    <string name="dev_reset_age_overrides">Reset Age Overrides</string>
+    <string name="dev_refresh_counts">Refresh Counts</string>
+    <string name="dev_send_test_post">Send Test Post</string>
+    <string name="dev_send_test_like">Send Test Like</string>
+    <string name="dev_send_test_user">Send Test User</string>
+    <string name="dev_send_bulk_posts">Send 5 Bulk Posts</string>
+    <string name="dev_clear_test_data">Clear All Test Data</string>
+    <string name="dev_reset_achievements">Reset Achievements</string>
+    <string name="dev_test_arabic_rtl">🇸🇦 Test Arabic RTL</string>
+    <string name="dev_reset_system_language">Reset to System Language</string>
+    <string name="dev_apply_restart">Apply &amp; Restart</string>
+    <string name="dev_email">Email</string>
+    <string name="dev_password">Password</string>
+    <string name="dev_phone_number">Phone Number</string>
+    <string name="dev_phone_placeholder">(555) 123-4567</string>
 </resources>

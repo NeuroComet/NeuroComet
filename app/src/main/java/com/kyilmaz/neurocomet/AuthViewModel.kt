@@ -287,6 +287,27 @@ class AuthViewModel : ViewModel() {
     fun signIn(email: String, password: String) {
         viewModelScope.launch {
             try {
+                // Input validation — prevent login with empty or malformed credentials
+                val trimmedEmail = email.trim()
+                val trimmedPassword = password.trim()
+
+                if (trimmedEmail.isBlank()) {
+                    _error.value = "Email is required"
+                    return@launch
+                }
+                if (!trimmedEmail.contains("@") || !trimmedEmail.contains(".")) {
+                    _error.value = "Please enter a valid email address"
+                    return@launch
+                }
+                if (trimmedPassword.isBlank()) {
+                    _error.value = "Password is required"
+                    return@launch
+                }
+                if (trimmedPassword.length < 6) {
+                    _error.value = "Password must be at least 6 characters"
+                    return@launch
+                }
+
                 delay(1000) // Simulate network
                 if (_is2FAEnabled.value) {
                     _is2FARequired.value = true
@@ -351,6 +372,27 @@ class AuthViewModel : ViewModel() {
 
     fun signUp(email: String, password: String, audience: Audience?) {
         viewModelScope.launch {
+            // Input validation — prevent sign-up with empty or malformed credentials
+            val trimmedEmail = email.trim()
+            val trimmedPassword = password.trim()
+
+            if (trimmedEmail.isBlank()) {
+                _error.value = "Email is required"
+                return@launch
+            }
+            if (!trimmedEmail.contains("@") || !trimmedEmail.contains(".")) {
+                _error.value = "Please enter a valid email address"
+                return@launch
+            }
+            if (trimmedPassword.isBlank()) {
+                _error.value = "Password is required"
+                return@launch
+            }
+            if (trimmedPassword.length < 6) {
+                _error.value = "Password must be at least 6 characters"
+                return@launch
+            }
+
             delay(1000)
             _user.value = User(
                 id = "mock_user_id",
@@ -369,6 +411,11 @@ class AuthViewModel : ViewModel() {
     }
 
     fun skipAuth() {
+        // Only allow guest access in debug builds to prevent unauthorized feed access
+        if (!BuildConfig.DEBUG) {
+            _error.value = "Authentication is required"
+            return
+        }
         _user.value = User(
             id = "guest_user",
             name = "Guest",

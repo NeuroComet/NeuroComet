@@ -1,4 +1,4 @@
-package com.kyilmaz.neurocomet
+﻿package com.kyilmaz.neurocomet
 
 import android.Manifest
 import android.content.ContentResolver
@@ -10,6 +10,7 @@ import android.media.MediaRecorder
 import android.net.Uri
 import android.os.Build
 import android.provider.ContactsContract
+import android.provider.ContactsPickerSessionContract
 import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
@@ -17,13 +18,26 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
+
+/**
+ * Data class holding a single contact result from the Android 17 system contacts picker.
+ * The session-based picker returns scoped, per-field data so we capture exactly what was
+ * selected.
+ */
+data class PickedContactResult(
+    val displayName: String,
+    val phone: String? = null,
+    val email: String? = null
+)
 
 private const val TAG = "MediaUtils"
 
@@ -298,12 +312,114 @@ object AttachmentHelper {
 
     /**
      * Check if contacts permission is granted.
+     * On CinnamonBun+ the [ContactsPickerSessionContract] path does NOT require
+     * READ_CONTACTS, but the legacy fallback still does. This always checks
+     * the real permission state so callers can decide whether to request it.
      */
     fun hasContactsPermission(context: Context): Boolean {
         return ContextCompat.checkSelfPermission(
             context,
             Manifest.permission.READ_CONTACTS
         ) == PackageManager.PERMISSION_GRANTED
+    }
+
+
+    /**
+     * Whether the device supports the privacy-preserving system contacts picker
+     * introduced in Android 17 (CinnamonBun / API 37).
+     * Uses [android.provider.ContactsPickerSessionContract].
+     */
+    fun supportsContactsPicker(): Boolean =
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.CINNAMON_BUN
+
+    /**
+     * Build the [Intent] to pass to [ContactsPickerSessionContract] for
+     * launching the Android 17 system contacts picker.
+     *
+     * Per the API reference the intent action must be
+     * [ContactsPickerSessionContract.ACTION_PICK_CONTACTS] and requested data
+     * field MIME types are supplied via
+     * [ContactsPickerSessionContract.EXTRA_PICK_CONTACTS_REQUESTED_DATA_FIELDS].
+     *
+     * @param allowMultiple whether the user may select more than one contact.
+     */
+    @Suppress("NewApi")
+    fun buildContactsPickerIntent(allowMultiple: Boolean = false): Intent {
+        val dataFields = arrayListOf(
+            ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE,
+            ContactsContract.CommonDataKinds.Email.CONTENT_ITEM_TYPE
+        )
+        return Intent(ContactsPickerSessionContract.ACTION_PICK_CONTACTS).apply {
+            putStringArrayListExtra(
+                ContactsPickerSessionContract.EXTRA_PICK_CONTACTS_REQUESTED_DATA_FIELDS,
+                dataFields
+            )
+            putExtra(Intent.EXTRA_ALLOW_MULTIPLE, allowMultiple)
+        }
+    }
+
+    /**
+     * Query the session URI returned by [ContactsPickerSessionContract].
+     *
+     * The picker delivers a session-scoped `content://` URI.  Querying it
+     * yields rows with the columns `display_name`, `mimetype` and `data1`
+     * (same layout as [ContactsContract.Data]).
+     */
+    fun queryContactPickerSession(
+        contentResolver: ContentResolver,
+        sessionUri: Uri
+    ): List<PickedContactResult> {
+        val contactsMap = mutableMapOf<String, MutableMap<String, String>>()
+        try {
+            contentResolver.query(
+                sessionUri,
+                arrayOf("display_name", "mimetype", "data1"),
+                null, null, null
+            )?.use { cursor ->
+                val nameIdx = cursor.getColumnIndex("display_name")
+                val mimeIdx = cursor.getColumnIndex("mimetype")
+                val dataIdx = cursor.getColumnIndex("data1")
+                while (cursor.moveToNext()) {
+                    val name = if (nameIdx >= 0) cursor.getString(nameIdx) ?: "Contact" else "Contact"
+                    val mime = if (mimeIdx >= 0) cursor.getString(mimeIdx) else null
+                    val data = if (dataIdx >= 0) cursor.getString(dataIdx) else null
+
+                    val entry = contactsMap.getOrPut(name) { mutableMapOf("name" to name) }
+                    when (mime) {
+                        ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE ->
+                            entry["phone"] = data ?: ""
+                        ContactsContract.CommonDataKinds.Email.CONTENT_ITEM_TYPE ->
+                            entry["email"] = data ?: ""
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to query contacts picker session", e)
+        }
+        return contactsMap.values.map { fields ->
+            PickedContactResult(
+                displayName = fields["name"] ?: "Contact",
+                phone = fields["phone"],
+                email = fields["email"]
+            )
+        }
+    }
+
+    /**
+     * Check if local network permission is granted.
+     * On Android 17 (CinnamonBun / API 37+) this is a runtime permission required
+     * for local device discovery, LAN connections, and WebRTC ICE candidate gathering.
+     * On older APIs the permission does not exist, so we return true.
+     */
+    fun hasLocalNetworkPermission(context: Context): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.CINNAMON_BUN) {
+            ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.ACCESS_LOCAL_NETWORK
+            ) == PackageManager.PERMISSION_GRANTED
+        } else {
+            true // Permission not required pre-CinnamonBun
+        }
     }
 
     /**
@@ -373,6 +489,18 @@ fun rememberAttachmentState(
     onAttachmentReady: (MessageAttachment) -> Unit
 ): AttachmentState {
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+
+    // Hoist string resources at composable scope to avoid
+    // "Querying resource values using LocalContext.current" errors.
+    val strCameraPermissionRequired = stringResource(R.string.camera_permission_required)
+    val strLocationShared = stringResource(R.string.location_shared)
+    val strUnableToGetLocation = stringResource(R.string.unable_to_get_location)
+    val strLocationPermissionRequired = stringResource(R.string.location_permission_required)
+    val strContactsPermissionRequired = stringResource(R.string.contacts_permission_required)
+    val strMicrophonePermissionRequired = stringResource(R.string.microphone_permission_required)
+    val strGettingLocation = stringResource(R.string.getting_location)
+    val strSharedLocation = stringResource(R.string.shared_location)
 
     // Image picker launcher
     val imagePickerLauncher = rememberLauncherForActivityResult(
@@ -422,8 +550,34 @@ fun rememberAttachmentState(
         }
     }
 
-    // Contact picker launcher
-    val contactPickerLauncher = rememberLauncherForActivityResult(
+    // ── Contact picker ─────────────────────────────────────────
+    // Android 17 (CinnamonBun): ContactsPickerSessionContract is an
+    // ActivityResultContract<Intent, Uri?>.  We register it with
+    // rememberLauncherForActivityResult and launch with an Intent built via
+    // ACTION_PICK_CONTACTS + EXTRA_PICK_CONTACTS_REQUESTED_DATA_FIELDS.
+    // No READ_CONTACTS permission is needed.
+    // Pre-CinnamonBun: Fall back to ActivityResultContracts.PickContact().
+
+    /** Helper: resolve a contact name from the returned URI (legacy path). */
+    fun resolveContactName(uri: Uri): String {
+        try {
+            context.contentResolver.query(
+                uri, arrayOf(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY),
+                null, null, null
+            )?.use { cursor ->
+                if (cursor.moveToFirst()) {
+                    val idx = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY)
+                    if (idx >= 0) return cursor.getString(idx) ?: "Contact"
+                }
+            }
+        } catch (e: Exception) {
+            Log.w(TAG, "Could not resolve contact name", e)
+        }
+        return "Contact"
+    }
+
+    // Legacy picker (pre-CinnamonBun)
+    val legacyContactPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickContact()
     ) { uri ->
         uri?.let {
@@ -431,9 +585,66 @@ fun rememberAttachmentState(
                 MessageAttachment(
                     type = AttachmentType.CONTACT,
                     uri = it,
-                    displayName = "Contact"
+                    displayName = resolveContactName(it)
                 )
             )
+        }
+    }
+
+    // Android 17+ system contacts picker via ContactsPickerSessionContract.
+    // ContactsPickerSessionContract is an ActivityResultContract<Intent, Uri?>
+    // that takes the ACTION_PICK_CONTACTS intent and returns a session URI.
+    @Suppress("NewApi")
+    val cinnamonBunContactPickerLauncher = rememberLauncherForActivityResult(
+        contract = object : androidx.activity.result.contract.ActivityResultContract<Intent, Uri?>() {
+            override fun createIntent(context: Context, input: Intent): Intent = input
+            override fun parseResult(resultCode: Int, intent: Intent?): Uri? {
+                return if (resultCode == android.app.Activity.RESULT_OK) intent?.data else null
+            }
+        }
+    ) { sessionUri: Uri? ->
+        if (sessionUri != null) {
+            // Query the session URI to get the privacy-scoped contact data
+            val contacts = AttachmentHelper.queryContactPickerSession(
+                context.contentResolver, sessionUri
+            )
+            if (contacts.isNotEmpty()) {
+                val first = contacts.first()
+                val summary = buildString {
+                    append(first.displayName)
+                    first.phone?.let { append(" • $it") }
+                    first.email?.let { append(" • $it") }
+                }
+                onAttachmentReady(
+                    MessageAttachment(
+                        type = AttachmentType.CONTACT,
+                        uri = sessionUri,
+                        displayName = summary,
+                        metadata = mapOf(
+                            "name" to first.displayName,
+                            "phone" to (first.phone ?: ""),
+                            "email" to (first.email ?: ""),
+                            "count" to contacts.size
+                        )
+                    )
+                )
+            }
+        }
+    }
+
+    /** Launch the correct contacts picker depending on API level. */
+    fun launchContactsPicker() {
+        if (AttachmentHelper.supportsContactsPicker()) {
+            // Android 17+ (CinnamonBun) — ContactsPickerSessionContract
+            try {
+                val intent = AttachmentHelper.buildContactsPickerIntent(allowMultiple = false)
+                cinnamonBunContactPickerLauncher.launch(intent)
+            } catch (e: Exception) {
+                Log.e(TAG, "CinnamonBun contacts picker failed, falling back", e)
+                legacyContactPickerLauncher.launch(null)
+            }
+        } else {
+            legacyContactPickerLauncher.launch(null)
         }
     }
 
@@ -466,7 +677,7 @@ fun rememberAttachmentState(
                 cameraLauncher.launch(uri)
             }
         } else {
-            Toast.makeText(context, "Camera permission required", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, strCameraPermissionRequired, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -474,10 +685,28 @@ fun rememberAttachmentState(
         contract = ActivityResultContracts.RequestPermission()
     ) { granted ->
         if (granted) {
-            // TODO: Get location and create attachment
-            Toast.makeText(context, "Getting location...", Toast.LENGTH_SHORT).show()
+            LocationService.initialize(context)
+            scope.launch {
+                val loc = LocationService.getCurrentLocation(context, LocationPriority.HIGH_ACCURACY)
+                if (loc != null) {
+                    onAttachmentReady(
+                        MessageAttachment(
+                            type = AttachmentType.LOCATION,
+                            displayName = "📍 Shared Location",
+                            metadata = mapOf(
+                                "latitude" to loc.latitude,
+                                "longitude" to loc.longitude,
+                                "accuracy" to (loc.accuracy ?: 0f)
+                            )
+                        )
+                    )
+                    Toast.makeText(context, strLocationShared, Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(context, strUnableToGetLocation, Toast.LENGTH_SHORT).show()
+                }
+            }
         } else {
-            Toast.makeText(context, "Location permission required", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, strLocationPermissionRequired, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -485,9 +714,9 @@ fun rememberAttachmentState(
         contract = ActivityResultContracts.RequestPermission()
     ) { granted ->
         if (granted) {
-            contactPickerLauncher.launch(null)
+            launchContactsPicker()
         } else {
-            Toast.makeText(context, "Contacts permission required", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, strContactsPermissionRequired, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -497,7 +726,7 @@ fun rememberAttachmentState(
         if (granted) {
             // Permission granted, state will handle this
         } else {
-            Toast.makeText(context, "Microphone permission required", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, strMicrophonePermissionRequired, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -519,15 +748,37 @@ fun rememberAttachmentState(
             onPickDocument = { documentPickerLauncher.launch(arrayOf("*/*")) },
             onShareLocation = {
                 if (AttachmentHelper.hasLocationPermission(context)) {
-                    // TODO: Get location
-                    Toast.makeText(context, "Getting location...", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, strGettingLocation, Toast.LENGTH_SHORT).show()
+                    LocationService.initialize(context)
+                    scope.launch {
+                        val loc = LocationService.getCurrentLocation(context, LocationPriority.HIGH_ACCURACY)
+                        if (loc != null) {
+                            onAttachmentReady(
+                                MessageAttachment(
+                                    type = AttachmentType.LOCATION,
+                                    displayName = "📍 $strSharedLocation",
+                                    metadata = mapOf(
+                                        "latitude" to loc.latitude,
+                                        "longitude" to loc.longitude,
+                                        "accuracy" to (loc.accuracy ?: 0f)
+                                    )
+                                )
+                            )
+                            Toast.makeText(context, strLocationShared, Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(context, strUnableToGetLocation, Toast.LENGTH_SHORT).show()
+                        }
+                    }
                 } else {
                     locationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
                 }
             },
             onPickContact = {
-                if (AttachmentHelper.hasContactsPermission(context)) {
-                    contactPickerLauncher.launch(null)
+                if (AttachmentHelper.supportsContactsPicker()) {
+                    // Android 17+ (CinnamonBun) — no permission needed, launch system picker directly
+                    launchContactsPicker()
+                } else if (AttachmentHelper.hasContactsPermission(context)) {
+                    launchContactsPicker()
                 } else {
                     contactsPermissionLauncher.launch(Manifest.permission.READ_CONTACTS)
                 }
@@ -560,4 +811,3 @@ class AttachmentState(
         ) == PackageManager.PERMISSION_GRANTED
     }
 }
-

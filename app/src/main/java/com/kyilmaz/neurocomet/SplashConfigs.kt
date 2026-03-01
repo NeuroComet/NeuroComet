@@ -200,6 +200,14 @@ fun getSplashConfigForState(state: NeuroState): SplashConfig {
             animationStyle = SplashAnimationStyle.CREATIVE_SWIRL
         )
 
+        // Comfort/Cozy Theme
+        NeuroState.CINNAMON_BUN -> SplashConfig(
+            messageResIds = listOf(R.string.splash_msg_cinnamon_bun_1, R.string.splash_msg_cinnamon_bun_2, R.string.splash_msg_cinnamon_bun_3),
+            taglineResId = R.string.splash_tagline_cinnamon_bun,
+            animationStyle = SplashAnimationStyle.GENTLE_FLOAT,
+            durationMs = 2000L
+        )
+
         // Secret Theme
         NeuroState.RAINBOW_BRAIN -> SplashConfig(
             messageResIds = listOf(

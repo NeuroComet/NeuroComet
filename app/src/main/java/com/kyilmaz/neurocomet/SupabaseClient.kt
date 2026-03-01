@@ -22,13 +22,7 @@ import io.github.jan.supabase.postgrest.Postgrest
  *
  * Configuration (optional):
  * - Set SUPABASE_URL and SUPABASE_KEY via buildConfigField in build.gradle.kts
- * - Or set them in local.properties (not committed to version control)
- *
- * Security notes:
- * - API keys are NOT required for the app to function
- * - Internal endpoints should NOT require auth (handled server-side)
- * - CORS is handled by the server, not the client
- * - Input validation happens both client-side and server-side
+ * - These are now stored in local.properties and obfuscated in the binary
  */
 @Suppress("unused")
 object AppSupabaseClient {
@@ -47,8 +41,8 @@ object AppSupabaseClient {
      */
     private fun getSupabaseUrl(): String? {
         return try {
-            val url = BuildConfig.SUPABASE_URL
-            if (url.isNotBlank() && url != "\"\"" && url != "null") url else null
+            val url = SecurityUtils.decrypt(BuildConfig.SUPABASE_URL)
+            if (url.isNotBlank() && url != "null") url else null
         } catch (e: Exception) {
             Log.d(TAG, "SUPABASE_URL not configured")
             null
@@ -60,8 +54,8 @@ object AppSupabaseClient {
      */
     private fun getSupabaseKey(): String? {
         return try {
-            val key = BuildConfig.SUPABASE_KEY
-            if (key.isNotBlank() && key != "\"\"" && key != "null") key else null
+            val key = SecurityUtils.decrypt(BuildConfig.SUPABASE_KEY)
+            if (key.isNotBlank() && key != "null") key else null
         } catch (e: Exception) {
             Log.d(TAG, "SUPABASE_KEY not configured")
             null
@@ -112,4 +106,3 @@ interface SupabaseService {
 }
 
 typealias SupabaseClientProvider = AppSupabaseClient
-

@@ -404,11 +404,11 @@ private fun generateMockPostsForCategory(category: String): List<Post> {
                 isLikedByMe = true,
                 minAudience = Audience.UNDER_13,
                 mediaItems = listOf(
-                    MediaItem(url = "https://picsum.photos/seed/study1/800/600", type = MediaType.IMAGE, altText = "Cozy reading nook"),
-                    MediaItem(url = "https://picsum.photos/seed/study2/800/600", type = MediaType.IMAGE, altText = "Organized desk setup"),
-                    MediaItem(url = "https://picsum.photos/seed/study3/800/600", type = MediaType.IMAGE, altText = "Fidget toy collection"),
-                    MediaItem(url = "https://picsum.photos/seed/study4/800/600", type = MediaType.IMAGE, altText = "Timer and planner station"),
-                    MediaItem(url = "https://picsum.photos/seed/study5/800/600", type = MediaType.IMAGE, altText = "Snack and water corner")
+                    MediaItem(url = "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800", type = MediaType.IMAGE, altText = "Cozy reading nook"),
+                    MediaItem(url = "https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?w=800", type = MediaType.IMAGE, altText = "Organized desk setup"),
+                    MediaItem(url = "https://images.unsplash.com/photo-1612538498456-e861df91d4d0?w=800", type = MediaType.IMAGE, altText = "Fidget toy collection"),
+                    MediaItem(url = "https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=800", type = MediaType.IMAGE, altText = "Timer and planner station"),
+                    MediaItem(url = "https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=800", type = MediaType.IMAGE, altText = "Snack and water corner")
                 )
             ),
             Post(
@@ -653,7 +653,7 @@ private fun generateMockPostsForCategory(category: String): List<Post> {
                 likes = 5000,
                 comments = 700,
                 shares = 200,
-                imageUrl = "https://picsum.photos/seed/macncheese/400/300",
+                imageUrl = "https://images.unsplash.com/photo-1543339494-b4cd4f7ba686?w=400",
                 createdAt = Instant.now().toString(),
                 isLikedByMe = false,
                 minAudience = Audience.TEEN

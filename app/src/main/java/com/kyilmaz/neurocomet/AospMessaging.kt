@@ -427,7 +427,7 @@ private fun AospConversationItem(
 }
 
 // =============================================================================
-// CONVERSATION SCREEN - AOSP STYLE WITH NEURO ENHANCEMENTS (API 36 COMPLIANT)
+// CONVERSATION SCREEN - AOSP STYLE WITH NEURO ENHANCEMENTS (API 37 COMPLIANT)
 // =============================================================================
 
 @OptIn(ExperimentalMaterial3Api::class)

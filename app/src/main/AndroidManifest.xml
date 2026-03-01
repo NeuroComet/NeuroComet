@@ -4,9 +4,63 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <!-- Camera & Microphone -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
+    <!-- Camera is optional — allow install on devices without a camera -->
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
+    <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
+
+    <!-- Location -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+
+    <!-- Storage: granular media permissions on API 33+ -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+    <!-- Legacy storage for API < 33 -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+
+    <!-- Notifications (API 33+) -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <!-- Bluetooth (API 31+) -->
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+
+    <!-- Local Network Access (API 37+ / CinnamonBun) — required for local device
+         discovery, WebRTC ICE candidate gathering over LAN, and casting. -->
+    <uses-permission android:name="android.permission.ACCESS_LOCAL_NETWORK" />
+
+    <!-- Required for Google Ads -->
+    <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
+
+    <!-- Shortcut permissions for various launchers -->
+    <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
+    <uses-permission android:name="com.android.launcher.permission.UNINSTALL_SHORTCUT" />
+    <!-- Samsung launcher -->
+    <uses-permission android:name="com.sec.android.provider.badge.permission.READ" />
+    <uses-permission android:name="com.sec.android.provider.badge.permission.WRITE" />
+    <!-- MIUI launcher -->
+    <uses-permission android:name="com.miui.home.launcher.permission.INSTALL_SHORTCUT" />
+    <!-- OPPO launcher -->
+    <uses-permission android:name="com.oppo.launcher.permission.INSTALL_SHORTCUT" />
+    <!-- Huawei launcher -->
+    <uses-permission android:name="com.huawei.android.launcher.permission.INSTALL_SHORTCUT" />
+
+    <!-- Contacts: On CinnamonBun+ (Android 17) the ContactsPickerSessionContract
+         provides privacy-preserving contact access without READ_CONTACTS.
+         The permission is still declared (without maxSdkVersion) so the legacy
+         picker fallback and third-party libraries can function on all API levels. -->
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
 
     <application
-          android:name=".NeuroNetApp"
+        android:name=".NeuroCometApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -14,17 +68,147 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.NeuroNetWorkingTitle"
+        android:theme="@style/Theme.NeuroComet"
+        android:extractNativeLibs="false"
         tools:targetApi="31">
+
+        <!-- Google AdMob App ID - Required for Google Mobile Ads SDK -->
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="${admobAppId}" />
+
+        <!-- Main Activity - No launcher intent, just the target -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.NeuroNetWorkingTitle">
+            android:theme="@style/Theme.NeuroComet">
+        </activity>
+
+        <!-- Transparent activity for shortcut requests -->
+        <activity
+            android:name=".ShortcutRequestActivity"
+            android:exported="false"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:excludeFromRecents="true"
+            android:noHistory="true" />
+
+        <!-- Default Icon Alias - enabled by default -->
+        <activity-alias
+            android:name=".MainActivityDefault"
+            android:targetActivity=".MainActivity"
+            android:enabled="true"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher"
+            android:roundIcon="@mipmap/ic_launcher_round"
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
+        </activity-alias>
+
+        <!-- Calm Icon Alias -->
+        <activity-alias
+            android:name=".MainActivityCalm"
+            android:targetActivity=".MainActivity"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher_calm"
+            android:roundIcon="@mipmap/ic_launcher_calm_round"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
+        </activity-alias>
+
+        <!-- Focus Icon Alias -->
+        <activity-alias
+            android:name=".MainActivityFocus"
+            android:targetActivity=".MainActivity"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher_focus"
+            android:roundIcon="@mipmap/ic_launcher_focus_round"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
+        </activity-alias>
+
+        <!-- Energy Icon Alias -->
+        <activity-alias
+            android:name=".MainActivityEnergy"
+            android:targetActivity=".MainActivity"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher_energy"
+            android:roundIcon="@mipmap/ic_launcher_energy_round"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
+        </activity-alias>
+
+        <!-- Sensory Friendly Icon Alias -->
+        <activity-alias
+            android:name=".MainActivitySensory"
+            android:targetActivity=".MainActivity"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher_sensory"
+            android:roundIcon="@mipmap/ic_launcher_sensory_round"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
+        </activity-alias>
+
+        <!-- Neurodiversity Pride Icon Alias -->
+        <activity-alias
+            android:name=".MainActivityPride"
+            android:targetActivity=".MainActivity"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher_pride"
+            android:roundIcon="@mipmap/ic_launcher_pride_round"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
+        </activity-alias>
+
+        <!-- Shortcut receiver for handling shortcut creation callbacks -->
+        <receiver
+            android:name=".ShortcutReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.kyilmaz.neurocomet.SHORTCUT_ADDED" />
+                <action android:name="com.android.launcher.action.INSTALL_SHORTCUT" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

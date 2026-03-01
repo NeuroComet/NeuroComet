@@ -36,6 +36,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.pm.ShortcutInfoCompat
+import androidx.core.content.pm.ShortcutManagerCompat
+import androidx.core.graphics.drawable.IconCompat
 
 /**
  * Detects the current default launcher app.
@@ -276,7 +279,7 @@ fun IconCustomizationScreen(
         }
     }
 
-    // Apply confirmation dialog
+    // Apply confirmation dialog with two options
     if (showApplyDialog) {
         AlertDialog(
             onDismissRequest = { showApplyDialog = false },
@@ -295,7 +298,7 @@ fun IconCustomizationScreen(
             },
             title = {
                 Text(
-                    "Create ${stringResource(selectedIcon.titleRes)} Shortcut?",
+                    stringResource(selectedIcon.titleRes),
                     textAlign = TextAlign.Center
                 )
             },
@@ -306,34 +309,121 @@ fun IconCustomizationScreen(
                         textAlign = TextAlign.Center,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
-                    Spacer(Modifier.height(8.dp))
-                    Text(
-                        "This will create a new home screen shortcut with this icon style.",
-                        style = MaterialTheme.typography.bodySmall,
-                        textAlign = TextAlign.Center,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
-                    )
-                    Spacer(Modifier.height(4.dp))
-                    Text(
-                        "💡 After adding the new shortcut, you can remove the old one from your home screen.",
-                        style = MaterialTheme.typography.labelSmall,
-                        textAlign = TextAlign.Center,
-                        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f)
-                    )
-                }
-            },
-            confirmButton = {
-                Button(
-                    onClick = {
-                        applyAppIcon(context, selectedIcon)
-                        showApplyDialog = false
+                    Spacer(Modifier.height(12.dp))
+
+                    // Option 1: Change App Icon
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f)
+                        ),
+                        shape = RoundedCornerShape(12.dp)
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(12.dp)
+                        ) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Text("🎨", fontSize = 20.sp)
+                                Spacer(Modifier.width(8.dp))
+                                Text(
+                                    "Change App Icon",
+                                    style = MaterialTheme.typography.titleSmall,
+                                    fontWeight = FontWeight.SemiBold
+                                )
+                            }
+                            Spacer(Modifier.height(4.dp))
+                            Text(
+                                "Changes the main app icon in your launcher. May take a few seconds to refresh.",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                            Spacer(Modifier.height(8.dp))
+                            Button(
+                                onClick = {
+                                    applyAppIcon(context, selectedIcon)
+                                    showApplyDialog = false
+                                },
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Icon(Icons.Filled.Check, null, Modifier.size(18.dp))
+                                Spacer(Modifier.width(4.dp))
+                                Text("Apply Icon")
+                            }
+                        }
                     }
-                ) {
-                    Icon(Icons.Filled.Add, null, Modifier.size(18.dp))
-                    Spacer(Modifier.width(4.dp))
-                    Text("Create Shortcut")
+
+                    Spacer(Modifier.height(12.dp))
+
+                    // Divider with "OR"
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        HorizontalDivider(modifier = Modifier.weight(1f))
+                        Text(
+                            "  OR  ",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        HorizontalDivider(modifier = Modifier.weight(1f))
+                    }
+
+                    Spacer(Modifier.height(12.dp))
+
+                    // Option 2: Create Shortcut
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.5f)
+                        ),
+                        shape = RoundedCornerShape(12.dp)
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(12.dp)
+                        ) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Text("📌", fontSize = 20.sp)
+                                Spacer(Modifier.width(8.dp))
+                                Text(
+                                    "Add Shortcut",
+                                    style = MaterialTheme.typography.titleSmall,
+                                    fontWeight = FontWeight.SemiBold
+                                )
+                            }
+                            Spacer(Modifier.height(4.dp))
+                            Text(
+                                "Creates a themed shortcut. After tapping, look at the BOTTOM of your screen for 'Add to Home screen' popup!",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                            Spacer(Modifier.height(4.dp))
+                            Text(
+                                "💡 Tip: Long-press app icon to see shortcuts in menu",
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f)
+                            )
+                            Spacer(Modifier.height(8.dp))
+                            OutlinedButton(
+                                onClick = {
+                                    // Launch the ShortcutRequestActivity to handle the shortcut
+                                    // This works better for triggering the system's "Add to Home" dialog
+                                    val intent = Intent(context, ShortcutRequestActivity::class.java).apply {
+                                        putExtra(ShortcutRequestActivity.EXTRA_ICON_STYLE, selectedIcon.name)
+                                    }
+                                    context.startActivity(intent)
+                                    showApplyDialog = false
+                                },
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Icon(Icons.Filled.Add, null, Modifier.size(18.dp))
+                                Spacer(Modifier.width(4.dp))
+                                Text("Create Shortcut")
+                            }
+                        }
+                    }
                 }
             },
+            confirmButton = {},
             dismissButton = {
                 TextButton(onClick = { showApplyDialog = false }) {
                     Text("Cancel")
@@ -589,18 +679,11 @@ fun getIconBackgroundResource(iconStyle: AppIconStyle): Int {
 }
 
 /**
- * Apply the selected app icon by creating a pinned shortcut.
+ * Apply the selected app icon using Android's activity-alias mechanism.
  *
- * This is the ONLY reliable way to have custom app icons on Android.
- * The component-alias approach is fundamentally broken because:
- * 1. Launchers cache component references
- * 2. When you disable an alias, the cached shortcut becomes invalid
- * 3. Tapping a cached shortcut to a disabled alias = crash
- *
- * Instead, we:
- * 1. Save the preference for next app reinstall
- * 2. Create a new pinned shortcut with the custom icon
- * 3. User can replace their existing shortcut with the new one
+ * This enables/disables activity-alias components to change the launcher icon.
+ * The icon change will take effect after the launcher refreshes (usually 5-10 seconds,
+ * or after restarting the launcher).
  */
 fun applyAppIcon(context: Context, iconStyle: AppIconStyle) {
     val TAG = "IconCustomization"
@@ -609,106 +692,407 @@ fun applyAppIcon(context: Context, iconStyle: AppIconStyle) {
     val prefs = context.getSharedPreferences("icon_preferences", Context.MODE_PRIVATE)
     prefs.edit().putString("selected_icon", iconStyle.name).apply()
 
-    android.util.Log.d(TAG, "Saving icon preference: ${iconStyle.name}")
+    android.util.Log.d(TAG, "Applying icon style: ${iconStyle.name}")
 
-    // Create a pinned shortcut with the selected icon
-    createPinnedShortcut(context, iconStyle)
+    // Change the app icon using activity-alias
+    changeAppIcon(context, iconStyle)
 }
 
 /**
- * Create a pinned shortcut with the selected icon style
+ * Map of AppIconStyle to their corresponding activity-alias class names
+ */
+private val iconAliasMap = mapOf(
+    AppIconStyle.DEFAULT to "com.kyilmaz.neurocomet.MainActivityDefault",
+    AppIconStyle.CALM to "com.kyilmaz.neurocomet.MainActivityCalm",
+    AppIconStyle.FOCUS to "com.kyilmaz.neurocomet.MainActivityFocus",
+    AppIconStyle.ENERGY to "com.kyilmaz.neurocomet.MainActivityEnergy",
+    AppIconStyle.SENSORY_FRIENDLY to "com.kyilmaz.neurocomet.MainActivitySensory",
+    AppIconStyle.NEURODIVERSITY_PRIDE to "com.kyilmaz.neurocomet.MainActivityPride"
+)
+
+/**
+ * Change the app icon by enabling/disabling activity-alias components.
+ * This is the proper Android way to change app icons dynamically.
+ */
+fun changeAppIcon(context: Context, iconStyle: AppIconStyle) {
+    val TAG = "IconCustomization"
+    val packageManager = context.packageManager
+
+    android.util.Log.d(TAG, "Changing app icon to: ${iconStyle.name}")
+
+    try {
+        // Get the target alias for the selected style
+        val targetAlias = iconAliasMap[iconStyle] ?: iconAliasMap[AppIconStyle.DEFAULT]!!
+
+        // Disable all aliases first, then enable the target one
+        iconAliasMap.forEach { (style, aliasName) ->
+            val componentName = android.content.ComponentName(context, aliasName)
+            val newState = if (aliasName == targetAlias) {
+                android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_ENABLED
+            } else {
+                android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_DISABLED
+            }
+
+            val currentState = packageManager.getComponentEnabledSetting(componentName)
+
+            // Only change if different from current state
+            if (currentState != newState) {
+                android.util.Log.d(TAG, "Setting $aliasName to ${if (newState == android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_ENABLED) "ENABLED" else "DISABLED"}")
+
+                packageManager.setComponentEnabledSetting(
+                    componentName,
+                    newState,
+                    android.content.pm.PackageManager.DONT_KILL_APP
+                )
+            }
+        }
+
+        android.util.Log.d(TAG, "Icon changed to: ${iconStyle.name}")
+
+        // Get launcher-specific tip for icon change
+        val launcherInfo = LauncherDetector.detectLauncher(context)
+        val tip = launcherInfo.getIconChangeTip()
+
+        Toast.makeText(
+            context,
+            "Icon changed! $tip",
+            Toast.LENGTH_LONG
+        ).show()
+
+    } catch (e: Exception) {
+        android.util.Log.e(TAG, "Failed to change app icon", e)
+        e.printStackTrace()
+
+        // Fallback to creating a pinned shortcut
+        Toast.makeText(
+            context,
+            "Icon change failed. Creating shortcut instead...",
+            Toast.LENGTH_SHORT
+        ).show()
+        createPinnedShortcut(context, iconStyle)
+    }
+}
+
+/**
+ * Create a pinned shortcut with the selected icon style using ShortcutManagerCompat.
+ * This uses AndroidX's compatibility library for better cross-device support.
  */
 fun createPinnedShortcut(context: Context, iconStyle: AppIconStyle) {
     val TAG = "IconCustomization"
 
     try {
-        val shortcutManager = context.getSystemService(android.content.pm.ShortcutManager::class.java)
+        android.util.Log.d(TAG, "Starting shortcut creation for: ${iconStyle.name}")
 
-        if (shortcutManager == null) {
-            android.util.Log.e(TAG, "ShortcutManager not available")
-            Toast.makeText(context, "Shortcuts not supported on this device", Toast.LENGTH_SHORT).show()
-            return
-        }
+        // Detect launcher and log diagnostics
+        val launcherInfo = LauncherDetector.detectLauncher(context)
+        android.util.Log.d(TAG, "Detected launcher: ${launcherInfo.launcherType.displayName} (${launcherInfo.packageName})")
+        android.util.Log.d(TAG, "Supports pinned: ${launcherInfo.supportsPinnedShortcuts}, Legacy: ${launcherInfo.supportsLegacyBroadcast}")
 
-        if (!shortcutManager.isRequestPinShortcutSupported) {
-            android.util.Log.e(TAG, "Pinned shortcuts not supported")
-            Toast.makeText(context, "Your launcher doesn't support pinned shortcuts", Toast.LENGTH_SHORT).show()
-            return
-        }
+        // Log full diagnostics in debug
+        LauncherDetector.logDiagnostics(context)
 
-        // Create the shortcut intent
-        val intent = Intent(context, MainActivity::class.java).apply {
-            action = Intent.ACTION_MAIN
+        // Check if pinned shortcuts are supported using Compat library
+        val isPinSupported = ShortcutManagerCompat.isRequestPinShortcutSupported(context)
+        android.util.Log.d(TAG, "ShortcutManagerCompat.isRequestPinShortcutSupported: $isPinSupported")
+
+        // Create the shortcut intent - explicitly target the currently enabled activity alias
+        val launchIntent = Intent(Intent.ACTION_MAIN).apply {
             addCategory(Intent.CATEGORY_LAUNCHER)
+            setPackage(context.packageName)
+            // Don't set a specific component - let the system resolve it
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
 
-        // Create the icon by manually compositing background and foreground
-        val icon = createCompositeIcon(context, iconStyle)
+        android.util.Log.d(TAG, "Created launch intent: $launchIntent")
 
-        android.util.Log.d(TAG, "Icon created for style: ${iconStyle.name}")
+        // Create the icon bitmap for the shortcut
+        val iconBitmap = createCompositeIconBitmap(context, iconStyle)
+        val iconCompat = IconCompat.createWithBitmap(iconBitmap)
 
-        // Create the shortcut info with a unique ID to prevent caching issues
-        val timestamp = System.currentTimeMillis()
-        val shortcutId = "neurocomet_${iconStyle.name.lowercase()}_$timestamp"
+        android.util.Log.d(TAG, "Icon bitmap created for style: ${iconStyle.name}, size: ${iconBitmap.width}x${iconBitmap.height}")
 
-        android.util.Log.d(TAG, "Creating shortcut with ID: $shortcutId")
+        // Create a unique shortcut ID
+        val shortcutId = "neurocomet_${iconStyle.name.lowercase()}_${System.currentTimeMillis()}"
 
-        val shortcutInfo = android.content.pm.ShortcutInfo.Builder(context, shortcutId)
+        android.util.Log.d(TAG, "Building ShortcutInfoCompat with ID: $shortcutId")
+
+        // Build the shortcut info using the Compat library
+        val shortcutInfo = ShortcutInfoCompat.Builder(context, shortcutId)
             .setShortLabel(context.getString(R.string.app_name))
             .setLongLabel("NeuroComet - ${context.getString(iconStyle.titleRes)}")
-            .setIcon(icon)
-            .setIntent(intent)
+            .setIcon(iconCompat)
+            .setIntent(launchIntent)
             .build()
 
-        // Request to pin the shortcut
-        val pinnedShortcutCallbackIntent = shortcutManager.createShortcutResultIntent(shortcutInfo)
-        val successCallback = android.app.PendingIntent.getBroadcast(
-            context,
-            0,
-            pinnedShortcutCallbackIntent,
-            android.app.PendingIntent.FLAG_IMMUTABLE
-        )
+        android.util.Log.d(TAG, "ShortcutInfoCompat built successfully")
 
-        shortcutManager.requestPinShortcut(shortcutInfo, successCallback.intentSender)
+        // First, try to add as a dynamic shortcut (shows in long-press menu)
+        try {
+            // Push this shortcut as a dynamic shortcut
+            ShortcutManagerCompat.pushDynamicShortcut(context, shortcutInfo)
+            android.util.Log.d(TAG, "Added dynamic shortcut successfully")
+        } catch (e: Exception) {
+            android.util.Log.w(TAG, "Could not add dynamic shortcut: ${e.message}")
+        }
 
-        android.util.Log.d(TAG, "Requested pinned shortcut for ${iconStyle.name}")
+        if (isPinSupported) {
+            // Request to pin the shortcut using Compat library
+            val result = ShortcutManagerCompat.requestPinShortcut(context, shortcutInfo, null)
 
-        Toast.makeText(
-            context,
-            "Add the new shortcut to your home screen, then remove the old one",
-            Toast.LENGTH_LONG
-        ).show()
+            android.util.Log.d(TAG, "ShortcutManagerCompat.requestPinShortcut returned: $result")
+
+            if (result) {
+                // Show clear instructions
+                Toast.makeText(
+                    context,
+                    "⬇️ TAP 'ADD' AT THE BOTTOM OF YOUR SCREEN! ⬇️",
+                    Toast.LENGTH_LONG
+                ).show()
+
+                // Also show a follow-up message
+                android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
+                    Toast.makeText(
+                        context,
+                        "Or long-press the app icon to see shortcuts",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }, 3500)
+                return
+            } else {
+                android.util.Log.w(TAG, "requestPinShortcut returned false, trying alternatives")
+            }
+        }
+
+        // If pinned shortcut failed or not supported, try alternatives
+        android.util.Log.d(TAG, "Trying alternative shortcut methods...")
+
+        // Try launcher-specific methods
+        if (tryLauncherSpecificShortcut(context, launcherInfo, launchIntent, iconBitmap)) {
+            return
+        }
+
+        // Try legacy broadcast method as fallback
+        tryLegacyShortcut(context, iconStyle, launchIntent, iconBitmap)
 
     } catch (e: Exception) {
         android.util.Log.e(TAG, "Failed to create pinned shortcut", e)
+        e.printStackTrace()
         Toast.makeText(context, "Failed to create shortcut: ${e.message}", Toast.LENGTH_LONG).show()
     }
 }
 
 /**
+ * Try launcher-specific shortcut creation methods using LauncherDetector info.
+ * Returns true if a method was attempted (doesn't guarantee success)
+ */
+private fun tryLauncherSpecificShortcut(
+    context: Context,
+    launcherInfo: LauncherDetector.LauncherInfo,
+    launchIntent: Intent,
+    iconBitmap: android.graphics.Bitmap
+): Boolean {
+    val TAG = "IconCustomization"
+
+    android.util.Log.d(TAG, "Trying launcher-specific shortcut for: ${launcherInfo.launcherType.displayName}")
+
+    // Check if this launcher has a custom shortcut action
+    val customAction = launcherInfo.customShortcutAction
+
+    if (customAction != null) {
+        try {
+            val intent = Intent(customAction).apply {
+                putExtra(Intent.EXTRA_SHORTCUT_INTENT, launchIntent)
+                putExtra(Intent.EXTRA_SHORTCUT_NAME, context.getString(R.string.app_name))
+                putExtra(Intent.EXTRA_SHORTCUT_ICON, iconBitmap)
+                putExtra("duplicate", false)
+            }
+            context.sendBroadcast(intent)
+            android.util.Log.d(TAG, "Sent custom launcher broadcast: $customAction")
+            Toast.makeText(context, "Shortcut added! ${launcherInfo.getShortcutTip()}", Toast.LENGTH_SHORT).show()
+            return true
+        } catch (e: Exception) {
+            android.util.Log.e(TAG, "Custom launcher broadcast failed", e)
+        }
+    }
+
+    // Fallback for launchers that support legacy broadcast
+    if (launcherInfo.supportsLegacyBroadcast) {
+        try {
+            val intent = Intent("com.android.launcher.action.INSTALL_SHORTCUT").apply {
+                putExtra(Intent.EXTRA_SHORTCUT_INTENT, launchIntent)
+                putExtra(Intent.EXTRA_SHORTCUT_NAME, context.getString(R.string.app_name))
+                putExtra(Intent.EXTRA_SHORTCUT_ICON, iconBitmap)
+                putExtra("duplicate", false)
+            }
+            context.sendBroadcast(intent)
+            android.util.Log.d(TAG, "Sent legacy launcher broadcast for: ${launcherInfo.launcherType.displayName}")
+            Toast.makeText(context, "Shortcut added! ${launcherInfo.getShortcutTip()}", Toast.LENGTH_SHORT).show()
+            return true
+        } catch (e: Exception) {
+            android.util.Log.e(TAG, "Legacy launcher broadcast failed", e)
+        }
+    }
+
+    return false
+}
+
+
+/**
+ * Legacy shortcut creation for older launchers.
+ * Creates a new intent to avoid issues with modified intents.
+ */
+@Suppress("DEPRECATION")
+private fun tryLegacyShortcut(context: Context, iconStyle: AppIconStyle, launchIntent: Intent, iconBitmap: android.graphics.Bitmap) {
+    val TAG = "IconCustomization"
+    try {
+        // Create a fresh intent for the shortcut target
+        val shortcutTargetIntent = Intent(Intent.ACTION_MAIN).apply {
+            addCategory(Intent.CATEGORY_LAUNCHER)
+            setPackage(context.packageName)
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+
+        val shortcutIntent = Intent("com.android.launcher.action.INSTALL_SHORTCUT").apply {
+            putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutTargetIntent)
+            putExtra(Intent.EXTRA_SHORTCUT_NAME, context.getString(R.string.app_name))
+            putExtra(Intent.EXTRA_SHORTCUT_ICON, iconBitmap)
+            putExtra("duplicate", false)
+        }
+        context.sendBroadcast(shortcutIntent)
+        android.util.Log.d(TAG, "Legacy shortcut broadcast sent")
+        Toast.makeText(
+            context,
+            "Shortcut created! Check your home screen.",
+            Toast.LENGTH_LONG
+        ).show()
+    } catch (e: Exception) {
+        android.util.Log.e(TAG, "Legacy shortcut also failed", e)
+        Toast.makeText(
+            context,
+            "Could not add shortcut. Try long-pressing the app icon to see shortcuts.",
+            Toast.LENGTH_LONG
+        ).show()
+    }
+}
+
+/**
  * Create the icon for the shortcut using the pre-built adaptive icon resources.
- * This uses the actual mipmap resources which have proper foreground transparency.
+ * This renders the adaptive icon to a bitmap for proper shortcut support.
  */
 private fun createCompositeIcon(context: Context, iconStyle: AppIconStyle): android.graphics.drawable.Icon {
     val TAG = "IconCustomization"
 
-    // Use the pre-built adaptive icon resources directly
-    // These have the correct foreground with transparency
-    val iconResId = when (iconStyle) {
-        AppIconStyle.DEFAULT -> R.mipmap.neuro_comet_icon
-        AppIconStyle.CALM -> R.mipmap.ic_launcher_calm
-        AppIconStyle.FOCUS -> R.mipmap.ic_launcher_focus
-        AppIconStyle.ENERGY -> R.mipmap.ic_launcher_energy
-        AppIconStyle.SENSORY_FRIENDLY -> R.mipmap.ic_launcher_sensory
-        AppIconStyle.NEURODIVERSITY_PRIDE -> R.mipmap.ic_launcher_pride
+    // Get the background and foreground drawable resources
+    val (backgroundResId, foregroundResId) = when (iconStyle) {
+        AppIconStyle.DEFAULT -> Pair(R.drawable.neuro_comet_icon_background, R.drawable.neuro_comet_icon_foreground_vector)
+        AppIconStyle.CALM -> Pair(R.drawable.icon_calm_background, R.drawable.icon_calm_foreground)
+        AppIconStyle.FOCUS -> Pair(R.drawable.icon_focus_background, R.drawable.icon_focus_foreground)
+        AppIconStyle.ENERGY -> Pair(R.drawable.icon_energy_background, R.drawable.icon_energy_foreground)
+        AppIconStyle.SENSORY_FRIENDLY -> Pair(R.drawable.icon_sensory_background, R.drawable.icon_sensory_foreground)
+        AppIconStyle.NEURODIVERSITY_PRIDE -> Pair(R.drawable.icon_pride_background, R.drawable.icon_pride_foreground)
     }
 
-    android.util.Log.d(TAG, "Using pre-built icon resource for: ${iconStyle.name}")
+    android.util.Log.d(TAG, "Creating composite icon for: ${iconStyle.name}, bg=$backgroundResId, fg=$foregroundResId")
 
-    return android.graphics.drawable.Icon.createWithResource(context, iconResId)
+    // Create a bitmap by compositing background and foreground
+    // Use a larger size for better quality
+    val size = 432 // Larger for better quality, will be scaled down by system
+    val bitmap = android.graphics.Bitmap.createBitmap(size, size, android.graphics.Bitmap.Config.ARGB_8888)
+    val canvas = android.graphics.Canvas(bitmap)
+
+    try {
+        // Draw background
+        val background = androidx.core.content.ContextCompat.getDrawable(context, backgroundResId)
+        if (background == null) {
+            android.util.Log.e(TAG, "Failed to load background drawable for ${iconStyle.name}")
+            // Draw a fallback color
+            canvas.drawColor(android.graphics.Color.parseColor("#667eea"))
+        } else {
+            background.setBounds(0, 0, size, size)
+            background.draw(canvas)
+            android.util.Log.d(TAG, "Background drawn for ${iconStyle.name}, intrinsic: ${background.intrinsicWidth}x${background.intrinsicHeight}")
+        }
+
+        // Draw foreground
+        val foreground = androidx.core.content.ContextCompat.getDrawable(context, foregroundResId)
+        if (foreground == null) {
+            android.util.Log.e(TAG, "Failed to load foreground drawable for ${iconStyle.name}")
+        } else {
+            foreground.setBounds(0, 0, size, size)
+            foreground.draw(canvas)
+            android.util.Log.d(TAG, "Foreground drawn for ${iconStyle.name}, intrinsic: ${foreground.intrinsicWidth}x${foreground.intrinsicHeight}")
+        }
+    } catch (e: Exception) {
+        android.util.Log.e(TAG, "Error drawing icon layers", e)
+    }
+
+    android.util.Log.d(TAG, "Composite icon bitmap created: ${bitmap.width}x${bitmap.height}, byteCount=${bitmap.byteCount}")
+
+    return android.graphics.drawable.Icon.createWithBitmap(bitmap)
 }
 
+/**
+ * Create a bitmap icon for shortcuts - used by multiple launcher implementations.
+ * Returns a Bitmap that can be used with various shortcut APIs.
+ */
+private fun createCompositeIconBitmap(context: Context, iconStyle: AppIconStyle): android.graphics.Bitmap {
+    val TAG = "IconCustomization"
+
+    // Get the background and foreground drawable resources
+    val (backgroundResId, foregroundResId) = when (iconStyle) {
+        AppIconStyle.DEFAULT -> Pair(R.drawable.neuro_comet_icon_background, R.drawable.neuro_comet_icon_foreground_vector)
+        AppIconStyle.CALM -> Pair(R.drawable.icon_calm_background, R.drawable.icon_calm_foreground)
+        AppIconStyle.FOCUS -> Pair(R.drawable.icon_focus_background, R.drawable.icon_focus_foreground)
+        AppIconStyle.ENERGY -> Pair(R.drawable.icon_energy_background, R.drawable.icon_energy_foreground)
+        AppIconStyle.SENSORY_FRIENDLY -> Pair(R.drawable.icon_sensory_background, R.drawable.icon_sensory_foreground)
+        AppIconStyle.NEURODIVERSITY_PRIDE -> Pair(R.drawable.icon_pride_background, R.drawable.icon_pride_foreground)
+    }
+
+    android.util.Log.d(TAG, "Creating composite bitmap for: ${iconStyle.name}, bg=$backgroundResId, fg=$foregroundResId")
+
+    // Use standard launcher icon size for maximum compatibility
+    // 192x192 is the recommended size for xxxhdpi adaptive icons
+    val size = 192
+    val bitmap = android.graphics.Bitmap.createBitmap(size, size, android.graphics.Bitmap.Config.ARGB_8888)
+    val canvas = android.graphics.Canvas(bitmap)
+
+    try {
+        // Draw background
+        val background = androidx.core.content.ContextCompat.getDrawable(context, backgroundResId)
+        if (background == null) {
+            android.util.Log.e(TAG, "Failed to load background drawable for ${iconStyle.name}")
+            // Draw a fallback gradient
+            val paint = android.graphics.Paint().apply {
+                shader = android.graphics.LinearGradient(
+                    0f, 0f, size.toFloat(), size.toFloat(),
+                    android.graphics.Color.parseColor("#667eea"),
+                    android.graphics.Color.parseColor("#764ba2"),
+                    android.graphics.Shader.TileMode.CLAMP
+                )
+            }
+            canvas.drawRect(0f, 0f, size.toFloat(), size.toFloat(), paint)
+        } else {
+            background.setBounds(0, 0, size, size)
+            background.draw(canvas)
+            android.util.Log.d(TAG, "Background drawn for ${iconStyle.name}")
+        }
+
+        // Draw foreground
+        val foreground = androidx.core.content.ContextCompat.getDrawable(context, foregroundResId)
+        if (foreground == null) {
+            android.util.Log.e(TAG, "Failed to load foreground drawable for ${iconStyle.name}")
+        } else {
+            foreground.setBounds(0, 0, size, size)
+            foreground.draw(canvas)
+            android.util.Log.d(TAG, "Foreground drawn for ${iconStyle.name}")
+        }
+    } catch (e: Exception) {
+        android.util.Log.e(TAG, "Error drawing icon layers", e)
+    }
+
+    android.util.Log.d(TAG, "Composite bitmap created: ${bitmap.width}x${bitmap.height}")
+    return bitmap
+}
 
 /**
  * Get the currently selected icon style from preferences

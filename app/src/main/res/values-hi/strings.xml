@@ -1,8 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <resources>
     <string name="app_name">NeuroComet</string>
-
-    <!-- Auth Screen -->
     <string name="auth_app_tagline">हर दिमाग के लिए सुरक्षित जगह ✨</string>
     <string name="auth_sign_in">साइन इन</string>
     <string name="auth_sign_up">साइन अप</string>
@@ -24,8 +22,6 @@
     <string name="auth_2fa_verify">सत्यापित करें</string>
     <string name="auth_hide_password">पासवर्ड छुपाएं</string>
     <string name="auth_show_password">पासवर्ड दिखाएं</string>
-
-    <!-- Auth Tutorial -->
     <string name="auth_tutorial_welcome_title">घर आपका स्वागत है 💜</string>
     <string name="auth_tutorial_welcome_desc">NeuroComet न्यूरोडाइवर्जेंट और LGBTQ+ दिमागों के लिए एक सुरक्षित, सकारात्मक जगह है। आप यहां बिल्कुल वैसे ही हैं—कोई मुखौटा जरूरी नहीं।</string>
     <string name="auth_tutorial_comfort_title">आपका आराम मायने रखता है ∞</string>
@@ -46,8 +42,6 @@
     <string name="auth_tutorial_lets_go">चलो शुरू करें! ✨</string>
     <string name="auth_tutorial_step_count">%1$d में से %2$d</string>
     <string name="auth_tutorial_tap_here">यहां टैप करें</string>
-
-    <!-- Splash Screen -->
     <string name="splash_tagline_default">आपके लिए डिज़ाइन की गई जगह</string>
     <string name="splash_tagline_hyperfocus">विचलन-मुक्त क्षेत्र</string>
     <string name="splash_tagline_overload">कम उत्तेजना मोड</string>
@@ -74,8 +68,6 @@
     <string name="splash_tagline_mood_overwhelmed">धीरे-धीरे ले रहे</string>
     <string name="splash_tagline_mood_creative">विचारों को बहने दें</string>
     <string name="splash_tagline_rainbow_brain">अपने इंद्रधनुषी दिमाग को अपनाएं</string>
-
-    <!-- Splash Messages -->
     <string name="splash_msg_default_1">वापस स्वागत है</string>
     <string name="splash_msg_default_2">आपकी जगह इंतज़ार कर रही है</string>
     <string name="splash_msg_default_3">शुरू करें</string>
@@ -156,8 +148,6 @@
     <string name="splash_msg_rainbow_3">✨ न्यूरोडाइवर्जेंस जादू है</string>
     <string name="splash_msg_rainbow_4">🧠 आपका दिमाग सुंदर है</string>
     <string name="splash_msg_rainbow_5">💜 अलग होना शक्तिशाली है</string>
-
-    <!-- NeuroState Categories -->
     <string name="neuro_category_basic">बुनियादी थीम</string>
     <string name="neuro_category_adhd">ADHD थीम</string>
     <string name="neuro_category_autism">ऑटिज़्म थीम</string>
@@ -167,8 +157,6 @@
     <string name="neuro_category_blind">अंधे और कम दृष्टि</string>
     <string name="neuro_category_mood">आप कैसा महसूस कर रहे हैं?</string>
     <string name="neuro_category_secret">🦄 गुप्त थीम</string>
-
-    <!-- NeuroState Names -->
     <string name="neuro_state_default">डिफ़ॉल्ट</string>
     <string name="neuro_state_hyperfocus">हाइपरफोकस</string>
     <string name="neuro_state_overload">संवेदी अधिभार</string>
@@ -195,8 +183,6 @@
     <string name="neuro_state_mood_overwhelmed">अभिभूत महसूस</string>
     <string name="neuro_state_mood_creative">रचनात्मक महसूस</string>
     <string name="neuro_state_rainbow_brain">इंद्रधनुष दिमाग</string>
-
-    <!-- NeuroState Descriptions -->
     <string name="neuro_state_default_desc">संतुलित रंगों के साथ मानक थीम</string>
     <string name="neuro_state_hyperfocus_desc">गहन एकाग्रता के लिए उच्च कंट्रास्ट</string>
     <string name="neuro_state_overload_desc">उत्तेजना कम करने के लिए मंद, शांत रंग</string>
@@ -223,25 +209,17 @@
     <string name="neuro_state_mood_overwhelmed_desc">सरलीकृत, शांत पैलेट</string>
     <string name="neuro_state_mood_creative_desc">कल्पना को बढ़ावा देने वाले प्रेरणादायक रंग</string>
     <string name="neuro_state_rainbow_brain_desc">अपने सुंदर अद्वितीय न्यूरोडाइवर्जेंट दिमाग का जश्न मनाएं! 🌈🧠</string>
-
-    <!-- Accessibility Strings -->
     <string name="accessibility_selected">चयनित</string>
     <string name="accessibility_not_selected">चयनित नहीं</string>
     <string name="expand_category">%1$s विस्तृत करें</string>
     <string name="collapse_category">%1$s संक्षिप्त करें</string>
-
-    <!-- Easter Egg Dialog -->
     <string name="easter_egg_secret_unlocked">🎊 रहस्य खुला! 🎊</string>
     <string name="easter_egg_welcome_back">🦄 वापसी पर स्वागत! 🦄</string>
-
-    <!-- Navigation/Screen Titles -->
     <string name="nav_feed">फ़ीड</string>
     <string name="nav_explore">खोजें</string>
     <string name="nav_messages">संदेश</string>
     <string name="nav_notifications">सूचनाएं</string>
     <string name="nav_settings">सेटिंग्स</string>
-
-    <!-- Direct Messages (DM) -->
     <string name="dm_title">संदेश</string>
     <string name="dm_search_placeholder">संदेश खोजें</string>
     <string name="dm_empty_title">अभी तक कोई बातचीत नहीं</string>
@@ -252,15 +230,12 @@
     <string name="dm_filtered_count">%1$d में से %2$d</string>
     <string name="dm_new_message_hint">किसी की प्रोफ़ाइल से नई बातचीत शुरू करें! 💬</string>
     <string name="dm_new_message">नया संदेश</string>
-
-    <!-- Message Empty States -->
     <string name="messages_empty_title">अभी तक कोई बातचीत नहीं</string>
     <string name="messages_empty_subtitle">जब आप किसी को संदेश भेजेंगे, तो वह यहां दिखाई देगा।</string>
     <string name="messages_empty_hint">सुझाव: एक्सप्लोर → प्रोफ़ाइल पर टैप करें → संदेश।</string>
     <string name="messages_no_results_title">कोई परिणाम नहीं</string>
     <string name="messages_no_results_subtitle">कोई अलग खोज करें या सभी पर वापस जाएं।</string>
     <string name="messages_filtering_unread">आप अपठित फ़िल्टर कर रहे हैं।</string>
-
     <string name="dm_kids_disabled_title">संदेश बंद हैं</string>
     <string name="dm_kids_disabled_body">बच्चों के मोड (13 वर्ष से कम) के लिए डायरेक्ट मैसेज अक्षम हैं। माता-पिता इसे सेटिंग्स → सुरक्षा और अभिभावक नियंत्रण में बदल सकते हैं।</string>
     <string name="dm_conversation_options">बातचीत विकल्प</string>
@@ -289,15 +264,11 @@
     <string name="dm_blocked_banner">आपने इस उपयोगकर्ता को ब्लॉक किया है।</string>
     <string name="dm_rate_limited">बहुत सारे संदेश। कृपया धीरे करें।</string>
     <string name="dm_send_failed">संदेश भेजने में विफल। टैप करें और पुनः प्रयास करें।</string>
-
-    <!-- Status Indicators -->
     <string name="status_online">ऑनलाइन</string>
     <string name="status_offline">ऑफ़लाइन</string>
     <string name="status_blocked">ब्लॉक किया गया</string>
     <string name="status_muted">म्यूट किया गया</string>
     <string name="status_away">दूर</string>
-
-    <!-- Settings Screen -->
     <string name="settings_profile_group">प्रोफ़ाइल</string>
     <string name="settings_badges_title">बैज</string>
     <string name="settings_badges_subtitle">अपनी अर्जित उपलब्धियां और लक्ष्य देखें।</string>
@@ -343,8 +314,6 @@
     <string name="settings_language_test_title">ऐप भाषा (परीक्षण)</string>
     <string name="settings_language_test_subtitle">ऐप भाषा मैन्युअली सेट करें। ऐप पुनरारंभ की आवश्यकता।</string>
     <string name="settings_my_profile">मेरी प्रोफ़ाइल</string>
-
-    <!-- Badges Screen -->
     <string name="badges_screen_title">आपके बैज</string>
     <string name="badges_earned_section_title">अर्जित बैज</string>
     <string name="badges_locked_section_title">लॉक्ड बैज</string>
@@ -356,21 +325,14 @@
     <string name="badge_name_hyperfocus_master">हाइपरफोकस मास्टर</string>
     <string name="badge_name_community_pillar">समुदाय का स्तंभ</string>
     <string name="badge_name_quiet_achiever">शांत उपलब्धिकर्ता</string>
-
-    <!-- Comment Sheet -->
     <string name="comments_title">टिप्पणियां</string>
     <string name="comments_add_comment_placeholder">टिप्पणी जोड़ें…</string>
     <string name="comments_send_button_description">भेजें</string>
     <string name="comments_view_all">सभी %d टिप्पणियां देखें</string>
-
-
-    <!-- Text Scale Factor Names -->
     <string name="text_scale_small">छोटा</string>
     <string name="text_scale_medium">मध्यम</string>
     <string name="text_scale_large">बड़ा</string>
     <string name="text_scale_xlarge">बहुत बड़ा</string>
-
-    <!-- Story Creation -->
     <string name="create_post_hint">आपके मन में क्या है?</string>
     <string name="create_post_image_url_hint">वैकल्पिक: इमेज URL</string>
     <string name="create_post_video_url_hint">वैकल्पिक: वीडियो URL</string>
@@ -383,13 +345,9 @@
     <string name="story_add_button_content_description">स्टोरी जोड़ें</string>
     <string name="story_your_story_label">आपकी स्टोरी</string>
     <string name="story_user_story_content_description">%s की स्टोरी</string>
-
-    <!-- Moments/Stories Section -->
     <string name="moments_title">पल</string>
     <string name="moments_new_count">%d नए</string>
     <string name="moments_your_story">आपकी स्टोरी</string>
-
-    <!-- Story Screen (Viewer) -->
     <string name="story_content_description">स्टोरी सामग्री</string>
     <string name="story_close_button_content_description">स्टोरी बंद करें</string>
     <string name="story_delete_button_content_description">स्टोरी हटाएं</string>
@@ -397,20 +355,14 @@
     <string name="story_delete_dialog_text">यह इस स्टोरी को स्थायी रूप से हटा देगा। यह क्रिया पूर्ववत नहीं की जा सकती।</string>
     <string name="story_delete_dialog_confirm">हटाएं</string>
     <string name="story_delete_dialog_cancel">रद्द करें</string>
-
-    <!-- Toast Messages -->
     <string name="simulate_badge_notification_toast">सिमुलेटेड: नया बैज नोटिफिकेशन!</string>
     <string name="notification_badge_earned_title">बैज अर्जित: %s</string>
     <string name="notification_badge_earned_message">आपने उपलब्धि अर्जित की: %s</string>
-
-    <!-- Notification Custom View -->
     <string name="notification_icon_description">नोटिफिकेशन आइकन</string>
     <string name="notification_action_dismiss">खारिज करें</string>
     <string name="notification_action_reply">जवाब दें</string>
     <string name="notification_action_view">देखें</string>
     <string name="notification_action_mark_read">पढ़ा के रूप में चिह्नित करें</string>
-
-    <!-- Generic content descriptions for FeedScreen -->
     <string name="user_avatar_content_description">उपयोगकर्ता अवतार</string>
     <string name="unknown_user_id">अज्ञात</string>
     <string name="more_options_content_description">अधिक विकल्प</string>
@@ -418,8 +370,6 @@
     <string name="share_button_content_description">साझा करें</string>
     <string name="comment_button_content_description">टिप्पणी</string>
     <string name="like_button_content_description">पसंद</string>
-
-    <!-- Post Actions -->
     <string name="post_following_indicator">• फ़ॉलो कर रहे हैं</string>
     <string name="post_follow_user">@%s को फ़ॉलो करें</string>
     <string name="post_unfollow_user">@%s को अनफ़ॉलो करें</string>
@@ -449,8 +399,6 @@
     <string name="post_block_user">@%s को ब्लॉक करें</string>
     <string name="post_report_post">पोस्ट रिपोर्ट करें</string>
     <string name="post_delete_post">पोस्ट हटाएं</string>
-
-    <!-- Create Post Dialog -->
     <string name="create_post_title">पोस्ट बनाएं</string>
     <string name="create_post_close">बंद करें</string>
     <string name="create_post_how_feeling">आप कैसा महसूस कर रहे हैं?</string>
@@ -464,22 +412,16 @@
     <string name="create_post_post">पोस्ट</string>
     <string name="create_post_chars_remaining">%d अक्षर शेष</string>
     <string name="create_post_chars_over">%d अक्षर सीमा से अधिक</string>
-
-    <!-- Report Dialog -->
     <string name="report_dialog_title">सामग्री रिपोर्ट करें</string>
     <string name="report_dialog_reason_hint">हमें और बताएं (वैकल्पिक)</string>
     <string name="report_dialog_submit">रिपोर्ट सबमिट करें</string>
     <string name="report_dialog_cancel">रद्द करें</string>
-
-    <!-- Premium Dialog -->
     <string name="premium_dialog_title">प्रीमियम</string>
     <string name="premium_dialog_message">इस डेमो बिल्ड में प्रीमियम अपग्रेड वायर्ड नहीं हैं।</string>
     <string name="premium_lifetime_member">आप लाइफटाइम मेंबर हैं!</string>
     <string name="premium_now_premium">अब आप प्रीमियम हैं!</string>
     <string name="premium_welcome_back">वापस स्वागत है, प्रीमियम मेंबर!</string>
     <string name="premium_welcome">प्रीमियम में स्वागत है!</string>
-
-    <!-- Common Buttons -->
     <string name="button_ok">ठीक है</string>
     <string name="button_cancel">रद्द करें</string>
     <string name="button_yes">हां</string>
@@ -488,8 +430,6 @@
     <string name="button_save">सेव करें</string>
     <string name="button_delete">हटाएं</string>
     <string name="button_edit">संपादित करें</string>
-
-    <!-- Menu Items -->
     <string name="menu_view_profile">प्रोफ़ाइल देखें</string>
     <string name="menu_search_chat">चैट में खोजें</string>
     <string name="menu_mute_notifications">नोटिफिकेशन म्यूट करें</string>
@@ -500,8 +440,6 @@
     <string name="menu_share">साझा करें</string>
     <string name="menu_copy_link">लिंक कॉपी करें</string>
     <string name="menu_hide">छुपाएं</string>
-
-    <!-- Share Sheet -->
     <string name="share_sheet_title">पोस्ट साझा करें</string>
     <string name="share_sheet_copy_link">लिंक कॉपी करें</string>
     <string name="share_sheet_copy_link_desc">पोस्ट लिंक क्लिपबोर्ड पर कॉपी करें</string>
@@ -511,27 +449,19 @@
     <string name="share_sheet_send_dm_desc">सीधे दोस्त को साझा करें</string>
     <string name="share_sheet_repost">रीपोस्ट</string>
     <string name="share_sheet_repost_desc">अपनी फ़ीड में साझा करें</string>
-
-    <!-- Post Actions -->
     <string name="post_action_like">पसंद</string>
     <string name="post_action_comment">टिप्पणी</string>
     <string name="post_action_share">साझा करें</string>
     <string name="post_action_save">सेव करें</string>
     <string name="post_likes_count">%d पसंद</string>
-    <string name="post_comments_shares_count">%d टिप्पणियां • %d साझा</string>
+    <string name="post_comments_shares_count" formatted="false">%d टिप्पणियां • %d साझा</string>
     <string name="post_content_hidden_kids">बच्चों के मोड के लिए सामग्री छुपाई गई</string>
-
-    <!-- Delete Post Dialog -->
     <string name="delete_post_title">पोस्ट हटाएं?</string>
     <string name="delete_post_message">यह क्रिया पूर्ववत नहीं की जा सकती। क्या आप वाकई इस पोस्ट को हटाना चाहते हैं?</string>
-
-    <!-- Time Formats -->
     <string name="time_just_now">अभी</string>
     <string name="time_format_minutes">%d मिनट पहले</string>
     <string name="time_format_hours">%d घंटे पहले</string>
     <string name="time_format_days">%d दिन पहले</string>
-
-    <!-- Toast Messages -->
     <string name="toast_profile_coming_soon">प्रोफ़ाइल व्यू जल्द आ रहा है! 👤</string>
     <string name="toast_search_coming_soon">चैट सर्च जल्द आ रहा है! 🔍</string>
     <string name="toast_notifications_muted">नोटिफिकेशन म्यूट किए गए 🔕</string>
@@ -542,8 +472,6 @@
     <string name="toast_shared">साझा किया!</string>
     <string name="toast_reported">रिपोर्ट किया, धन्यवाद!</string>
     <string name="toast_hidden">फ़ीड से छुपाया</string>
-
-    <!-- Message Actions -->
     <string name="action_copy">कॉपी</string>
     <string name="action_react">प्रतिक्रिया…</string>
     <string name="action_retry">पुनः प्रयास</string>
@@ -551,8 +479,6 @@
     <string name="action_unpin">अनपिन करें</string>
     <string name="action_archive">आर्काइव करें</string>
     <string name="action_delete_chat">चैट हटाएं</string>
-
-    <!-- Explore Screen -->
     <string name="explore_title">खोजें</string>
     <string name="explore_subtitle">समुदाय और संसाधन खोजें</string>
     <string name="explore_featured">विशेष</string>
@@ -565,14 +491,10 @@
     <string name="explore_new">नया</string>
     <string name="explore_see_all">सभी देखें</string>
     <string name="explore_online_now">%d अभी ऑनलाइन</string>
-
-    <!-- Notifications Screen -->
     <string name="notifications_title">नोटिफिकेशन</string>
     <string name="notifications_empty">अभी तक कोई नोटिफिकेशन नहीं</string>
     <string name="notifications_mark_all_read">सभी पढ़े के रूप में चिह्नित करें</string>
     <string name="notifications_unread_count">%d अपठित</string>
-
-    <!-- Feed Screen -->
     <string name="feed_title">फ़ीड</string>
     <string name="feed_empty">अभी तक कोई पोस्ट नहीं</string>
     <string name="feed_refresh">रिफ्रेश करने के लिए खींचें</string>
@@ -583,8 +505,6 @@
     <string name="feed_removed_from_saved">सेव से हटाया</string>
     <string name="feed_save_post">पोस्ट सेव करें</string>
     <string name="feed_content_hidden_kids">बच्चों के मोड के लिए सामग्री छुपाई गई</string>
-
-    <!-- Emotional Tones -->
     <string name="tone_neutral">तटस्थ</string>
     <string name="tone_happy">सकारात्मक वाइब्स</string>
     <string name="tone_excited">रोमांचक!</string>
@@ -596,12 +516,8 @@
     <string name="tone_celebration">जश्न मना रहे हैं!</string>
     <string name="tone_informative">जानकारीपूर्ण</string>
     <string name="tone_may_be_intense">तीव्र हो सकता है</string>
-
-    <!-- Social Settings -->
     <string name="social_show_online_status">ऑनलाइन स्थिति दिखाएं</string>
     <string name="social_show_online_status_desc">दूसरों को देखने दें जब आप सक्रिय हों</string>
-
-    <!-- Community Detail Screen -->
     <string name="community_back">वापस</string>
     <string name="community_share">समुदाय साझा करें</string>
     <string name="community_more_options">अधिक विकल्प</string>
@@ -621,8 +537,6 @@
     <string name="community_report">समुदाय रिपोर्ट करें</string>
     <string name="community_reported_toast">रिपोर्ट सबमिट की गई। धन्यवाद!</string>
     <string name="community_compose">लिखें</string>
-
-    <!-- Profile Screen -->
     <string name="profile_my_profile">मेरी प्रोफ़ाइल</string>
     <string name="profile_edit">प्रोफ़ाइल संपादित करें</string>
     <string name="profile_share">प्रोफ़ाइल साझा करें</string>
@@ -650,8 +564,6 @@
     <string name="profile_selected">चयनित</string>
     <string name="profile_cancel">रद्द करें</string>
     <string name="profile_got_it">समझ गया</string>
-
-    <!-- Explore Section Titles -->
     <string name="explore_section_daily_living">दैनिक जीवन</string>
     <string name="explore_section_sensory">सेंसरी और नियमन</string>
     <string name="explore_section_social">सामाजिक और संवाद</string>
@@ -660,7 +572,6 @@
     <string name="explore_section_health">स्वास्थ्य और तंदुरुस्ती</string>
     <string name="explore_section_family">परिवार और पालन-पोषण</string>
     <string name="explore_section_lgbtq">LGBTQ+ और पहचान</string>
-
     <string name="explore_topic_adhd_hacks">ADHD हैक्स</string>
     <string name="explore_topic_adhd_hacks_desc">उत्पादकता टिप्स और लाइफ हैक्स जो वास्तव में काम करते हैं</string>
     <string name="explore_topic_safe_foods">सेफ फूड्स</string>
@@ -709,8 +620,6 @@
     <string name="explore_topic_parenting_desc">न्यूरोडाइवर्जेंट माता-पिता और ND बच्चों की परवरिश</string>
     <string name="explore_topic_late_diagnosed">देर से निदान</string>
     <string name="explore_topic_late_diagnosed_desc">वयस्क निदान अनुभव और पहचान अन्वेषण</string>
-
-    <!-- LGBTQ+ Topics -->
     <string name="explore_topic_lgbtq_nd">LGBTQ+ और न्यूरोडाइवर्जेंट</string>
     <string name="explore_topic_lgbtq_nd_desc">क्वीर और न्यूरोडाइवर्जेंट पहचान का जश्न</string>
     <string name="explore_topic_trans_nd">ट्रांस और ND</string>
@@ -723,8 +632,6 @@
     <string name="explore_topic_nonbinary_desc">नॉन-बाइनरी, जेंडरक्वीर समुदाय</string>
     <string name="explore_topic_coming_out">कमिंग आउट स्टोरीज</string>
     <string name="explore_topic_coming_out_desc">कमिंग आउट यात्राएं और स्वीकृति खोजना</string>
-
-    <!-- Security Messages -->
     <string name="security_rooted_device">यह ऐप आपकी सुरक्षा के लिए रूटेड डिवाइस पर नहीं चल सकता।</string>
     <string name="security_debug_not_allowed">प्रोडक्शन बिल्ड में डिबगिंग की अनुमति नहीं है।</string>
     <string name="security_tampering_detected">सुरक्षा फ्रेमवर्क टैम्परिंग का पता चला।</string>
@@ -735,8 +642,6 @@
     <string name="security_status_fair">⚠️ डिवाइस सुरक्षा: ठीक - कुछ सुविधाएं प्रतिबंधित हो सकती हैं</string>
     <string name="security_status_at_risk">🔴 डिवाइस सुरक्षा: जोखिम में - सुरक्षा सुविधाएं सक्षम</string>
     <string name="security_status_critical">🚨 डिवाइस सुरक्षा: गंभीर - ऐप प्रतिबंध सक्रिय</string>
-
-    <!-- NeuroGames - स्टिम-फ्रेंडली गेम्स -->
     <string name="games_hub_title">न्यूरोगेम्स</string>
     <string name="games_subtitle">आपके दिमाग के लिए स्टिम-फ्रेंडली मजा</string>
     <string name="games_play_now">गेम्स खेलें</string>
@@ -749,8 +654,6 @@
     <string name="games_requires_achievements">%d उपलब्धियां आवश्यक</string>
     <string name="games_coming_soon">जल्द आ रहा है</string>
     <string name="games_coming_soon_message">यह गेम अभी विकसित हो रहा है। जल्द वापस आएं!</string>
-
-    <!-- व्यक्तिगत गेम्स -->
     <string name="game_bubble_pop">बबल पॉप</string>
     <string name="game_bubble_pop_desc">शांत करने वाले स्टिम अनुभव के लिए संतोषजनक बबल्स फोड़ें</string>
     <string name="game_bubble_pop_hint">उन्हें फोड़ने के लिए बबल्स पर टैप करें! ✨</string>
@@ -762,10 +665,13 @@
     <string name="game_color_flow_hint">रंग बदलने के लिए कहीं भी टैप करें</string>
     <string name="game_pattern_tap">पैटर्न टैप</string>
     <string name="game_pattern_tap_desc">क्रम में पैटर्न टैप करें - फोकस ट्रेनिंग के लिए बढ़िया</string>
+    <string name="game_pattern_tap_hint">पैटर्न देखें, फिर टाइल्स को क्रम में टैप करें! 🎯</string>
     <string name="game_infinity_draw">इन्फिनिटी ड्रॉ</string>
     <string name="game_infinity_draw_desc">अनंत पैटर्न बनाएं जो कभी मिटते नहीं - शुद्ध स्टिम आनंद</string>
+    <string name="game_infinity_draw_hint">ड्रॉ करने के लिए उंगली खींचें - जो चाहें बनाएं! ✨</string>
     <string name="game_sensory_rain">सेंसरी रेन</string>
     <string name="game_sensory_rain_desc">शांत करने वाले विजुअल्स के साथ सुंदर बारिश की बूंदें गिरते देखें</string>
+    <string name="game_sensory_rain_hint">ज्यादा बारिश के लिए स्लाइडर एडजस्ट करें। तरंगें बनाने के लिए टैप करें! 🌧️</string>
     <string name="game_breathing_bubbles">ब्रीदिंग बबल्स</string>
     <string name="game_breathing_bubbles_desc">शांत श्वास अभ्यास के लिए बुलबुले का पालन करें</string>
     <string name="game_breathing_bubbles_hint">बुलबुला बढ़ने पर सांस लें, सिकुड़ने पर छोड़ें 🫧</string>
@@ -775,24 +681,33 @@
     <string name="game_sound_garden">साउंड गार्डन</string>
     <string name="game_sound_garden_desc">साउंड फ्लावर लगाकर एंबियंट साउंडस्केप बनाएं</string>
     <string name="game_sound_garden_hint">लगाने के लिए टैप करें, हटाने के लिए दबाए रखें। आवाजें मिलाएं! 🌸</string>
-
-    <!-- विकास में गेम्स -->
     <string name="game_stim_sequencer">स्टिम सीक्वेंसर</string>
     <string name="game_stim_sequencer_desc">अपने खुद के संतोषजनक रिदम पैटर्न बनाएं</string>
+    <string name="game_stim_sequencer_hint">अपनी बीट बनाने के लिए पैड्स पर टैप करें! साफ करने के लिए दबाए रखें 🎵</string>
     <string name="game_emotion_garden">इमोशन गार्डन</string>
     <string name="game_emotion_garden_desc">अपनी भावनाओं को दर्शाने वाले फूल उगाएं</string>
+    <string name="game_emotion_garden_hint">इमोशन फ्लावर लगाने के लिए टैप करें, इसे बढ़ते देखें! 🌸</string>
     <string name="game_safe_space">सेफ स्पेस बिल्डर</string>
     <string name="game_safe_space_desc">अपना खुद का शांत करने वाला वर्चुअल कमरा डिजाइन करें</string>
+    <string name="game_safe_space_hint">अपनी परफेक्ट शांत जगह बनाने के लिए आइटम जोड़ें 🏠</string>
     <string name="game_worry_jar">वरी जार</string>
     <string name="game_worry_jar_desc">चिंताएं लिखें और उन्हें तैरते देखें</string>
+    <string name="game_worry_jar_hint">एक चिंता टाइप करें और जार में छोड़ें ✨</string>
+    <string name="game_constellation_connect">कॉन्स्टेलेशन कनेक्ट</string>
+    <string name="game_constellation_connect_desc">तारामंडल बनाने के लिए तारों के बीच रेखाएं खींचें</string>
+    <string name="game_constellation_connect_hint">पैटर्न दिखाने के लिए तारों को जोड़ें ⭐</string>
+    <string name="game_zen_sand">ज़ेन सैंड गार्डन</string>
+    <string name="game_zen_sand_desc">वर्चुअल रेत में शांत पैटर्न बनाएं</string>
+    <string name="game_zen_sand_hint">लहरें बनाने के लिए उंगली घुमाएं 🏝️</string>
+    <string name="game_mood_mixer">मूड मिक्सर</string>
+    <string name="game_mood_mixer_desc">अपने मौजूदा मूड से मिलान के लिए रंग मिलाएं</string>
+    <string name="game_mood_mixer_hint">नई भावनाएं बनाने के लिए रंगों को एक साथ खींचें 🎨</string>
     <string name="game_coming_soon">जल्द आ रहा है</string>
     <string name="game_in_development">🚧 विकास में</string>
-
-    <!-- टॉपिक डिटेल स्क्रीन -->
     <string name="topic_not_found">विषय नहीं मिला</string>
     <string name="topic_share">विषय साझा करें</string>
     <string name="topic_more_options_soon">और विकल्प जल्द आ रहे हैं! ⚙️</string>
-    <string name="topic_members_posts">%s सदस्य • %s पोस्ट</string>
+    <string name="topic_members_posts" formatted="false">%s सदस्य • %s पोस्ट</string>
     <string name="topic_joined">शामिल हो गए</string>
     <string name="topic_join_community">समुदाय में शामिल हों</string>
     <string name="topic_tab_posts">पोस्ट्स</string>
@@ -800,8 +715,6 @@
     <string name="topic_tab_events">इवेंट्स</string>
     <string name="topic_tab_members">सदस्य</string>
     <string name="topic_share_text">NeuroComet पर %s समुदाय देखें! 🧠✨</string>
-
-    <!-- टॉपिक रिसोर्सेज सेक्शन -->
     <string name="topic_resources_title">संसाधन</string>
     <string name="resource_getting_started">शुरुआत गाइड</string>
     <string name="resource_getting_started_desc">मूल बातें और समुदाय दिशानिर्देश सीखें</string>
@@ -836,8 +749,6 @@
     <string name="resource_reading">अनुशंसित पठन</string>
     <string name="resource_reading_desc">सदस्यों द्वारा अनुशंसित पुस्तकें और लेख</string>
     <string name="resource_reading_count">45 आइटम</string>
-
-    <!-- टॉपिक इवेंट्स सेक्शन -->
     <string name="topic_events_title">आगामी इवेंट्स</string>
     <string name="event_weekly_chat">साप्ताहिक कम्युनिटी चैट</string>
     <string name="event_weekly_chat_time">हर शनिवार दोपहर 3 बजे EST</string>
@@ -857,8 +768,6 @@
     <string name="event_live">लाइव</string>
     <string name="event_rsvp">RSVP</string>
     <string name="event_join">शामिल हों</string>
-
-    <!-- टॉपिक मेंबर्स सेक्शन -->
     <string name="topic_members_title">समुदाय के सदस्य</string>
     <string name="member_role_moderator">मॉडरेटर</string>
     <string name="member_role_contributor">टॉप कंट्रीब्यूटर</string>
@@ -868,47 +777,33 @@
     <string name="member_role_new">नया सदस्य</string>
     <string name="member_follow">फॉलो करें</string>
     <string name="member_share">शेयर करें</string>
-
-    <!-- समय पहले स्ट्रिंग्स -->
     <string name="time_minutes_ago">%d मिनट पहले</string>
     <string name="time_hours_ago">%d घंटे पहले</string>
     <string name="time_days_ago">%d दिन पहले</string>
-
-    <!-- Feedback Hub -->
     <string name="feedback_hub_title">फीडबैक हब</string>
     <string name="feedback_report_bug_title">बग रिपोर्ट करें</string>
     <string name="feedback_request_feature_title">फीचर का अनुरोध करें</string>
     <string name="feedback_send_title">फीडबैक भेजें</string>
-
-    <!-- Additional Settings -->
     <string name="settings_section_appearance">प्रकटन और प्रदर्शन</string>
     <string name="settings_section_privacy">गोपनीयता और सुरक्षा</string>
     <string name="settings_section_notifications">सूचनाएं</string>
     <string name="settings_section_accessibility">अभिगम्यता</string>
-
-    <!-- Explore Topics -->
     <string name="explore_autism">ऑटिज़्म</string>
     <string name="explore_adhd">एडीएचडी</string>
     <string name="explore_anxiety">चिंता</string>
     <string name="explore_sensory">संवेदी</string>
-
-    <!-- Developer Section -->
     <string name="settings_section_developer">डेवलपर</string>
     <string name="settings_developer_subtitle">डीबग और परीक्षण उपकरण</string>
     <string name="settings_dev_options_desc">परीक्षण और डीबग के लिए उन्नत विकल्प</string>
     <string name="settings_fake_premium">नकली प्रीमियम मोड</string>
     <string name="settings_fake_premium_enabled">परीक्षण के लिए प्रीमियम सुविधाएं अनलॉक</string>
     <string name="settings_fake_premium_disabled">प्रीमियम सुविधाओं का परीक्षण करने के लिए सक्षम करें</string>
-
-    <!-- Dev Options -->
     <string name="dev_options_title">डेवलपर विकल्प</string>
     <string name="dev_phone_format_test">फोन नंबर फॉर्मेटिंग</string>
     <string name="dev_phone_format_test_desc">विभिन्न क्षेत्रों के लिए स्वचालित फॉर्मेटिंग का परीक्षण करें</string>
     <string name="dev_phone_format_style">फॉर्मेट शैली</string>
     <string name="dev_phone_test_input">फोन नंबर दर्ज करें</string>
     <string name="dev_phone_format_pattern">पैटर्न</string>
-
-    <!-- Credential Storage Dev Options -->
     <string name="dev_credential_title">क्रेडेंशियल संग्रहण</string>
     <string name="dev_credential_test_save">सहेजने का परीक्षण करें</string>
     <string name="dev_credential_test_retrieve">पुनर्प्राप्ति का परीक्षण करें</string>
@@ -918,11 +813,905 @@
     <string name="dev_credential_create_session">परीक्षण सत्र बनाएं</string>
     <string name="dev_credential_end_session">सत्र समाप्त करें</string>
     <string name="dev_credential_extend_session">सत्र बढ़ाएं</string>
-
-    <!-- Debug Tools -->
     <string name="debug_tools_title">डीबग उपकरण</string>
     <string name="debug_performance_overlay">प्रदर्शन ओवरले</string>
     <string name="debug_performance_desc">FPS, मेमोरी और स्क्रॉल आँकड़े दिखाता है</string>
     <string name="debug_reset_counters">काउंटर रीसेट करें</string>
-</resources>
+    <string name="post_stim_1_author">स्टिम स्क्वाड</string>
+    <string name="post_stim_1_content">नई स्टिम टॉय रिव्यू! यह टेक्सचर्ड फिजेट रिंग बहुत संतोषजनक है। मीटिंग्स के लिए काफी शांत, रेगुलेशन के लिए काफी स्टिमी ✨</string>
+    <string name="post_stim_2_author">हैप्पी फ्लैपर</string>
+    <string name="post_stim_2_content">पब्लिक में स्टिमिंग को नॉर्मल करें! मैं ग्रोसरी स्टोर में रॉक कर रही थी और एक बच्चे ने कहा \'वो डांस कर रही है!\' मेरा दिन बन गया 💃</string>
+    <string name="post_stim_3_author">च्यूइंग सैम</string>
+    <string name="post_stim_3_content">मेरे ओरल स्टिमर्स के लिए - च्यूएबल नेकलेस मिले जो असली ज्वेलरी जैसे दिखते हैं। डिस्क्रीट और फंक्शनल!</string>
+    <string name="post_stim_4_author">स्पिनर सोफी</string>
+    <string name="post_stim_4_content">मूवमेंट मेडिसिन है! जब मैं खुलकर स्टिम नहीं कर सकती, मैं डेस्क के नीचे टो-टैपिंग करती हूं। सूक्ष्म लेकिन मदद करता है 🦶</string>
+    <string name="post_stim_5_author">सेंसरी सीकर</string>
+    <string name="post_stim_5_content">अपने बैग के लिए \'स्टिम किट\' बनाई: पुट्टी, टेक्सचर्ड कार्ड्स, फिजेट क्यूब। रेगुलेशन जरूरतों के लिए हमेशा तैयार!</string>
+    <string name="post_sensory_1_author">ओवरवेल्म्ड ओली</string>
+    <string name="post_sensory_1_content">लूप इयरप्लग्स ने मेरी जिंदगी बदल दी। अभी भी बातचीत सुन सकता हूं लेकिन सेंसरी-ओवरलोड एनवायरनमेंट का एज हट जाता है 🎧</string>
+    <string name="post_sensory_2_author">लाइट सेंसिटिव लूना</string>
+    <string name="post_sensory_2_content">वार्म-टोन्ड लाइट बल्ब + डिमर स्विच ने मेरे घर को सेफ हेवन बना दिया। हार्श फ्लोरोसेंट बैन हैं!</string>
+    <string name="post_sensory_3_author">टैग हेटर टेलर</string>
+    <string name="post_sensory_3_content">आज सभी कपड़ों के टैग हटाने में एक घंटा बिताया। हर सेकंड की कीमत थी। ब्रांड्स उन्हें इतने खुजली वाले क्यों बनाते हैं?! 👕</string>
+    <string name="post_sensory_4_author">सेंट सेंसिटिव एलेक्स</string>
+    <string name="post_sensory_4_content">बिना खुशबू वाली हर चीज सही है। सच में फ्रेग्रेंस-फ्री प्रोडक्ट्स की लिस्ट बनाई, शेयर करने में खुशी होगी!</string>
+    <string name="post_sensory_5_author">क्वाइट क्विन</string>
+    <string name="post_sensory_5_content">अपने शहर का \'सेंसरी मैप\' बनाया - शांत कैफे, लो-स्टिम स्टोर्स, एक्सेसिबल एस्केप रूट्स। बहुत मददगार! 🗺️</string>
+    <string name="post_meltdown_1_author">रिकवरी रेन</string>
+    <string name="post_meltdown_1_content">याद रखें: मेल्टडाउन \'बुरा व्यवहार\' नहीं है - यह नर्वस सिस्टम ओवरलोड है। बाद में खुद के साथ जेंटल रहें 💙</string>
+    <string name="post_meltdown_2_author">कोपिंग कार्ला</string>
+    <string name="post_meltdown_2_content">मेरी मेल्टडाउन किट: नॉइज-कैंसलिंग हेडफोन्स, सनग्लासेस, वेटेड लैप पैड, पानी, और \'सेफ पर्सन\' कॉन्टैक्ट</string>
+    <string name="post_meltdown_3_author">प्रिवेंशन पैट</string>
+    <string name="post_meltdown_3_content">अपने वार्निंग साइन्स सीख रही हूं: इरिटेबिलिटी स्पाइक, साउंड सेंसिटिविटी इंक्रीज, फिजिकल टेंशन। जल्दी पकड़ना मदद करता है!</string>
+    <string name="post_meltdown_4_author">सेफ स्पेस सैम</string>
+    <string name="post_meltdown_4_content">अपने घर में \'काम कॉर्नर\' बनाया - डिम लाइट्स, सॉफ्ट टेक्सचर्स, और कोई डिमांड नहीं। जरूरी रिकवरी जोन 🏠</string>
+    <string name="post_meltdown_5_author">सपोर्टिव सू</string>
+    <string name="post_meltdown_5_content">पोस्ट-मेल्टडाउन सेल्फ-केयर: आराम, हाइड्रेशन, कम्फर्ट फूड, और बिल्कुल कोई सेल्फ-क्रिटिसिज्म नहीं। रिकवरी में समय लगता है 🌸</string>
+    <string name="post_special_1_author">डायनो डेव</string>
+    <string name="post_special_1_content">तीन घंटे डायनासोर फेदर इवोल्यूशन पर रिसर्च और मुझे कोई पछतावा नहीं! कौन Archaeopteryx के बारे में सुनना चाहता है? 🦕</string>
+    <string name="post_special_2_author">ट्रेन ट्रैकर</string>
+    <string name="post_special_2_content">मेरा स्पेशल इंटरेस्ट ट्रेन शेड्यूल है। मैं 47 मेट्रो लाइन्स का हर स्टॉप बता सकता हूं। कुछ भी पूछो! 🚂</string>
+    <string name="post_special_3_author">मशरूम माइक</string>
+    <string name="post_special_3_content">फंगी अद्भुत हैं! क्या तुम्हें पता है एक मशरूम है जो प्लास्टिक तोड़ सकता है? माइसीलियम भविष्य है! 🍄</string>
+    <string name="post_special_4_author">लोर एक्सप्लोरर</string>
+    <string name="post_special_4_content">जब तुम्हारे स्पेशल इंटरेस्ट में लोर हो, तुम विकी बन जाते हो। इस गेम में 400 घंटे और अभी भी सीख रहा हूं! 🎮</string>
+    <string name="post_special_5_author">स्टार स्ट्रक</string>
+    <string name="post_special_5_content">स्पेस फैक्ट्स आ रहे हैं! वीनस पर एक दिन वीनस पर एक साल से लंबा है। हर बार सोचने पर माइंड = ब्लोन ✨</string>
+    <string name="post_lgbtq_1_author">रेनबो ब्रेन</string>
+    <string name="post_lgbtq_1_content">LGBTQ+ और ND कम्युनिटीज का ओवरलैप बहुत रियल है! दोनों आइडेंटिटीज को समझने वाले लोग मिलना सब कुछ है 🏳️‍🌈♾️</string>
+    <string name="post_lgbtq_2_author">प्राउड और ऑटिस्टिक</string>
+    <string name="post_lgbtq_2_content">क्वीर और न्यूरोडाइवर्जेंट होने पर गर्व! दोनों मेरी पहचान का हिस्सा हैं, और दोनों वैलिड और ब्यूटीफुल हैं ✨</string>
+    <string name="post_lgbtq_3_author">इंटरसेक्शन एलेक्स</string>
+    <string name="post_lgbtq_3_content">रिसर्च दिखाती है ND लोग LGBTQ+ होने की ज्यादा संभावना रखते हैं। हम कितने तरीकों से मोल्ड तोड़ते हैं! 💜</string>
+    <string name="post_lgbtq_4_author">कम्युनिटी कार्ला</string>
+    <string name="post_lgbtq_4_content">यह स्पेस जो मेरे पूरे को बिना सवाल स्वीकार करती है हीलिंग है। यहाँ होने के लिए धन्यवाद 🙏</string>
+    <string name="post_lgbtq_5_author">एलाइड एंडी</string>
+    <string name="post_lgbtq_5_content">चाहे तुम आइडेंटिटी समझ रहे हो, पहले से आउट हो, या बस सपोर्ट कर रहे हो - तुम यहाँ बिलॉन्ग करते हो! 🏳️‍🌈</string>
+    <string name="post_default_1_author">कम्युनिटी मेंबर</string>
+    <string name="post_default_1_content">इस कम्युनिटी में स्वागत है! अपने एक्सपीरियंस शेयर करें और एक-दूसरे को सपोर्ट करें। हम सब इसमें साथ हैं 💙</string>
+    <string name="post_default_2_author">हेल्पफुल हेलन</string>
+    <string name="post_default_2_content">याद रखें: हर किसी की जर्नी अलग है। जो एक व्यक्ति के लिए काम करता है वो दूसरे के लिए नहीं कर सकता, और यह ठीक है!</string>
+    <string name="post_default_3_author">रिसोर्स रॉन</string>
+    <string name="post_default_3_content">पिन्ड पोस्ट में बढ़िया रिसोर्सेज! अगर तुम यहाँ नए हो तो चेक करो 📚</string>
+    <string name="post_default_4_author">सपोर्टिव सू</string>
+    <string name="post_default_4_content">यह जजमेंट-फ्री जोन है। सवाल पूछो, स्ट्रगल्स शेयर करो, जीत मनाओ। हम तुम्हारे साथ हैं! 🌟</string>
+    <string name="post_default_5_author">वेलकमिंग विल</string>
+    <string name="post_default_5_content">नए मेंबर्स: अपना परिचय दो! तुम्हें यहाँ क्या लाया? क्या सीखने या शेयर करने की उम्मीद है?</string>
+    <string name="post_trans_1_author">ट्रांस और प्राउड</string>
+    <string name="post_trans_1_content">ट्रांस और ऑटिस्टिक होना मतलब कई स्तरों पर आइडेंटिटी प्रोसेस करना। जटिल लेकिन सुंदर है 🏳️‍⚧️</string>
+    <string name="post_trans_2_author">जेंडर एक्सप्लोरर</string>
+    <string name="post_trans_2_content">ND दिमाग अक्सर जेंडर को अलग तरह से अनुभव करते हैं। हमारी यात्राएं वैलिड हैं भले ही \'टिपिकल\' न हों 💙💗🤍</string>
+    <string name="post_trans_3_author">सपोर्टिव स्पेस</string>
+    <string name="post_trans_3_content">मेरी प्रोफाइल में नाम और प्रोनाउन स्टिकर्स! यहाँ रेस्पेक्ट नॉन-नेगोशिएबल है 🏳️‍⚧️</string>
+    <string name="post_trans_4_author">ट्रांजिशन टिप्स</string>
+    <string name="post_trans_4_content">ट्रांस और ND होकर हेल्थकेयर नेविगेट करना एक्स्ट्रा चैलेंजिंग हो सकता है। रिसोर्सेज और सपोर्ट शेयर करें! 💪</string>
+    <string name="post_trans_5_author">असली मैं</string>
+    <string name="post_trans_5_content">आखिरकार अपने असली रूप में जी रहा/रही हूं। ND कम्युनिटी अविश्वसनीय रूप से वेलकमिंग रही। आभारी हूं 💜</string>
+    <string name="post_pride_1_author">प्राइड परेड</string>
+    <string name="post_pride_1_content">प्राइड मंथ जून हो सकता है, लेकिन हम पूरे साल सेलिब्रेट करते हैं! क्वीर जॉय ND-फ्रेंडली जॉय है 🌈✨</string>
+    <string name="post_pride_2_author">क्वीर कम्युनिटी</string>
+    <string name="post_pride_2_content">सेंसरी-फ्रेंडली प्राइड इवेंट्स बेस्ट हैं! ईयरप्लग्स और सनग्लासेस के साथ प्राइड! 🎉🏳️‍🌈</string>
+    <string name="post_pride_3_author">लव इज लव</string>
+    <string name="post_pride_3_content">याद रखो: तुम्हें किसी को अपनी आइडेंटिटी \'प्रूव\' करने की जरूरत नहीं। तुम्हारा एक्सपीरियंस वैलिड है! 💖</string>
+    <string name="post_pride_4_author">जॉयफुल क्वीर</string>
+    <string name="post_pride_4_content">आज क्वीर जॉय सेलिब्रेट कर रहे हैं! इस कम्युनिटी का हिस्सा होने से तुम्हें क्या खुशी देता है? 🎊</string>
+    <string name="post_pride_5_author">प्राइड हिस्ट्री</string>
+    <string name="post_pride_5_content">LGBTQ+ हिस्ट्री सीखना इस महीने मेरा स्पेशल इंटरेस्ट रहा है। सेलिब्रेट और ऑनर करने के लिए बहुत कुछ! 📚🏳️‍🌈</string>
+    <string name="post_ace_1_author">एस स्पेस</string>
+    <string name="post_ace_1_content">एसेक्सुअल और ऑटिस्टिक - \'डबल A\' क्लब! दोनों को समझना सेल्फ-डिस्कवरी की यात्रा रही 🖤🤍💜</string>
+    <string name="post_ace_2_author">एरो एस वाइब्स</string>
+    <string name="post_ace_2_content">एरोमैंटिक स्पेक्ट्रम रिप्रेजेंटेशन मायने रखता है! QPRs, चुने हुए परिवार, दोस्ती-केंद्रित जीवन सुंदर हैं 💚</string>
+    <string name="post_ace_3_author">स्पेक्ट्रम एक्सप्लोरर</string>
+    <string name="post_ace_3_content">ग्रे-एस, डेमी, एगो - अट्रैक्शन अनुभव करने (या न करने) के इतने तरीके। सब वैलिड! 🖤🩶🤍💜</string>
+    <string name="post_ace_4_author">नॉर्मलाइज एस</string>
+    <string name="post_ace_4_content">\'टिपिकल\' तरीके से अट्रैक्शन अनुभव न करना हमें टूटा नहीं बनाता। अलग बस अलग है 💜</string>
+    <string name="post_ace_5_author">एस प्राइड</string>
+    <string name="post_ace_5_content">एस वीक रिसोर्सेज आ रहे हैं! एजुकेशनल कंटेंट और कम्युनिटी स्टोरीज शेयर करने के लिए 🖤🩶🤍💜</string>
+    <string name="post_nb_1_author">नॉन-बाइनरी निंजा</string>
+    <string name="post_nb_1_content">नॉन-बाइनरी और न्यूरोडाइवर्जेंट! जेंडर एक कंस्ट्रक्ट है जिसे मैं खुशी से डीकंस्ट्रक्ट कर रहा/रही हूं 💛🤍💜🖤</string>
+    <string name="post_nb_2_author">वे/उन्हें प्रोनाउंस</string>
+    <string name="post_nb_2_content">वे/उन्हें प्रोनाउंस प्लीज! हमारी कम्युनिटी सबकी आइडेंटिटी का सम्मान करती है 💜</string>
+    <string name="post_nb_3_author">जेंडर फ्लूइड</string>
+    <string name="post_nb_3_content">कुछ दिन ज्यादा फेम, कुछ दिन ज्यादा मास्क, कुछ दिन ??? और सब वैलिड! ✨</string>
+    <string name="post_nb_4_author">एनबी एक्सप्लोरर</string>
+    <string name="post_nb_4_content">जेंडर-अफर्मिंग क्लोदिंग जो सेंसरी-फ्रेंडली भी हो ढूंढना एक एडवेंचर है! अपनी फाइंड्स शेयर करो! 👕</string>
+    <string name="post_nb_5_author">आइडेंटिटी जर्नी</string>
+    <string name="post_nb_5_content">मेरा जेंडर समझने में सालों लगे। ND ब्रेन + जेंडर एक्सप्लोरेशन = कॉम्प्लेक्स लेकिन वर्थ इट 💛🤍💜🖤</string>
+    <string name="post_coming_1_author">केम आउट कार्ला</string>
+    <string name="post_coming_1_content">अपने परिवार को ND और क्वीर दोनों के रूप में बताना डरावना लेकिन मुक्तिदायक था। तुम अपनी टाइमलाइन पर करो! 🚪💜</string>
+    <string name="post_coming_2_author">सेफ हार्बर</string>
+    <string name="post_coming_2_content">यह कम्युनिटी एक्सप्लोर करने के लिए सेफ स्पेस है। अभी सारे जवाब होने जरूरी नहीं 💙</string>
+    <string name="post_coming_3_author">जर्नी स्टोरीज</string>
+    <string name="post_coming_3_content">कमिंग आउट स्टोरीज शेयर करना दूसरों को कम अकेला महसूस कराता है। कम्फर्टेबल हो तो अपनी कमेंट करो! 🌈</string>
+    <string name="post_coming_4_author">अभी फिगर आउट कर रहे</string>
+    <string name="post_coming_4_content">अभी लेबल्स के बारे में शुअर नहीं और यह ठीक है! क्वेश्चनिंग जर्नी का हिस्सा है, एंड नहीं 💜</string>
+    <string name="post_coming_5_author">चोजन फैमिली</string>
+    <string name="post_coming_5_content">चोजन फैमिली जब बायो फैमिली नहीं समझती। ND+LGBTQ+ कम्युनिटी तुम्हारे साथ है 🏠💜</string>
+    <string name="dm_search_conversations_placeholder">Search conversations</string>
+    <string name="dm_reply_to_placeholder">Reply to %s…</string>
+    <string name="create_post_share_thoughts">समुदाय के साथ अपने विचार साझा करें…</string>
+    <string name="image_editor_type_text">Type your text…</string>
+    <string name="image_editor_enter_text">Enter your text…</string>
+    <string name="create_story_caption_label">कैप्शन (वैकल्पिक)</string>
+    <string name="create_story_caption_placeholder">कैप्शन जोड़ें…</string>
+    <string name="create_story_understood">Understood</string>
+    <string name="create_story_posting">Posting…</string>
+    <string name="create_story_url_label">URL</string>
+    <string name="create_story_url_placeholder">https://…</string>
+    <string name="create_story_message_label">Your message</string>
+    <string name="create_story_message_placeholder">What\'s on your mind?</string>
+    <string name="create_story_share_link">Share a link with a preview</string>
+    <string name="create_story_create_text">Create a text story</string>
+    <string name="create_story_text_preview">Your text here…</string>
+    <string name="create_story_background_color">पृष्ठभूमि का रंग</string>
+    <string name="create_story_gradient_backgrounds">Gradient Backgrounds</string>
+    <string name="emoji_thumbs_up" translatable="false">👍</string>
+    <string name="emoji_heart" translatable="false">❤️</string>
+    <string name="emoji_smile" translatable="false">😊</string>
+    <string name="emoji_hands" translatable="false">🙌</string>
+    <string name="emoji_more" translatable="false">+</string>
+    <string name="posting_restricted_title">Posting Restricted</string>
+    <string name="posting_restricted_message">Posting has been disabled by parental controls. Ask a parent or guardian to change this setting.</string>
+    <string name="create_post_tone_label">टोन</string>
+    <string name="create_post_add_image">छवि जोड़ें</string>
+    <string name="create_post_add_video">वीडियो जोड़ें</string>
+    <string name="create_post_posting">पोस्ट हो रहा है…</string>
+    <string name="post_hidden">Post hidden</string>
+    <string name="mock_notif_welcome_title">Welcome to NeuroComet! 👋</string>
+    <string name="mock_notif_welcome_msg">We\'re so glad you\'re here. This is a safe space designed for neurodivergent minds.</string>
+    <string name="mock_notif_badge_title">New Badge Earned</string>
+    <string name="mock_notif_badge_msg">You verified your humanity! 🎉</string>
+    <string name="mock_notif_like_title">%s liked your post</string>
+    <string name="mock_notif_like_msg">The one about mechanical keyboards.</string>
+    <string name="mock_notif_follow_title">New follower</string>
+    <string name="mock_notif_follow_msg">%s started following you</string>
+    <string name="mock_notif_reply_title">Reply from %s</string>
+    <string name="mock_notif_reply_msg">I totally agree with that! Great perspective.</string>
+    <string name="mock_notif_mention_title">You were mentioned</string>
+    <string name="mock_notif_mention_msg">%s mentioned you: "Check out this accessibility tip!"</string>
+    <string name="mock_notif_repost_title">Your post was reposted</string>
+    <string name="mock_notif_repost_msg" formatted="false">%s shared your post about ADHD tips with %d followers</string>
+    <string name="mock_notif_safety_title">Safety reminder</string>
+    <string name="mock_notif_safety_msg">Remember to take breaks! You\'ve been active for a while. 💙</string>
+    <string name="mock_notif_filtered_title">Content filtered</string>
+    <string name="mock_notif_filtered_msg">We\'ve hidden some content that may not be suitable. You can adjust this in settings.</string>
+    <string name="mock_post_puzzle">🌈 Just finished my rainbow puzzle! 1000 pieces completed! Who else loves puzzles? 🧩</string>
+    <string name="mock_post_dinosaur">Today I learned that dinosaurs lived millions of years ago! 🦕 T-Rex is my favorite!</string>
+    <string name="mock_post_cat">My cat learned a new trick today! She can high-five now! 🐱✋ So proud of her!</string>
+    <string name="mock_post_game">🎮 Just beat my high score in my favorite game! Practice really does make perfect! 🏆</string>
+    <string name="mock_post_bracelet">🌈 Made a friendship bracelet for my best friend! The colors are so pretty together! 💕</string>
+    <string name="mock_post_dog">🐕 My dog is my best helper! He sits with me when I do homework and it makes me feel calm! 🐾</string>
+    <string name="mock_post_reading">📖 Reading time is the BEST! I\'m on chapter 10 of my favorite book series! Who else loves reading? 📚</string>
+    <string name="mock_post_art">🎨 Art class was so fun today! We painted sunsets and mine has ALL the colors! 🌅</string>
+    <string name="mock_post_hyperfocus">Just had a breakthrough on my project! Hyperfocus is a superpower when you can direct it. Late night coding sessions hit different.</string>
+    <string name="mock_post_weighted_vest">Trying out my new weighted vest today. Instant calm, highly recommend for sensory regulation! Also helps with my anxiety during exams.</string>
+    <string name="mock_post_dating_adhd">Dating with ADHD is wild. Hyperfocusing on someone new then completely forgetting to text back for 3 days 😅 Anyone else?</string>
+    <string name="mock_post_school_stress">School stress is real right now. Midterms + social anxiety = wanting to hide in my room for a week. At least my noise-canceling headphones help.</string>
+    <string name="mock_post_quiet_space">Need a quiet space. Going into Overload Mode for the rest of the afternoon. See you all tomorrow. #QuietMode</string>
+    <string name="mock_post_organizing">Just finished sorting all my project files into categorized folders. The visual order is immensely satisfying. My therapist says this is a healthy coping mechanism.</string>
+    <string name="mock_post_workplace">Workplace accommodations are finally in place! Took 6 months of advocacy but got my quiet workspace approved. HR was surprisingly supportive once I provided the documentation.</string>
+    <string name="mock_post_adulting">Adulting with ADHD: Forgot to pay rent again, but somehow remembered every line of dialogue from a movie I watched 10 years ago. My landlord is not amused.</string>
+    <string name="mock_post_late_diagnosis">PSA: Getting diagnosed as an adult is valid. Got mine at 34 and suddenly my entire life makes sense. The grief of \'what could have been\' is real but so is the relief of finally understanding yourself.</string>
+    <string name="mock_dm_hey">Hey! Love your posts about sensory tips! 💜</string>
+    <string name="mock_dm_thanks">Thanks so much! Your content is super helpful too!</string>
+    <string name="mock_dm_question">Quick question about that fidget toy you recommended?</string>
+    <string name="mock_dm_sure">Sure, happy to help! What would you like to know?</string>
+    <string name="mock_post_workspace">✨ Finally got my sensory-friendly workspace set up! Noise-canceling headphones, soft lighting, and my weighted lap pad. Game changer for focus! 🎧💡</string>
+    <string name="mock_post_brain_different">Reminder: Your brain works differently, not wrong. 🧠💜 Embrace your unique way of processing the world!</string>
+    <string name="mock_post_body_doubling">Just discovered body doubling on NeuroComet and WOW. Studied for 3 hours straight with my virtual study buddy! 📚🎉 Anyone else find this helpful?</string>
+    <string name="mock_post_stim_toys">My stim toy collection is growing! 🌈 These fidget tools have helped me so much in meetings. No shame in stimming! ✨</string>
+    <string name="mock_post_launch_pad">Pro tip: Create a \'launch pad\' by your door with everything you need for the day. Keys, wallet, meds, snacks - all in one spot! 🚀 ADHD life hack #247</string>
+    <string name="mock_post_lunch_win">Today\'s win: I remembered to eat lunch! 🎊 Setting phone alarms for basic needs is self-care. Don\'t let anyone tell you otherwise. 💪</string>
+    <string name="filter_all">सभी</string>
+    <string name="filter_unread">अपठित</string>
+    <string name="filter_mentions">उल्लेख</string>
+    <string name="filter_likes">पसंद</string>
+    <string name="filter_follows">फॉलो</string>
+    <string name="mock_dm_conv1_msg1">Hey, how are you feeling today?</string>
+    <string name="mock_dm_conv1_msg2">I\'m good, thanks! Just chilling.</string>
+    <string name="mock_dm_conv2_msg1">Did you see that new scam post? Don\'t fall for it!</string>
+    <string name="mock_dm_conv2_msg2">Thanks for the warning. I saw the phishing attempt.</string>
+    <string name="mock_dm_conv3_msg1">Hey! I saw your post about executive function struggles. I totally relate!</string>
+    <string name="mock_dm_conv3_msg2">Right?! Some days are just harder than others.</string>
+    <string name="mock_dm_conv3_msg3">Have you tried body doubling? It really helps me stay on task.</string>
+    <string name="mock_dm_conv3_msg4">I\'ve heard of it but never tried. How does it work for you?</string>
+    <string name="mock_dm_conv3_msg5">I just video call a friend while we both work on our own stuff. The accountability helps!</string>
+    <string name="mock_dm_conv4_msg1">Yo! That productivity hack you shared was 🔥</string>
+    <string name="mock_dm_conv4_msg2">Glad it helped! The Pomodoro technique is a game changer.</string>
+    <string name="mock_dm_conv4_msg3">I modified it to 25 min work / 10 min stim break. Works way better for my ADHD brain.</string>
+    <string name="mock_dm_conv4_msg4">That\'s genius! Mind if I share that tip in my next post?</string>
+    <string name="mock_dm_conv4_msg5">Go for it! Tag me 😄</string>
+    <string name="mock_dm_conv5_msg1">🎨 Just finished a new painting during my hyperfocus session!</string>
+    <string name="mock_dm_conv5_msg2">OMG I need to see it! You\'re so talented!</string>
+    <string name="mock_dm_conv5_msg3">Thanks! It\'s all blues and purples - very calming colors. I\'ll post it later today.</string>
+    <string name="mock_dm_conv5_msg4">Those are my favorite colors too! They really help when I\'m overstimulated.</string>
+    <string name="mock_dm_conv6_msg1">Hi there! Wanted to share a grounding technique that helped me today.</string>
+    <string name="mock_dm_conv6_msg2">I\'m all ears! Been having a rough week with anxiety.</string>
+    <string name="mock_dm_conv6_msg3">Try the 5-4-3-2-1 method: 5 things you see, 4 you hear, 3 you touch, 2 you smell, 1 you taste.</string>
+    <string name="mock_dm_conv6_msg4">This is really helpful, thank you! 💙</string>
+    <string name="mock_dm_conv6_msg5">Anytime! We\'re all in this together. 🤗</string>
+    <string name="mock_dm_conv7_msg1">Just got the new mechanical keyboard! The clicks are SO satisfying 🎹</string>
+    <string name="mock_dm_conv7_msg2">Ooooh which switches did you get?</string>
+    <string name="mock_dm_conv7_msg3">Cherry MX Blues! The tactile feedback is *chef\'s kiss* for my stimming needs.</string>
+    <string name="mock_dm_conv7_msg4">I\'ve been eyeing those! Do they help you focus while coding?</string>
+    <string name="mock_dm_conv7_msg5">Absolutely! The rhythmic clicking is like a built-in focus soundtrack. Highly recommend!</string>
+    <string name="mock_dm_conv7_msg6">Adding to cart right now 😂</string>
+    <string name="mock_dm_conv8_msg1">Low spoon day today 😴 How are you managing?</string>
+    <string name="mock_dm_conv8_msg2">Same here. Decided to cancel all non-essential plans.</string>
+    <string name="mock_dm_conv8_msg3">That\'s smart! Self-care isn\'t selfish. Rest up! 💜</string>
+    <string name="settings_section_account">Account</string>
+    <string name="settings_section_premium">Premium</string>
+    <string name="settings_section_safety">Safety &amp; Wellbeing</string>
+    <string name="settings_section_support">Help &amp; Support</string>
+    <string name="settings_section_about">About</string>
+    <string name="settings_my_profile_desc">View and edit your profile, energy status &amp; preferences</string>
+    <string name="settings_premium_active">Premium Active ✨</string>
+    <string name="settings_premium_thanks">Thank you for your support!</string>
+    <string name="settings_go_premium">Go Premium ⭐</string>
+    <string name="settings_premium_price">Ad-free experience • $2/month or $60 lifetime</string>
+    <string name="settings_theme">Theme Settings</string>
+    <string name="settings_theme_desc">Colors, styles &amp; neurodivergent themes</string>
+    <string name="settings_animation">Animation Settings</string>
+    <string name="settings_animation_desc">Control motion and visual effects</string>
+    <string name="settings_animation_disabled">All animations disabled</string>
+    <string name="settings_dark_mode">Dark Mode</string>
+    <string name="settings_dark_mode_desc">Use dark theme for low-light environments</string>
+    <string name="settings_high_contrast">High Contrast</string>
+    <string name="settings_high_contrast_desc">Maximum contrast for visibility</string>
+    <string name="settings_app_icon">App Icon</string>
+    <string name="settings_app_icon_desc">Choose your favorite icon style</string>
+    <string name="icon_style_default">Default Comet</string>
+    <string name="icon_style_default_desc">The classic NeuroComet icon</string>
+    <string name="icon_style_calm">Calm Waters</string>
+    <string name="icon_style_calm_desc">Soothing blue tones for relaxation</string>
+    <string name="icon_style_focus">Focus Mode</string>
+    <string name="icon_style_focus_desc">Minimal design to reduce distractions</string>
+    <string name="icon_style_energy">Energy Burst</string>
+    <string name="icon_style_energy_desc">Vibrant colors for motivation</string>
+    <string name="icon_style_sensory">Sensory Friendly</string>
+    <string name="icon_style_sensory_desc">Muted tones gentle on the eyes</string>
+    <string name="icon_style_pride">Neurodiversity Pride</string>
+    <string name="icon_style_pride_desc">Celebrate neurodivergent identity</string>
+    <string name="icon_customization_title">Choose Your Icon</string>
+    <string name="icon_customization_subtitle">Pick an icon that matches your mood and needs</string>
+    <string name="icon_applied">Icon applied! Restart your launcher if it doesn\'t update. 🎨</string>
+    <string name="settings_privacy">Privacy Settings</string>
+    <string name="settings_privacy_desc">Who can see your content &amp; message you</string>
+    <string name="privacy_muted_word_label">Word or phrase</string>
+    <string name="settings_blocked">Blocked Accounts</string>
+    <string name="settings_blocked_desc">Manage users you\'ve blocked</string>
+    <string name="settings_data">Data &amp; Storage</string>
+    <string name="settings_data_desc">Cache, downloads &amp; data usage</string>
+    <string name="settings_notif_prefs">Notification Preferences</string>
+    <string name="settings_notif_desc">Customize what notifications you receive</string>
+    <string name="settings_quiet_hours">Quiet Hours</string>
+    <string name="settings_quiet_hours_desc">Schedule do-not-disturb periods</string>
+    <string name="settings_text_display">Text &amp; Display</string>
+    <string name="settings_text_display_desc">Font size, reading options &amp; dyslexia support</string>
+    <string name="settings_screen_reader">Screen Reader</string>
+    <string name="settings_screen_reader_desc">Optimize for assistive technologies</string>
+    <string name="settings_reduce_motion">Reduce Motion</string>
+    <string name="settings_reduce_motion_desc">Minimize animations &amp; movement</string>
+    <string name="settings_content_filters">Content Filters</string>
+    <string name="settings_content_filters_desc">Manage sensitive content settings</string>
+    <string name="settings_break_reminders">Break Reminders</string>
+    <string name="settings_break_reminders_desc">Get prompted to take breaks</string>
+    <string name="settings_parental">Parental Controls</string>
+    <string name="settings_parental_desc">Safety settings for younger users</string>
+    <string name="settings_parental_pin_set">PIN is set • Tap to manage</string>
+    <string name="parental_pin_label">PIN</string>
+    <string name="parental_pin_confirm_label">Confirm PIN</string>
+    <string name="parental_pin_current_label">Current PIN</string>
+    <string name="parental_pin_new_label">New PIN</string>
+    <string name="parental_pin_confirm_new_label">Confirm New PIN</string>
+    <string name="parental_pin_enter_confirm">Enter PIN to confirm</string>
+    <string name="settings_kid_mode">Kid Mode</string>
+    <string name="settings_kid_mode_desc">Age-appropriate content filtering</string>
+    <string name="settings_keep_screen_on">Keep Screen On</string>
+    <string name="settings_keep_screen_on_desc">Prevent screen from dimming during focus time</string>
+    <string name="settings_help_center">Help Center</string>
+    <string name="settings_help_center_desc">FAQs, guides &amp; tutorials</string>
+    <string name="settings_report_issue">Report an Issue</string>
+    <string name="settings_report_issue_desc">Let us know about bugs or problems</string>
+    <string name="settings_feedback">Send Feedback</string>
+    <string name="settings_feedback_desc">Share your thoughts &amp; suggestions</string>
+    <string name="settings_terms">Terms of Service</string>
+    <string name="settings_privacy_policy">Privacy Policy</string>
+    <string name="settings_licenses">Open Source Licenses</string>
+    <string name="tips_title">Quick Tips &amp; Tricks</string>
+    <string name="tips_tap_expand">Tap to see %d helpful tips</string>
+    <string name="tips_tap_collapse">Tap to collapse</string>
+    <string name="tips_expand">Expand</string>
+    <string name="tips_collapse">Collapse</string>
+    <string name="tip_animation_toggle_title">Quick Animation Toggle</string>
+    <string name="tip_animation_toggle_desc">Tap the ♾️ infinity logo on the login screen to quickly enable/disable animations</string>
+    <string name="tip_rainbow_brain_title">Unlock Rainbow Brain</string>
+    <string name="tip_rainbow_brain_desc">Tap the version info 7 times in Settings to unlock the secret Rainbow Brain theme!</string>
+    <string name="tip_eye_strain_title">Reduce Eye Strain</string>
+    <string name="tip_eye_strain_desc">Enable Dark Mode + Autism Low Stimulation theme for the calmest experience</string>
+    <string name="tip_readability_title">Better Readability</string>
+    <string name="tip_readability_desc">Try Lexend or Atkinson Hyperlegible fonts - designed for neurodivergent readers</string>
+    <string name="tip_calm_title">Calm Experience</string>
+    <string name="tip_calm_desc">Disable all animations in Settings &gt; Animations and use the Calm or Overload theme</string>
+    <string name="tip_focus_title">Stay Focused</string>
+    <string name="tip_focus_desc">Use ADHD Task Mode theme + Hyperfocus for minimal distractions</string>
+    <string name="tip_kids_title">Protect Kids</string>
+    <string name="tip_kids_desc">Set up Parental Controls with a PIN to manage screen time and content</string>
+    <string name="tip_holiday_title">Holiday Themes</string>
+    <string name="tip_holiday_desc">The logo automatically celebrates holidays and ND awareness events with special colors!</string>
+    <string name="tip_themes_title">25+ Themes</string>
+    <string name="tip_themes_desc">Explore themes for ADHD, Autism, Anxiety, Colorblind, Low Vision, and your current mood</string>
+    <string name="tip_fonts_title">12+ Fonts</string>
+    <string name="tip_fonts_desc">Choose from dyslexia-friendly, ADHD-friendly, and accessibility fonts in Settings &gt; Font &amp; Reading</string>
+    <string name="tutorial_title">App Tutorial</string>
+    <string name="tutorial_description">Watch the getting started guide again</string>
+    <string name="post_adhd_1_author">FocusedFinn</string>
+    <string name="post_adhd_1_content">🧠 Just discovered the power of body doubling! Working alongside someone (even virtually) helps me stay on task so much better.</string>
+    <string name="post_adhd_2_author">TimeBlindTina</string>
+    <string name="post_adhd_2_content">Anyone else use timers for EVERYTHING? I set 25-min work blocks and it\'s a game changer. Pomodoro for the win! 🍅</string>
+    <string name="post_adhd_3_author">HyperfocusHarry</string>
+    <string name="post_adhd_3_content">TIP: Put your phone in another room during deep work. Out of sight = out of mind. Finally finishing projects!</string>
+    <string name="post_adhd_4_author">ScatterbrainSally</string>
+    <string name="post_adhd_4_content">External scaffolding is my superpower! Visual reminders, apps, alarms - my environment remembers so I don\'t have to 📝</string>
+    <string name="post_adhd_5_author">ImpulsiveIvy</string>
+    <string name="post_adhd_5_content">Started using \'implementation intentions\' - instead of \'I\'ll exercise\' I say \'At 7am, I put on shoes and walk\'. Works! 🏃‍♀️</string>
+    <string name="post_safefood_1_author">TextureSensitive</string>
+    <string name="post_safefood_1_content">Found a new safe food! These rice crackers have the perfect crunch without being too loud. Sharing the brand in comments 🍘</string>
+    <string name="post_safefood_2_author">BeigeFoodClub</string>
+    <string name="post_safefood_2_content">Reminder that \'safe foods\' are valid! Sometimes plain pasta is self-care. No shame in eating what works for you 🍝</string>
+    <string name="post_safefood_3_author">SensoryChef</string>
+    <string name="post_safefood_3_content">I made a sensory-friendly recipe book! All recipes avoid common texture triggers. Would anyone want me to share it?</string>
+    <string name="post_safefood_4_author">PickyEaterPete</string>
+    <string name="post_safefood_4_content">Does anyone else have \'safe restaurants\'? Places where you know exactly what to order and it\'s always consistent?</string>
+    <string name="post_safefood_5_author">MealPrepMolly</string>
+    <string name="post_safefood_5_content">Batch cooking my safe foods on Sunday = less decision fatigue all week! Currently rotating 5 meals I actually enjoy 💪</string>
+    <string name="post_sleep_1_author">NightOwlNate</string>
+    <string name="post_sleep_1_content">Finally found a weighted blanket that doesn\'t make me overheat! Deep pressure + cool fabric = actually sleeping 😴</string>
+    <string name="post_sleep_2_author">RestlessRachel</string>
+    <string name="post_sleep_2_content">Wind-down routine that works for my brain: dim lights, no screens 1hr before, same playlist every night. Consistency is key!</string>
+    <string name="post_sleep_3_author">InsomniaIan</string>
+    <string name="post_sleep_3_content">Anyone else\'s brain do the \'remember every embarrassing moment\' thing at 2am? Started journaling before bed to \'close tabs\'</string>
+    <string name="post_sleep_4_author">SleepySteph</string>
+    <string name="post_sleep_4_content">White noise vs brown noise vs pink noise - which works for you? I\'m team brown noise, it\'s like a hug for my ears 🔊</string>
+    <string name="post_sleep_5_author">DreamyDan</string>
+    <string name="post_sleep_5_content">Started using blackout curtains AND a sleep mask. Totally dark room = finally getting deep sleep cycles!</string>
+    <string name="post_social_1_author">ConvoCoach</string>
+    <string name="post_social_1_content">Scripts for small talk! \'How\'s your day going?\' → \'Any fun weekend plans?\' → \'That sounds nice!\' Memorized patterns help! 💬</string>
+    <string name="post_social_2_author">FriendshipFred</string>
+    <string name="post_social_2_content">Quality over quantity. Having 2-3 close friends who \'get it\' is worth more than 100 acquaintances 👥</string>
+    <string name="post_social_3_author">AwkwardAndy</string>
+    <string name="post_social_3_content">It\'s okay to leave social events early! \'I had a great time, heading out now\' - no long explanation needed 👋</string>
+    <string name="post_social_4_author">BoundaryBella</string>
+    <string name="post_social_4_content">\'I need to think about that\' is a complete sentence. No pressure to respond immediately!</string>
+    <string name="post_social_5_author">ParallelPaul</string>
+    <string name="post_social_5_content">Parallel play is valid adult friendship! Gaming together, crafting in the same room - connection without constant interaction</string>
+    <string name="post_mask_1_author">UnmaskingUri</string>
+    <string name="post_mask_1_content">Finally dropping the mask at home. It\'s exhausting pretending to be \'normal\' all day. Safe spaces matter 🎭</string>
+    <string name="post_mask_2_author">BurnoutBeth</string>
+    <string name="post_mask_2_content">Masking led to burnout. Now I\'m slowly learning who I am without the performance. It\'s scary but freeing</string>
+    <string name="post_mask_3_author">AuthenticAva</string>
+    <string name="post_mask_3_content">Found friends who accept the real me - stims, infodumps, and all. They say I\'m \'more interesting\' unmasked! ✨</string>
+    <string name="post_mask_4_author">ExhaustedEli</string>
+    <string name="post_mask_4_content">The price of masking: migraines, fatigue, identity confusion. Is \'fitting in\' worth my wellbeing? Reconsidering…</string>
+    <string name="post_mask_5_author">GrowingGrace</string>
+    <string name="post_mask_5_content">Started stimming publicly. Heart raced at first, but literally no one cared. The fear was bigger than reality 💪</string>
+    <string name="post_mental_1_author">AnxietyAlly</string>
+    <string name="post_mental_1_content">ADHD + anxiety is a rough combo. Tips that help me: structured routines, movement breaks, and lots of self-compassion 🧘</string>
+    <string name="post_mental_2_author">DepressionDiana</string>
+    <string name="post_mental_2_content">Some days, just existing is an achievement. Be proud of the small wins. You\'re doing better than you think 💙</string>
+    <string name="post_mental_3_author">TherapyTom</string>
+    <string name="post_mental_3_content">Finally found a neurodivergent-affirming therapist! They understand that \'just try harder\' isn\'t helpful. Game changer!</string>
+    <string name="post_mental_4_author">HealingHannah</string>
+    <string name="post_mental_4_content">Journaling prompts for rough days: What\'s draining me? What\'s one kind thing I can do for myself right now?</string>
+    <string name="post_mental_5_author">CopingChris</string>
+    <string name="post_mental_5_content">Medication isn\'t a failure - it\'s a tool. Just like glasses for vision. No shame in chemical support 💊</string>
+    <string name="post_work_1_author">AccommodationAce</string>
+    <string name="post_work_1_content">Got my workplace accommodations approved! Noise-canceling headphones, flexible hours, written instructions. Know your rights! 💼</string>
+    <string name="post_work_2_author">StudentSara</string>
+    <string name="post_work_2_content">College disability services changed everything. Extra time, quiet testing rooms, note-taking support. Ask for help! 🎓</string>
+    <string name="post_work_3_author">RemoteRick</string>
+    <string name="post_work_3_content">WFH is my dream. No fluorescent lights, no open offices, no surprise social interactions. Productivity skyrocketed!</string>
+    <string name="post_work_4_author">MeetingMary</string>
+    <string name="post_work_4_content">Cameras off in meetings when I need them. Standing during calls. These \'small\' accommodations make huge differences</string>
+    <string name="post_work_5_author">CareerCoach</string>
+    <string name="post_work_5_content">Neurodivergent-friendly career paths: programming, research, art, writing, data analysis. Play to your strengths! 📈</string>
+    <string name="post_late_1_author">LateBloomLisa</string>
+    <string name="post_late_1_content">Diagnosed at 35. Everything suddenly makes sense - the struggles, the differences, the \'quirks\'. Grief and relief mixed 🔍</string>
+    <string name="post_late_2_author">MidlifeMike</string>
+    <string name="post_late_2_content">Spent decades thinking I was broken. Turns out I\'m just wired differently. Late diagnosis is still valid diagnosis 💜</string>
+    <string name="post_late_3_author">IdentityCrisis</string>
+    <string name="post_late_3_content">Unmasking after 40 years is HARD. Who am I without the performance? Slowly rediscovering myself</string>
+    <string name="post_late_4_author">GriefAndGrowth</string>
+    <string name="post_late_4_content">Grieving the support I could have had growing up. But also grateful for finally understanding myself 🌱</string>
+    <string name="post_late_5_author">NewChapter</string>
+    <string name="post_late_5_content">It\'s never too late to learn about yourself. Late-diagnosed at 52, and life is finally making sense!</string>
+    <string name="profile_verified">सत्यापित</string>
+    <string name="comments_close">टिप्पणियाँ बंद करें</string>
+    <string name="comments_replying_to">%s को जवाब</string>
+    <string name="comments_no_comments_yet">अभी तक कोई टिप्पणी नहीं</string>
+    <string name="comments_be_first">अपने विचार साझा करने वाले पहले व्यक्ति बनें!</string>
+    <string name="comments_send_comment">टिप्पणी भेजें</string>
+    <string name="share_category_text">Check out the %1$s community on NeuroComet! 🧠✨\n\nJoin a supportive space for neurodivergent individuals.\n\nhttps://NeuroComet.app/community/%2$s</string>
+    <string name="share_category_subject">%s - NeuroComet Community</string>
+    <string name="share_category_chooser">Share %s</string>
+    <string name="share_story_text">Check out %1$s\'s story! %2$s</string>
+    <string name="share_story_chooser">Share Story</string>
+    <string name="share_explore_topic_text">Check out the %1$s community on NeuroComet! %2$s\n\n%3$s\n\n👥 %4$s members\n📝 %5$s posts\n\nJoin the conversation: NeuroComet.app/explore/%6$s</string>
+    <string name="share_explore_topic_subject">%1$s %2$s - NeuroComet Community</string>
+    <string name="share_explore_topic_chooser">Share %s</string>
+    <string name="story_reply">Reply</string>
+    <string name="story_like">Like</string>
+    <string name="story_liked">Liked</string>
+    <string name="security_check_failed">Security check failed. This app cannot run on this device.</string>
+    <string name="theme_settings_title">Theme Settings</string>
+    <string name="theme_settings_subtitle">Choose a theme that works for you</string>
+    <string name="theme_current_theme">Current Theme</string>
+    <string name="theme_quick_settings">Quick Settings</string>
+    <string name="theme_dynamic_colors">Dynamic Colors</string>
+    <string name="theme_dynamic_colors_active">Dynamic Colors Active</string>
+    <string name="theme_dynamic_colors_hint">Disable Dynamic Colors in Quick Settings below to use custom themes.</string>
+    <string name="theme_dynamic_colors_desc">Use colors from your device wallpaper (Material You)</string>
+    <string name="theme_dynamic_colors_unavailable">Requires Android 12 or higher</string>
+    <string name="theme_disabled_dynamic_active">Disabled (Dynamic Colors active)</string>
+    <string name="theme_rainbow_unlocked">🦄 You\'ve unlocked the Rainbow Brain theme!\nScroll down to Secret Themes to try it!</string>
+    <string name="theme_made_with_love">Made with 💜 for every unique mind</string>
+    <string name="easter_egg_rainbow_unlocked">🦄 You\'ve unlocked the Rainbow Brain theme!\nFind it in Theme Settings → Secret Themes</string>
+    <string name="ads_loading">विज्ञापन लोड हो रहा है…</string>
+    <string name="ads_premium_no_ads">कोई विज्ञापन नहीं - प्रीमियम सदस्य</string>
+    <string name="ads_watch_to_support">NeuroComet का समर्थन करने के लिए एक छोटा विज्ञापन देखें</string>
+    <string name="ads_rewarded_complete">धन्यवाद! आपने एक पुरस्कार अर्जित किया।</string>
+    <string name="ads_disabled_kids">बच्चों के मोड में विज्ञापन अक्षम हैं</string>
+    <string name="ads_error_load_failed">विज्ञापन लोड करने में विफल</string>
+    <string name="widget_focus_timer">Focus Timer</string>
+    <string name="widget_energy_level">Energy Level</string>
+    <string name="widget_social_battery">Social Battery</string>
+    <string name="widget_task_checklist">Today\'s Tasks</string>
+    <string name="widget_calm_corner">Calm Corner</string>
+    <string name="widget_daily_checkin">How are you feeling?</string>
+    <string name="widget_sensory_status">Sensory Status</string>
+    <string name="widget_minutes_remaining">minutes remaining</string>
+    <string name="widget_add_task">Add Task</string>
+    <string name="image_edit_title">Edit Image</string>
+    <string name="image_edit_filters">Filters</string>
+    <string name="image_edit_adjust">Adjust</string>
+    <string name="image_edit_text">Text</string>
+    <string name="image_edit_stickers">Stickers</string>
+    <string name="image_edit_draw">Draw</string>
+    <string name="image_edit_crop">Crop</string>
+    <string name="image_edit_brightness">Brightness</string>
+    <string name="image_edit_contrast">Contrast</string>
+    <string name="image_edit_saturation">Saturation</string>
+    <string name="image_edit_add_text">Add text…</string>
+    <string name="image_edit_drawing_on">Drawing mode on</string>
+    <string name="image_edit_undo">Undo</string>
+    <string name="image_edit_done">Done</string>
+    <string name="explore_view_grid">Grid</string>
+    <string name="explore_view_compact">Compact</string>
+    <string name="explore_view_standard">Standard</string>
+    <string name="explore_view_large">Large</string>
+    <string name="post_media_count" formatted="false">%d of %d</string>
+    <string name="post_max_media_reached">Maximum %d items allowed</string>
+    <string name="post_add_more_media">Add more</string>
+    <string name="post_remove_media">Remove</string>
+    <string name="post_video_indicator">Video</string>
+    <string name="post_photos_count">%d photos</string>
+    <string name="widget_energy_name">Energy Level</string>
+    <string name="widget_energy_description">Track your energy and social battery level from your home screen</string>
+    <string name="widget_focus_timer_name">फोकस टाइमर</string>
+    <string name="widget_focus_timer_description">अपनी होम स्क्रीन से सीधे फोकस सेशन शुरू करें और प्रबंधित करें</string>
+    <string name="widget_mood_name">मूड ट्रैकर</string>
+    <string name="widget_mood_description">अपनी होम स्क्रीन से त्वरित मूड चेक-इन</string>
+    <string name="widget_spoon_name">स्पून काउंटर</string>
+    <string name="widget_spoon_description">स्पून थ्योरी का उपयोग करके अपनी दैनिक ऊर्जा का ट्रैक करें</string>
+    <string name="widget_affirmation_name">दैनिक प्रतिज्ञान</string>
+    <string name="widget_affirmation_description">न्यूरोडाइवर्जेंट-सकारात्मक दैनिक संदेश आपके दिन को रोशन करने के लिए</string>
+    <string name="widget_stim_break_name">स्टिम ब्रेक</string>
+    <string name="widget_stim_break_description">सेंसरी रेगुलेशन ब्रेक लेने के लिए ट्रैक करें और खुद को याद दिलाएं</string>
+    <string name="pull_to_refresh">रिफ्रेश करने के लिए खींचें</string>
+    <string name="release_to_refresh">रिफ्रेश करने के लिए छोड़ें</string>
+    <string name="refreshing">रिफ्रेश हो रहा है…</string>
+    <string name="refresh_complete">रिफ्रेश पूर्ण</string>
+    <string name="location_permission_title">लोकेशन एक्सेस</string>
+    <string name="location_permission_desc">लोकेशन शेयरिंग और आसपास के सदस्यों को खोजने के लिए उपयोग किया जाता है</string>
+    <string name="location_high_accuracy">उच्च सटीकता</string>
+    <string name="location_balanced">संतुलित</string>
+    <string name="location_low_power">बैटरी सेवर</string>
+    <string name="sensor_accelerometer">एक्सेलेरोमीटर</string>
+    <string name="sensor_magnetometer">मैग्नेटोमीटर</string>
+    <string name="sensor_barometer">बैरोमीटर</string>
+    <string name="sensor_monitoring">सेंसर मॉनिटरिंग</string>
+    <string name="error_something_went_wrong">कुछ गलत हो गया</string>
+    <string name="error_content_unavailable">सामग्री उपलब्ध नहीं है</string>
+    <string name="error_try_again">पुनः प्रयास करें</string>
+    <string name="error_go_home">होम पर जाएं</string>
+    <string name="error_get_help">मदद पाएं</string>
+    <string name="error_data_safe">चिंता न करें, आपका डेटा सुरक्षित है!</string>
+    <string name="error_temporary">यह बस एक अस्थायी समस्या है। ऐप खुद को ठीक करने पर काम कर रहा है!</string>
+    <string name="error_taking_longer">उम्मीद से अधिक समय लग रहा है</string>
+    <string name="error_still_loading">सामग्री अभी भी लोड हो रही है। आप प्रतीक्षा कर सकते हैं या फिर से प्रयास कर सकते हैं।</string>
+    <string name="error_offline">आप ऑफ़लाइन हैं</string>
+    <string name="error_check_connection">अपना कनेक्शन जांचें और पुनः प्रयास करें</string>
+    <string name="error_feature_unavailable">%s उपलब्ध नहीं है</string>
+    <string name="error_empty_title">यहां अभी कुछ नहीं है</string>
+    <string name="error_empty_message">यह जगह भरे जाने का इंतजार कर रही है!</string>
+    <string name="error_show_details">तकनीकी विवरण दिखाएं</string>
+    <string name="error_hide_details">विवरण छुपाएं</string>
+    <string name="feedback_submit_tab">सबमिट करें</string>
+    <string name="feedback_requests_tab">अनुरोध</string>
+    <string name="feedback_roadmap_tab">रोडमैप</string>
+    <string name="feedback_remaining">आज आपके पास %d सबमिशन बाकी हैं</string>
+    <string name="feedback_report_bug_desc">कुछ टूटा हुआ मिला? हमें बताएं ताकि हम इसे ठीक कर सकें।</string>
+    <string name="feedback_request_feature_desc">NeuroComet को बेहतर बनाने का कोई आइडिया है? हम सुनना चाहेंगे!</string>
+    <string name="feedback_send_desc">अपने विचार, सुझाव साझा करें या बस हैलो कहें!</string>
+    <string name="feedback_community_note">सभी फीडबैक हमारी टीम द्वारा समीक्षित किए जाते हैं। हम सामुदायिक वोटों और न्यूरोडाइवर्जेंट उपयोगकर्ताओं पर प्रभाव के आधार पर सुविधाओं को प्राथमिकता देते हैं।</string>
+    <string name="feedback_bug_submitted_title">बग रिपोर्ट सबमिट हो गई</string>
+    <string name="feedback_bug_submitted_msg">NeuroComet को बेहतर बनाने में मदद करने के लिए धन्यवाद! हम इस समस्या की जांच करेंगे।</string>
+    <string name="feedback_feature_submitted_title">फीचर अनुरोध सबमिट हो गया</string>
+    <string name="feedback_feature_submitted_msg">आपका आइडिया सबमिट हो गया है! समुदाय अब इस पर वोट कर सकता है।</string>
+    <string name="feedback_thank_you_title">धन्यवाद!</string>
+    <string name="feedback_thank_you_msg">आपका फीडबैक NeuroComet को सभी के लिए बेहतर बनाने में मदद करता है।</string>
+    <string name="feedback_bug_title_label">बग का शीर्षक</string>
+    <string name="feedback_bug_title_hint">समस्या का संक्षिप्त विवरण</string>
+    <string name="feedback_steps_label">पुनः उत्पन्न करने के चरण</string>
+    <string name="feedback_steps_hint">1. जाएं…\n2. टैप करें…\n3. बग दिखाई देता है</string>
+    <string name="feedback_severity_label">गंभीरता</string>
+    <string name="feedback_include_device_info">डिवाइस जानकारी शामिल करें</string>
+    <string name="feedback_feature_title_label">फीचर का शीर्षक</string>
+    <string name="feedback_feature_title_hint">आप क्या देखना चाहेंगे?</string>
+    <string name="feedback_feature_desc_label">विवरण</string>
+    <string name="feedback_feature_desc_hint">बताएं कि यह फीचर आपकी कैसे मदद करेगा…</string>
+    <string name="feedback_category_label">श्रेणी</string>
+    <string name="feedback_general_label">आपके विचार (वैकल्पिक)</string>
+    <string name="feedback_general_hint">हमें बताएं आप क्या सोचते हैं…</string>
+    <string name="feedback_submit_bug">बग रिपोर्ट सबमिट करें</string>
+    <string name="feedback_submit_request">अनुरोध सबमिट करें</string>
+    <string name="feedback_submit">सबमिट करें</string>
+    <string name="feedback_coming_soon">जल्द आ रहा है</string>
+    <string name="feedback_recently_shipped">हाल ही में जारी</string>
+    <string name="feedback_sort_top_voted">सबसे ज्यादा वोट</string>
+    <string name="feedback_sort_newest">नवीनतम</string>
+    <string name="feedback_status_submitted">सबमिट हो गया</string>
+    <string name="feedback_status_review">समीक्षाधीन</string>
+    <string name="feedback_status_planned">नियोजित</string>
+    <string name="feedback_status_progress">प्रगति में</string>
+    <string name="feedback_status_completed">पूर्ण</string>
+    <string name="feedback_status_declined">अस्वीकृत</string>
+    <string name="feedback_severity_low">कम</string>
+    <string name="feedback_severity_medium">मध्यम</string>
+    <string name="feedback_severity_high">उच्च</string>
+    <string name="feedback_severity_critical">गंभीर</string>
+    <string name="feedback_votes">%d वोट</string>
+    <string name="comments_empty">अभी तक कोई टिप्पणी नहीं</string>
+    <string name="comments_load_more">और लोड करें</string>
+    <string name="comments_replies">%d जवाब</string>
+    <string name="comments_reply">जवाब दें</string>
+    <string name="community_members">%d सदस्य</string>
+    <string name="community_posts">%d पोस्ट</string>
+    <string name="create_post_add_link">लिंक जोड़ें</string>
+    <string name="create_post_add_poll">पोल जोड़ें</string>
+    <string name="create_post_discard">छोड़ें</string>
+    <string name="create_post_discard_message">आपकी पोस्ट खो जाएगी।</string>
+    <string name="create_post_discard_title">पोस्ट छोड़ें?</string>
+    <string name="explore_bipolar">बाइपोलर</string>
+    <string name="explore_communities">समुदाय</string>
+    <string name="explore_depression">अवसाद</string>
+    <string name="explore_dyslexia">डिस्लेक्सिया</string>
+    <string name="explore_lgbtq">LGBTQ+</string>
+    <string name="explore_nonbinary">नॉन-बाइनरी</string>
+    <string name="explore_ocd">OCD</string>
+    <string name="explore_people">लोग</string>
+    <string name="explore_ptsd">PTSD</string>
+    <string name="explore_topics">विषय</string>
+    <string name="explore_trans">ट्रांसजेंडर</string>
+    <string name="feed_empty_subtitle">लोगों और समुदायों को फॉलो करें</string>
+    <string name="feed_empty_title">अभी कुछ नहीं है</string>
+    <string name="feed_error">लोड करने में त्रुटि</string>
+    <string name="feed_loading">लोड हो रहा है…</string>
+    <string name="feed_retry">पुनः प्रयास करें</string>
+    <string name="feedback_category">श्रेणी</string>
+    <string name="feedback_description">विवरण</string>
+    <string name="feedback_description_placeholder">विस्तार से बताएं…</string>
+    <string name="feedback_severity">गंभीरता</string>
+    <string name="feedback_thanks">आपकी प्रतिक्रिया के लिए धन्यवाद!</string>
+    <string name="neuro_category_dyslexia">डिस्लेक्सिया</string>
+    <string name="notification_commented">ने आपकी पोस्ट पर टिप्पणी की</string>
+    <string name="notification_followed">अब आपको फॉलो कर रहे हैं</string>
+    <string name="notification_liked_post">ने आपकी पोस्ट पसंद की</string>
+    <string name="notification_mentioned">ने आपको मेंशन किया</string>
+    <string name="notification_replied">ने आपकी टिप्पणी का जवाब दिया</string>
+    <string name="notifications_mark_read">पढ़ा हुआ चिह्नित करें</string>
+    <string name="notifications_settings">सूचना सेटिंग्स</string>
+    <string name="post_comment">टिप्पणी</string>
+    <string name="post_copy_link">लिंक कॉपी करें</string>
+    <string name="post_edit">संपादित करें</string>
+    <string name="post_like">पसंद</string>
+    <string name="post_unlike">नापसंद</string>
+    <string name="settings_about">ऐप के बारे में</string>
+    <string name="settings_contact">हमसे संपर्क करें</string>
+    <string name="settings_help">मदद और सहायता</string>
+    <string name="settings_rate_app">ऐप रेट करें</string>
+    <string name="settings_share_app">ऐप शेयर करें</string>
+    <string name="settings_terms_of_service">सेवा की शर्तें</string>
+    <string name="time_months_ago">%d महीने पहले</string>
+    <string name="time_weeks_ago">%d सप्ताह पहले</string>
+    <string name="time_years_ago">%d साल पहले</string>
+    <string name="avatar_title">प्रोफ़ाइल फ़ोटो</string>
+    <string name="avatar_customize">अवतार कस्टमाइज़ करें</string>
+    <string name="avatar_choose_photo">फ़ोटो चुनें</string>
+    <string name="avatar_take_selfie">सेल्फी लें</string>
+    <string name="avatar_from_gallery">गैलरी से</string>
+    <string name="avatar_remove_photo">फ़ोटो हटाएं</string>
+    <string name="avatar_use_default">डिफ़ॉल्ट अवतार का उपयोग करें</string>
+    <string name="avatar_create_custom">कस्टम अवतार बनाएं</string>
+    <string name="avatar_edit">अवतार संपादित करें</string>
+    <string name="avatar_save">अवतार सहेजें</string>
+    <string name="avatar_cancel">रद्द करें</string>
+    <string name="avatar_preview">पूर्वावलोकन</string>
+    <string name="avatar_saved_success">अवतार सहेजा गया! ✨</string>
+    <string name="avatar_upload_failed">अपलोड विफल। पुन: प्रयास करें।</string>
+    <string name="avatar_permission_camera">सेल्फी के लिए कैमरा अनुमति आवश्यक</string>
+    <string name="avatar_permission_gallery">गैलरी के लिए स्टोरेज अनुमति आवश्यक</string>
+    <string name="avatar_crop_title">फ़ोटो क्रॉप करें</string>
+    <string name="avatar_crop_hint">ज़ूम करने के लिए पिंच करें, समायोजित करने के लिए खींचें</string>
+    <string name="avatar_style_title">अवतार शैली</string>
+    <string name="avatar_style_photo">फ़ोटो</string>
+    <string name="avatar_style_illustrated">चित्रित</string>
+    <string name="avatar_style_pixel">पिक्सेल आर्ट</string>
+    <string name="avatar_style_abstract">अमूर्त</string>
+    <string name="avatar_background_title">पृष्ठभूमि</string>
+    <string name="avatar_background_solid">ठोस रंग</string>
+    <string name="avatar_background_gradient">ग्रेडिएंट</string>
+    <string name="avatar_background_pride">प्राइड फ्लैग</string>
+    <string name="avatar_background_pattern">पैटर्न</string>
+    <string name="avatar_accessories_title">एक्सेसरीज़</string>
+    <string name="avatar_accessories_none">कोई नहीं</string>
+    <string name="avatar_accessories_glasses">चश्मा</string>
+    <string name="avatar_accessories_hat">टोपी</string>
+    <string name="avatar_accessories_headphones">हेडफ़ोन</string>
+    <string name="avatar_frame_title">फ्रेम</string>
+    <string name="avatar_frame_none">कोई फ्रेम नहीं</string>
+    <string name="avatar_frame_circle">सर्कल</string>
+    <string name="avatar_frame_rounded">गोलाकार</string>
+    <string name="avatar_frame_pride">प्राइड फ्रेम</string>
+    <string name="avatar_frame_neurodivergent">इनफिनिटी फ्रेम ∞</string>
+    <string name="avatar_colors_title">रंग</string>
+    <string name="avatar_skin_tone">त्वचा का रंग</string>
+    <string name="avatar_hair_color">बालों का रंग</string>
+    <string name="avatar_eye_color">आंखों का रंग</string>
+    <string name="avatar_expression_title">भाव</string>
+    <string name="avatar_expression_happy">खुश</string>
+    <string name="avatar_expression_calm">शांत</string>
+    <string name="avatar_expression_confident">आत्मविश्वासी</string>
+    <string name="avatar_expression_playful">चंचल</string>
+    <string name="avatar_randomize">रैंडम</string>
+    <string name="avatar_reset">रीसेट</string>
+    <string name="avatar_premium_feature">प्रीमियम फ़ीचर ✨</string>
+    <string name="avatar_premium_unlock">Premium के साथ और विकल्प अनलॉक करें!</string>
+    <string name="story_swipe_to_close">Swipe down to close</string>
+    <string name="story_release_to_close">Release to close</string>
+    <string name="story_image_content_description">Story image</string>
+    <string name="story_paused">Paused</string>
+    <string name="story_send_reply_content_description">Send reply</string>
+    <string name="story_counter">%1$d of %2$d</string>
+    <string name="create_story_choose_type">Choose how to create your story:</string>
+    <string name="create_story_preview_content_description">Story preview</string>
+    <string name="create_story_share_button">Share Story</string>
+    <string name="time_seconds_short">%1$ds</string>
+    <string-array name="create_post_prompts">
+        <item>What\'s on your mind today?</item>
+        <item>Share a small win!</item>
+        <item>What are you grateful for?</item>
+        <item>Any new hyperfixations?</item>
+        <item>How is your energy level?</item>
+        <item>Learned anything new recently?</item>
+        <item>Vent space: let it out.</item>
+        <item>Share a sensory joy!</item>
+        <item>What\'s inspiring you right now?</item>
+        </string-array>
+    <string name="neuro_state_cinnamon_bun">Cinnamon Bun</string>
+    <string name="neuro_state_cinnamon_bun_desc">Warm, cozy, and comforting like a freshly baked treat 🥐</string>
+    <string name="splash_tagline_cinnamon_bun">Cozy and comforting</string>
+    <string name="splash_msg_cinnamon_bun_1">Warm and cozy</string>
+    <string name="splash_msg_cinnamon_bun_2">Sweet comfort</string>
+    <string name="splash_msg_cinnamon_bun_3">Safe and warm</string>
+    <string name="beta_welcome_title">बीटा में आपका स्वागत है! 🚀</string>
+    <string name="beta_welcome_message">NeuroComet का परीक्षण करने के लिए धन्यवाद! आपकी प्रतिक्रिया हमें मदद करती है।</string>
+    <string name="beta_feedback_prompt">कोई बग मिला या कोई सुझाव है?</string>
+    <string name="beta_feedback_button">प्रतिक्रिया भेजें</string>
+    <string name="beta_version_notice">बीटा संस्करण %s</string>
+    <string name="settings_section_legal">Legal</string>
+    <string name="settings_privacy_policy_url">Privacy Policy</string>
+    <string name="settings_privacy_policy_desc">How we protect your data</string>
+    <string name="settings_terms_url">Terms of Service</string>
+    <string name="settings_terms_desc">Rules for using NeuroComet</string>
+    <string name="settings_licenses_desc">Open source libraries we use</string>
+    <string name="settings_about_app">About NeuroComet</string>
+    <string name="settings_about_app_desc">Version info, credits &amp; more</string>
+    <string name="about_title">NeuroComet के बारे में</string>
+    <string name="about_tagline">हर दिमाग के लिए एक सुरक्षित स्थान ✨</string>
+    <string name="about_description">NeuroComet न्यूरोडाईवर्जेंट दिमागों के लिए डिज़ाइन किया गया एक सोशल प्लेटफॉर्म है।</string>
+    <string name="about_credits">NeuroComet टीम द्वारा 💜 के साथ बनाया गया</string>
+    <string name="about_version">संस्करण %1$s (बिल्ड %2$d)</string>
+    <string name="about_copyright">© 2024–2026 NeuroComet. सर्वाधिकार सुरक्षित।</string>
+    <string name="whats_new_title">What\'s New</string>
+    <string name="whats_new_see_all">See all updates</string>
+    <string name="mood_happy">खुश</string>
+    <string name="mood_thoughtful">Thoughtful</string>
+    <string name="mood_tired">Tired</string>
+    <string name="mood_celebrating">Celebrating</string>
+    <string name="mood_motivated">प्रेरित</string>
+    <string name="mood_calm">शांत</string>
+    <string name="mood_mind_blown">Mind-blown</string>
+    <string name="mood_inspired">प्रेरित</string>
+        <string name="loading">लोड हो रहा है...</string>
+    <string name="action_save">सहेजें</string>
+    <string name="action_cancel">रद्द करें</string>
+    <string name="action_delete">हटाएं</string>
+    <string name="messaging_search_conversations">बातचीत खोजें…</string>
+    <string name="messaging_no_results">कोई परिणाम नहीं मिला</string>
+    <string name="messaging_no_conversations_yet">अभी तक कोई बातचीत नहीं</string>
+    <string name="messaging_start_conversation">किसी के साथ बातचीत शुरू करें!</string>
+    <string name="messaging_start_your_conversation">अपनी बातचीत शुरू करें</string>
+    <string name="messaging_user_blocked">उपयोगकर्ता अवरुद्ध</string>
+    <string name="messaging_unblock_to_send">भेजने के लिए अनब्लॉक करें</string>
+    <string name="messaging_tap_to_retry">पुनः प्रयास के लिए टैप करें</string>
+    <string name="messaging_quick_emoji">त्वरित इमोजी</string>
+    <string name="messaging_close_search">खोज बंद करें</string>
+    <string name="age_verify_your_age">आपकी उम्र</string>
+    <string name="age_confirm">पुष्टि करें</string>
+    <string name="age_skip_for_now">अभी के लिए छोड़ें</string>
+    <string name="badges_badge_unlocked">🎉 बैज अनलॉक! 🎉</string>
+    <string name="badges_xp_earned">+%d XP अर्जित</string>
+    <string name="badges_unlocked_count">%d अनलॉक</string>
+    <string name="badges_close">बंद करें</string>
+    <string name="badges_awesome">शानदार!</string>
+    <string name="badges_all">सभी</string>
+    <string name="category_no_posts">\'%s\' में कोई पोस्ट नहीं</string>
+    <string name="category_be_first">पहले साझा करने वाले बनें!</string>
+    <string name="create_moment">पल बनाएं</string>
+    <string name="debug_tools">🔧 डीबग टूल्स</string>
+    <string name="debug_performance_overlay_title">प्रदर्शन ओवरले</string>
+    <string name="dev_go_back">Go Back</string>
+    <string name="dev_developer_options">Developer Options</string>
+    <string name="dev_reset_mock_data">Reset All Mock Data</string>
+    <string name="dev_restart_app">Restart App (Show Splash)</string>
+    <string name="dev_reset_stay_signed_in">Reset Stay Signed In Prompt</string>
+    <string name="dev_loading_stress_test">Loading stress testing…</string>
+    <string name="dev_reset_audience">Reset Forced Audience</string>
+    <string name="dev_apply_audience">Apply Current Audience</string>
+    <string name="dev_force_under_13">Force Under 13</string>
+    <string name="dev_force_teen">Force Teen</string>
+    <string name="dev_force_adult">Force Adult</string>
+    <string name="dev_launch_age_popup">Launch Age Popup</string>
+    <string name="dev_reset_age_overrides">Reset Age Overrides</string>
+    <string name="dev_refresh_counts">Refresh Counts</string>
+    <string name="dev_send_test_post">Send Test Post</string>
+    <string name="dev_send_test_like">Send Test Like</string>
+    <string name="dev_send_test_user">Send Test User</string>
+    <string name="dev_send_bulk_posts">Send 5 Bulk Posts</string>
+    <string name="dev_clear_test_data">Clear All Test Data</string>
+    <string name="dev_reset_achievements">Reset Achievements</string>
+    <string name="dev_test_arabic_rtl">🇸🇦 Test Arabic RTL</string>
+    <string name="dev_reset_system_language">Reset to System Language</string>
+    <string name="dev_apply_restart">Apply &amp; Restart</string>
+    <string name="dev_email">Email</string>
+    <string name="dev_password">Password</string>
+    <string name="dev_phone_number">Phone Number</string>
+    <string name="dev_phone_placeholder">(555) 123-4567</string>
 
+    <!-- Additional translations -->
+    <string name="debug_fps">FPS: %d</string>
+    <string name="debug_jank">⚠️ रुकावट</string>
+    <string name="debug_drops">ड्रॉप्स: %d</string>
+    <string name="debug_mem">मेमोरी: %.1f MB</string>
+    <string name="debug_scroll">स्क्रॉल: %d px/s</string>
+    <string name="account_delete">खाता हटाएं</string>
+    <string name="account_delete_confirm">क्या आप वाकई अपना खाता हटाना चाहते हैं?</string>
+    <string name="account_delete_warning">यह क्रिया पूर्ववत नहीं की जा सकती। आपका सारा डेटा स्थायी रूप से हटा दिया जाएगा।</string>
+    <string name="account_delete_scheduled">खाता 14 दिनों में हटाने के लिए निर्धारित। रद्द करने के लिए फिर से लॉगिन करें।</string>
+    <string name="account_delete_cancel">हटाना रद्द करें</string>
+    <string name="account_delete_cancelled">खाता हटाना रद्द किया गया</string>
+    <string name="email_verification">ईमेल सत्यापन</string>
+    <string name="email_resend_verification">सत्यापन ईमेल फिर से भेजें</string>
+    <string name="email_verification_sent">सत्यापन ईमेल भेजा गया!</string>
+    <string name="email_not_verified">आपका ईमेल सत्यापित नहीं है</string>
+    <string name="email_verify">ईमेल सत्यापित करें</string>
+    <string name="password_update">पासवर्ड अपडेट करें</string>
+    <string name="password_updated">पासवर्ड सफलतापूर्वक अपडेट किया गया</string>
+    <string name="email_update">ईमेल अपडेट करें</string>
+    <string name="password_current">वर्तमान पासवर्ड</string>
+    <string name="password_new">नया पासवर्ड</string>
+    <string name="user_blocked">उपयोगकर्ता को ब्लॉक किया गया</string>
+    <string name="user_unblocked">उपयोगकर्ता को अनब्लॉक किया गया</string>
+    <string name="user_muted">उपयोगकर्ता को म्यूट किया गया</string>
+    <string name="user_unmuted">उपयोगकर्ता को अनम्यूट किया गया</string>
+    <string name="report_submitted">रिपोर्ट सबमिट की गई। हम जल्द ही इसकी समीक्षा करेंगे।</string>
+    <string name="report_reason">रिपोर्ट का कारण</string>
+    <string name="report_details">अतिरिक्त विवरण (वैकल्पिक)</string>
+    <string name="report_spam">स्पैम</string>
+    <string name="report_harassment">उत्पीड़न</string>
+    <string name="report_hate_speech">घृणा भाषण</string>
+    <string name="report_misinformation">गलत सूचना</string>
+    <string name="report_violence">हिंसा</string>
+    <string name="report_other">अन्य</string>
+    <string name="action_unblock">अनब्लॉक</string>
+    <string name="action_unmute">अनम्यूट</string>
+    <string name="blocked_users_empty">कोई ब्लॉक किया गया उपयोगकर्ता नहीं</string>
+    <string name="muted_users_empty">कोई म्यूट किया गया उपयोगकर्ता नहीं</string>
+    <string name="bookmark">बुकमार्क</string>
+    <string name="bookmark_added">पोस्ट बुकमार्क किया गया</string>
+    <string name="bookmark_removed">बुकमार्क हटाया गया</string>
+    <string name="bookmarks">बुकमार्क</string>
+    <string name="bookmarks_empty">अभी तक कोई बुकमार्क नहीं</string>
+    <string name="bookmarks_hint">आपके बुकमार्क किए गए पोस्ट यहां दिखाई देंगे।</string>
+    <string name="error_connection">कनेक्शन त्रुटि। कृपया अपना इंटरनेट जांचें।</string>
+    <string name="error_server">सर्वर त्रुटि। कृपया बाद में पुनः प्रयास करें।</string>
+    <string name="error_unknown">कुछ गलत हो गया। कृपया पुनः प्रयास करें।</string>
+    <string name="toast_offline">आप ऑफलाइन हैं</string>
+    <string name="toast_online">वापस ऑनलाइन</string>
+    <string name="error_session_expired">सत्र समाप्त हो गया। कृपया फिर से साइन इन करें।</string>
+    <string name="error_rate_limited">बहुत अधिक अनुरोध। कृपया कुछ देर प्रतीक्षा करें।</string>
+    <string name="error_no_internet">इंटरनेट कनेक्शन नहीं है</string>
+    <string name="action_try_again">पुनः प्रयास</string>
+    <string name="action_dismiss">खारिज करें</string>
+    <string name="search_users">उपयोगकर्ता खोजें</string>
+    <string name="search_posts">पोस्ट खोजें</string>
+    <string name="search_no_results">कोई परिणाम नहीं मिला</string>
+    <string name="search_hint">कोई अलग खोज शब्द आज़माएं</string>
+    <string name="comments_view_replies">%d उत्तर देखें</string>
+    <string name="comments_hide_replies">उत्तर छुपाएं</string>
+    <string name="time_seconds_ago">%d सेकंड पहले</string>
+    <string name="time_minute_ago">1 मिनट पहले</string>
+    <string name="time_hour_ago">1 घंटे पहले</string>
+    <string name="time_day_ago">1 दिन पहले</string>
+    <string name="time_week_ago">1 सप्ताह पहले</string>
+    <string name="time_month_ago">1 महीने पहले</string>
+    <string name="time_year_ago">1 साल पहले</string>
+    <string name="a11y_skip_to_content">सामग्री पर जाएं</string>
+    <string name="a11y_close_dialog">डायलॉग बंद करें</string>
+    <string name="a11y_open_menu">मेनू खोलें</string>
+    <string name="a11y_close_menu">मेनू बंद करें</string>
+    <string name="a11y_go_back">वापस जाएं</string>
+    <string name="a11y_scroll_to_top">ऊपर स्क्रॉल करें</string>
+    <string name="a11y_load_more">और लोड करें</string>
+    <string name="a11y_refresh">सामग्री रिफ्रेश करें</string>
+    <string name="a11y_image_desc">चित्र विवरण</string>
+    <string name="a11y_video_desc">वीडियो विवरण</string>
+    <string name="conversation_video_call">वीडियो कॉल</string>
+    <string name="conversation_voice_call">वॉइस कॉल</string>
+    <string name="conversation_back">वापस</string>
+    <string name="conversation_profile_picture">प्रोफ़ाइल चित्र</string>
+    <string name="conversation_more_options">और विकल्प</string>
+    <string name="conversation_scroll_to_bottom">नीचे स्क्रॉल करें</string>
+    <string name="conversation_remove_attachment">अटैचमेंट हटाएं</string>
+    <string name="conversation_cancel_recording">रिकॉर्डिंग रद्द करें</string>
+    <string name="conversation_take_photo">फ़ोटो लें</string>
+    <string name="conversation_sending">भेजा जा रहा है</string>
+    <string name="conversation_sent">भेजा गया</string>
+    <string name="conversation_failed">विफल</string>
+    <string name="conversation_verified">सत्यापित</string>
+    <string name="conversation_search">खोजें</string>
+    <string name="conversation_practice_calls">अभ्यास कॉल</string>
+    <string name="conversation_new_message">नया संदेश</string>
+    <string name="sim_offline_error">नेटवर्क कनेक्शन नहीं (सिम्युलेटेड ऑफलाइन)</string>
+    <string name="sim_server_error">सिम्युलेटेड सर्वर त्रुटि (HTTP 500)</string>
+    <string name="camera_permission_required">कैमरा अनुमति आवश्यक है</string>
+    <string name="location_permission_required">स्थान अनुमति आवश्यक है</string>
+    <string name="contacts_permission_required">संपर्क अनुमति आवश्यक है</string>
+    <string name="microphone_permission_required">माइक्रोफोन अनुमति आवश्यक है</string>
+    <string name="getting_location">स्थान प्राप्त हो रहा है…</string>
+    <string name="location_shared">स्थान साझा किया गया</string>
+    <string name="unable_to_get_location">स्थान प्राप्त करने में असमर्थ</string>
+    <string name="shared_location">साझा स्थान</string>
+    <string name="new_chat">नई चैट</string>
+    <string name="sync_contacts">संपर्क सिंक करें</string>
+    <string name="allow_access_find_friends">NeuroComet पर दोस्तों को खोजने के लिए एक्सेस दें</string>
+    <string name="not_now">अभी नहीं</string>
+    <string name="allow">अनुमति दें</string>
+    <string name="contacts_synced">संपर्क सिंक हो गए</string>
+    <string name="email_required">ईमेल आवश्यक है</string>
+    <string name="invalid_email">कृपया एक मान्य ईमेल पता दर्ज करें</string>
+    <string name="password_required">पासवर्ड आवश्यक है</string>
+    <string name="password_too_short">पासवर्ड कम से कम 6 अक्षर का होना चाहिए</string>
+    <string name="auth_required">प्रमाणीकरण आवश्यक है</string>
+</resources>

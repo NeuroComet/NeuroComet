@@ -11,11 +11,15 @@ import com.revenuecat.purchases.Purchases
 import com.revenuecat.purchases.PurchasesError
 import com.revenuecat.purchases.getOfferingsWith
 import com.revenuecat.purchases.interfaces.PurchaseCallback
-import com.revenuecat.purchases.interfaces.ReceiveOfferingsCallback
 import com.revenuecat.purchases.models.StoreTransaction
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import java.security.MessageDigest
 
 /**
@@ -33,6 +37,20 @@ import java.security.MessageDigest
 object SubscriptionManager {
 
     private const val TAG = "SubscriptionManager"
+
+    // =========================================================================
+    // TEST MODE — enabled automatically in debug builds.
+    // Simulates the full purchase flow without a real RevenueCat account so the
+    // UI, navigation, and ad-removal logic can be exercised end-to-end.
+    // =========================================================================
+    private val testMode: Boolean = BuildConfig.DEBUG
+
+    /** Coroutine scope used by test-mode helpers to simulate async delays. */
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
+
+    /** Tracks whether the simulated user has "purchased" premium in test mode. */
+    @Volatile
+    private var isTestPremium = false
 
     // RevenueCat product identifiers (configure these in RevenueCat dashboard)
     const val PRODUCT_MONTHLY = "NeuroComet_premium_monthly"
@@ -86,6 +104,9 @@ object SubscriptionManager {
      * 3. Verification is recent (within validity window)
      */
     fun verifyPremiumStatus(): Boolean {
+        // Test mode: trust the simulated flag
+        if (testMode) return isTestPremium
+
         val state = _subscriptionState.value
         if (!state.isPremium) return false
 
@@ -106,6 +127,9 @@ object SubscriptionManager {
      * Will crash the app if tampering is detected.
      */
     fun enforcePremiumSecurity() {
+        // Test mode: no enforcement needed
+        if (testMode) return
+
         val state = _subscriptionState.value
 
         // If app claims premium but has no valid verification
@@ -130,6 +154,22 @@ object SubscriptionManager {
      * Fetch available offerings from RevenueCat
      */
     fun fetchOfferings() {
+        // Test mode: simulate offerings loaded after a short delay
+        if (testMode) {
+            _subscriptionState.value = _subscriptionState.value.copy(isLoading = true, error = null)
+            scope.launch {
+                delay(400) // Simulate network
+                _subscriptionState.value = _subscriptionState.value.copy(
+                    isLoading = false,
+                    // Packages stay null — the UI already falls back to "$2.00" / "$60.00"
+                    monthlyPackage = null,
+                    lifetimePackage = null
+                )
+                Log.d(TAG, "🧪 TEST MODE: Offerings simulated (prices use UI fallbacks)")
+            }
+            return
+        }
+
         _subscriptionState.value = _subscriptionState.value.copy(isLoading = true, error = null)
 
         Purchases.sharedInstance.getOfferingsWith(
@@ -168,6 +208,14 @@ object SubscriptionManager {
      * Check current premium status
      */
     fun checkPremiumStatus(onResult: (Boolean) -> Unit) {
+        // Test mode: return simulated state immediately
+        if (testMode) {
+            _subscriptionState.value = _subscriptionState.value.copy(isPremium = isTestPremium)
+            onResult(isTestPremium)
+            Log.d(TAG, "🧪 TEST MODE: Premium status = $isTestPremium")
+            return
+        }
+
         try {
             Purchases.sharedInstance.getCustomerInfo(
                 callback = object : com.revenuecat.purchases.interfaces.ReceiveCustomerInfoCallback {
@@ -205,6 +253,11 @@ object SubscriptionManager {
      * Purchase the monthly subscription
      */
     fun purchaseMonthly(activity: Activity, onSuccess: () -> Unit, onError: (String) -> Unit) {
+        if (testMode) {
+            simulateTestPurchase("monthly", onSuccess)
+            return
+        }
+
         val pkg = _subscriptionState.value.monthlyPackage
         if (pkg == null) {
             onError("Monthly subscription not available")
@@ -217,6 +270,11 @@ object SubscriptionManager {
      * Purchase the lifetime subscription
      */
     fun purchaseLifetime(activity: Activity, onSuccess: () -> Unit, onError: (String) -> Unit) {
+        if (testMode) {
+            simulateTestPurchase("lifetime", onSuccess)
+            return
+        }
+
         val pkg = _subscriptionState.value.lifetimePackage
         if (pkg == null) {
             onError("Lifetime subscription not available")
@@ -279,6 +337,23 @@ object SubscriptionManager {
      * Restore purchases
      */
     fun restorePurchases(onSuccess: (Boolean) -> Unit, onError: (String) -> Unit) {
+        // Test mode: simulate restore
+        if (testMode) {
+            _subscriptionState.value = _subscriptionState.value.copy(isLoading = true, error = null)
+            scope.launch {
+                delay(800)
+                _subscriptionState.value = _subscriptionState.value.copy(
+                    isLoading = false,
+                    isPremium = isTestPremium,
+                    purchaseSuccess = isTestPremium,
+                    purchaseType = if (isTestPremium) "restored" else null
+                )
+                Log.d(TAG, "🧪 TEST MODE: Restore simulated — premium = $isTestPremium")
+                onSuccess(isTestPremium)
+            }
+            return
+        }
+
         _subscriptionState.value = _subscriptionState.value.copy(isLoading = true, error = null)
 
         Purchases.sharedInstance.restorePurchases(
@@ -314,6 +389,42 @@ object SubscriptionManager {
                 }
             }
         )
+    }
+
+    // =========================================================================
+    // TEST MODE HELPERS
+    // =========================================================================
+
+    /**
+     * Simulates a purchase flow with a realistic delay.
+     * Called internally by [purchaseMonthly] / [purchaseLifetime] when [testMode] is active.
+     */
+    private fun simulateTestPurchase(purchaseType: String, onSuccess: () -> Unit) {
+        _subscriptionState.value = _subscriptionState.value.copy(isLoading = true, error = null)
+        scope.launch {
+            delay(1200) // Simulate payment sheet + network round-trip
+            isTestPremium = true
+            _subscriptionState.value = _subscriptionState.value.copy(
+                isLoading = false,
+                isPremium = true,
+                purchaseSuccess = true,
+                purchaseType = purchaseType
+            )
+            Log.d(TAG, "🧪 TEST MODE: Purchase simulated — type = $purchaseType")
+            onSuccess()
+        }
+    }
+
+    /**
+     * Resets the simulated premium status back to free.
+     * Useful from a DevOptions screen so you can re-test the purchase flow
+     * without restarting the app.
+     */
+    fun resetTestPurchase() {
+        if (!testMode) return
+        isTestPremium = false
+        _subscriptionState.value = SubscriptionState()
+        Log.d(TAG, "🧪 TEST MODE: Premium status reset to FREE")
     }
 
     /**

@@ -56,7 +56,8 @@ data class PermissionInfo(
     val description: String,
     val icon: ImageVector,
     val category: PermissionCategory,
-    val minSdk: Int = 1
+    val minSdk: Int = 1,
+    val maxSdk: Int = Int.MAX_VALUE  // API level above which this permission is no longer required
 )
 
 enum class PermissionCategory {
@@ -65,6 +66,7 @@ enum class PermissionCategory {
     STORAGE,
     CONTACTS,
     NOTIFICATIONS,
+    NETWORK,
     OTHER
 }
 
@@ -141,14 +143,24 @@ val APP_PERMISSIONS = listOf(
         PermissionCategory.STORAGE,
         minSdk = Build.VERSION_CODES.TIRAMISU
     ),
+    @Suppress("DEPRECATION")
+    PermissionInfo(
+        Manifest.permission.READ_EXTERNAL_STORAGE,
+        "Read Storage (Legacy)",
+        "Access files on device (pre-API 33)",
+        Icons.Filled.SdStorage,
+        PermissionCategory.STORAGE,
+        maxSdk = Build.VERSION_CODES.S_V2 // API 32 — replaced by granular media perms on 33+
+    ),
 
     // Contacts
     PermissionInfo(
         Manifest.permission.READ_CONTACTS,
         "Read Contacts",
-        "Find friends in your contacts",
+        "Find friends in your contacts (not needed on Android 17+ — ContactsPickerSessionContract)",
         Icons.Filled.Contacts,
-        PermissionCategory.CONTACTS
+        PermissionCategory.CONTACTS,
+        maxSdk = 36 // Android 17 (CinnamonBun / API 37) uses ContactsPickerSessionContract — READ_CONTACTS not needed on 37+
     ),
 
     // Notifications
@@ -176,6 +188,16 @@ val APP_PERMISSIONS = listOf(
         Icons.Filled.Bluetooth,
         PermissionCategory.OTHER,
         minSdk = Build.VERSION_CODES.S
+    ),
+
+    // Network
+    PermissionInfo(
+        Manifest.permission.ACCESS_LOCAL_NETWORK,
+        "Local Network",
+        "Access local network for calls, device discovery, and WebRTC ICE gathering",
+        Icons.Filled.Wifi,
+        PermissionCategory.NETWORK,
+        minSdk = Build.VERSION_CODES.CINNAMON_BUN
     )
 )
 
@@ -370,7 +392,7 @@ fun PermissionTestingSection(
                     onClick = {
                         // On Android 11+, exclude background location from batch request
                         val notGranted = APP_PERMISSIONS
-                            .filter { Build.VERSION.SDK_INT >= it.minSdk }
+                            .filter { Build.VERSION.SDK_INT >= it.minSdk && Build.VERSION.SDK_INT <= it.maxSdk }
                             .filter { permissionStates[it.permission] != PermissionStatus.GRANTED }
                             .filter {
                                 // Exclude background location on Android 11+ (must be requested separately)
@@ -414,7 +436,7 @@ fun PermissionTestingSection(
             // Permission categories
             PermissionCategory.entries.forEach { category ->
                 val categoryPermissions = APP_PERMISSIONS
-                    .filter { it.category == category && Build.VERSION.SDK_INT >= it.minSdk }
+                    .filter { it.category == category && Build.VERSION.SDK_INT >= it.minSdk && Build.VERSION.SDK_INT <= it.maxSdk }
 
                 if (categoryPermissions.isNotEmpty()) {
                     PermissionCategorySection(
@@ -495,6 +517,7 @@ private fun PermissionCategorySection(
         PermissionCategory.STORAGE -> Icons.Filled.Folder
         PermissionCategory.CONTACTS -> Icons.Filled.Contacts
         PermissionCategory.NOTIFICATIONS -> Icons.Filled.Notifications
+        PermissionCategory.NETWORK -> Icons.Filled.Wifi
         PermissionCategory.OTHER -> Icons.Filled.Settings
     }
 
@@ -504,6 +527,7 @@ private fun PermissionCategorySection(
         PermissionCategory.STORAGE -> "Storage"
         PermissionCategory.CONTACTS -> "Contacts"
         PermissionCategory.NOTIFICATIONS -> "Notifications"
+        PermissionCategory.NETWORK -> "Network"
         PermissionCategory.OTHER -> "Other"
     }
 
@@ -660,7 +684,7 @@ private fun PermissionItem(
 
 private fun checkAllPermissions(context: Context): Map<String, PermissionStatus> {
     return APP_PERMISSIONS
-        .filter { Build.VERSION.SDK_INT >= it.minSdk }
+        .filter { Build.VERSION.SDK_INT >= it.minSdk && Build.VERSION.SDK_INT <= it.maxSdk }
         .associate { info ->
             info.permission to checkPermissionStatus(context, info.permission)
         }

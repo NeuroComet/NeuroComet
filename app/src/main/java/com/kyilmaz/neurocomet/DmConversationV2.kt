@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.ime
@@ -37,6 +38,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.Block
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.EmojiEmotions
 import androidx.compose.material.icons.filled.Keyboard
 import androidx.compose.material.icons.filled.KeyboardArrowDown
@@ -61,6 +63,9 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -120,6 +125,8 @@ fun DmConversationScreenV2(
     var messageText by remember { mutableStateOf("") }
     var showEmojiPicker by remember { mutableStateOf(false) }
     var showMenu by remember { mutableStateOf(false) }
+    var showSearch by remember { mutableStateOf(false) }
+    var searchQuery by remember { mutableStateOf("") }
 
     // Auto-hide emoji panel when the keyboard appears.
     // Keep this in sync with how the rest of the app detects IME visibility.
@@ -193,7 +200,6 @@ fun DmConversationScreenV2(
 
                         // Pre-fetch strings for Toast messages
                         val toastProfileComingSoon = stringResource(R.string.toast_profile_coming_soon)
-                        val toastSearchComingSoon = stringResource(R.string.toast_search_coming_soon)
                         val toastNotificationsMuted = stringResource(R.string.toast_notifications_muted)
                         val toastNotificationsUnmuted = stringResource(R.string.toast_notifications_unmuted)
                         val toastUserBlocked = stringResource(R.string.toast_user_blocked)
@@ -219,11 +225,8 @@ fun DmConversationScreenV2(
                                 text = { Text(stringResource(R.string.menu_search_chat)) },
                                 onClick = {
                                     showMenu = false
-                                    android.widget.Toast.makeText(
-                                        context,
-                                        toastSearchComingSoon,
-                                        android.widget.Toast.LENGTH_SHORT
-                                    ).show()
+                                    showSearch = !showSearch
+                                    if (!showSearch) searchQuery = ""
                                 },
                                 leadingIcon = { Icon(Icons.Filled.Search, null) }
                             )
@@ -351,17 +354,63 @@ fun DmConversationScreenV2(
                 .fillMaxSize()
                 .padding(padding)
         ) {
-            if (conversation.messages.isEmpty()) {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Column(modifier = Modifier.fillMaxSize()) {
+                // Search bar
+                AnimatedVisibility(visible = showSearch) {
+                    Surface(
+                        color = MaterialTheme.colorScheme.surfaceContainerHigh,
+                        tonalElevation = 1.dp
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 12.dp, vertical = 8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            OutlinedTextField(
+                                value = searchQuery,
+                                onValueChange = { searchQuery = it },
+                                placeholder = { Text("Search messages…", style = MaterialTheme.typography.bodySmall) },
+                                modifier = Modifier.weight(1f),
+                                singleLine = true,
+                                leadingIcon = { Icon(Icons.Filled.Search, null, modifier = Modifier.size(18.dp)) },
+                                trailingIcon = {
+                                    if (searchQuery.isNotEmpty()) {
+                                        IconButton(onClick = { searchQuery = "" }) {
+                                            Icon(Icons.Filled.Clear, "Clear", modifier = Modifier.size(18.dp))
+                                        }
+                                    }
+                                },
+                                shape = RoundedCornerShape(24.dp),
+                                colors = OutlinedTextFieldDefaults.colors(
+                                    focusedBorderColor = MaterialTheme.colorScheme.primary,
+                                    unfocusedBorderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.3f)
+                                )
+                            )
+                            Spacer(Modifier.width(8.dp))
+                            TextButton(onClick = { showSearch = false; searchQuery = "" }) {
+                                Text("Done")
+                            }
+                        }
+                    }
+                }
+
+                // Compute filtered messages
+                val filteredMessages = remember(conversation.messages, searchQuery) {
+                    if (searchQuery.isBlank()) conversation.messages
+                    else conversation.messages.filter { it.content.contains(searchQuery, ignoreCase = true) }
+                }
+            if (filteredMessages.isEmpty()) {
+                Box(modifier = Modifier.fillMaxSize().weight(1f), contentAlignment = Alignment.Center) {
                     Text(
-                        text = "Say hi 👋",
+                        text = if (searchQuery.isNotBlank()) "No messages matching \"$searchQuery\"" else "Say hi 👋",
                         style = MessageTextStyles.headerTitle
                     )
                 }
             } else {
                 LazyColumn(
                     state = listState,
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier.fillMaxSize().weight(1f),
                     contentPadding = PaddingValues(
                         start = 12.dp,
                         end = 12.dp,
@@ -371,10 +420,10 @@ fun DmConversationScreenV2(
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     items(
-                        count = conversation.messages.size,
-                        key = { idx -> conversation.messages[idx].id }
+                        count = filteredMessages.size,
+                        key = { idx -> filteredMessages[idx].id }
                     ) { idx ->
-                        val msg = conversation.messages[idx]
+                        val msg = filteredMessages[idx]
                         MessageBubbleV2(
                             message = msg,
                             isFromMe = msg.senderId == "me",
@@ -384,6 +433,7 @@ fun DmConversationScreenV2(
                     }
                 }
             }
+            } // end Column
 
             AnimatedVisibility(
                 visible = showJumpToLatest,

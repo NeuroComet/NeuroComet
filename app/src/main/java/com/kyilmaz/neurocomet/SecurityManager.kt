@@ -180,7 +180,8 @@ object SecurityManager {
             val reader = BufferedReader(InputStreamReader(process.inputStream))
             var line: String?
             while (reader.readLine().also { line = it } != null) {
-                if (line!!.contains("/system") && line!!.contains("rw")) {
+                val currentLine = line ?: continue
+                if (currentLine.contains("/system") && currentLine.contains("rw")) {
                     details.add("System partition mounted as RW")
                     isRooted = true
                     break
@@ -215,8 +216,9 @@ object SecurityManager {
             val reader = BufferedReader(InputStreamReader(File("/proc/self/status").inputStream()))
             var line: String?
             while (reader.readLine().also { line = it } != null) {
-                if (line!!.startsWith("TracerPid:")) {
-                    val tracerPid = line!!.substringAfter(":").trim().toIntOrNull() ?: 0
+                val currentLine = line ?: continue
+                if (currentLine.startsWith("TracerPid:")) {
+                    val tracerPid = currentLine.substringAfter(":").trim().toIntOrNull() ?: 0
                     if (tracerPid > 0) {
                         details.add("TracerPid detected: $tracerPid")
                         debuggerAttached = true

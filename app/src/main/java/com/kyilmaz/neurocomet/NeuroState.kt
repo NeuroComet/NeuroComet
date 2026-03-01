@@ -55,6 +55,9 @@ enum class NeuroState(
     MOOD_OVERWHELMED(R.string.neuro_state_mood_overwhelmed, R.string.neuro_state_mood_overwhelmed_desc, "🧘"),
     MOOD_CREATIVE(R.string.neuro_state_mood_creative, R.string.neuro_state_mood_creative_desc, "🎨"),
 
+    // Comfort/Cozy themes
+    CINNAMON_BUN(R.string.neuro_state_cinnamon_bun, R.string.neuro_state_cinnamon_bun_desc, "🥐"),
+
     // Secret unlockable theme - Rainbow Brain!
     RAINBOW_BRAIN(R.string.neuro_state_rainbow_brain, R.string.neuro_state_rainbow_brain_desc, "🦄");
 
@@ -84,7 +87,7 @@ enum class NeuroStateCategory(
     ACCESSIBILITY(R.string.neuro_category_accessibility, listOf(NeuroState.DYSLEXIA_FRIENDLY)),
     COLORBLIND(R.string.neuro_category_colorblind, listOf(NeuroState.COLORBLIND_DEUTERANOPIA, NeuroState.COLORBLIND_PROTANOPIA, NeuroState.COLORBLIND_TRITANOPIA, NeuroState.COLORBLIND_MONOCHROMACY)),
     BLIND(R.string.neuro_category_blind, listOf(NeuroState.BLIND_SCREEN_READER, NeuroState.BLIND_HIGH_CONTRAST, NeuroState.BLIND_LARGE_TEXT)),
-    MOOD(R.string.neuro_category_mood, listOf(NeuroState.MOOD_TIRED, NeuroState.MOOD_ANXIOUS, NeuroState.MOOD_HAPPY, NeuroState.MOOD_OVERWHELMED, NeuroState.MOOD_CREATIVE)),
+    MOOD(R.string.neuro_category_mood, listOf(NeuroState.MOOD_TIRED, NeuroState.MOOD_ANXIOUS, NeuroState.MOOD_HAPPY, NeuroState.MOOD_OVERWHELMED, NeuroState.MOOD_CREATIVE, NeuroState.CINNAMON_BUN)),
     SECRET(R.string.neuro_category_secret, listOf(NeuroState.RAINBOW_BRAIN), isSecret = true);
 
     /**

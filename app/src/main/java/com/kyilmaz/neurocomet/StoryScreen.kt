@@ -7,7 +7,9 @@
 
 package com.kyilmaz.neurocomet
 
-import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.AnimationEndReason
+import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -31,12 +33,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import coil.compose.AsyncImage
-import kotlinx.coroutines.delay
-import androidx.lifecycle.viewmodel.compose.viewModel 
+import androidx.lifecycle.viewmodel.compose.viewModel
 
-// Explicit imports for symbols in the same package
-import com.kyilmaz.neurocomet.CURRENT_USER 
-import com.kyilmaz.neurocomet.FeedViewModel 
 
 @Composable
 fun StoryScreen(
@@ -45,35 +43,50 @@ fun StoryScreen(
     feedViewModel: FeedViewModel = viewModel()
 ) {
     var currentItemIndex by remember { mutableStateOf(0) }
-    var rawProgress by remember { mutableStateOf(0f) }
+    // Replace rawProgress and animateFloatAsState with Animatable
+    val progressAnimatable = remember { Animatable(0f) }
+    var isPaused by remember { mutableStateOf(false) }
     var showDeleteConfirmation by remember { mutableStateOf(false) }
 
     val currentItem = story.items[currentItemIndex]
 
-    val animatedProgress by animateFloatAsState(
-        targetValue = rawProgress,
-        animationSpec = tween(durationMillis = 120),
-        label = "storyProgressAnimation"
-    )
-
     fun navigateTo(index: Int) {
         if (index in story.items.indices) {
             currentItemIndex = index
-            rawProgress = 0f
+            // Reset progress will happen in LaunchedEffect
         } else {
             onDismiss()
         }
     }
 
+    // Reset progress when item changes
     LaunchedEffect(currentItemIndex) {
-        rawProgress = 0f
-        val startTime = System.currentTimeMillis()
-        val durationMs = currentItem.duration.coerceAtLeast(1L)
-        while (System.currentTimeMillis() < startTime + durationMs) {
-            rawProgress = ((System.currentTimeMillis() - startTime).toFloat() / durationMs).coerceIn(0f, 1f)
-            delay(50)
+        progressAnimatable.snapTo(0f)
+    }
+
+    // Handle progress animation handling pause/resume
+    LaunchedEffect(currentItemIndex, isPaused) {
+        if (!isPaused) {
+            val durationMs = currentItem.duration.coerceAtLeast(1L)
+            val remainingProgress = 1f - progressAnimatable.value
+            val remainingTime = (durationMs * remainingProgress).toLong()
+
+            if (remainingTime > 0) {
+                val result = progressAnimatable.animateTo(
+                    targetValue = 1f,
+                    animationSpec = tween(
+                        durationMillis = remainingTime.toInt(),
+                        easing = LinearEasing
+                    )
+                )
+
+                if (result.endReason == AnimationEndReason.Finished) {
+                    navigateTo(currentItemIndex + 1)
+                }
+            } else if (remainingProgress <= 0.01f) {
+                 navigateTo(currentItemIndex + 1)
+            }
         }
-        navigateTo(currentItemIndex + 1)
     }
 
     Dialog(
@@ -85,14 +98,20 @@ fun StoryScreen(
                 .fillMaxSize()
                 .background(Color.Black)
                 .pointerInput(Unit) {
-                    detectTapGestures {
-                        offset ->
-                        if (offset.x > size.width / 2) {
-                            navigateTo(currentItemIndex + 1)
-                        } else {
-                            navigateTo(currentItemIndex - 1)
+                    detectTapGestures(
+                        onPress = {
+                            isPaused = true
+                            tryAwaitRelease()
+                            isPaused = false
+                        },
+                        onTap = { offset ->
+                            if (offset.x > size.width / 2) {
+                                navigateTo(currentItemIndex + 1)
+                            } else {
+                                navigateTo(currentItemIndex - 1)
+                            }
                         }
-                    }
+                    )
                 }
         ) {
             AsyncImage(
@@ -113,7 +132,7 @@ fun StoryScreen(
                     story.items.forEachIndexed { index, _ ->
                         val itemProgress = when {
                             index < currentItemIndex -> 1f
-                            index == currentItemIndex -> animatedProgress
+                            index == currentItemIndex -> progressAnimatable.value
                             else -> 0f
                         }
                         StoryProgressBar(

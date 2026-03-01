@@ -7,6 +7,8 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
 import coil.Coil
+import com.kyilmaz.neurocomet.ads.GoogleAdsManager
+import java.util.concurrent.Executors
 
 private const val TAG = "NeuroCometApp"
 
@@ -33,12 +35,11 @@ class NeuroCometApplication : Application() {
             // Store application reference for global access (lightweight)
             ApplicationProvider.init(this)
 
-
             // Initialize Coil ImageLoader (lightweight)
             initializeImageLoader()
 
-            // Defer heavier initialization to avoid blocking the main thread
-            Handler(Looper.getMainLooper()).post {
+            // Run non-UI initialization on a background thread to avoid blocking startup
+            Executors.newSingleThreadExecutor().execute {
                 try {
                     // Initialize network configuration (no API keys required)
                     NetworkConfig.initialize(this)
@@ -48,11 +49,18 @@ class NeuroCometApplication : Application() {
 
                     // Create notification channels
                     NotificationChannels.createNotificationChannels(this)
+                } catch (e: Exception) {
+                    Log.e(TAG, "Error during background initialization", e)
+                }
+            }
 
-
+            // Defer Ads SDK init to after the first frame renders (must run on main thread)
+            Handler(Looper.getMainLooper()).post {
+                try {
+                    GoogleAdsManager.initialize(this, useTestAds = BuildConfig.DEBUG)
                     Log.d(TAG, "Application initialized successfully")
                 } catch (e: Exception) {
-                    Log.e(TAG, "Error during deferred initialization", e)
+                    Log.e(TAG, "Error during ads initialization", e)
                 }
             }
         } catch (e: Exception) {

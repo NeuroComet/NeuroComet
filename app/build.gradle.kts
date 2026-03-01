@@ -8,16 +8,34 @@ import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.google.services)
 }
 
-// Load local.properties
-val localProperties = Properties()
-val localPropertiesFile = rootProject.file("local.properties")
-if (localPropertiesFile.exists()) {
-    localPropertiesFile.inputStream().use { localProperties.load(it) }
+// Load properties from multiple potential secret files
+val combinedProperties = Properties()
+listOf("local.properties", "secrets.properties").forEach { fileName ->
+    val file = rootProject.file(fileName)
+    if (file.exists()) {
+        file.inputStream().use { combinedProperties.load(it) }
+    }
+}
+
+/**
+ * Basic obfuscation to hide keys from simple string searches in the binary.
+ * Uses XOR with a key and hex encoding.
+ */
+fun obfuscate(value: String?): String {
+    if (value.isNullOrEmpty()) return ""
+    val xorKey = "neurocomet_internal_security_key_2025"
+    val bytes = value.toByteArray(Charsets.UTF_8)
+    val result = StringBuilder()
+    for (i in bytes.indices) {
+        val obfuscatedByte = bytes[i].toInt() xor xorKey[i % xorKey.length].code
+        result.append(String.format("%02x", obfuscatedByte and 0xFF))
+    }
+    return result.toString()
 }
 
 kotlin {
@@ -26,36 +44,45 @@ kotlin {
 
 android {
     namespace = "com.kyilmaz.neurocomet"
-    compileSdk = 36
+    compileSdkPreview = "CinnamonBun"
 
     defaultConfig {
         applicationId = "com.kyilmaz.neurocomet"
         minSdk = 26
-        targetSdk = 36
-        versionCode = 141
-        versionName = "1.0.0-rc27"
+        targetSdkPreview = "CinnamonBun"
+        versionCode = 144
+        versionName = "2.0.0-beta02"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        // Load Supabase credentials from local.properties
-        val supabaseUrl = localProperties.getProperty("SUPABASE_URL") ?: ""
-        val supabaseKey = localProperties.getProperty("SUPABASE_KEY") ?: ""
-        val devHash = localProperties.getProperty("DEVELOPER_DEVICE_HASH") ?: ""
-        val geminiApiKey = localProperties.getProperty("GEMINI_API_KEY") ?: ""
-        val revenueCatKey = localProperties.getProperty("REVENUECAT_API_KEY") ?: ""
+        // Load credentials from combined properties
+        val supabaseUrl = combinedProperties.getProperty("SUPABASE_URL") ?: ""
+        val supabaseKey = combinedProperties.getProperty("SUPABASE_KEY") ?: ""
+        val devHash = combinedProperties.getProperty("DEVELOPER_DEVICE_HASH") ?: ""
+        val geminiApiKey = combinedProperties.getProperty("GEMINI_API_KEY") ?: ""
+        val revenueCatKey = combinedProperties.getProperty("REVENUECAT_API_KEY") ?: ""
+        val admobAppId = combinedProperties.getProperty("ADMOB_APP_ID") ?: "ca-app-pub-3940256099942544~3347511713"
+        
+        // AdMob Unit IDs
+        val bannerAdId = combinedProperties.getProperty("ADMOB_BANNER_ID") ?: "ca-app-pub-3940256099942544/6300978111"
+        val interstitialAdId = combinedProperties.getProperty("ADMOB_INTERSTITIAL_ID") ?: "ca-app-pub-3940256099942544/1033173712"
+        val rewardedAdId = combinedProperties.getProperty("ADMOB_REWARDED_ID") ?: "ca-app-pub-3940256099942544/5224354917"
 
-        buildConfigField("String", "SUPABASE_URL", "\"$supabaseUrl\"")
-        buildConfigField("String", "SUPABASE_KEY", "\"$supabaseKey\"")
-        // Developer device hash for allowing dev options on your personal device
-        // Set this in local.properties: DEVELOPER_DEVICE_HASH=your_sha256_hash_here
-        // To get your hash: run the app in debug, try dev options, check logcat for "DEV_ACCESS"
+        // Inject obfuscated keys into BuildConfig
+        buildConfigField("String", "SUPABASE_URL", "\"${obfuscate(supabaseUrl)}\"")
+        buildConfigField("String", "SUPABASE_KEY", "\"${obfuscate(supabaseKey)}\"")
+        buildConfigField("String", "GEMINI_API_KEY", "\"${obfuscate(geminiApiKey)}\"")
+        buildConfigField("String", "REVENUECAT_API_KEY", "\"${obfuscate(revenueCatKey)}\"")
+        buildConfigField("String", "ADMOB_BANNER_ID", "\"${obfuscate(bannerAdId)}\"")
+        buildConfigField("String", "ADMOB_INTERSTITIAL_ID", "\"${obfuscate(interstitialAdId)}\"")
+        buildConfigField("String", "ADMOB_REWARDED_ID", "\"${obfuscate(rewardedAdId)}\"")
+        
+        // Non-secret but device-specific config
         buildConfigField("String", "DEVELOPER_DEVICE_HASH", "\"$devHash\"")
-        // Gemini API key for AI-powered testing features
-        // Set this in local.properties: GEMINI_API_KEY=your_api_key_here
-        buildConfigField("String", "GEMINI_API_KEY", "\"$geminiApiKey\"")
-        // RevenueCat API key for in-app purchases
-        // Set this in local.properties: REVENUECAT_API_KEY=your_api_key_here
-        buildConfigField("String", "REVENUECAT_API_KEY", "\"$revenueCatKey\"")
+        buildConfigField("String", "ADMOB_APP_ID", "\"$admobAppId\"")
+
+        // Add AdMob App ID as a manifest placeholder
+        manifestPlaceholders["admobAppId"] = admobAppId
     }
 
     buildTypes {
@@ -66,39 +93,32 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            // Additional optimizations for release
             ndk {
                 debugSymbolLevel = "SYMBOL_TABLE"
             }
-            // Optimize for release - no debugging overhead
             isDebuggable = false
-            // Enable resource optimization
             isCrunchPngs = true
         }
         debug {
             applicationIdSuffix = ".debug"
             versionNameSuffix = "-debug"
             isDebuggable = true
-            // Disable minification in debug for faster builds
             isMinifyEnabled = false
             isShrinkResources = false
-            // Skip PNG crunching in debug for faster builds
             isCrunchPngs = false
         }
     }
 
-    // Split APKs by ABI for smaller download sizes on Play Store
     splits {
         abi {
             isEnable = true
             reset()
             include("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
-            isUniversalApk = true // Also generate a universal APK
+            isUniversalApk = true
         }
     }
 
 
-    // Enable build optimizations
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -106,6 +126,16 @@ android {
             excludes += "/META-INF/LICENSE*"
             excludes += "/META-INF/NOTICE*"
             excludes += "/*.properties"
+            excludes += "/META-INF/versions/**"
+            excludes += "/META-INF/proguard/**"
+            excludes += "/META-INF/*.kotlin_module"
+            excludes += "/kotlin/**"
+            excludes += "/DebugProbesKt.bin"
+        }
+        // 16KB page size alignment for native libraries
+        // Required for devices with 16KB memory pages (e.g., Pixel 9 and future devices)
+        jniLibs {
+            useLegacyPackaging = false
         }
     }
 
@@ -119,15 +149,21 @@ android {
         buildConfig = true
     }
 
-    // Add Lint baseline configuration
     lint {
         baseline = file("lint-baseline.xml")
-        abortOnError = false // Keep the build from failing on lint errors temporarily
+        abortOnError = false
     }
 }
 
+composeCompiler {
+    featureFlags = setOf(
+        org.jetbrains.kotlin.compose.compiler.gradle.ComposeFeatureFlag.OptimizeNonSkippingGroups
+    )
+    stabilityConfigurationFiles.add(rootProject.layout.projectDirectory.file("compose_stability.conf"))
+}
+
+
 dependencies {
-    // Keep version-catalog libs that resolve, but use stable coordinates for ones that don't.
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -136,13 +172,12 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
-    implementation("com.google.android.material:material:1.12.0")
-    implementation("androidx.appcompat:appcompat:1.7.0")
-    implementation("androidx.biometric:biometric:1.1.0")
+    implementation(libs.google.material)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.biometric)
 
-    // Location services
-    implementation("com.google.android.gms:play-services-location:21.2.0")
-
+    implementation(libs.play.services.location)
+    implementation(libs.play.services.ads)
 
     implementation(libs.androidx.compose.material.icons.extended)
     implementation(libs.androidx.navigation.compose)
@@ -164,14 +199,14 @@ dependencies {
     implementation(libs.ktor.client.content.negotiation)
     implementation(libs.ktor.serialization.kotlinx.json)
     implementation(libs.kotlinx.serialization.json)
+    implementation(libs.kotlin.reflect) // Required by Supabase SDK v3 typeOf() at runtime
 
     implementation(libs.revenuecat.purchases)
 
-    // WebRTC for voice/video calls
     implementation(libs.webrtc)
 
-    // OkHttp is used directly for Gemini API calls (avoids Ktor version conflicts)
-    // The generative-ai SDK has Ktor version conflicts with Supabase
+    // Baseline Profile support - improves startup and rendering speed via AOT compilation
+    implementation(libs.androidx.profileinstaller)
 
     testImplementation(libs.junit)
     testImplementation(libs.coroutines.test)

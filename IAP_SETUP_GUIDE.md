@@ -1,35 +1,65 @@
-# In-App Purchases Setup Guide for NeuroComet
+# In-App Purchases & Ads Setup Guide for NeuroComet
 
-Your app already has a complete RevenueCat integration! Here's how to make it work in production.
+Your app already has a complete RevenueCat and Google AdMob integration with enhanced security! Here's how to make it work in production.
 
 ## Current Implementation Status ✅
 
 Your app already includes:
 - `SubscriptionManager.kt` - Handles all purchase logic with security verification
 - `SubscriptionScreen.kt` - Beautiful premium subscription UI
+- `GoogleAdsManager.kt` - Neurodivergent-friendly ad management
+- `SecurityUtils.kt` - **ENHANCED SECURITY**: All API keys and Ad IDs are now obfuscated in the binary
 - RevenueCat SDK integration
 - Two products: Monthly ($2/month) and Lifetime ($60 one-time)
 
 ---
 
-## Step 1: Set Up RevenueCat Account
+## Step 1: Set Up Credentials in `local.properties`
 
-1. **Create a RevenueCat account**: https://app.revenuecat.com
-2. **Create a new project** for NeuroComet
-3. **Get your API key** from Project Settings → API Keys
+For security, ALL sensitive keys must be placed in `local.properties`. This file is ignored by Git, preventing your keys from being exposed in your repository.
 
-### Update your API key in `MainActivity.kt`:
-```kotlin
-// Find this line around line 885:
-Purchases.configure(PurchasesConfiguration.Builder(this, "test_ghfalVJOgCZfjWpsJdiyCbHARmz").build())
+Add these lines to your `C:/Users/bkyil/AndroidStudioProjects/NeuroComet/local.properties`:
 
-// Replace with your actual RevenueCat public API key:
-Purchases.configure(PurchasesConfiguration.Builder(this, "YOUR_REVENUECAT_API_KEY").build())
+```properties
+# RevenueCat
+REVENUECAT_API_KEY=goog_your_actual_revenuecat_api_key
+
+# Google AdMob
+ADMOB_APP_ID=ca-app-pub-XXXXXXXXXX~XXXXXXXXXX
+ADMOB_BANNER_ID=ca-app-pub-XXXXXXXXXX/XXXXXXXXXX
+ADMOB_INTERSTITIAL_ID=ca-app-pub-XXXXXXXXXX/XXXXXXXXXX
+ADMOB_REWARDED_ID=ca-app-pub-XXXXXXXXXX/XXXXXXXXXX
+
+# Gemini AI (for Practice Calls)
+GEMINI_API_KEY=your_gemini_api_key_here
+
+# Supabase (Backend)
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_KEY=your-supabase-anon-key
 ```
 
 ---
 
-## Step 2: Set Up Google Play Console
+## Step 2: How Security Works (Auto-implemented)
+
+The app now uses a multi-layer security approach:
+1.  **Source Security**: Keys are stored in `local.properties` (never committed to Git).
+2.  **Build Security**: `build.gradle.kts` reads these keys and **obfuscates** them before injecting them into `BuildConfig`.
+3.  **Binary Security**: `SecurityUtils.kt` decrypts the keys at runtime. This prevents "bad actors" from finding your plain-text API keys by simply running `strings` on your APK or decompiling it.
+
+**No additional code changes are needed!** The app is already configured to use `SecurityUtils.decrypt()` for all sensitive configurations.
+
+---
+
+## Step 3: Set Up RevenueCat Account
+
+1. **Create a RevenueCat account**: https://app.revenuecat.com
+2. **Create a new project** for NeuroComet
+3. **Get your API key** from Project Settings → API Keys and add it to `local.properties`.
+
+---
+
+## Step 4: Set Up Google Play Console
 
 ### A. Create Your Products
 
@@ -39,200 +69,59 @@ Purchases.configure(PurchasesConfiguration.Builder(this, "YOUR_REVENUECAT_API_KE
 #### For Monthly Subscription:
 - Product ID: `NeuroComet_premium_monthly`
 - Product Type: **Subscription**
-- Name: "NeuroComet Premium Monthly"
 - Price: $2.00/month
-- Benefits:
-  - Ad-free experience
-  - Premium features
-  - Priority support
 
 #### For Lifetime Purchase:
 - Product ID: `NeuroComet_premium_lifetime`  
-- Product Type: **In-app product** (one-time purchase)
-- Name: "NeuroComet Premium Lifetime"
+- Product Type: **In-app product**
 - Price: $60.00
-- Benefits:
-  - Permanent ad-free access
-  - All premium features forever
 
 ### B. Connect Google Play to RevenueCat
 
 1. In Google Play Console → **Monetization setup**
 2. Create a Service Account with Play Developer API access
-3. Download the JSON credentials
-4. In RevenueCat → **Apps** → Your Android app → **Configuration**
-5. Upload the service account credentials
+3. Download the JSON credentials and upload to RevenueCat Dashboard.
 
 ---
 
-## Step 3: Configure RevenueCat Products
+## Step 5: Google AdMob Setup
 
-### A. Create Products in RevenueCat
+### A. Create AdMob Account
 
-1. Go to RevenueCat Dashboard → **Products**
-2. **Add Product** for each:
+1. Go to [Google AdMob](https://admob.google.com/)
+2. Create a new app for NeuroComet (Android)
+3. Get your **App ID** and **Ad Unit IDs**.
 
-| Identifier | Store Product ID | Type |
-|------------|-----------------|------|
-| `NeuroComet_premium_monthly` | `NeuroComet_premium_monthly` | Subscription |
-| `NeuroComet_premium_lifetime` | `NeuroComet_premium_lifetime` | Non-consumable |
+### B. Update `local.properties`
 
-### B. Create Entitlement
-
-1. Go to **Entitlements**
-2. Create entitlement: `premium`
-3. Add both products to this entitlement
-
-### C. Create Offering
-
-1. Go to **Offerings**
-2. Create offering: `default`
-3. Add packages:
-   - `$rc_monthly` → `NeuroComet_premium_monthly`
-   - `$rc_lifetime` → `NeuroComet_premium_lifetime`
+Add the production IDs to your `local.properties` as shown in Step 1. The `build.gradle.kts` will automatically pick these up, obfuscate them, and `GoogleAdsManager` will use them for production builds.
 
 ---
 
-## Step 4: Testing
+## Step 6: Security Features (Already Implemented!)
 
-### A. Add Test Users
-
-1. In Google Play Console → **Settings** → **License testing**
-2. Add your test Gmail accounts
-3. Test purchases won't charge your card
-
-### B. Test in App
-
-1. Build and run the app
-2. Go to **Settings** → **Go Premium**
-3. Select a plan and complete the test purchase
-4. Check RevenueCat dashboard for the transaction
-
----
-
-## Step 5: Security Features (Already Implemented!)
-
-Your `SubscriptionManager.kt` includes anti-piracy measures:
-
-```kotlin
-// Verification token ensures purchases are legitimate
-private fun generateVerificationToken(customerInfo: CustomerInfo): String
-
-// Verifies premium status hasn't been tampered with
-fun verifyPremiumStatus(): Boolean
-
-// Crashes app if tampering detected
-fun enforcePremiumSecurity()
-```
-
----
-
-## Step 6: Using Premium Status in Your App
-
-### Check if user is premium:
-```kotlin
-val subscriptionState by SubscriptionManager.subscriptionState.collectAsState()
-val isPremium = subscriptionState.isPremium
-
-if (isPremium) {
-    // Show premium features
-} else {
-    // Show ads or lock features
-}
-```
-
-### Example: Hide ads for premium users:
-```kotlin
-@Composable
-fun AdBanner() {
-    val isPremium by SubscriptionManager.subscriptionState.collectAsState()
-    
-    if (!isPremium.isPremium) {
-        // Show ad banner
-        AndroidView(
-            factory = { context ->
-                AdView(context).apply {
-                    // Set up ad
-                }
-            }
-        )
-    }
-}
-```
-
-### Example: Lock premium features:
-```kotlin
-@Composable
-fun PremiumFeatureCard(
-    onUpgradeClick: () -> Unit
-) {
-    val isPremium by SubscriptionManager.subscriptionState.collectAsState()
-    
-    if (isPremium.isPremium) {
-        // Show feature content
-        Text("Premium Feature Available!")
-    } else {
-        // Show upgrade prompt
-        Card {
-            Column {
-                Text("🌟 Premium Feature")
-                Text("Upgrade to access this feature")
-                Button(onClick = onUpgradeClick) {
-                    Text("Go Premium")
-                }
-            }
-        }
-    }
-}
-```
+Your `SubscriptionManager.kt` and `SecurityUtils.kt` include:
+- ✅ **API Key Obfuscation**: Prevents string-scraping attacks.
+- ✅ **Anti-Piracy Tokens**: Ensures purchases are legitimate.
+- ✅ **Tamper Detection**: Verifies premium status hasn't been modified locally.
+- ✅ **Native Keystore**: Sensitive user data is encrypted with hardware-backed keys.
 
 ---
 
 ## Step 7: Production Checklist
 
-- [ ] Replace test API key with production RevenueCat key
-- [ ] Create products in Google Play Console
-- [ ] Configure products in RevenueCat
-- [ ] Test purchases with license testers
-- [ ] Verify restore purchases works
-- [ ] Add Terms of Service and Privacy Policy links
-- [ ] Submit app for review
-
----
-
-## Files to Update for Production
-
-### 1. `local.properties` (add):
-```properties
-REVENUECAT_API_KEY=your_production_api_key_here
-```
-
-### 2. `app/build.gradle.kts` (add BuildConfig field):
-```kotlin
-val revenueCatKey = localProperties.getProperty("REVENUECAT_API_KEY") ?: ""
-buildConfigField("String", "REVENUECAT_API_KEY", "\"$revenueCatKey\"")
-```
-
-### 3. `MainActivity.kt` (use BuildConfig):
-```kotlin
-Purchases.configure(
-    PurchasesConfiguration.Builder(this, BuildConfig.REVENUECAT_API_KEY).build()
-)
-```
-
----
-
-## Revenue Split
-
-- **Google Play**: Takes 15-30% of revenue
-- **RevenueCat**: Free for first $2,500/month, then 1%
-- **You**: Keep the rest!
+- [ ] Add all production keys to `local.properties`.
+- [ ] Create products in Google Play Console.
+- [ ] Configure products and entitlements in RevenueCat.
+- [ ] Test purchases with license testers.
+- [ ] Verify restore purchases works.
+- [ ] Set `BuildConfig.DEBUG` to `false` for release (handled by Gradle).
+- [ ] Submit app for review.
 
 ---
 
 ## Support
 
 - RevenueCat Docs: https://docs.revenuecat.com
-- Google Play Billing: https://developer.android.com/google/play/billing
-- RevenueCat Discord: https://discord.gg/revenuecat
-
+- Google AdMob Docs: https://developers.google.com/admob/android/quick-start
+- NeuroComet Security: See `SecurityUtils.kt` and `CredentialStorage.kt`

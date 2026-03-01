@@ -218,7 +218,7 @@ object MockDataProvider {
                 shares = 5,
                 isLikedByMe = true,
                 userAvatar = MOCK_USERS.find { it.id == "HyperFocusCode" }?.avatarUrl,
-                imageUrl = "https://example.com/image1.jpg",
+                imageUrl = "https://images.unsplash.com/photo-1488190211105-8b0e65b80b4e?w=800",
                 minAudience = Audience.TEEN
             ),
             Post(
@@ -231,7 +231,7 @@ object MockDataProvider {
                 shares = 10,
                 isLikedByMe = false,
                 userAvatar = MOCK_USERS.find { it.id == "SensorySeeker" }?.avatarUrl,
-                imageUrl = "https://picsum.photos/seed/SensorySeeker/400/300",
+                imageUrl = "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800",
                 minAudience = Audience.TEEN
             ),
             Post(
@@ -339,7 +339,7 @@ object MockDataProvider {
                 shares = 89,
                 isLikedByMe = true,
                 userAvatar = "https://i.pravatar.cc/150?u=focusqueen",
-                imageUrl = "https://images.unsplash.com/photo-1593062096033-9a26b09da705?w=800"
+                imageUrl = "https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?w=800"
             ),
             Post(
                 id = 102L,
@@ -373,7 +373,7 @@ object MockDataProvider {
                 shares = 445,
                 isLikedByMe = true,
                 userAvatar = "https://i.pravatar.cc/150?u=stimhappy",
-                imageUrl = "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800"
+                imageUrl = "https://images.unsplash.com/photo-1612538498456-e861df91d4d0?w=800"
             ),
             Post(
                 id = 105L,
@@ -518,6 +518,54 @@ object MockDataProvider {
                 ),
                 lastMessageTimestamp = Instant.now().minusSeconds(13200).toString(),
                 unreadCount = 1
+            ),
+            // Group conversations
+            Conversation(
+                id = "group1",
+                participants = listOf(currentUserId, dinoUserId, "NeuroNaut", "SensorySeeker"),
+                messages = listOf(
+                    DirectMessage("grp1", dinoUserId, currentUserId, "Has anyone tried the new stim toy from that Etsy shop? 🦕", Instant.now().minusSeconds(5400).toString()),
+                    DirectMessage("grp2", "SensorySeeker", currentUserId, "Yes! The texture is amazing, highly recommend", Instant.now().minusSeconds(5200).toString()),
+                    DirectMessage("grp3", "NeuroNaut", currentUserId, "Link please! 🙏", Instant.now().minusSeconds(5000).toString())
+                ),
+                lastMessageTimestamp = Instant.now().minusSeconds(5000).toString(),
+                unreadCount = 3,
+                isGroup = true,
+                groupName = "Stim Toy Reviews 🧸"
+            ),
+            Conversation(
+                id = "group2",
+                participants = listOf(currentUserId, "HyperFocusCode", "CalmObserver", "Alex_Stims"),
+                messages = listOf(
+                    DirectMessage("grp4", "HyperFocusCode", currentUserId, "Body doubling session starting in 10! Who's in?", Instant.now().minusSeconds(10800).toString()),
+                    DirectMessage("grp5", currentUserId, "HyperFocusCode", "I'm in! Need to finish my essay 📝", Instant.now().minusSeconds(10600).toString()),
+                    DirectMessage("grp6", "CalmObserver", currentUserId, "Same, joining now 🙂", Instant.now().minusSeconds(10400).toString())
+                ),
+                lastMessageTimestamp = Instant.now().minusSeconds(10400).toString(),
+                unreadCount = 0,
+                isGroup = true,
+                groupName = "Focus Friends 🎯"
+            ),
+            // Archived conversations
+            Conversation(
+                id = "archived1",
+                participants = listOf(currentUserId, "OldFriend"),
+                messages = listOf(
+                    DirectMessage("arch1", "OldFriend", currentUserId, "It was great chatting! Talk soon ✨", Instant.now().minusSeconds(604800).toString())
+                ),
+                lastMessageTimestamp = Instant.now().minusSeconds(604800).toString(),
+                unreadCount = 0,
+                isArchived = true
+            ),
+            Conversation(
+                id = "archived2",
+                participants = listOf(currentUserId, "EventBot"),
+                messages = listOf(
+                    DirectMessage("arch2", "EventBot", currentUserId, "Your ADHD Awareness Week event has ended. Thanks for attending!", Instant.now().minusSeconds(1209600).toString())
+                ),
+                lastMessageTimestamp = Instant.now().minusSeconds(1209600).toString(),
+                unreadCount = 0,
+                isArchived = true
             )
         )
     }

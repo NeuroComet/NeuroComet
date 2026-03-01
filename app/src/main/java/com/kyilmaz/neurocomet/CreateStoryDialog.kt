@@ -756,10 +756,11 @@ private fun MediaTabContent(
                                 }
 
                                 // Show edit badge if edited
-                                if (editState != null && (editState!!.filter != StoryImageFilter.NONE ||
-                                    editState!!.textOverlays.isNotEmpty() ||
-                                    editState!!.drawingPaths.isNotEmpty() ||
-                                    editState!!.stickers.isNotEmpty())) {
+                                val currentEditState = editState
+                                if (currentEditState != null && (currentEditState.filter != StoryImageFilter.NONE ||
+                                    currentEditState.textOverlays.isNotEmpty() ||
+                                    currentEditState.drawingPaths.isNotEmpty() ||
+                                    currentEditState.stickers.isNotEmpty())) {
                                     Surface(
                                         modifier = Modifier
                                             .align(Alignment.BottomStart)

@@ -24,6 +24,10 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
+import com.kyilmaz.neurocomet.safeInsert
+import com.kyilmaz.neurocomet.AttachmentHelper
 import org.webrtc.*
 import java.time.Instant
 import java.time.ZoneId
@@ -231,12 +235,27 @@ class WebRTCCallManager private constructor() {
     )
 
     /**
+     * Whether the local network permission is missing on API 37+ (CinnamonBun).
+     * When `true`, WebRTC ICE candidate gathering over LAN may fail.
+     * Observe this from the calling UI to prompt the user.
+     */
+    var localNetworkPermissionNeeded by mutableStateOf(false)
+        private set
+
+    /**
      * Initialize the call manager with context and Supabase client
      */
     fun initialize(context: Context, supabase: SupabaseClient?, userId: String?) {
         appContext = context.applicationContext
         supabaseClient = supabase
         currentUserId = userId
+
+        // Android 17+ (CinnamonBun) requires ACCESS_LOCAL_NETWORK for
+        // WebRTC ICE candidate gathering on the local network.
+        if (!AttachmentHelper.hasLocalNetworkPermission(context)) {
+            Log.w(TAG, "ACCESS_LOCAL_NETWORK not granted — WebRTC local ICE candidates may be unavailable")
+            localNetworkPermissionNeeded = true
+        }
 
         initializeWebRTC(context)
         setupSignalingListener()
@@ -868,18 +887,16 @@ class WebRTCCallManager private constructor() {
         val call = currentCall
 
         try {
-            client.from("call_signals").insert(
-                mapOf(
-                    "call_id" to callId,
-                    "from_user_id" to userId,
-                    "to_user_id" to toUserId,
-                    "type" to type,
-                    "payload" to payload,
-                    "call_type" to callType.name,
-                    "caller_name" to (call?.recipientName ?: "Unknown"),
-                    "caller_avatar" to (call?.recipientAvatar ?: "")
-                )
-            )
+            client.safeInsert("call_signals", buildJsonObject {
+                put("call_id", callId)
+                put("from_user_id", userId)
+                put("to_user_id", toUserId)
+                put("type", type)
+                put("payload", payload)
+                put("call_type", callType.name)
+                put("caller_name", call?.recipientName ?: "Unknown")
+                put("caller_avatar", call?.recipientAvatar ?: "")
+            })
             Log.d(TAG, "Sent signaling message: type=$type, to=$toUserId")
         } catch (e: Exception) {
             Log.e(TAG, "Failed to send signaling message", e)
@@ -1005,9 +1022,12 @@ class WebRTCCallManager private constructor() {
 
         scope.launch {
             try {
-                val history = client.from("call_history")
-                    .select()
-                    .decodeList<CallHistoryEntry>()
+                val rows = com.kyilmaz.neurocomet.safeSelect(
+                    table = "call_history",
+                    columns = "*"
+                )
+                val json = kotlinx.serialization.json.Json { ignoreUnknownKeys = true }
+                val history = rows.map { json.decodeFromJsonElement(CallHistoryEntry.serializer(), it) }
 
                 _callHistory.clear()
                 _callHistory.addAll(history.sortedByDescending { it.timestamp })
@@ -1023,7 +1043,10 @@ class WebRTCCallManager private constructor() {
 
         scope.launch {
             try {
-                client.from("call_history").insert(entry)
+                val entryJson = kotlinx.serialization.json.Json.encodeToJsonElement(
+                    CallHistoryEntry.serializer(), entry
+                ) as kotlinx.serialization.json.JsonObject
+                client.safeInsert("call_history", entryJson)
                 Log.d(TAG, "Saved call to history: ${entry.id}")
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to save call to history", e)
@@ -1141,4 +1164,3 @@ fun formatCallDuration(durationSeconds: Long): String {
         String.format("%d:%02d", minutes, seconds)
     }
 }
-

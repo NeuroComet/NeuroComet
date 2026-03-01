@@ -3,10 +3,10 @@ package com.kyilmaz.neurocomet
 import android.util.Log
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
+import androidx.core.net.toUri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -16,12 +16,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -504,12 +500,21 @@ fun FullScreenFallback(
             if (showSupportOption) {
                 TextButton(
                     onClick = {
-                        // Open support/feedback
-                        android.widget.Toast.makeText(
-                            context,
-                            "Support coming soon!",
-                            android.widget.Toast.LENGTH_SHORT
-                        ).show()
+                        // Open support via email
+                        try {
+                            val intent = android.content.Intent(android.content.Intent.ACTION_SENDTO).apply {
+                                data = "mailto:support@neurocomet.app".toUri()
+                                putExtra(android.content.Intent.EXTRA_SUBJECT, "NeuroComet Support Request")
+                                putExtra(android.content.Intent.EXTRA_TEXT, "I encountered an issue while using the app.\n\nDevice: ${android.os.Build.MANUFACTURER} ${android.os.Build.MODEL}\nAndroid: ${android.os.Build.VERSION.RELEASE}\n\nPlease describe your issue:\n")
+                            }
+                            context.startActivity(intent)
+                        } catch (_: Exception) {
+                            android.widget.Toast.makeText(
+                                context,
+                                "Email support@neurocomet.app for help",
+                                android.widget.Toast.LENGTH_LONG
+                            ).show()
+                        }
                     }
                 ) {
                     @Suppress("DEPRECATION")

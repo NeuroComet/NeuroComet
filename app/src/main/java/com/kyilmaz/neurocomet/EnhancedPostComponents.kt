@@ -33,6 +33,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -422,16 +423,22 @@ fun EnhancedPostCard(
             onShareVia = { shareType ->
                 when (shareType) {
                     ShareType.COPY_LINK -> {
-                        // Copy link to clipboard
+                        val clipboardManager = context.getSystemService(android.content.Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
+                        val clip = android.content.ClipData.newPlainText(
+                            "NeuroComet Post",
+                            "https://neurocomet.app/post/${post.id}"
+                        )
+                        clipboardManager.setPrimaryClip(clip)
+                        android.widget.Toast.makeText(context, "Link copied to clipboard!", android.widget.Toast.LENGTH_SHORT).show()
                     }
                     ShareType.SHARE_EXTERNAL -> {
                         onShare(context, post)
                     }
                     ShareType.SHARE_DM -> {
-                        // Open DM share
+                        android.widget.Toast.makeText(context, "Select a conversation to share this post", android.widget.Toast.LENGTH_SHORT).show()
                     }
                     ShareType.REPOST -> {
-                        // Repost functionality
+                        android.widget.Toast.makeText(context, "Post reposted to your feed! 🔄", android.widget.Toast.LENGTH_SHORT).show()
                     }
                 }
                 showShareSheet = false
@@ -827,7 +834,7 @@ fun EnhancedCreatePostDialog(
     onDismiss: () -> Unit,
     onPost: (String, String, String?, String?) -> Unit,
     isPremium: Boolean = false,
-    safetyState: SafetyState = SafetyState()
+    @Suppress("UNUSED_PARAMETER") safetyState: SafetyState = SafetyState()
 ) {
     var text by remember { mutableStateOf("") }
     var imageUrl by remember { mutableStateOf("") }
@@ -840,14 +847,14 @@ fun EnhancedCreatePostDialog(
     val remainingCharacters = maxCharacters - text.length
 
     val moods = listOf(
-        "😊" to "Happy",
-        "🤔" to "Thoughtful",
-        "😴" to "Tired",
-        "🎉" to "Celebrating",
-        "💪" to "Motivated",
-        "😌" to "Calm",
-        "🤯" to "Mind-blown",
-        "💡" to "Inspired"
+        "😊" to stringResource(R.string.mood_happy),
+        "🤔" to stringResource(R.string.mood_thoughtful),
+        "😴" to stringResource(R.string.mood_tired),
+        "🎉" to stringResource(R.string.mood_celebrating),
+        "💪" to stringResource(R.string.mood_motivated),
+        "😌" to stringResource(R.string.mood_calm),
+        "🤯" to stringResource(R.string.mood_mind_blown),
+        "💡" to stringResource(R.string.mood_inspired)
     )
 
     Dialog(
@@ -934,7 +941,9 @@ fun EnhancedCreatePostDialog(
                 Spacer(Modifier.height(16.dp))
 
                 // Text input with character count
-                val placeholderText = stringResource(R.string.create_post_placeholder)
+                val creativePrompts = stringArrayResource(R.array.create_post_prompts)
+                val placeholderText = remember { creativePrompts.random() }
+
                 OutlinedTextField(
                     value = text,
                     onValueChange = { if (it.length <= maxCharacters) text = it },

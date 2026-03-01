@@ -15,6 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -715,7 +716,7 @@ private fun CleanTutorialCard(
 
 /**
  * Visual preview of the bottom navigation showing which item to look for
- * This provides guidance without overlaying the actual interface
+ * Matches the actual NeuroComet navigation bar design with Material 3 styling
  */
 @Composable
 private fun NavigationPreview(
@@ -725,27 +726,38 @@ private fun NavigationPreview(
     val infiniteTransition = rememberInfiniteTransition(label = "navPreview")
     val pulseScale by infiniteTransition.animateFloat(
         initialValue = 1f,
-        targetValue = 1.15f,
+        targetValue = 1.1f,
         animationSpec = infiniteRepeatable(
-            animation = tween(1000, easing = gentleEasing),
+            animation = tween(800, easing = gentleEasing),
             repeatMode = RepeatMode.Reverse
         ),
         label = "navPulse"
     )
 
-    // Navigation items with their icons and labels
+    val glowAlpha by infiniteTransition.animateFloat(
+        initialValue = 0.2f,
+        targetValue = 0.5f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(800, easing = gentleEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "glowAlpha"
+    )
+
+    // Navigation items matching actual NeuroComet navigation
     data class NavItem(
-        val icon: ImageVector,
+        val iconFilled: ImageVector,
+        val iconOutlined: ImageVector,
         val label: String,
         val area: HighlightArea
     )
 
     val navItems = listOf(
-        NavItem(Icons.Filled.Home, "Feed", HighlightArea.BOTTOM_NAV_FEED),
-        NavItem(Icons.Filled.Search, "Explore", HighlightArea.BOTTOM_NAV_EXPLORE),
-        NavItem(Icons.Filled.Mail, "Messages", HighlightArea.BOTTOM_NAV_MESSAGES),
-        NavItem(Icons.Filled.Notifications, "Alerts", HighlightArea.BOTTOM_NAV_NOTIFICATIONS),
-        NavItem(Icons.Filled.Settings, "Settings", HighlightArea.BOTTOM_NAV_SETTINGS)
+        NavItem(Icons.Filled.Home, Icons.Outlined.Home, "Feed", HighlightArea.BOTTOM_NAV_FEED),
+        NavItem(Icons.Filled.Search, Icons.Outlined.Search, "Explore", HighlightArea.BOTTOM_NAV_EXPLORE),
+        NavItem(Icons.Filled.Mail, Icons.Outlined.Mail, "Messages", HighlightArea.BOTTOM_NAV_MESSAGES),
+        NavItem(Icons.Filled.Notifications, Icons.Outlined.Notifications, "Alerts", HighlightArea.BOTTOM_NAV_NOTIFICATIONS),
+        NavItem(Icons.Filled.Settings, Icons.Outlined.Settings, "Settings", HighlightArea.BOTTOM_NAV_SETTINGS)
     )
 
     Column(
@@ -753,24 +765,25 @@ private fun NavigationPreview(
     ) {
         // Label
         Text(
-            text = "Look for this in the navigation bar:",
-            style = MaterialTheme.typography.labelSmall,
-            color = Color.White.copy(alpha = 0.5f)
+            text = "Find this in your navigation bar:",
+            style = MaterialTheme.typography.labelMedium,
+            color = Color.White.copy(alpha = 0.6f)
         )
 
         Spacer(Modifier.height(12.dp))
 
-        // Mini navigation bar preview
+        // Material 3 style navigation bar preview
         Surface(
-            shape = RoundedCornerShape(16.dp),
-            color = Color(0xFF252540),
+            shape = RoundedCornerShape(20.dp),
+            color = Color(0xFF1C1B1F), // Material 3 surface container
+            tonalElevation = 3.dp,
             modifier = Modifier.fillMaxWidth()
         ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 12.dp, horizontal = 8.dp),
-                horizontalArrangement = Arrangement.SpaceEvenly,
+                    .padding(vertical = 8.dp),
+                horizontalArrangement = Arrangement.SpaceAround,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 navItems.forEach { item ->
@@ -779,33 +792,35 @@ private fun NavigationPreview(
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         modifier = Modifier
+                            .weight(1f)
+                            .padding(vertical = 4.dp)
                             .then(
-                                if (isHighlighted) {
-                                    Modifier.scale(pulseScale)
-                                } else {
-                                    Modifier
-                                }
+                                if (isHighlighted) Modifier.scale(pulseScale) else Modifier
                             )
                     ) {
-                        // Icon with highlight effect
+                        // Icon container with Material 3 indicator pill
                         Box(
-                            contentAlignment = Alignment.Center
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier
+                                .height(32.dp)
+                                .widthIn(min = 48.dp)
                         ) {
-                            // Glow effect for highlighted item
+                            // Selected indicator pill (Material 3 style)
                             if (isHighlighted) {
                                 Box(
                                     modifier = Modifier
-                                        .size(40.dp)
-                                        .clip(CircleShape)
-                                        .background(accentColor.copy(alpha = 0.3f))
+                                        .width(56.dp)
+                                        .height(32.dp)
+                                        .clip(RoundedCornerShape(16.dp))
+                                        .background(accentColor.copy(alpha = glowAlpha))
                                 )
                             }
 
                             Icon(
-                                imageVector = item.icon,
+                                imageVector = if (isHighlighted) item.iconFilled else item.iconOutlined,
                                 contentDescription = item.label,
                                 modifier = Modifier.size(24.dp),
-                                tint = if (isHighlighted) accentColor else Color.White.copy(alpha = 0.4f)
+                                tint = if (isHighlighted) accentColor else Color.White.copy(alpha = 0.6f)
                             )
                         }
 
@@ -815,55 +830,62 @@ private fun NavigationPreview(
                         Text(
                             text = item.label,
                             style = MaterialTheme.typography.labelSmall,
-                            color = if (isHighlighted) accentColor else Color.White.copy(alpha = 0.3f),
-                            fontWeight = if (isHighlighted) FontWeight.Bold else FontWeight.Normal
+                            color = if (isHighlighted) accentColor else Color.White.copy(alpha = 0.5f),
+                            fontWeight = if (isHighlighted) FontWeight.SemiBold else FontWeight.Normal,
+                            maxLines = 1
                         )
                     }
                 }
             }
         }
 
-        // Arrow pointing down to indicate "look at bottom of screen"
-        Spacer(Modifier.height(8.dp))
+        Spacer(Modifier.height(10.dp))
 
+        // Bouncing arrow pointing down
         Icon(
             imageVector = Icons.Filled.KeyboardArrowDown,
             contentDescription = null,
             modifier = Modifier
-                .size(24.dp)
+                .size(28.dp)
                 .graphicsLayer {
-                    translationY = (pulseScale - 1f) * 20f
+                    translationY = (pulseScale - 1f) * 30f
                 },
-            tint = accentColor.copy(alpha = 0.7f)
+            tint = accentColor
+        )
+
+        Text(
+            text = "At the bottom of your screen",
+            style = MaterialTheme.typography.labelSmall,
+            color = Color.White.copy(alpha = 0.4f)
         )
     }
 }
 
 /**
  * Visual preview showing how to access Practice Calls from Messages
- * Shows a mock Messages header with the phone icon highlighted
+ * Accurately matches the actual NeuroComet Messages screen header
  */
 @Composable
 private fun PracticeCallsPreview(accentColor: Color) {
     val infiniteTransition = rememberInfiniteTransition(label = "practiceCallsPreview")
     val pulseScale by infiniteTransition.animateFloat(
         initialValue = 1f,
-        targetValue = 1.2f,
+        targetValue = 1.15f,
         animationSpec = infiniteRepeatable(
-            animation = tween(1000, easing = gentleEasing),
+            animation = tween(800, easing = gentleEasing),
             repeatMode = RepeatMode.Reverse
         ),
-        label = "phonePulse"
+        label = "headsetPulse"
     )
 
     val glowAlpha by infiniteTransition.animateFloat(
         initialValue = 0.3f,
         targetValue = 0.6f,
         animationSpec = infiniteRepeatable(
-            animation = tween(1000, easing = gentleEasing),
+            animation = tween(800, easing = gentleEasing),
             repeatMode = RepeatMode.Reverse
         ),
-        label = "phoneGlow"
+        label = "headsetGlow"
     )
 
     Column(
@@ -871,67 +893,112 @@ private fun PracticeCallsPreview(accentColor: Color) {
     ) {
         // Label
         Text(
-            text = "In Messages, look for the phone icon:",
-            style = MaterialTheme.typography.labelSmall,
-            color = Color.White.copy(alpha = 0.5f)
+            text = "In Messages, find the headset icon:",
+            style = MaterialTheme.typography.labelMedium,
+            color = Color.White.copy(alpha = 0.6f)
         )
 
         Spacer(Modifier.height(12.dp))
 
-        // Mock Messages header preview
+        // Accurate Messages screen header preview
         Surface(
-            shape = RoundedCornerShape(16.dp),
-            color = Color(0xFF252540),
+            shape = RoundedCornerShape(20.dp),
+            color = Color(0xFF1C1B1F),
+            tonalElevation = 3.dp,
             modifier = Modifier.fillMaxWidth()
         ) {
             Column {
-                // Mock header bar
+                // Top bar with title and action icons
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 12.dp),
+                        .padding(horizontal = 16.dp, vertical = 14.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    // Messages title
+                    // Messages title (left side)
+                    Text(
+                        text = "Messages",
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
+                    )
+
+                    // Action buttons row (right side) - matches actual UI
                     Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        horizontalArrangement = Arrangement.spacedBy(4.dp),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Icon(
-                            imageVector = Icons.Filled.Mail,
-                            contentDescription = null,
-                            modifier = Modifier.size(20.dp),
-                            tint = Color.White.copy(alpha = 0.7f)
-                        )
-                        Text(
-                            text = "Messages",
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.SemiBold,
-                            color = Color.White.copy(alpha = 0.9f)
-                        )
-                    }
-
-                    // Highlighted phone icon
-                    Box(
-                        contentAlignment = Alignment.Center,
-                        modifier = Modifier.scale(pulseScale)
-                    ) {
-                        // Glow effect
+                        // Practice Calls button - HIGHLIGHTED
                         Box(
-                            modifier = Modifier
-                                .size(44.dp)
-                                .clip(CircleShape)
-                                .background(accentColor.copy(alpha = glowAlpha))
-                        )
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier.scale(pulseScale)
+                        ) {
+                            // Glow effect
+                            Box(
+                                modifier = Modifier
+                                    .size(40.dp)
+                                    .clip(CircleShape)
+                                    .background(accentColor.copy(alpha = glowAlpha))
+                            )
+                            // Headset icon (actual icon used)
+                            Icon(
+                                imageVector = Icons.Outlined.Headset,
+                                contentDescription = "Practice Calls",
+                                modifier = Modifier.size(24.dp),
+                                tint = accentColor
+                            )
+                        }
 
-                        // Phone icon
-                        Icon(
-                            imageVector = Icons.Filled.Phone,
-                            contentDescription = "Practice Calls",
-                            modifier = Modifier.size(24.dp),
-                            tint = accentColor
-                        )
+                        // Call History button (dimmed)
+                        Box(
+                            modifier = Modifier.size(40.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Outlined.History,
+                                contentDescription = "Call History",
+                                modifier = Modifier.size(24.dp),
+                                tint = Color.White.copy(alpha = 0.4f)
+                            )
+                        }
+
+                        // Search button (dimmed)
+                        Box(
+                            modifier = Modifier.size(40.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Outlined.Search,
+                                contentDescription = "Search",
+                                modifier = Modifier.size(24.dp),
+                                tint = Color.White.copy(alpha = 0.4f)
+                            )
+                        }
+                    }
+                }
+
+                // Filter chips row (simplified preview)
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 16.dp, end = 16.dp, bottom = 12.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    // Mock filter chips
+                    listOf("All", "Unread", "Groups").forEach { label ->
+                        Surface(
+                            shape = RoundedCornerShape(8.dp),
+                            color = if (label == "All") Color.White.copy(alpha = 0.15f)
+                                   else Color.White.copy(alpha = 0.05f)
+                        ) {
+                            Text(
+                                text = label,
+                                style = MaterialTheme.typography.labelSmall,
+                                color = Color.White.copy(alpha = if (label == "All") 0.9f else 0.5f),
+                                modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                            )
+                        }
                     }
                 }
 
@@ -940,10 +1007,10 @@ private fun PracticeCallsPreview(accentColor: Color) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(1.dp)
-                        .background(Color.White.copy(alpha = 0.1f))
+                        .background(Color.White.copy(alpha = 0.08f))
                 )
 
-                // Mock conversation list hint
+                // Mock conversation preview
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -951,55 +1018,66 @@ private fun PracticeCallsPreview(accentColor: Color) {
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    // Avatar placeholder
+                    // Avatar
                     Box(
                         modifier = Modifier
-                            .size(40.dp)
+                            .size(48.dp)
                             .clip(CircleShape)
                             .background(Color.White.copy(alpha = 0.1f))
                     )
 
                     Column(modifier = Modifier.weight(1f)) {
+                        // Name placeholder
                         Box(
                             modifier = Modifier
-                                .fillMaxWidth(0.5f)
-                                .height(12.dp)
-                                .clip(RoundedCornerShape(6.dp))
-                                .background(Color.White.copy(alpha = 0.15f))
+                                .fillMaxWidth(0.4f)
+                                .height(14.dp)
+                                .clip(RoundedCornerShape(7.dp))
+                                .background(Color.White.copy(alpha = 0.2f))
                         )
                         Spacer(Modifier.height(6.dp))
+                        // Message placeholder
                         Box(
                             modifier = Modifier
-                                .fillMaxWidth(0.8f)
-                                .height(8.dp)
-                                .clip(RoundedCornerShape(4.dp))
-                                .background(Color.White.copy(alpha = 0.08f))
+                                .fillMaxWidth(0.7f)
+                                .height(10.dp)
+                                .clip(RoundedCornerShape(5.dp))
+                                .background(Color.White.copy(alpha = 0.1f))
                         )
                     }
+
+                    // Time placeholder
+                    Box(
+                        modifier = Modifier
+                            .width(32.dp)
+                            .height(10.dp)
+                            .clip(RoundedCornerShape(5.dp))
+                            .background(Color.White.copy(alpha = 0.1f))
+                    )
                 }
             }
         }
 
-        Spacer(Modifier.height(8.dp))
+        Spacer(Modifier.height(10.dp))
 
-        // Instruction text
+        // Instruction text with correct icon
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             Text(
-                text = "Tap the",
+                text = "Tap",
                 style = MaterialTheme.typography.labelSmall,
                 color = Color.White.copy(alpha = 0.5f)
             )
             Icon(
-                imageVector = Icons.Filled.Phone,
+                imageVector = Icons.Outlined.Headset,
                 contentDescription = null,
-                modifier = Modifier.size(14.dp),
+                modifier = Modifier.size(16.dp),
                 tint = accentColor
             )
             Text(
-                text = "icon to start practicing!",
+                text = "to practice conversations with AI",
                 style = MaterialTheme.typography.labelSmall,
                 color = Color.White.copy(alpha = 0.5f)
             )

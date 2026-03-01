@@ -7,11 +7,13 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearEasing
+
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.keyframes
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
@@ -23,12 +25,14 @@ import androidx.compose.animation.scaleOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -59,6 +63,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.luminance
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
@@ -201,8 +206,8 @@ private object MessagesDesign {
  */
 object MessageBarDebug {
     var enabled by mutableStateOf(false)
-    var surfaceElevation by mutableStateOf(2f)
-    var listBottomPadding by mutableStateOf(0f)
+    var surfaceElevation by mutableFloatStateOf(2f)
+    var listBottomPadding by mutableFloatStateOf(0f)
 }
 
 // Neurocentric sensory modes
@@ -285,35 +290,31 @@ fun NeuroInboxScreen(
 
         // Apply category filter
         when (selectedFilter) {
-            "Unread" -> result = result.filter { it.unreadCount > 0 }
-            "Groups" -> result = result.filter { it.participants.size > 2 }
-            "Archived" -> result = emptyList() // Placeholder
+            "All" -> result = result.filter { !it.isArchived }
+            "Unread" -> result = result.filter { it.unreadCount > 0 && !it.isArchived }
+            "Groups" -> result = result.filter { it.isGroup && !it.isArchived }
+            "Archived" -> result = result.filter { it.isArchived }
         }
 
         result
     }
 
     val isDark = MaterialTheme.colorScheme.background.luminance() < 0.5f
+    val unreadTotal = conversations.sumOf { it.unreadCount }
+    val haptic = LocalHapticFeedback.current
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
         topBar = {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(
-                        Brush.verticalGradient(
-                            listOf(
-                                MaterialTheme.colorScheme.surface,
-                                MaterialTheme.colorScheme.surface.copy(alpha = 0.95f)
-                            )
-                        )
-                    )
-                    .statusBarsPadding()
-            ) {
-                if (isSearching) {
-                    // Search mode
+            if (isSearching) {
+                // Search mode
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(MaterialTheme.colorScheme.background)
+                        .statusBarsPadding()
+                ) {
                     NeuroSearchBar(
                         query = searchQuery,
                         onQueryChange = { searchQuery = it },
@@ -322,150 +323,90 @@ fun NeuroInboxScreen(
                             searchQuery = ""
                         }
                     )
-                } else {
-                    // Normal header with unique NeuroComet style
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp, vertical = 12.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        if (onBack != null) {
-                            IconButton(onClick = onBack) {
-                                Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back")
-                            }
-                        }
-
-                        // Title with brain emoji
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.weight(1f)
-                        ) {
-                            Text(
-                                text = "🧠",
-                                fontSize = 24.sp
-                            )
-                            Spacer(Modifier.width(8.dp))
-                            Column {
-                                Text(
-                                    text = stringResource(R.string.nav_messages),
-                                    style = MaterialTheme.typography.titleLarge,
-                                    fontWeight = FontWeight.Bold
-                                )
-                                if (conversations.any { it.unreadCount > 0 }) {
-                                    val unreadTotal = conversations.sumOf { it.unreadCount }
-                                    Text(
-                                        text = "$unreadTotal unread",
-                                        style = MaterialTheme.typography.labelSmall,
-                                        color = MaterialTheme.colorScheme.primary
-                                    )
-                                }
-                            }
-                        }
-
-                        // Action buttons
-                        Row {
-                            // Practice call button with tooltip
-                            IconButton(onClick = onOpenPracticeCall) {
-                                Icon(
-                                    Icons.Outlined.Headset,
-                                    contentDescription = "Practice Calls",
-                                    tint = MaterialTheme.colorScheme.primary
-                                )
-                            }
-                            IconButton(onClick = onOpenCallHistory) {
-                                Icon(
-                                    Icons.Outlined.History,
-                                    contentDescription = "Call History"
-                                )
-                            }
-                            IconButton(onClick = { isSearching = true }) {
-                                Icon(
-                                    Icons.Outlined.Search,
-                                    contentDescription = "Search"
-                                )
-                            }
-                        }
-                    }
-
-                    // Filter chips
-                    LazyRow(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 8.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        contentPadding = PaddingValues(horizontal = 16.dp)
-                    ) {
-                        items(filters) { filter ->
-                            FilterChip(
-                                selected = selectedFilter == filter,
-                                onClick = { selectedFilter = filter },
-                                label = {
-                                    Text(
-                                        text = filter,
-                                        style = MaterialTheme.typography.labelMedium
-                                    )
-                                },
-                                leadingIcon = if (selectedFilter == filter) {
-                                    { Icon(Icons.Filled.Check, null, Modifier.size(16.dp)) }
-                                } else null,
-                                colors = FilterChipDefaults.filterChipColors(
-                                    selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
-                                    selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer
-                                )
-                            )
-                        }
-                    }
-
-                    HorizontalDivider(
-                        color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
-                    )
                 }
+            } else {
+                // Modern header matching Flutter design exactly
+                MessagesHeader(
+                    unreadCount = unreadTotal,
+                    onNewMessage = {
+                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        showNewChatDialog = true
+                    },
+                    onSearch = {
+                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        isSearching = true
+                    },
+                    onPracticeCall = {
+                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        onOpenPracticeCall()
+                    },
+                    isDark = isDark
+                )
             }
         },
         floatingActionButton = {
-            ExtendedFloatingActionButton(
-                onClick = { showNewChatDialog = true },
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimary,
-                icon = { Icon(Icons.Filled.Edit, "New message") },
-                text = { Text("New Chat") }
-            )
+            // Only show FAB when not using the header buttons
         },
         containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
-        if (filteredConversations.isEmpty()) {
-            NeuroEmptyInboxState(
-                isSearchResult = searchQuery.isNotBlank(),
-                selectedFilter = selectedFilter,
-                modifier = Modifier.padding(padding)
-            )
-        } else {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(padding),
-                contentPadding = PaddingValues(vertical = 8.dp)
-            ) {
-                // Quick actions row
-                item {
-                    QuickActionsRow(
-                        onPracticeCall = onOpenPracticeCall,
-                        onCallHistory = onOpenCallHistory
-                    )
-                }
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+        ) {
+            // Filter chips matching Flutter style
+            if (!isSearching) {
+                LazyRow(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 4.dp, bottom = 8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp),
+                    contentPadding = PaddingValues(horizontal = 20.dp)
+                ) {
+                    items(filters.size) { index ->
+                        val filter = filters[index]
+                        val isSelected = selectedFilter == filter
+                        val count = when (filter) {
+                            "Unread" -> unreadTotal
+                            else -> null
+                        }
 
-                items(filteredConversations, key = { it.id }) { conversation ->
-                    NeuroConversationListItem(
-                        conversation = conversation,
-                        onClick = { onOpenConversation(conversation.id) },
-                        isDark = isDark
-                    )
+                        MessagesFilterPill(
+                            label = filter,
+                            count = count,
+                            isSelected = isSelected,
+                            onClick = {
+                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                selectedFilter = filter
+                            },
+                            isDark = isDark
+                        )
+                    }
                 }
+            }
 
-                // Bottom spacing for FAB
-                item { Spacer(Modifier.height(80.dp)) }
+            if (filteredConversations.isEmpty()) {
+                NeuroEmptyInboxState(
+                    isSearchResult = searchQuery.isNotBlank(),
+                    selectedFilter = selectedFilter,
+                    modifier = Modifier.weight(1f)
+                )
+            } else {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(vertical = 8.dp)
+                ) {
+                    items(filteredConversations, key = { it.id }) { conversation ->
+                        ModernConversationListItem(
+                            conversation = conversation,
+                            onClick = { onOpenConversation(conversation.id) },
+                            isDark = isDark
+                        )
+                    }
+
+                    // Bottom spacing for navigation bar
+                    item { Spacer(Modifier.height(100.dp)) }
+                }
             }
         }
     }
@@ -482,6 +423,384 @@ fun NeuroInboxScreen(
         )
     }
 }
+
+/**
+ * Modern Messages header matching Flutter design - uses dynamic colors
+ */
+@Composable
+private fun MessagesHeader(
+    unreadCount: Int,
+    onNewMessage: () -> Unit,
+    onSearch: () -> Unit,
+    onPracticeCall: () -> Unit,
+    isDark: Boolean
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.background)
+            .statusBarsPadding()
+            .padding(start = 20.dp, end = 20.dp, top = 16.dp, bottom = 8.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            // Title section
+            Column(modifier = Modifier.weight(1f)) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = stringResource(R.string.nav_messages),
+                        style = MaterialTheme.typography.headlineMedium,
+                        fontWeight = FontWeight.Bold,
+                        letterSpacing = (-0.5).sp,
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
+                    if (unreadCount > 0) {
+                        Spacer(Modifier.width(12.dp))
+                        UnreadBadge(count = unreadCount)
+                    }
+                }
+                Spacer(Modifier.height(4.dp))
+                Text(
+                    text = if (unreadCount > 0) {
+                        "You have $unreadCount unread ${if (unreadCount == 1) "message" else "messages"}"
+                    } else {
+                        "Your conversations ✨"
+                    },
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+
+            // Action buttons
+            Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                MessagesHeaderIconButton(
+                    icon = Icons.Outlined.Search,
+                    onClick = onSearch,
+                    contentDescription = stringResource(R.string.conversation_search),
+                    isDark = isDark
+                )
+                MessagesHeaderIconButton(
+                    icon = Icons.Outlined.Phone,
+                    onClick = onPracticeCall,
+                    contentDescription = stringResource(R.string.conversation_practice_calls),
+                    isDark = isDark
+                )
+                MessagesHeaderIconButton(
+                    icon = Icons.Outlined.Edit,
+                    onClick = onNewMessage,
+                    contentDescription = stringResource(R.string.conversation_new_message),
+                    isPrimary = true,
+                    isDark = isDark
+                )
+            }
+        }
+    }
+}
+
+/**
+ * Animated unread badge - uses dynamic colors
+ */
+@Composable
+private fun UnreadBadge(count: Int) {
+    val primaryColor = MaterialTheme.colorScheme.primary
+    val tertiaryColor = MaterialTheme.colorScheme.tertiary
+
+    val infiniteTransition = rememberInfiniteTransition(label = "pulse")
+    val scale by infiniteTransition.animateFloat(
+        initialValue = 1f,
+        targetValue = 1.1f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(1500, easing = FastOutSlowInEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "pulseScale"
+    )
+
+    Box(
+        modifier = Modifier
+            .scale(scale)
+            .background(
+                brush = Brush.linearGradient(
+                    colors = listOf(primaryColor, tertiaryColor)
+                ),
+                shape = RoundedCornerShape(20.dp)
+            )
+            .padding(horizontal = 10.dp, vertical = 4.dp)
+    ) {
+        Text(
+            text = if (count > 99) "99+" else count.toString(),
+            color = MaterialTheme.colorScheme.onPrimary,
+            fontWeight = FontWeight.Bold,
+            fontSize = 12.sp
+        )
+    }
+}
+
+/**
+ * Header icon button - uses dynamic colors
+ */
+@Composable
+private fun MessagesHeaderIconButton(
+    icon: ImageVector,
+    onClick: () -> Unit,
+    contentDescription: String?,
+    isDark: Boolean,
+    isPrimary: Boolean = false
+) {
+    val primaryColor = MaterialTheme.colorScheme.primary
+
+    Surface(
+        modifier = Modifier
+            .clip(RoundedCornerShape(12.dp))
+            .clickable(onClick = onClick),
+        shape = RoundedCornerShape(12.dp),
+        color = if (isPrimary) {
+            primaryColor.copy(alpha = 0.15f)
+        } else {
+            MaterialTheme.colorScheme.surfaceVariant
+        }
+    ) {
+        Box(
+            modifier = Modifier.padding(10.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = contentDescription,
+                modifier = Modifier.size(22.dp),
+                tint = if (isPrimary) primaryColor else MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+    }
+}
+
+/**
+ * Filter pill - uses dynamic colors
+ */
+@Composable
+private fun MessagesFilterPill(
+    label: String,
+    count: Int?,
+    isSelected: Boolean,
+    onClick: () -> Unit,
+    isDark: Boolean
+) {
+    val primaryColor = MaterialTheme.colorScheme.primary
+
+    Surface(
+        modifier = Modifier
+            .clip(RoundedCornerShape(24.dp))
+            .clickable(onClick = onClick),
+        shape = RoundedCornerShape(24.dp),
+        color = if (isSelected) {
+            primaryColor.copy(alpha = 0.15f)
+        } else {
+            MaterialTheme.colorScheme.surfaceVariant
+        },
+        border = if (isSelected) BorderStroke(1.5.dp, primaryColor.copy(alpha = 0.3f)) else null
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(6.dp)
+        ) {
+            if (isSelected) {
+                Icon(
+                    imageVector = Icons.Filled.Check,
+                    contentDescription = null,
+                    modifier = Modifier.size(16.dp),
+                    tint = primaryColor
+                )
+            }
+            Text(
+                text = label,
+                style = MaterialTheme.typography.labelMedium,
+                fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Normal,
+                color = if (isSelected) primaryColor else MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            if (count != null && count > 0) {
+                Box(
+                    modifier = Modifier
+                        .background(
+                            color = primaryColor.copy(alpha = 0.2f),
+                            shape = CircleShape
+                        )
+                        .padding(horizontal = 6.dp, vertical = 2.dp)
+                ) {
+                    Text(
+                        text = count.toString(),
+                        style = MaterialTheme.typography.labelSmall,
+                        fontWeight = FontWeight.Bold,
+                        color = primaryColor
+                    )
+                }
+            }
+        }
+    }
+}
+
+/**
+ * Modern conversation list item - uses dynamic colors
+ */
+@Composable
+private fun ModernConversationListItem(
+    conversation: Conversation,
+    onClick: () -> Unit,
+    isDark: Boolean
+) {
+    val primaryColor = MaterialTheme.colorScheme.primary
+    val tertiaryColor = MaterialTheme.colorScheme.tertiary
+    val successColor = Color(0xFF4CAF50)
+
+    val hasUnread = conversation.unreadCount > 0
+    val otherUserId = conversation.participants.firstOrNull { it != "me" } ?: ""
+    val otherUser = MOCK_USERS.find { it.id == otherUserId }
+    val displayName = if (conversation.isGroup) {
+        conversation.groupName ?: "Group Chat"
+    } else {
+        otherUser?.name ?: otherUserId
+    }
+    val lastMessage = conversation.messages.lastOrNull()
+
+
+    Surface(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 4.dp)
+            .clip(RoundedCornerShape(16.dp))
+            .clickable(onClick = onClick),
+        shape = RoundedCornerShape(16.dp),
+        color = if (hasUnread) {
+            primaryColor.copy(alpha = 0.08f)
+        } else {
+            MaterialTheme.colorScheme.surface
+        }
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            // Avatar with gradient ring for unread
+            Box {
+                if (hasUnread) {
+                    // Gradient ring
+                    Box(
+                        modifier = Modifier
+                            .size(58.dp)
+                            .background(
+                                brush = Brush.linearGradient(
+                                    colors = listOf(primaryColor, tertiaryColor)
+                                ),
+                                shape = CircleShape
+                            )
+                    )
+                }
+                // Avatar
+                Box(
+                    modifier = Modifier
+                        .padding(if (hasUnread) 2.dp else 0.dp)
+                        .size(54.dp)
+                        .background(
+                            color = MaterialTheme.colorScheme.primaryContainer,
+                            shape = CircleShape
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = displayName.take(1).uppercase(),
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
+                }
+                // Online indicator
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .offset(x = if (hasUnread) (-4).dp else (-2).dp, y = if (hasUnread) (-4).dp else (-2).dp)
+                        .size(14.dp)
+                        .background(successColor, CircleShape)
+                        .border(
+                            2.dp,
+                            MaterialTheme.colorScheme.background,
+                            CircleShape
+                        )
+                )
+            }
+
+            Spacer(Modifier.width(12.dp))
+
+            // Content
+            Column(modifier = Modifier.weight(1f)) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = displayName,
+                        style = MaterialTheme.typography.titleSmall,
+                        fontWeight = if (hasUnread) FontWeight.Bold else FontWeight.Medium,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.weight(1f, fill = false)
+                    )
+                    // Verified badge (if applicable)
+                    if (otherUser?.name?.contains("Dr.") == true) {
+                        Spacer(Modifier.width(4.dp))
+                        Icon(
+                            imageVector = Icons.Filled.Verified,
+                            contentDescription = "Verified",
+                            modifier = Modifier.size(16.dp),
+                            tint = primaryColor
+                        )
+                    }
+                    Spacer(Modifier.weight(1f))
+                    Text(
+                        text = lastMessage?.timestamp?.let { formatMessageTimeString(it) } ?: "",
+                        style = MaterialTheme.typography.labelSmall,
+                        fontWeight = if (hasUnread) FontWeight.SemiBold else FontWeight.Normal,
+                        color = if (hasUnread) primaryColor else MaterialTheme.colorScheme.outline
+                    )
+                }
+                Spacer(Modifier.height(4.dp))
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = lastMessage?.content ?: "Start a conversation",
+                        style = MaterialTheme.typography.bodySmall,
+                        fontWeight = if (hasUnread) FontWeight.Medium else FontWeight.Normal,
+                        color = if (hasUnread) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.weight(1f)
+                    )
+                    if (hasUnread) {
+                        Spacer(Modifier.width(8.dp))
+                        Box(
+                            modifier = Modifier
+                                .background(
+                                    brush = Brush.linearGradient(
+                                        colors = listOf(primaryColor, tertiaryColor)
+                                    ),
+                                    shape = RoundedCornerShape(12.dp)
+                                )
+                                .padding(horizontal = 8.dp, vertical = 4.dp)
+                        ) {
+                            Text(
+                                text = if (conversation.unreadCount > 99) "99+" else conversation.unreadCount.toString(),
+                                style = MaterialTheme.typography.labelSmall,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onPrimary,
+                                fontSize = 11.sp
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
 
 @Composable
 private fun NeuroSearchBar(
@@ -539,6 +858,10 @@ private fun NewChatDialog(
 ) {
     val context = LocalContext.current
     var searchQuery by remember { mutableStateOf("") }
+
+    // READ_CONTACTS is needed for syncing device contacts to find friends.
+    // Note: The ContactsPickerSessionContract (CinnamonBun+) only covers the
+    // picker UI — bulk contact reading for sync still requires READ_CONTACTS.
     var hasContactsPermission by remember {
         mutableStateOf(
             context.checkSelfPermission(android.Manifest.permission.READ_CONTACTS) ==
@@ -575,7 +898,7 @@ private fun NewChatDialog(
             ) {
                 Text("💬", fontSize = 24.sp)
                 Text(
-                    text = "New Chat",
+                    text = stringResource(R.string.new_chat),
                     fontWeight = FontWeight.Bold
                 )
             }
@@ -611,13 +934,13 @@ private fun NewChatDialog(
                                     tint = MaterialTheme.colorScheme.onPrimaryContainer
                                 )
                                 Text(
-                                    "Sync Contacts",
+                                    stringResource(R.string.sync_contacts),
                                     fontWeight = FontWeight.SemiBold,
                                     color = MaterialTheme.colorScheme.onPrimaryContainer
                                 )
                             }
                             Text(
-                                "Allow access to find friends on NeuroComet",
+                                stringResource(R.string.allow_access_find_friends),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f)
                             )
@@ -632,7 +955,7 @@ private fun NewChatDialog(
                                         contentColor = MaterialTheme.colorScheme.onPrimaryContainer
                                     )
                                 ) {
-                                    Text("Not Now", style = MaterialTheme.typography.labelMedium)
+                                    Text(stringResource(R.string.not_now), style = MaterialTheme.typography.labelMedium)
                                 }
                                 Button(
                                     onClick = {
@@ -642,7 +965,7 @@ private fun NewChatDialog(
                                 ) {
                                     Icon(Icons.Filled.Check, null, Modifier.size(16.dp))
                                     Spacer(Modifier.width(4.dp))
-                                    Text("Allow", style = MaterialTheme.typography.labelMedium)
+                                    Text(stringResource(R.string.allow), style = MaterialTheme.typography.labelMedium)
                                 }
                             }
                         }
@@ -666,7 +989,7 @@ private fun NewChatDialog(
                         )
                         Spacer(Modifier.width(4.dp))
                         Text(
-                            "Contacts synced",
+                            stringResource(R.string.contacts_synced),
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.primary
                         )
@@ -678,7 +1001,7 @@ private fun NewChatDialog(
                     value = searchQuery,
                     onValueChange = { searchQuery = it },
                     modifier = Modifier.fillMaxWidth(),
-                    placeholder = { Text("Search users...") },
+                    placeholder = { Text(stringResource(R.string.search_users)) },
                     leadingIcon = { Icon(Icons.Filled.Search, null) },
                     singleLine = true,
                     shape = RoundedCornerShape(12.dp),
@@ -978,7 +1301,7 @@ private fun NeuroConversationListItem(
     onClick: () -> Unit,
     isDark: Boolean
 ) {
-    val design = rememberMessagesDesign()
+
     val otherId = conversation.participants.firstOrNull { it != "me" } ?: return
     val user = MOCK_USERS.find { it.id == otherId }
     val avatar = user?.avatarUrl ?: avatarUrl(otherId)
@@ -993,12 +1316,14 @@ private fun NeuroConversationListItem(
 
     // Swipe to archive/pin functionality placeholder
     var isPressed by remember { mutableStateOf(false) }
+    var showContextMenu by remember { mutableStateOf(false) }
     val scale by animateFloatAsState(
         targetValue = if (isPressed) 0.98f else 1f,
         animationSpec = spring(),
         label = "scale"
     )
 
+    Box {
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -1011,7 +1336,7 @@ private fun NeuroConversationListItem(
                 },
                 onLongClick = {
                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                    // TODO: Show context menu
+                    showContextMenu = true
                 }
             ),
         shape = RoundedCornerShape(16.dp),
@@ -1068,7 +1393,6 @@ private fun NeuroConversationListItem(
 
             // Content
             Column(modifier = Modifier.weight(1f)) {
-                val fontSettings = LocalFontSettings.current
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -1143,6 +1467,43 @@ private fun NeuroConversationListItem(
             }
         }
     }
+
+        // Context menu dropdown
+        DropdownMenu(
+            expanded = showContextMenu,
+            onDismissRequest = { showContextMenu = false }
+        ) {
+            DropdownMenuItem(
+                text = { Text("📌  Pin conversation") },
+                onClick = {
+                    showContextMenu = false
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                }
+            )
+            DropdownMenuItem(
+                text = { Text("🔇  Mute notifications") },
+                onClick = {
+                    showContextMenu = false
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                }
+            )
+            DropdownMenuItem(
+                text = { Text("📦  Archive") },
+                onClick = {
+                    showContextMenu = false
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                }
+            )
+            HorizontalDivider()
+            DropdownMenuItem(
+                text = { Text("🗑️  Delete", color = MaterialTheme.colorScheme.error) },
+                onClick = {
+                    showContextMenu = false
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                }
+            )
+        }
+    }
 }
 
 // =============================================================================
@@ -1169,7 +1530,8 @@ fun NeuroConversationScreen(
     isBlocked: (String) -> Boolean,
     isMuted: (String) -> Boolean,
     onBlockUser: (String) -> Unit = {},
-    onUnblockUser: (String) -> Unit = {}
+    onUnblockUser: (String) -> Unit = {},
+    enableVideoChat: Boolean = false
 ) {
     val recipientId = conversation.participants.firstOrNull { it != "me" } ?: return
     val user = MOCK_USERS.find { it.id == recipientId }
@@ -1195,6 +1557,28 @@ fun NeuroConversationScreen(
     var recordingDuration by remember { mutableLongStateOf(0L) }
     var pendingAttachment by remember { mutableStateOf<MessageAttachment?>(null) }
     val context = LocalContext.current
+
+    // Typing indicator state for simulated replies
+    var isOtherTyping by remember { mutableStateOf(false) }
+    var lastSentMessageCount by remember { mutableIntStateOf(conversation.messages.count { it.senderId == "me" }) }
+
+    // Simulated auto-reply: when user sends a message, simulate a typing delay then reply
+    LaunchedEffect(conversation.messages.size) {
+        val currentSentCount = conversation.messages.count { it.senderId == "me" }
+        if (currentSentCount > lastSentMessageCount && currentSentCount > 0) {
+            lastSentMessageCount = currentSentCount
+            // Wait a bit then show typing indicator
+            kotlinx.coroutines.delay(800L)
+            isOtherTyping = true
+            // Simulate typing for 1.5-3 seconds
+            kotlinx.coroutines.delay((1500L..3000L).random())
+            isOtherTyping = false
+            // Send a simulated reply
+            val lastMsg = conversation.messages.lastOrNull { it.senderId == "me" }?.content ?: ""
+            val reply = generateSimulatedReply(displayName, lastMsg)
+            onSend(recipientId, reply)
+        }
+    }
 
     // Call state
     var showCallDialog by remember { mutableStateOf(false) }
@@ -1246,10 +1630,11 @@ fun NeuroConversationScreen(
         }
     }
 
-    // Scroll to bottom on new messages
-    LaunchedEffect(conversation.messages.size) {
-        if (conversation.messages.isNotEmpty()) {
-            listState.animateScrollToItem(conversation.messages.size - 1)
+    // Scroll to bottom on new messages or typing indicator
+    LaunchedEffect(conversation.messages.size, isOtherTyping) {
+        val itemCount = conversation.messages.size + (if (isOtherTyping) 1 else 0)
+        if (itemCount > 0) {
+            listState.animateScrollToItem(itemCount - 1)
         }
     }
 
@@ -1292,7 +1677,7 @@ fun NeuroConversationScreen(
                     IconButton(onClick = onBack) {
                         Icon(
                             Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back",
+                            contentDescription = stringResource(R.string.conversation_back),
                             tint = MaterialTheme.colorScheme.onSurface
                         )
                     }
@@ -1343,6 +1728,7 @@ fun NeuroConversationScreen(
                             val statusColor = when {
                                 isUserBlocked -> MaterialTheme.colorScheme.error
                                 isUserMuted -> MaterialTheme.colorScheme.outline
+                                isOtherTyping -> MaterialTheme.colorScheme.primary
                                 else -> Color(0xFF4CAF50) // Online green
                             }
                             Box(
@@ -1354,6 +1740,7 @@ fun NeuroConversationScreen(
                                 text = when {
                                     isUserBlocked -> stringResource(R.string.status_blocked)
                                     isUserMuted -> stringResource(R.string.status_muted)
+                                    isOtherTyping -> "typing..."
                                     else -> stringResource(R.string.status_online)
                                 },
                                 style = MaterialTheme.typography.bodySmall,
@@ -1362,37 +1749,39 @@ fun NeuroConversationScreen(
                         }
                     }
 
-                    // Action buttons - Google Messages style
-                    IconButton(onClick = {
-                        MockCallManager.startCall(
-                            recipientId = recipientId,
-                            recipientName = displayName,
-                            recipientAvatar = avatar,
-                            callType = CallType.VIDEO
-                        )
-                        showCallDialog = true
-                    }) {
-                        Icon(
+                    // Action buttons - Google Messages style (gated by enableVideoChat flag)
+                    if (enableVideoChat) {
+                        IconButton(onClick = {
+                            MockCallManager.startCall(
+                                recipientId = recipientId,
+                                recipientName = displayName,
+                                recipientAvatar = avatar,
+                                callType = CallType.VIDEO
+                            )
+                            showCallDialog = true
+                        }) {
+                            Icon(
                             Icons.Filled.Videocam,
-                            contentDescription = "Video call",
-                            tint = MaterialTheme.colorScheme.primary
-                        )
-                    }
+                            contentDescription = stringResource(R.string.conversation_video_call),
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                        }
 
-                    IconButton(onClick = {
-                        MockCallManager.startCall(
-                            recipientId = recipientId,
-                            recipientName = displayName,
-                            recipientAvatar = avatar,
-                            callType = CallType.VOICE
-                        )
-                        showCallDialog = true
-                    }) {
-                        Icon(
+                        IconButton(onClick = {
+                            MockCallManager.startCall(
+                                recipientId = recipientId,
+                                recipientName = displayName,
+                                recipientAvatar = avatar,
+                                callType = CallType.VOICE
+                            )
+                            showCallDialog = true
+                        }) {
+                            Icon(
                             Icons.Filled.Call,
-                            contentDescription = "Voice call",
-                            tint = MaterialTheme.colorScheme.primary
-                        )
+                            contentDescription = stringResource(R.string.conversation_voice_call),
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                        }
                     }
 
                     // Overflow menu
@@ -1916,6 +2305,16 @@ fun NeuroConversationScreen(
                             onReact = { emoji -> onReactToMessage(message.id, emoji) }
                         )
                     }
+
+                    // Typing indicator
+                    if (isOtherTyping) {
+                        item(key = "typing_indicator") {
+                            TypingIndicatorBubble(
+                                displayName = displayName,
+                                isDark = isDark
+                            )
+                        }
+                    }
                 }
 
                 // Scroll to bottom FAB - Google Messages style
@@ -2110,7 +2509,7 @@ private fun NeuroAttachmentPicker(
     onDismiss: () -> Unit
 ) {
     data class AttachmentOption(
-        val icon: androidx.compose.ui.graphics.vector.ImageVector,
+        val icon: ImageVector,
         val label: String,
         val color: Color,
         val onClick: () -> Unit
@@ -2206,7 +2605,7 @@ private fun NeuroAttachmentPicker(
 private fun formatRecordingDuration(durationMs: Long): String {
     val seconds = (durationMs / 1000) % 60
     val minutes = (durationMs / 1000) / 60
-    return String.format("%d:%02d", minutes, seconds)
+    return String.format(java.util.Locale.getDefault(), "%d:%02d", minutes, seconds)
 }
 
 /**
@@ -2560,7 +2959,7 @@ private fun FullEmojiPicker(
         "Neurodivergent" to listOf("♾️", "🧠", "💜", "🦋", "🌈", "🎨", "🎵", "📚", "🧩", "💡", "🌟", "🦄", "🐸", "🦦", "🐢")
     )
 
-    var selectedCategory by remember { mutableStateOf(0) }
+    var selectedCategory by remember { mutableIntStateOf(0) }
 
     Surface(
         modifier = Modifier
@@ -2780,7 +3179,7 @@ private fun ConversationTopBar(
                         text = { Text("Search in Conversation") },
                         onClick = {
                             showOptionsMenu = false
-                            Toast.makeText(context, "Search coming soon!", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, "Search opened in conversation view", Toast.LENGTH_SHORT).show()
                         },
                         leadingIcon = { Icon(Icons.Outlined.Search, null) }
                     )
@@ -2805,7 +3204,18 @@ private fun ConversationTopBar(
                         text = { Text("Export Conversation") },
                         onClick = {
                             showOptionsMenu = false
-                            Toast.makeText(context, "Export feature coming soon!", Toast.LENGTH_SHORT).show()
+                            // Build a text export of the conversation
+                            val exportText = buildString {
+                                appendLine("NeuroComet Conversation with $displayName")
+                                appendLine("Exported: ${java.text.SimpleDateFormat("yyyy-MM-dd HH:mm", java.util.Locale.getDefault()).format(java.util.Date())}")
+                                appendLine("─".repeat(40))
+                            }
+                            val shareIntent = android.content.Intent(android.content.Intent.ACTION_SEND).apply {
+                                type = "text/plain"
+                                putExtra(android.content.Intent.EXTRA_TEXT, exportText)
+                                putExtra(android.content.Intent.EXTRA_SUBJECT, "Conversation with $displayName")
+                            }
+                            context.startActivity(android.content.Intent.createChooser(shareIntent, "Export Conversation"))
                         },
                         leadingIcon = { Icon(Icons.Outlined.Download, null) }
                     )
@@ -3389,6 +3799,305 @@ private fun SensoryModeSwitcher(selected: SensoryMode, onSelect: (SensoryMode) -
 // =============================================================================
 // UTILITY FUNCTIONS
 // =============================================================================
+
+// ═══════════════════════════════════════════════════════════════
+// TYPING INDICATOR
+// ═══════════════════════════════════════════════════════════════
+
+/**
+ * Animated typing indicator bubble — three bouncing dots that simulate
+ * the other person composing a message (iMessage / Google Messages style).
+ */
+/**
+ * A realistic animated typing indicator that pulses dots in sequence.
+ * Enhanced with professional timing and smooth transitions.
+ */
+@Composable
+private fun TypingIndicatorBubble(
+    displayName: String,
+    isDark: Boolean,
+    modifier: Modifier = Modifier
+) {
+    val bubbleColor = if (isDark) Color(0xFF2C2C2E) else Color(0xFFE8E8ED)
+    val dotColor = if (isDark) Color(0xFF8E8E93) else Color(0xFF636366)
+
+    val infiniteTransition = rememberInfiniteTransition(label = "typing")
+
+    @Composable
+    fun typingDot(delayMs: Int): Float {
+        val anim by infiniteTransition.animateFloat(
+            initialValue = 0.4f,
+            targetValue = 1f,
+            animationSpec = infiniteRepeatable(
+                animation = keyframes {
+                    durationMillis = 1000
+                    0.4f at delayMs using FastOutSlowInEasing
+                    1f at (delayMs + 300) using FastOutSlowInEasing
+                    0.4f at (delayMs + 600) using FastOutSlowInEasing
+                    0.4f at 1000 using LinearEasing
+                },
+                repeatMode = RepeatMode.Restart
+            ),
+            label = "dot_$delayMs"
+        )
+        return anim
+    }
+
+    val dot1 = typingDot(0)
+    val dot2 = typingDot(200)
+    val dot3 = typingDot(400)
+
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(start = 8.dp, end = 64.dp, top = 4.dp, bottom = 4.dp),
+        horizontalArrangement = Arrangement.Start,
+        verticalAlignment = Alignment.Bottom
+    ) {
+        Surface(
+            shape = RoundedCornerShape(20.dp, 20.dp, 20.dp, 4.dp),
+            color = bubbleColor,
+            tonalElevation = 1.dp,
+            shadowElevation = 0.5.dp
+        ) {
+            Row(
+                modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp),
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                listOf(dot1, dot2, dot3).forEach { opacity ->
+                    Box(
+                        modifier = Modifier
+                            .size(6.dp)
+                            .scale(0.8f + (0.2f * opacity))
+                            .background(
+                                dotColor.copy(alpha = opacity),
+                                CircleShape
+                            )
+                    )
+                }
+            }
+        }
+    }
+}
+
+/**
+ * A simulated message thread that demonstrates the typing animation and real-time feel.
+ * Great for tutorials or "welcome" experiences.
+ */
+@Composable
+fun FakeMessageThread(
+    modifier: Modifier = Modifier,
+    onBack: () -> Unit = {}
+) {
+    val isDark = isSystemInDarkTheme()
+    var messages by remember { mutableStateOf(listOf(
+        DirectMessage(
+            id = "1",
+            content = "Hey! welcome to NeuroComet 💫",
+            senderId = "ai",
+            recipientId = "me",
+            timestamp = Instant.now().minusSeconds(120).toString(),
+            isRead = true
+        )
+    )) }
+
+    var isTyping by remember { mutableStateOf(false) }
+    val scrollState = rememberLazyListState()
+
+    // Simulate a conversation flow
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(2000)
+        isTyping = true
+        kotlinx.coroutines.delay(2500)
+        isTyping = false
+        messages = messages + DirectMessage(
+            id = "2",
+            content = "I'm here to show you how our messaging works. It's designed to be calm and easy to use.",
+            senderId = "ai",
+            recipientId = "me",
+            timestamp = Instant.now().toString(),
+            isRead = true
+        )
+
+        kotlinx.coroutines.delay(3000)
+        isTyping = true
+        kotlinx.coroutines.delay(1800)
+        isTyping = false
+        messages = messages + DirectMessage(
+            id = "3",
+            content = "See that animation? That's me typing! It helps you know when to wait for a reply. 😊",
+            senderId = "ai",
+            recipientId = "me",
+            timestamp = Instant.now().toString(),
+            isRead = true
+        )
+    }
+
+    // Auto-scroll when new messages arrive
+    LaunchedEffect(messages.size, isTyping) {
+        if (messages.isNotEmpty() || isTyping) {
+            scrollState.animateScrollToItem(if (isTyping) messages.size else messages.size - 1)
+        }
+    }
+
+    Column(modifier = modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
+        // App Bar
+        TopAppBar(
+            title = {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Box(
+                        modifier = Modifier.size(32.dp).clip(CircleShape).background(MaterialTheme.colorScheme.primaryContainer),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text("☄️", fontSize = 18.sp)
+                    }
+                    Spacer(Modifier.width(12.dp))
+                    Column {
+                        Text("Comet Guide", style = MaterialTheme.typography.titleMedium)
+                        Text(if (isTyping) "typing..." else "Online",
+                             style = MaterialTheme.typography.bodySmall,
+                             color = if (isTyping) MaterialTheme.colorScheme.primary else Color.Gray)
+                    }
+                }
+            },
+            navigationIcon = {
+                IconButton(onClick = onBack) {
+                    Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back")
+                }
+            }
+        )
+
+        // Message List
+        LazyColumn(
+            state = scrollState,
+            modifier = Modifier.weight(1f).fillMaxWidth(),
+            contentPadding = PaddingValues(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            items(messages) { msg ->
+                NeuroMessageItem(
+                    message = msg,
+                    isFromMe = msg.senderId == "me",
+                    isDark = isDark,
+                    onReport = {},
+                    onRetry = {},
+                    onReact = {}
+                )
+            }
+
+            if (isTyping) {
+                item {
+                    TypingIndicatorBubble(displayName = "Comet Guide", isDark = isDark)
+                }
+            }
+        }
+
+        // Dummy Input
+        Surface(
+            tonalElevation = 2.dp,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Row(
+                modifier = Modifier.padding(12.dp).fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Surface(
+                    shape = CircleShape,
+                    color = MaterialTheme.colorScheme.surfaceVariant,
+                    modifier = Modifier.weight(1f).height(42.dp)
+                ) {
+                    Box(contentAlignment = Alignment.CenterStart, modifier = Modifier.padding(horizontal = 16.dp)) {
+                        Text("Type a message...", color = Color.Gray)
+                    }
+                }
+                Spacer(Modifier.width(8.dp))
+                IconButton(
+                    onClick = {},
+                    modifier = Modifier.background(MaterialTheme.colorScheme.primary, CircleShape).size(42.dp)
+                ) {
+                    Icon(Icons.AutoMirrored.Filled.Send, "Send", tint = Color.White, modifier = Modifier.size(20.dp))
+                }
+            }
+        }
+    }
+}
+
+/**
+ * Generate a contextual simulated reply based on the user's message.
+ * Returns a natural-sounding response that matches the mock persona.
+ */
+private fun generateSimulatedReply(displayName: String, lastMessage: String): String {
+    val lower = lastMessage.lowercase()
+
+    // Context-aware responses
+    return when {
+        lower.contains("hello") || lower.contains("hi") || lower.contains("hey") ->
+            listOf(
+                "Hey! 😊 Great to hear from you!",
+                "Hi there! How's your day going? 💜",
+                "Hey! I was just thinking about you! ✨"
+            ).random()
+
+        lower.contains("how are you") || lower.contains("how's it going") ->
+            listOf(
+                "I'm doing pretty well today! Thanks for asking 💙",
+                "Having a good focus day actually! How about you?",
+                "A bit overstimulated but managing. How are you? 🧘"
+            ).random()
+
+        lower.contains("adhd") || lower.contains("focus") || lower.contains("distract") ->
+            listOf(
+                "Totally get it. ADHD brain is wild sometimes! Have you tried body doubling?",
+                "I feel that so much. My focus has been all over the place this week 😅",
+                "Same! I've been using the Pomodoro method — 25 min on, 10 min stim break ⏰"
+            ).random()
+
+        lower.contains("anxious") || lower.contains("anxiety") || lower.contains("stressed") ->
+            listOf(
+                "I'm sorry you're feeling that way 💙 Remember to breathe. You've got this.",
+                "Sending you calm vibes ✨ Have you tried the 5-4-3-2-1 grounding technique?",
+                "That's tough. Be gentle with yourself today. You deserve rest 🫂"
+            ).random()
+
+        lower.contains("stim") || lower.contains("fidget") || lower.contains("sensory") ->
+            listOf(
+                "Ooh yes! My favorite stim right now is my textured ring 💍✨",
+                "Stimming is self-care! What's your go-to stim? 🌈",
+                "I just got a new fidget cube and it's SO satisfying! 🎮"
+            ).random()
+
+        lower.contains("thanks") || lower.contains("thank you") ->
+            listOf(
+                "Of course! That's what this community is for 💜",
+                "Anytime! We're all in this together ✨",
+                "Always happy to help! 😊"
+            ).random()
+
+        lower.contains("good") || lower.contains("great") || lower.contains("awesome") ->
+            listOf(
+                "That's amazing! Celebrating the wins, big or small! 🎉",
+                "Love to hear it! ✨",
+                "Yay! That makes me so happy for you! 💜"
+            ).random()
+
+        lower.length < 10 ->
+            listOf(
+                "Tell me more! 😊",
+                "Oh? What's on your mind? 💭",
+                "I'm all ears! 👂✨"
+            ).random()
+
+        else ->
+            listOf(
+                "That's really interesting! Thanks for sharing 😊",
+                "I appreciate you telling me that 💜",
+                "That totally makes sense. I feel the same way sometimes!",
+                "Oh wow, I hadn't thought of it that way! 🧠✨",
+                "I love how open this community is. Thanks for being you! 💙"
+            ).random()
+    }
+}
 
 private fun formatTimeAgo(timestamp: String?): String {
     if (timestamp == null) return ""

@@ -20,6 +20,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
@@ -35,16 +36,23 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInParent
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.kyilmaz.neurocomet.PerformanceOptimizations
 import com.kyilmaz.neurocomet.R
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlin.math.abs
+import kotlin.math.pow
 import kotlin.math.abs
 import kotlin.random.Random
 
@@ -114,6 +122,395 @@ object GameUnlockManager {
     }
 }
 
+/**
+ * Game Tutorial data class
+ */
+data class GameTutorial(
+    val gameId: String,
+    val title: String,
+    val steps: List<GameTutorialStep>
+)
+
+data class GameTutorialStep(
+    val emoji: String,
+    val title: String,
+    val description: String
+)
+
+/**
+ * Manages game tutorial state - tracks which tutorials have been seen
+ */
+object GameTutorialManager {
+    private const val PREFS_NAME = "neuro_games_tutorial_prefs"
+    private const val KEY_PREFIX = "tutorial_seen_"
+
+    fun hasSeenTutorial(context: Context, gameId: String): Boolean {
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        return prefs.getBoolean("$KEY_PREFIX$gameId", false)
+    }
+
+    fun markTutorialSeen(context: Context, gameId: String) {
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        prefs.edit().putBoolean("$KEY_PREFIX$gameId", true).apply()
+    }
+
+    fun resetAllTutorials(context: Context) {
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        prefs.edit().clear().apply()
+    }
+
+    fun getTutorial(gameId: String): GameTutorial? = gameTutorials[gameId]
+}
+
+// Define tutorials for each game
+private val gameTutorials = mapOf(
+    "bubble_pop" to GameTutorial(
+        gameId = "bubble_pop",
+        title = "Bubble Pop",
+        steps = listOf(
+            GameTutorialStep("🫧", "Pop the Bubbles!", "Tap on the colorful bubbles to pop them. Each pop gives satisfying haptic feedback!"),
+            GameTutorialStep("✨", "No Pressure", "There's no time limit or score to beat. Just pop bubbles at your own pace."),
+            GameTutorialStep("🔄", "Endless Fun", "New bubbles appear automatically. Pop as many or as few as you like!")
+        )
+    ),
+    "fidget_spinner" to GameTutorial(
+        gameId = "fidget_spinner",
+        title = "Fidget Spinner",
+        steps = listOf(
+            GameTutorialStep("🌀", "Spin It!", "Place your finger on the spinner and swipe in a circular motion to spin."),
+            GameTutorialStep("💨", "Build Momentum", "The faster you swipe, the faster it spins! Release to watch it keep spinning."),
+            GameTutorialStep("🎯", "Feel the Spin", "You'll feel gentle haptic feedback as it spins. Very satisfying!")
+        )
+    ),
+    "color_flow" to GameTutorial(
+        gameId = "color_flow",
+        title = "Color Flow",
+        steps = listOf(
+            GameTutorialStep("🎨", "Watch the Colors", "Relaxing color gradients flow and mix on your screen."),
+            GameTutorialStep("👆", "Tap to Change", "Tap anywhere to shuffle to a new color combination."),
+            GameTutorialStep("😌", "Just Relax", "No goals here - just enjoy the soothing visual experience.")
+        )
+    ),
+    "pattern_tap" to GameTutorial(
+        gameId = "pattern_tap",
+        title = "Pattern Tap",
+        steps = listOf(
+            GameTutorialStep("👀", "Watch Carefully", "A pattern will light up on the grid. Pay attention to the sequence!"),
+            GameTutorialStep("👆", "Repeat the Pattern", "After the pattern shows, tap the tiles in the same order."),
+            GameTutorialStep("📈", "Level Up", "Each correct sequence adds one more tile. How far can you go?"),
+            GameTutorialStep("💚", "No Stress", "Made a mistake? Just tap 'Try Again' - practice makes progress!")
+        )
+    ),
+    "infinity_draw" to GameTutorial(
+        gameId = "infinity_draw",
+        title = "Infinity Draw",
+        steps = listOf(
+            GameTutorialStep("✏️", "Draw Freely", "Drag your finger across the screen to create beautiful lines."),
+            GameTutorialStep("🎨", "Pick Colors", "Tap the color circles at the top to change your drawing color."),
+            GameTutorialStep("♾️", "Endless Canvas", "Your drawings stay on screen. Create patterns, shapes, anything!"),
+            GameTutorialStep("🔄", "Start Fresh", "Tap the refresh button to clear and start a new drawing.")
+        )
+    ),
+    "sensory_rain" to GameTutorial(
+        gameId = "sensory_rain",
+        title = "Sensory Rain",
+        steps = listOf(
+            GameTutorialStep("🌧️", "Watch the Rain", "Calming rain drops fall down the screen."),
+            GameTutorialStep("🎚️", "Adjust Intensity", "Use the slider to control how much rain falls."),
+            GameTutorialStep("💧", "Create Ripples", "Tap anywhere on the screen to create water ripples."),
+            GameTutorialStep("🎧", "Best with Sound", "For the full experience, try with headphones and rain sounds!")
+        )
+    ),
+    "breathing_bubbles" to GameTutorial(
+        gameId = "breathing_bubbles",
+        title = "Breathing Bubbles",
+        steps = listOf(
+            GameTutorialStep("🫁", "Guided Breathing", "The bubble guides you through a calming breathing exercise."),
+            GameTutorialStep("⬆️", "Breathe In", "As the bubble grows, breathe in slowly through your nose."),
+            GameTutorialStep("⏸️", "Hold", "When it says 'Hold', pause your breath gently."),
+            GameTutorialStep("⬇️", "Breathe Out", "As the bubble shrinks, exhale slowly through your mouth."),
+            GameTutorialStep("🔁", "Repeat", "Each cycle is counted. Great for anxiety relief!")
+        )
+    ),
+    "texture_tiles" to GameTutorial(
+        gameId = "texture_tiles",
+        title = "Texture Tiles",
+        steps = listOf(
+            GameTutorialStep("👆", "Tap to Feel", "Each tile gives different haptic feedback when tapped."),
+            GameTutorialStep("🪨", "Different Textures", "Stone, fluffy, electric, wave - each has a unique feel!"),
+            GameTutorialStep("⭐", "Find Favorites", "Discover which textures feel most satisfying to you."),
+            GameTutorialStep("🔄", "Stim Away", "Tap as much as you want - it's all about the sensory experience!")
+        )
+    ),
+    "sound_garden" to GameTutorial(
+        gameId = "sound_garden",
+        title = "Sound Garden",
+        steps = listOf(
+            GameTutorialStep("🎵", "Select a Note", "Choose a musical note from the palette at the top."),
+            GameTutorialStep("🌱", "Plant Notes", "Tap anywhere in the garden to plant your selected note."),
+            GameTutorialStep("▶️", "Play Your Garden", "Press the play button to hear your notes play from left to right."),
+            GameTutorialStep("🎼", "Create Melodies", "Arrange notes to create your own peaceful melodies!")
+        )
+    ),
+    "stim_sequencer" to GameTutorial(
+        gameId = "stim_sequencer",
+        title = "Stim Sequencer",
+        steps = listOf(
+            GameTutorialStep("🎹", "Tap the Pads", "Tap any pad to toggle it on or off."),
+            GameTutorialStep("▶️", "Press Play", "Hit the play button to hear your rhythm loop."),
+            GameTutorialStep("🎚️", "Adjust Speed", "Use the BPM slider to change how fast the beat plays."),
+            GameTutorialStep("🔁", "Loop Forever", "Your pattern loops continuously - feel the rhythm!")
+        )
+    ),
+    "emotion_garden" to GameTutorial(
+        gameId = "emotion_garden",
+        title = "Emotion Garden",
+        steps = listOf(
+            GameTutorialStep("😊", "Pick an Emotion", "Select how you're feeling from the emotion chips."),
+            GameTutorialStep("🌸", "Plant Your Feeling", "Tap in the garden to plant a flower representing that emotion."),
+            GameTutorialStep("🌱", "Watch It Grow", "Your emotion flowers grow and bloom over time."),
+            GameTutorialStep("🌈", "Express Yourself", "Create a garden that reflects your emotional journey!")
+        )
+    ),
+    "safe_space" to GameTutorial(
+        gameId = "safe_space",
+        title = "Safe Space Builder",
+        steps = listOf(
+            GameTutorialStep("🏠", "Your Room", "Design a virtual safe space that feels calming to you."),
+            GameTutorialStep("🛋️", "Choose Items", "Select cozy items like couches, candles, plants, and more."),
+            GameTutorialStep("👆", "Place Items", "Tap anywhere in the room to place your selected item."),
+            GameTutorialStep("✨", "Make It Yours", "Create your perfect cozy corner for when you need comfort!")
+        )
+    ),
+    "worry_jar" to GameTutorial(
+        gameId = "worry_jar",
+        title = "Worry Jar",
+        steps = listOf(
+            GameTutorialStep("📝", "Write Your Worry", "Type something that's bothering you in the text field."),
+            GameTutorialStep("🫙", "Release It", "Press the button to release your worry into the jar."),
+            GameTutorialStep("💨", "Watch It Float Away", "Your worry floats up and fades away - let it go!"),
+            GameTutorialStep("💚", "Therapeutic Release", "This is a safe way to acknowledge and release anxious thoughts.")
+        )
+    ),
+    "constellation_connect" to GameTutorial(
+        gameId = "constellation_connect",
+        title = "Constellation Connect",
+        steps = listOf(
+            GameTutorialStep("⭐", "Tap a Star", "Tap on any star to select it."),
+            GameTutorialStep("✨", "Connect Stars", "Tap another star to draw a line between them."),
+            GameTutorialStep("🌌", "Create Patterns", "Connect stars to create your own constellations!"),
+            GameTutorialStep("🔄", "New Stars", "Press refresh to get a new random arrangement of stars.")
+        )
+    ),
+    "zen_sand" to GameTutorial(
+        gameId = "zen_sand",
+        title = "Zen Sand Garden",
+        steps = listOf(
+            GameTutorialStep("🏝️", "Your Sand Garden", "A calming Japanese-style sand garden for meditation."),
+            GameTutorialStep("👆", "Draw Patterns", "Drag your finger to rake patterns in the sand."),
+            GameTutorialStep("☯️", "Find Peace", "Create spirals, waves, or any pattern that feels soothing."),
+            GameTutorialStep("🔄", "Start Fresh", "Press refresh to smooth out the sand and begin again.")
+        )
+    ),
+    "mood_mixer" to GameTutorial(
+        gameId = "mood_mixer",
+        title = "Mood Mixer",
+        steps = listOf(
+            GameTutorialStep("🎨", "Pick Two Moods", "Select a first mood and a second mood from the color palettes."),
+            GameTutorialStep("🎚️", "Blend Them", "Use the slider to blend between the two mood colors."),
+            GameTutorialStep("💭", "See Your Mood", "The big circle shows your blended mood color."),
+            GameTutorialStep("🌈", "Explore Feelings", "Experiment with different combinations - how do they make you feel?")
+        )
+    )
+)
+
+/**
+ * Game Tutorial Dialog Composable
+ */
+@Composable
+fun GameTutorialDialog(
+    tutorial: GameTutorial,
+    onDismiss: () -> Unit
+) {
+    var currentStep by remember { mutableIntStateOf(0) }
+    val step = tutorial.steps[currentStep]
+    val isLastStep = currentStep == tutorial.steps.lastIndex
+
+    val infiniteTransition = rememberInfiniteTransition(label = "tutorial")
+    val emojiScale by infiniteTransition.animateFloat(
+        initialValue = 1f,
+        targetValue = 1.15f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(800, easing = EaseInOutSine),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "emojiScale"
+    )
+
+    androidx.compose.ui.window.Dialog(
+        onDismissRequest = onDismiss,
+        properties = androidx.compose.ui.window.DialogProperties(
+            dismissOnBackPress = true,
+            dismissOnClickOutside = false
+        )
+    ) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            shape = RoundedCornerShape(24.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surface
+            ),
+            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                // Header with game title
+                Text(
+                    text = "How to Play",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.primary
+                )
+
+                Text(
+                    text = tutorial.title,
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold
+                )
+
+                Spacer(Modifier.height(24.dp))
+
+                // Animated emoji
+                Text(
+                    text = step.emoji,
+                    fontSize = 64.sp,
+                    modifier = Modifier.scale(emojiScale)
+                )
+
+                Spacer(Modifier.height(16.dp))
+
+                // Step title
+                Text(
+                    text = step.title,
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.SemiBold,
+                    textAlign = TextAlign.Center
+                )
+
+                Spacer(Modifier.height(8.dp))
+
+                // Step description
+                Text(
+                    text = step.description,
+                    style = MaterialTheme.typography.bodyMedium,
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+
+                Spacer(Modifier.height(24.dp))
+
+                // Step indicators
+                Row(
+                    horizontalArrangement = Arrangement.Center,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    tutorial.steps.forEachIndexed { index, _ ->
+                        Box(
+                            modifier = Modifier
+                                .padding(horizontal = 4.dp)
+                                .size(if (index == currentStep) 10.dp else 8.dp)
+                                .clip(CircleShape)
+                                .background(
+                                    if (index == currentStep)
+                                        MaterialTheme.colorScheme.primary
+                                    else
+                                        MaterialTheme.colorScheme.outlineVariant
+                                )
+                        )
+                    }
+                }
+
+                Spacer(Modifier.height(24.dp))
+
+                // Navigation buttons
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    // Skip/Back button
+                    TextButton(
+                        onClick = {
+                            if (currentStep > 0) {
+                                currentStep--
+                            } else {
+                                onDismiss()
+                            }
+                        }
+                    ) {
+                        Text(if (currentStep > 0) "Back" else "Skip")
+                    }
+
+                    // Next/Got it button
+                    Button(
+                        onClick = {
+                            if (isLastStep) {
+                                onDismiss()
+                            } else {
+                                currentStep++
+                            }
+                        }
+                    ) {
+                        Text(if (isLastStep) "Got it!" else "Next")
+                        if (!isLastStep) {
+                            Spacer(Modifier.width(4.dp))
+                            Icon(
+                                Icons.AutoMirrored.Filled.ArrowForward,
+                                contentDescription = null,
+                                modifier = Modifier.size(18.dp)
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+/**
+ * Wrapper composable that shows tutorial on first launch of a game
+ */
+@Composable
+fun GameWithTutorial(
+    gameId: String,
+    content: @Composable () -> Unit
+) {
+    val context = LocalContext.current
+    var showTutorial by remember {
+        mutableStateOf(!GameTutorialManager.hasSeenTutorial(context, gameId))
+    }
+
+    val tutorial = GameTutorialManager.getTutorial(gameId)
+
+    // Show the game content
+    content()
+
+    // Show tutorial dialog if needed
+    if (showTutorial && tutorial != null) {
+        GameTutorialDialog(
+            tutorial = tutorial,
+            onDismiss = {
+                GameTutorialManager.markTutorialSeen(context, gameId)
+                showTutorial = false
+            }
+        )
+    }
+}
+
 // All available games
 val ALL_GAMES = listOf(
     NeuroGame(
@@ -129,7 +526,7 @@ val ALL_GAMES = listOf(
         id = "fidget_spinner",
         nameRes = R.string.game_fidget_spinner,
         descriptionRes = R.string.game_fidget_spinner_desc,
-        icon = Icons.Outlined.RotateRight,
+        icon = Icons.Outlined.Refresh,
         gradientColors = listOf(Color(0xFF11998e), Color(0xFF38ef7d)),
         requiredAchievements = 3,
         tags = listOf("stim", "calming", "spin")
@@ -281,6 +678,30 @@ fun GamesHubScreen(
     val achievementCount = remember { mutableIntStateOf(GameUnlockManager.getAchievementCount(context)) }
     val unlockedGames = remember(achievementCount.intValue) { GameUnlockManager.getUnlockedGames(context) }
     val lockedGames = remember(achievementCount.intValue) { GameUnlockManager.getLockedGames(context) }
+    var showResetTutorialsDialog by remember { mutableStateOf(false) }
+
+    // Reset tutorials confirmation dialog
+    if (showResetTutorialsDialog) {
+        AlertDialog(
+            onDismissRequest = { showResetTutorialsDialog = false },
+            icon = { Icon(Icons.Outlined.Info, contentDescription = null) },
+            title = { Text("Reset Game Tutorials?") },
+            text = { Text("This will show the how-to-play tutorials again the next time you open each game.") },
+            confirmButton = {
+                Button(onClick = {
+                    GameTutorialManager.resetAllTutorials(context)
+                    showResetTutorialsDialog = false
+                }) {
+                    Text("Reset Tutorials")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showResetTutorialsDialog = false }) {
+                    Text("Cancel")
+                }
+            }
+        )
+    }
 
     Scaffold(
         topBar = {
@@ -302,6 +723,15 @@ fun GamesHubScreen(
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                    }
+                },
+                actions = {
+                    IconButton(onClick = { showResetTutorialsDialog = true }) {
+                        Icon(
+                            Icons.Outlined.Info,
+                            contentDescription = "Reset Tutorials",
+                            tint = MaterialTheme.colorScheme.onSurface
+                        )
                     }
                 }
             )
@@ -874,23 +1304,42 @@ fun FidgetSpinnerGame(onBack: () -> Unit) {
     var rotation by remember { mutableFloatStateOf(0f) }
     var velocity by remember { mutableFloatStateOf(0f) }
     var totalSpins by remember { mutableFloatStateOf(0f) }
+    var lastAngle by remember { mutableFloatStateOf(0f) }
+    var isDragging by remember { mutableStateOf(false) }
+    var spinnerCenter by remember { mutableStateOf(androidx.compose.ui.geometry.Offset.Zero) }
 
-    // Physics update
-    LaunchedEffect(velocity) {
-        while (abs(velocity) > 0.1f) {
-            delay(16) // ~60fps
-            rotation += velocity
-            totalSpins += abs(velocity) / 360f
-            velocity *= 0.995f // Friction
+    // Performance-aware frame delay
+    val frameDelay = remember { PerformanceOptimizations.getGameLoopDelayMs() }
+
+    // Physics update - using withFrameNanos for VSync-aligned updates
+    LaunchedEffect(Unit) {
+        var lastFrameTime = 0L
+        while (isActive) {
+            withFrameNanos { frameTimeNanos ->
+                val frameTimeMillis = frameTimeNanos / 1_000_000L
+                // Calculate delta time for frame-rate independent physics
+                val deltaTime = if (lastFrameTime > 0) {
+                    ((frameTimeMillis - lastFrameTime) / 16.67f).coerceIn(0.5f, 3f)
+                } else 1f
+                lastFrameTime = frameTimeMillis
+
+                if (!isDragging && abs(velocity) > 0.05f) {
+                    rotation += velocity * deltaTime
+                    totalSpins += abs(velocity * deltaTime) / 360f
+                    // Frame-rate independent friction
+                    val frictionPerFrame = 0.992f.pow(deltaTime)
+                    velocity *= frictionPerFrame
+
+                    // Haptic feedback at certain speeds for tactile response
+                    if (abs(velocity) > 5f && (rotation.toInt() % 30 == 0)) {
+                        haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                    }
+                } else if (!isDragging) {
+                    velocity = 0f
+                }
+            }
         }
-        velocity = 0f
     }
-
-    val animatedRotation by animateFloatAsState(
-        targetValue = rotation,
-        animationSpec = tween(16, easing = LinearEasing),
-        label = "rotation"
-    )
 
     Scaffold(
         topBar = {
@@ -930,15 +1379,64 @@ fun FidgetSpinnerGame(onBack: () -> Unit) {
             Box(
                 modifier = Modifier
                     .size(250.dp)
-                    .rotate(animatedRotation)
+                    .rotate(rotation)
+                    .onGloballyPositioned { coordinates ->
+                        val size = coordinates.size
+                        val position = coordinates.positionInParent()
+                        spinnerCenter = androidx.compose.ui.geometry.Offset(
+                            position.x + size.width / 2f,
+                            position.y + size.height / 2f
+                        )
+                    }
                     .pointerInput(Unit) {
                         detectDragGestures(
-                            onDrag = { change, dragAmount ->
+                            onDragStart = { offset ->
+                                isDragging = true
+                                // Calculate initial angle from center
+                                val centerOffset = offset - androidx.compose.ui.geometry.Offset(
+                                    size.width / 2f,
+                                    size.height / 2f
+                                )
+                                lastAngle = kotlin.math.atan2(
+                                    centerOffset.y.toDouble(),
+                                    centerOffset.x.toDouble()
+                                ).toFloat() * (180f / Math.PI.toFloat())
+                            },
+                            onDrag = { change, _ ->
                                 change.consume()
-                                // Calculate rotation from drag
-                                val dragRotation = (dragAmount.x + dragAmount.y) * 0.5f
-                                velocity += dragRotation * 0.1f
-                                haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                                // Calculate current angle from center
+                                val centerOffset = change.position - androidx.compose.ui.geometry.Offset(
+                                    size.width / 2f,
+                                    size.height / 2f
+                                )
+                                val currentAngle = kotlin.math.atan2(
+                                    centerOffset.y.toDouble(),
+                                    centerOffset.x.toDouble()
+                                ).toFloat() * (180f / Math.PI.toFloat())
+
+                                // Calculate angle difference
+                                var angleDelta = currentAngle - lastAngle
+
+                                // Handle wrap-around at 180/-180 degrees
+                                if (angleDelta > 180f) angleDelta -= 360f
+                                if (angleDelta < -180f) angleDelta += 360f
+
+                                // Apply rotation directly while dragging
+                                rotation += angleDelta
+
+                                // Build up velocity based on drag speed (for momentum when released)
+                                velocity = velocity * 0.7f + angleDelta * 0.5f
+
+                                lastAngle = currentAngle
+                            },
+                            onDragEnd = {
+                                isDragging = false
+                                // Give a bit of boost to the velocity on release
+                                velocity *= 1.2f
+                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                            },
+                            onDragCancel = {
+                                isDragging = false
                             }
                         )
                     },
@@ -1076,21 +1574,29 @@ fun GameScreen(
     gameId: String,
     onBack: () -> Unit
 ) {
-    when (gameId) {
-        "bubble_pop" -> BubblePopGame(onBack)
-        "fidget_spinner" -> FidgetSpinnerGame(onBack)
-        "color_flow" -> ColorFlowGame(onBack)
-        // In-Development Games with functional prototypes
-        "stim_sequencer" -> StimSequencerGame(onBack)
-        "emotion_garden" -> EmotionGardenGame(onBack)
-        "safe_space" -> SafeSpaceBuilderGame(onBack)
-        "worry_jar" -> WorryJarGame(onBack)
-        "constellation_connect" -> ConstellationConnectGame(onBack)
-        "zen_sand" -> ZenSandGardenGame(onBack)
-        "mood_mixer" -> MoodMixerGame(onBack)
-        else -> {
-            // Coming soon placeholder
-            ComingSoonGame(onBack)
+    // Wrap each game with tutorial support
+    GameWithTutorial(gameId = gameId) {
+        when (gameId) {
+            "bubble_pop" -> BubblePopGame(onBack)
+            "fidget_spinner" -> FidgetSpinnerGame(onBack)
+            "color_flow" -> ColorFlowGame(onBack)
+            "pattern_tap" -> PatternTapGame(onBack)
+            "infinity_draw" -> InfinityDrawGame(onBack)
+            "sensory_rain" -> SensoryRainGame(onBack)
+            "breathing_bubbles" -> BreathingBubblesGame(onBack)
+            "texture_tiles" -> TextureTilesGame(onBack)
+            "sound_garden" -> SoundGardenGame(onBack)
+            "stim_sequencer" -> StimSequencerGame(onBack)
+            "emotion_garden" -> EmotionGardenGame(onBack)
+            "safe_space" -> SafeSpaceBuilderGame(onBack)
+            "worry_jar" -> WorryJarGame(onBack)
+            "constellation_connect" -> ConstellationConnectGame(onBack)
+            "zen_sand" -> ZenSandGardenGame(onBack)
+            "mood_mixer" -> MoodMixerGame(onBack)
+            else -> {
+                // Coming soon placeholder
+                ComingSoonGame(onBack)
+            }
         }
     }
 }
@@ -1296,6 +1802,7 @@ data class EmotionFlower(
 @Composable
 fun EmotionGardenGame(onBack: () -> Unit) {
     val haptic = LocalHapticFeedback.current
+    val density = androidx.compose.ui.platform.LocalDensity.current
     var flowers by remember { mutableStateOf(listOf<EmotionFlower>()) }
     var selectedEmotion by remember { mutableStateOf<Pair<String, String>?>(null) }
     var nextId by remember { mutableIntStateOf(0) }
@@ -1318,9 +1825,9 @@ fun EmotionGardenGame(onBack: () -> Unit) {
         "Curious" to Color(0xFF98D8C8)
     )
 
-    // Grow flowers animation
+    // Grow flowers animation with proper cancellation
     LaunchedEffect(flowers) {
-        while (true) {
+        while (isActive) {
             delay(100)
             flowers = flowers.map {
                 it.copy(growth = (it.growth + 0.02f).coerceAtMost(1f))
@@ -1407,8 +1914,8 @@ fun EmotionGardenGame(onBack: () -> Unit) {
                     Box(
                         modifier = Modifier
                             .offset(
-                                x = (flower.x - 24).dp,
-                                y = (flower.y - 24).dp
+                                x = with(density) { (flower.x - 24).toDp() },
+                                y = with(density) { (flower.y - 24).toDp() }
                             )
                             .scale(scale)
                     ) {
@@ -1459,6 +1966,7 @@ data class RoomItem(
 @Composable
 fun SafeSpaceBuilderGame(onBack: () -> Unit) {
     val haptic = LocalHapticFeedback.current
+    val density = androidx.compose.ui.platform.LocalDensity.current
     var roomItems by remember { mutableStateOf(listOf<RoomItem>()) }
     var nextId by remember { mutableIntStateOf(0) }
     var selectedItem by remember { mutableStateOf<String?>(null) }
@@ -1563,8 +2071,8 @@ fun SafeSpaceBuilderGame(onBack: () -> Unit) {
                     Box(
                         modifier = Modifier
                             .offset(
-                                x = (item.x - 24).dp,
-                                y = (item.y - 24).dp
+                                x = with(density) { (item.x - 24).toDp() },
+                                y = with(density) { (item.y - 24).toDp() }
                             )
                     ) {
                         Text(
@@ -1779,9 +2287,26 @@ data class StarConnection(
 @Composable
 fun ConstellationConnectGame(onBack: () -> Unit) {
     val haptic = LocalHapticFeedback.current
-    var stars by remember { mutableStateOf(generateStars(15)) }
+    val density = androidx.compose.ui.platform.LocalDensity.current
+    var stars by remember { mutableStateOf<List<Star>>(emptyList()) }
     var connections by remember { mutableStateOf(listOf<StarConnection>()) }
     var selectedStar by remember { mutableStateOf<Int?>(null) }
+    var canvasSize by remember { mutableStateOf(androidx.compose.ui.geometry.Size.Zero) }
+
+    // Generate stars when canvas size is known
+    LaunchedEffect(canvasSize) {
+        if (canvasSize.width > 0 && canvasSize.height > 0 && stars.isEmpty()) {
+            stars = generateStarsForSize(15, canvasSize.width, canvasSize.height)
+        }
+    }
+
+    fun regenerateStars() {
+        if (canvasSize.width > 0 && canvasSize.height > 0) {
+            stars = generateStarsForSize(15, canvasSize.width, canvasSize.height)
+            connections = emptyList()
+            selectedStar = null
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -1798,10 +2323,7 @@ fun ConstellationConnectGame(onBack: () -> Unit) {
                         modifier = Modifier.padding(end = 16.dp),
                         color = Color.White
                     )
-                    IconButton(onClick = {
-                        stars = generateStars(15)
-                        connections = emptyList()
-                    }) {
+                    IconButton(onClick = { regenerateStars() }) {
                         Icon(Icons.Filled.Refresh, contentDescription = "New Stars", tint = Color.White)
                     }
                 },
@@ -1820,6 +2342,12 @@ fun ConstellationConnectGame(onBack: () -> Unit) {
                         listOf(Color(0xFF0F2027), Color(0xFF203A43), Color(0xFF2C5364))
                     )
                 )
+                .onGloballyPositioned { coordinates ->
+                    canvasSize = androidx.compose.ui.geometry.Size(
+                        coordinates.size.width.toFloat(),
+                        coordinates.size.height.toFloat()
+                    )
+                }
         ) {
             // Draw connections
             androidx.compose.foundation.Canvas(
@@ -1850,8 +2378,8 @@ fun ConstellationConnectGame(onBack: () -> Unit) {
                 Box(
                     modifier = Modifier
                         .offset(
-                            x = (star.x - 16).dp,
-                            y = (star.y - 16).dp
+                            x = with(density) { (star.x - 16).toDp() },
+                            y = with(density) { (star.y - 16).toDp() }
                         )
                         .scale(starScale)
                         .size(32.dp)
@@ -1899,12 +2427,13 @@ fun ConstellationConnectGame(onBack: () -> Unit) {
     }
 }
 
-private fun generateStars(count: Int): List<Star> {
+private fun generateStarsForSize(count: Int, width: Float, height: Float): List<Star> {
+    val padding = 50f
     return List(count) { index ->
         Star(
             id = index,
-            x = Random.nextFloat() * 800 + 50,
-            y = Random.nextFloat() * 1000 + 100
+            x = Random.nextFloat() * (width - padding * 2) + padding,
+            y = Random.nextFloat() * (height - padding * 2) + padding
         )
     }
 }
@@ -2008,6 +2537,1013 @@ fun ZenSandGardenGame(onBack: () -> Unit) {
                     )
                 }
             }
+        }
+    }
+}
+
+// =============================================================================
+// PATTERN TAP GAME - Memorize and repeat patterns
+// =============================================================================
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun PatternTapGame(onBack: () -> Unit) {
+    val haptic = LocalHapticFeedback.current
+    val scope = rememberCoroutineScope()
+
+    var pattern by remember { mutableStateOf(listOf<Int>()) }
+    var playerInput by remember { mutableStateOf(listOf<Int>()) }
+    var isShowingPattern by remember { mutableStateOf(false) }
+    var currentShowIndex by remember { mutableIntStateOf(-1) }
+    var score by remember { mutableIntStateOf(0) }
+    var gameState by remember { mutableStateOf("waiting") } // waiting, showing, input, success, fail
+
+    val gridColors = listOf(
+        Color(0xFF8E2DE2), Color(0xFF4A00E0), Color(0xFFFF6B6B), Color(0xFF4ECDC4),
+        Color(0xFFFFE66D), Color(0xFF95E1D3), Color(0xFFF38181), Color(0xFFAA96DA),
+        Color(0xFF667eea)
+    )
+
+    fun startNewRound() {
+        val newPattern = if (pattern.isEmpty()) {
+            listOf(Random.nextInt(9))
+        } else {
+            pattern + Random.nextInt(9)
+        }
+        pattern = newPattern
+        playerInput = emptyList()
+        gameState = "showing"
+        isShowingPattern = true
+
+        scope.launch {
+            delay(500)
+            for (i in newPattern.indices) {
+                currentShowIndex = newPattern[i]
+                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                delay(600)
+                currentShowIndex = -1
+                delay(300)
+            }
+            isShowingPattern = false
+            gameState = "input"
+        }
+    }
+
+    fun onTileTap(index: Int) {
+        if (gameState != "input") return
+
+        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+        val newInput = playerInput + index
+
+        if (newInput[newInput.lastIndex] != pattern[newInput.lastIndex]) {
+            gameState = "fail"
+            return
+        }
+
+        playerInput = newInput
+
+        if (newInput.size == pattern.size) {
+            score++
+            gameState = "success"
+            scope.launch {
+                delay(1000)
+                startNewRound()
+            }
+        }
+    }
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text(stringResource(R.string.game_pattern_tap)) },
+                navigationIcon = {
+                    IconButton(onClick = onBack) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                    }
+                },
+                actions = {
+                    Text(
+                        "🎯 Level $score",
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.padding(end = 16.dp)
+                    )
+                }
+            )
+        }
+    ) { padding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .background(
+                    Brush.verticalGradient(
+                        listOf(Color(0xFF8E2DE2), Color(0xFF4A00E0))
+                    )
+                )
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            // Status text
+            Text(
+                when (gameState) {
+                    "waiting" -> "Tap Start to begin!"
+                    "showing" -> "Watch the pattern..."
+                    "input" -> "Your turn! (${playerInput.size}/${pattern.size})"
+                    "success" -> "✨ Great! Next level..."
+                    "fail" -> "Oops! Try again"
+                    else -> ""
+                },
+                color = Color.White,
+                style = MaterialTheme.typography.headlineSmall,
+                fontWeight = FontWeight.Bold
+            )
+
+            Spacer(Modifier.height(32.dp))
+
+            // 3x3 Grid
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(3),
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+                modifier = Modifier.size(280.dp)
+            ) {
+                items(9) { index ->
+                    val isHighlighted = currentShowIndex == index
+                    val tileScale by animateFloatAsState(
+                        targetValue = if (isHighlighted) 1.1f else 1f,
+                        animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy),
+                        label = "tileScale"
+                    )
+
+                    Box(
+                        modifier = Modifier
+                            .aspectRatio(1f)
+                            .scale(tileScale)
+                            .clip(RoundedCornerShape(16.dp))
+                            .background(
+                                if (isHighlighted) gridColors[index]
+                                else gridColors[index].copy(alpha = 0.4f)
+                            )
+                            .border(
+                                width = if (isHighlighted) 4.dp else 2.dp,
+                                color = Color.White.copy(alpha = if (isHighlighted) 1f else 0.3f),
+                                shape = RoundedCornerShape(16.dp)
+                            )
+                            .clickable(enabled = gameState == "input") { onTileTap(index) }
+                    )
+                }
+            }
+
+            Spacer(Modifier.height(32.dp))
+
+            // Start/Restart button
+            if (gameState == "waiting" || gameState == "fail") {
+                Button(
+                    onClick = {
+                        pattern = emptyList()
+                        score = 0
+                        startNewRound()
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.White)
+                ) {
+                    Text(
+                        if (gameState == "fail") "Try Again" else "Start",
+                        color = Color(0xFF8E2DE2),
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
+
+            Spacer(Modifier.height(16.dp))
+
+            Text(
+                stringResource(R.string.game_pattern_tap_hint),
+                color = Color.White.copy(alpha = 0.7f),
+                style = MaterialTheme.typography.bodySmall,
+                textAlign = TextAlign.Center
+            )
+        }
+    }
+}
+
+// =============================================================================
+// INFINITY DRAW GAME - Calming infinite drawing
+// =============================================================================
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun InfinityDrawGame(onBack: () -> Unit) {
+    val haptic = LocalHapticFeedback.current
+    var lines by remember { mutableStateOf(listOf<List<Pair<Float, Float>>>()) }
+    var currentLine by remember { mutableStateOf(listOf<Pair<Float, Float>>()) }
+    var currentColor by remember { mutableStateOf(Color(0xFFFF416C)) }
+
+    val colors = listOf(
+        Color(0xFFFF416C), Color(0xFFFF4B2B), Color(0xFF667eea),
+        Color(0xFF764ba2), Color(0xFF11998e), Color(0xFF38ef7d),
+        Color(0xFFFFE66D), Color(0xFFF38181)
+    )
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text(stringResource(R.string.game_infinity_draw)) },
+                navigationIcon = {
+                    IconButton(onClick = onBack) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                    }
+                },
+                actions = {
+                    IconButton(onClick = { lines = emptyList() }) {
+                        Icon(Icons.Filled.Refresh, contentDescription = "Clear")
+                    }
+                }
+            )
+        }
+    ) { padding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+        ) {
+            // Color palette
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.surfaceVariant)
+                    .padding(8.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                colors.forEach { color ->
+                    Box(
+                        modifier = Modifier
+                            .size(36.dp)
+                            .clip(CircleShape)
+                            .background(color)
+                            .border(
+                                width = if (currentColor == color) 3.dp else 1.dp,
+                                color = if (currentColor == color) Color.White else Color.Gray,
+                                shape = CircleShape
+                            )
+                            .clickable {
+                                currentColor = color
+                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                            }
+                    )
+                }
+            }
+
+            // Drawing canvas
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+                    .background(
+                        Brush.verticalGradient(
+                            listOf(Color(0xFF1a1a2e), Color(0xFF16213e))
+                        )
+                    )
+                    .pointerInput(currentColor) {
+                        detectDragGestures(
+                            onDragStart = { offset ->
+                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                currentLine = listOf(offset.x to offset.y)
+                            },
+                            onDrag = { change, _ ->
+                                currentLine = currentLine + (change.position.x to change.position.y)
+                            },
+                            onDragEnd = {
+                                if (currentLine.size > 2) {
+                                    lines = lines + listOf(currentLine)
+                                }
+                                currentLine = emptyList()
+                            }
+                        )
+                    }
+            ) {
+                androidx.compose.foundation.Canvas(
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    // Draw all completed lines
+                    lines.forEachIndexed { lineIndex, points ->
+                        if (points.size >= 2) {
+                            val lineColor = colors[lineIndex % colors.size]
+                            for (i in 0 until points.size - 1) {
+                                drawLine(
+                                    color = lineColor,
+                                    start = androidx.compose.ui.geometry.Offset(points[i].first, points[i].second),
+                                    end = androidx.compose.ui.geometry.Offset(points[i + 1].first, points[i + 1].second),
+                                    strokeWidth = 6f
+                                )
+                            }
+                        }
+                    }
+
+                    // Draw current line
+                    if (currentLine.size >= 2) {
+                        for (i in 0 until currentLine.size - 1) {
+                            drawLine(
+                                color = currentColor,
+                                start = androidx.compose.ui.geometry.Offset(currentLine[i].first, currentLine[i].second),
+                                end = androidx.compose.ui.geometry.Offset(currentLine[i + 1].first, currentLine[i + 1].second),
+                                strokeWidth = 6f
+                            )
+                        }
+                    }
+                }
+
+                // Hint
+                if (lines.isEmpty() && currentLine.isEmpty()) {
+                    Column(
+                        modifier = Modifier
+                            .align(Alignment.Center)
+                            .padding(32.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text("✨", fontSize = 64.sp)
+                        Spacer(Modifier.height(16.dp))
+                        Text(
+                            stringResource(R.string.game_infinity_draw_hint),
+                            color = Color.White.copy(alpha = 0.7f),
+                            textAlign = TextAlign.Center,
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+// =============================================================================
+// SENSORY RAIN GAME - Relaxing rain visualization
+// =============================================================================
+
+data class RainDrop(
+    val id: Int,
+    val x: Float,
+    var y: Float,
+    val speed: Float,
+    val size: Float,
+    val alpha: Float
+)
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SensoryRainGame(onBack: () -> Unit) {
+    val haptic = LocalHapticFeedback.current
+    var rainDrops by remember { mutableStateOf<List<RainDrop>>(emptyList()) }
+    var intensity by remember { mutableFloatStateOf(0.5f) }
+    var ripples by remember { mutableStateOf(listOf<Pair<Float, Float>>()) }
+    var canvasSize by remember { mutableStateOf(androidx.compose.ui.geometry.Size.Zero) }
+
+    // Generate rain drops when canvas size is known
+    LaunchedEffect(canvasSize) {
+        if (canvasSize.width > 0 && canvasSize.height > 0 && rainDrops.isEmpty()) {
+            rainDrops = generateRainDropsForSize(100, canvasSize.width, canvasSize.height)
+        }
+    }
+
+    // Animate rain with frame-aware timing
+    LaunchedEffect(canvasSize) {
+        if (canvasSize.width > 0 && canvasSize.height > 0) {
+            while (isActive) {
+                withFrameNanos { _ ->
+                    rainDrops = rainDrops.map { drop ->
+                        val newY = drop.y + drop.speed * intensity * 2
+                        if (newY > canvasSize.height) {
+                            drop.copy(y = -20f, x = Random.nextFloat() * canvasSize.width)
+                        } else {
+                            drop.copy(y = newY)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // Fade ripples
+    LaunchedEffect(ripples) {
+        if (ripples.isNotEmpty()) {
+            delay(500)
+            ripples = emptyList()
+        }
+    }
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text(stringResource(R.string.game_sensory_rain)) },
+                navigationIcon = {
+                    IconButton(onClick = onBack) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                    }
+                }
+            )
+        }
+    ) { padding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+        ) {
+            // Intensity slider
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color(0xFF1a1a2e))
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text("🌧️", fontSize = 20.sp)
+                Slider(
+                    value = intensity,
+                    onValueChange = { intensity = it },
+                    modifier = Modifier.weight(1f).padding(horizontal = 16.dp)
+                )
+                Text("⛈️", fontSize = 20.sp)
+            }
+
+            // Rain canvas
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+                    .background(
+                        Brush.verticalGradient(
+                            listOf(Color(0xFF0c0c1e), Color(0xFF1a1a3e), Color(0xFF2a2a5e))
+                        )
+                    )
+                    .onGloballyPositioned { coordinates ->
+                        canvasSize = androidx.compose.ui.geometry.Size(
+                            coordinates.size.width.toFloat(),
+                            coordinates.size.height.toFloat()
+                        )
+                    }
+                    .pointerInput(Unit) {
+                        detectTapGestures { offset ->
+                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                            ripples = ripples + (offset.x to offset.y)
+                        }
+                    }
+            ) {
+                androidx.compose.foundation.Canvas(
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    // Draw rain drops
+                    rainDrops.forEach { drop ->
+                        drawLine(
+                            color = Color(0xFF87CEEB).copy(alpha = drop.alpha * intensity),
+                            start = androidx.compose.ui.geometry.Offset(drop.x, drop.y),
+                            end = androidx.compose.ui.geometry.Offset(drop.x, drop.y + drop.size),
+                            strokeWidth = 2f
+                        )
+                    }
+
+                    // Draw ripples
+                    ripples.forEach { (x, y) ->
+                        drawCircle(
+                            color = Color(0xFF87CEEB).copy(alpha = 0.3f),
+                            radius = 40f,
+                            center = androidx.compose.ui.geometry.Offset(x, y),
+                            style = androidx.compose.ui.graphics.drawscope.Stroke(width = 2f)
+                        )
+                    }
+                }
+
+                // Hint
+                Text(
+                    stringResource(R.string.game_sensory_rain_hint),
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(32.dp),
+                    color = Color.White.copy(alpha = 0.5f),
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+        }
+    }
+}
+
+private fun generateRainDropsForSize(count: Int, width: Float, height: Float): List<RainDrop> {
+    return List(count) { id ->
+        RainDrop(
+            id = id,
+            x = Random.nextFloat() * width,
+            y = Random.nextFloat() * height,
+            speed = Random.nextFloat() * 5 + 3,
+            size = Random.nextFloat() * 20 + 10,
+            alpha = Random.nextFloat() * 0.5f + 0.3f
+        )
+    }
+}
+
+// =============================================================================
+// BREATHING BUBBLES GAME - Guided breathing exercise
+// =============================================================================
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun BreathingBubblesGame(onBack: () -> Unit) {
+    val haptic = LocalHapticFeedback.current
+    var isBreathing by remember { mutableStateOf(false) }
+    var breathPhase by remember { mutableStateOf("inhale") } // inhale, hold, exhale
+    var cycleCount by remember { mutableIntStateOf(0) }
+
+    // Animated scale based on breath phase
+    val targetScale = when {
+        !isBreathing -> 0.8f
+        breathPhase == "inhale" -> 1.2f
+        breathPhase == "hold" -> 1.2f
+        else -> 0.5f  // exhale
+    }
+
+    val bubbleScale by animateFloatAsState(
+        targetValue = targetScale,
+        animationSpec = tween(
+            durationMillis = when {
+                !isBreathing -> 300
+                breathPhase == "hold" -> 100
+                else -> 4000
+            },
+            easing = EaseInOutSine
+        ),
+        label = "bubbleScale"
+    )
+
+    // Breathing cycle
+    LaunchedEffect(isBreathing) {
+        if (isBreathing) {
+            while (isBreathing) {
+                // Inhale
+                breathPhase = "inhale"
+                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                delay(4000)
+
+                // Hold
+                breathPhase = "hold"
+                delay(2000)
+
+                // Exhale
+                breathPhase = "exhale"
+                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                delay(4000)
+
+                cycleCount++
+            }
+        }
+    }
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text(stringResource(R.string.game_breathing_bubbles)) },
+                navigationIcon = {
+                    IconButton(onClick = onBack) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                    }
+                },
+                actions = {
+                    Text(
+                        "🫧 $cycleCount breaths",
+                        modifier = Modifier.padding(end = 16.dp)
+                    )
+                }
+            )
+        }
+    ) { padding ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .background(
+                    Brush.radialGradient(
+                        listOf(Color(0xFF56CCF2), Color(0xFF2F80ED), Color(0xFF1a1a4e))
+                    )
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                // Breathing bubble
+                Box(
+                    modifier = Modifier
+                        .size(200.dp)
+                        .scale(bubbleScale)
+                        .clip(CircleShape)
+                        .background(
+                            Brush.radialGradient(
+                                listOf(
+                                    Color.White.copy(alpha = 0.8f),
+                                    Color(0xFF87CEEB).copy(alpha = 0.6f),
+                                    Color(0xFF56CCF2).copy(alpha = 0.3f)
+                                )
+                            )
+                        )
+                        .border(2.dp, Color.White.copy(alpha = 0.5f), CircleShape),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        when {
+                            !isBreathing -> "🫧"
+                            breathPhase == "inhale" -> "Breathe In"
+                            breathPhase == "hold" -> "Hold"
+                            else -> "Breathe Out"
+                        },
+                        color = if (isBreathing) Color(0xFF1a1a4e) else Color.Transparent,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = if (isBreathing) 18.sp else 64.sp,
+                        textAlign = TextAlign.Center
+                    )
+                }
+
+                Spacer(Modifier.height(48.dp))
+
+                // Start/Stop button
+                Button(
+                    onClick = {
+                        isBreathing = !isBreathing
+                        if (!isBreathing) {
+                            breathPhase = "inhale"
+                        }
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.White.copy(alpha = 0.9f)
+                    )
+                ) {
+                    Icon(
+                        if (isBreathing) Icons.Filled.Pause else Icons.Filled.PlayArrow,
+                        contentDescription = null,
+                        tint = Color(0xFF2F80ED)
+                    )
+                    Spacer(Modifier.width(8.dp))
+                    Text(
+                        if (isBreathing) "Pause" else "Start Breathing",
+                        color = Color(0xFF2F80ED),
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+
+                Spacer(Modifier.height(32.dp))
+
+                Text(
+                    stringResource(R.string.game_breathing_bubbles_hint),
+                    color = Color.White.copy(alpha = 0.7f),
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.padding(horizontal = 32.dp)
+                )
+            }
+        }
+    }
+}
+
+// =============================================================================
+// TEXTURE TILES GAME - Satisfying haptic textures
+// =============================================================================
+
+data class TextureTile(
+    val id: Int,
+    val emoji: String,
+    val name: String,
+    val color: Color,
+    val hapticPattern: Int // 1-5 intensity
+)
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TextureTilesGame(onBack: () -> Unit) {
+    val haptic = LocalHapticFeedback.current
+    val scope = rememberCoroutineScope()
+    var selectedTile by remember { mutableStateOf<TextureTile?>(null) }
+    var tapCount by remember { mutableIntStateOf(0) }
+
+    val tiles = listOf(
+        TextureTile(0, "🪨", "Stone", Color(0xFF6B7280), 3),
+        TextureTile(1, "🧸", "Fluffy", Color(0xFFFBBF24), 1),
+        TextureTile(2, "🧊", "Ice", Color(0xFF60A5FA), 4),
+        TextureTile(3, "🌿", "Leaf", Color(0xFF34D399), 2),
+        TextureTile(4, "⚡", "Electric", Color(0xFFF472B6), 5),
+        TextureTile(5, "🌊", "Wave", Color(0xFF3B82F6), 2),
+        TextureTile(6, "🔥", "Warm", Color(0xFFEF4444), 3),
+        TextureTile(7, "❄️", "Cold", Color(0xFF93C5FD), 4),
+        TextureTile(8, "🍃", "Breeze", Color(0xFF86EFAC), 1)
+    )
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text(stringResource(R.string.game_texture_tiles)) },
+                navigationIcon = {
+                    IconButton(onClick = onBack) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                    }
+                },
+                actions = {
+                    Text(
+                        "👆 $tapCount taps",
+                        modifier = Modifier.padding(end = 16.dp)
+                    )
+                }
+            )
+        }
+    ) { padding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .background(
+                    Brush.verticalGradient(
+                        listOf(Color(0xFFf953c6), Color(0xFFb91d73))
+                    )
+                )
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            // Selected tile display
+            Box(
+                modifier = Modifier
+                    .size(120.dp)
+                    .clip(RoundedCornerShape(24.dp))
+                    .background(selectedTile?.color ?: Color.White.copy(alpha = 0.2f))
+                    .border(3.dp, Color.White, RoundedCornerShape(24.dp)),
+                contentAlignment = Alignment.Center
+            ) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(
+                        selectedTile?.emoji ?: "?",
+                        fontSize = 48.sp
+                    )
+                    selectedTile?.let { tile ->
+                        Text(
+                            tile.name,
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+            }
+
+            Spacer(Modifier.height(32.dp))
+
+            // Texture grid
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(3),
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+                modifier = Modifier.weight(1f)
+            ) {
+                items(tiles.size) { index ->
+                    val tile = tiles[index]
+                    val isSelected = selectedTile?.id == tile.id
+                    val tileScale by animateFloatAsState(
+                        targetValue = if (isSelected) 1.1f else 1f,
+                        animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy),
+                        label = "tileScale"
+                    )
+
+                    Box(
+                        modifier = Modifier
+                            .aspectRatio(1f)
+                            .scale(tileScale)
+                            .clip(RoundedCornerShape(16.dp))
+                            .background(tile.color.copy(alpha = if (isSelected) 1f else 0.7f))
+                            .border(
+                                width = if (isSelected) 3.dp else 1.dp,
+                                color = Color.White,
+                                shape = RoundedCornerShape(16.dp)
+                            )
+                            .clickable {
+                                selectedTile = tile
+                                tapCount++
+                                // Perform haptic based on tile intensity with delays
+                                scope.launch {
+                                    repeat(tile.hapticPattern) {
+                                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                        if (it < tile.hapticPattern - 1) {
+                                            delay(50)
+                                        }
+                                    }
+                                }
+                            },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Text(tile.emoji, fontSize = 32.sp)
+                            Text(
+                                tile.name,
+                                color = Color.White,
+                                style = MaterialTheme.typography.labelSmall
+                            )
+                        }
+                    }
+                }
+            }
+
+            Spacer(Modifier.height(16.dp))
+
+            Text(
+                stringResource(R.string.game_texture_tiles_hint),
+                color = Color.White.copy(alpha = 0.7f),
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.bodySmall
+            )
+        }
+    }
+}
+
+// =============================================================================
+// SOUND GARDEN GAME - Create musical patterns
+// =============================================================================
+
+data class GardenNote(
+    val id: Int,
+    val emoji: String,
+    val name: String,
+    val color: Color,
+    var x: Float,
+    var y: Float
+)
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SoundGardenGame(onBack: () -> Unit) {
+    val haptic = LocalHapticFeedback.current
+    val density = androidx.compose.ui.platform.LocalDensity.current
+    var notes by remember { mutableStateOf(listOf<GardenNote>()) }
+    var selectedNote by remember { mutableStateOf<Pair<String, String>?>(null) }
+    var nextId by remember { mutableIntStateOf(0) }
+    var isPlaying by remember { mutableStateOf(false) }
+    var playIndex by remember { mutableIntStateOf(-1) }
+    val scope = rememberCoroutineScope()
+
+    val noteTypes = listOf(
+        "🎵" to "Note",
+        "🎶" to "Melody",
+        "🔔" to "Bell",
+        "🎹" to "Piano",
+        "🥁" to "Drum",
+        "🎺" to "Horn",
+        "🎸" to "Guitar",
+        "🪇" to "Chime"
+    )
+
+    val noteColors = listOf(
+        Color(0xFFFF6B6B), Color(0xFF4ECDC4), Color(0xFFFFE66D),
+        Color(0xFF95E1D3), Color(0xFFF38181), Color(0xFFAA96DA),
+        Color(0xFF667eea), Color(0xFF43cea2)
+    )
+
+    fun playGarden() {
+        if (notes.isEmpty()) return
+        isPlaying = true
+        scope.launch {
+            notes.sortedBy { it.x }.forEachIndexed { index, note ->
+                playIndex = note.id
+                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                delay(300)
+            }
+            playIndex = -1
+            isPlaying = false
+        }
+    }
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text(stringResource(R.string.game_sound_garden)) },
+                navigationIcon = {
+                    IconButton(onClick = onBack) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                    }
+                },
+                actions = {
+                    IconButton(onClick = { playGarden() }, enabled = !isPlaying && notes.isNotEmpty()) {
+                        Icon(Icons.Filled.PlayArrow, contentDescription = "Play")
+                    }
+                    IconButton(onClick = { notes = emptyList() }) {
+                        Icon(Icons.Filled.Refresh, contentDescription = "Clear")
+                    }
+                }
+            )
+        }
+    ) { padding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+        ) {
+            // Note palette
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .horizontalScroll(rememberScrollState())
+                    .background(MaterialTheme.colorScheme.surfaceVariant)
+                    .padding(8.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                noteTypes.forEach { (emoji, name) ->
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(
+                                if (selectedNote?.first == emoji)
+                                    MaterialTheme.colorScheme.primaryContainer
+                                else
+                                    MaterialTheme.colorScheme.surface
+                            )
+                            .clickable {
+                                selectedNote = emoji to name
+                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                            }
+                            .padding(12.dp)
+                    ) {
+                        Text(emoji, fontSize = 28.sp)
+                        Text(name, style = MaterialTheme.typography.labelSmall)
+                    }
+                }
+            }
+
+            // Garden area
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+                    .background(
+                        Brush.verticalGradient(
+                            listOf(Color(0xFF43cea2), Color(0xFF185a9d))
+                        )
+                    )
+                    .pointerInput(selectedNote) {
+                        detectTapGestures { offset ->
+                            selectedNote?.let { (emoji, name) ->
+                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                notes = notes + GardenNote(
+                                    id = nextId++,
+                                    emoji = emoji,
+                                    name = name,
+                                    color = noteColors[notes.size % noteColors.size],
+                                    x = offset.x,
+                                    y = offset.y
+                                )
+                            }
+                        }
+                    }
+            ) {
+                // Draw notes
+                notes.forEach { note ->
+                    val isCurrentlyPlaying = playIndex == note.id
+                    val noteScale by animateFloatAsState(
+                        targetValue = if (isCurrentlyPlaying) 1.5f else 1f,
+                        animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy),
+                        label = "noteScale"
+                    )
+
+                    Box(
+                        modifier = Modifier
+                            .offset(
+                                x = with(density) { (note.x - 24).toDp() },
+                                y = with(density) { (note.y - 24).toDp() }
+                            )
+                            .scale(noteScale)
+                    ) {
+                        Text(
+                            text = note.emoji,
+                            fontSize = 48.sp
+                        )
+                    }
+                }
+
+                // Hint
+                if (notes.isEmpty()) {
+                    Column(
+                        modifier = Modifier
+                            .align(Alignment.Center)
+                            .padding(32.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text("🎼", fontSize = 64.sp)
+                        Spacer(Modifier.height(16.dp))
+                        Text(
+                            stringResource(R.string.game_sound_garden_hint),
+                            color = Color.White,
+                            textAlign = TextAlign.Center,
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                    }
+                }
+            }
+
+            // Note count
+            Text(
+                "🎵 ${notes.size} notes planted",
+                modifier = Modifier.padding(16.dp),
+                style = MaterialTheme.typography.bodyMedium
+            )
         }
     }
 }

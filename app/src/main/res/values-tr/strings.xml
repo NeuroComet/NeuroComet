@@ -1,22 +1,20 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <resources>
     <string name="app_name">NeuroComet</string>
-
-    <!-- Auth Screen -->
     <string name="auth_app_tagline">Her zihin için güvenli bir alan ✨</string>
     <string name="auth_sign_in">Giriş Yap</string>
     <string name="auth_sign_up">Kayıt Ol</string>
     <string name="auth_email_label">E-posta</string>
-    <string name="auth_email_placeholder">email@adresiniz.com</string>
+    <string name="auth_email_placeholder">ornek@email.com</string>
     <string name="auth_password_label">Şifre</string>
     <string name="auth_confirm_password_label">Şifreyi Onayla</string>
-    <string name="auth_password_requirements">🔒 Şifre en az 12 karakter olmalı ve büyük harf, küçük harf, rakam ve sembol içermelidir.</string>
+    <string name="auth_password_requirements">🔒 Şifre büyük harf, küçük harf, rakam ve sembol içeren 12+ karakter olmalıdır.</string>
     <string name="auth_create_account">Hesap Oluştur</string>
     <string name="auth_passwords_not_match">Şifreler eşleşmiyor</string>
     <string name="auth_password_weak">Şifre gereksinimleri karşılamıyor</string>
-    <string name="auth_skip">Şimdilik atla</string>
-    <string name="auth_skip_dev">Şimdilik atla (geliştirici)</string>
-    <string name="auth_data_secure">Verileriniz şifrelenmiş ve güvendedir</string>
+    <string name="auth_skip">Şimdilik geç</string>
+    <string name="auth_skip_dev">Şimdilik geç (geliştirici)</string>
+    <string name="auth_data_secure">Verileriniz şifrelenmiş ve güvende</string>
     <string name="auth_2fa_title">İki Faktörlü Doğrulama</string>
     <string name="auth_2fa_description">Cihazınıza gönderilen 6 haneli kodu girin</string>
     <string name="auth_2fa_code_label">6 Haneli Kod</string>
@@ -24,42 +22,38 @@
     <string name="auth_2fa_verify">Doğrula</string>
     <string name="auth_hide_password">Şifreyi gizle</string>
     <string name="auth_show_password">Şifreyi göster</string>
-
-    <!-- Auth Tutorial -->
     <string name="auth_tutorial_welcome_title">Hoş Geldiniz 💜</string>
-    <string name="auth_tutorial_welcome_desc">NeuroComet, nöroçeşitli ve LGBTQ+ zihinler için güvenli, olumlu bir alandır. Tam olduğunuz gibi buraya aitsiniz—maske gerekmez.</string>
+    <string name="auth_tutorial_welcome_desc">NeuroComet, nöroçeşitli ve LGBTQ+ bireyler için güvenli, destekleyici bir alandır. Olduğunuz gibi buraya aitsiniz—maske gerekmez.</string>
     <string name="auth_tutorial_comfort_title">Konforunuz Önemli ∞</string>
-    <string name="auth_tutorial_comfort_desc_anim">Görsel hareketi azaltmak için istediğiniz zaman sonsuzluk sembolüne dokunun. Duyusal dostu gezinme için tasarladık.</string>
-    <string name="auth_tutorial_comfort_desc_static">Mükemmel! Sakin modu etkinleştirdiniz. Daha fazla veya daha az hareket gerektiğinde tekrar dokunun.</string>
+    <string name="auth_tutorial_comfort_desc_anim">Görsel hareketi azaltmak için sonsuzluk sembolüne dokunun. Duyusal dostu gezinme için tasarlandı.</string>
+    <string name="auth_tutorial_comfort_desc_static">Mükemmel! Sakin modu etkinleştirdiniz. Daha fazla veya daha az hareket istediğinizde tekrar dokunun.</string>
     <string name="auth_tutorial_themes_title">25+ Nöro-Durum Teması 🎨</string>
-    <string name="auth_tutorial_themes_desc">ADHD odağı, otizm konforu, anksiyete rahatlaması, renk körlüğü erişilebilirliği ve ruh hali desteği için tasarlanmış temalar seçin. Beyniniz, sizin yolunuz.</string>
+    <string name="auth_tutorial_themes_desc">ADHD odaklanma, otizm konforu, anksiyete rahatlama, renk körlüğü erişilebilirliği ve ruh hali desteği için tasarlanmış temalar seçin.</string>
     <string name="auth_tutorial_fonts_title">Disleksi Dostu Yazı Tipleri 📖</string>
-    <string name="auth_tutorial_fonts_desc">OpenDyslexic, Lexend ve Atkinson Hyperlegible dahil 12+ erişilebilirlik yazı tipi. Aralık, ağırlık ve boyutu BEYNİNİZİN en iyi okuduğu şekle göre ayarlayın.</string>
-    <string name="auth_tutorial_community_title">Topluluk ve Onur 🌈</string>
-    <string name="auth_tutorial_community_desc">Anlayan insanlarla bağlantı kurun. Nöroçeşitli, LGBTQ+ ve müttefikler—tüm beyinler, tüm kimlikler, hepsi güzel. Onur Ayı, Otizm Günü ve DEHB Ayı için özel temalar!</string>
+    <string name="auth_tutorial_fonts_desc">OpenDyslexic, Lexend ve Atkinson Hyperlegible dahil 12+ erişilebilirlik yazı tipi. Beyninizia en uygun şekilde ayarlayın.</string>
+    <string name="auth_tutorial_community_title">Topluluk ve Gurur 🌈</string>
+    <string name="auth_tutorial_community_desc">Anlayan insanlarla bağlantı kurun. Nöroçeşitli, LGBTQ+ ve destekçiler—tüm beyinler, tüm kimlikler, hepsi güzel.</string>
     <string name="auth_tutorial_safety_title">Güvenlik İçin Tasarlandı 🛡️</string>
-    <string name="auth_tutorial_safety_desc">İçerik filtreleme, ebeveyn kontrolleri, ekran süresi limitleri ve uyku modu refahınızı korur. Ne gördüğünüzü ve ne zaman gördüğünüzü siz kontrol edersiniz.</string>
+    <string name="auth_tutorial_safety_desc">İçerik filtreleme, ebeveyn kontrolleri, ekran süresi sınırları ve uyku modu refahınızı korur.</string>
     <string name="auth_tutorial_ready_title">Başlamaya Hazır! ✨</string>
-    <string name="auth_tutorial_ready_desc">Binlerce nöroçeşitli ve LGBTQ+ bireye katılmak için giriş yapın veya hesap oluşturun. Bu SİZİN alanınız—kendi hızınızda keşfedin.</string>
-    <string name="auth_tutorial_skip">Atla</string>
+    <string name="auth_tutorial_ready_desc">Binlerce nöroçeşitli ve LGBTQ+ bireye katılmak için giriş yapın veya hesap oluşturun. Bu SİZİN alanınız.</string>
+    <string name="auth_tutorial_skip">Geç</string>
     <string name="auth_tutorial_continue">Devam</string>
-    <string name="auth_tutorial_lets_go">Haydi Başlayalım! ✨</string>
+    <string name="auth_tutorial_lets_go">Başlayalım! ✨</string>
     <string name="auth_tutorial_step_count">%1$d / %2$d</string>
     <string name="auth_tutorial_tap_here">Buraya dokunun</string>
-
-    <!-- Splash Screen -->
     <string name="splash_tagline_default">Sizin için tasarlanmış bir alan</string>
-    <string name="splash_tagline_hyperfocus">Dikkat dağıtmayan bölge</string>
+    <string name="splash_tagline_hyperfocus">Dikkat dağıtıcısız bölge</string>
     <string name="splash_tagline_overload">Düşük uyaran modu</string>
     <string name="splash_tagline_calm">Huzurlu alanınız</string>
     <string name="splash_tagline_adhd_energized">Dalgayı sür</string>
     <string name="splash_tagline_adhd_low_dopamine">Nazik motivasyon</string>
-    <string name="splash_tagline_adhd_task_mode">Minimum dikkat dağınıklığı</string>
+    <string name="splash_tagline_adhd_task_mode">Minimum dikkat dağıtıcı</string>
     <string name="splash_tagline_autism_routine">Öngörülebilir ve güvenli</string>
     <string name="splash_tagline_autism_sensory_seek">Zengin deneyimler sizi bekliyor</string>
     <string name="splash_tagline_autism_low_stim">Minimum uyaran</string>
     <string name="splash_tagline_anxiety_soothe">Zihninizi sakinleştiriyor</string>
-    <string name="splash_tagline_anxiety_grounding">Şu ana kök salmış</string>
+    <string name="splash_tagline_anxiety_grounding">Şimdide köklü</string>
     <string name="splash_tagline_dyslexia_friendly">Netlik için tasarlandı</string>
     <string name="splash_tagline_colorblind_deuteranopia">Deuteranopia dostu</string>
     <string name="splash_tagline_colorblind_protanopia">Protanopia dostu</string>
@@ -71,46 +65,44 @@
     <string name="splash_tagline_mood_tired">Dinlenmek sorun değil</string>
     <string name="splash_tagline_mood_anxious">Bizimle nefes alın</string>
     <string name="splash_tagline_mood_happy">Sizi kutlayalım</string>
-    <string name="splash_tagline_mood_overwhelmed">Nazikçe alıyoruz</string>
+    <string name="splash_tagline_mood_overwhelmed">Yavaşça ilerliyoruz</string>
     <string name="splash_tagline_mood_creative">Fikirlerin akmasına izin verin</string>
     <string name="splash_tagline_rainbow_brain">Gökkuşağı beyninizi kucaklayın</string>
-
-    <!-- Splash Messages -->
     <string name="splash_msg_default_1">Tekrar hoş geldiniz</string>
     <string name="splash_msg_default_2">Alanınız sizi bekliyor</string>
     <string name="splash_msg_default_3">Başlayalım</string>
-    <string name="splash_msg_hyperfocus_1">Odaklanma modu</string>
+    <string name="splash_msg_hyperfocus_1">Odak modu</string>
     <string name="splash_msg_hyperfocus_2">Berrak zihin önde</string>
-    <string name="splash_msg_hyperfocus_3">Derinlere dalmaya hazır</string>
-    <string name="splash_msg_overload_1">Yavaşça alıyoruz</string>
+    <string name="splash_msg_hyperfocus_3">Derine dalmaya hazır</string>
+    <string name="splash_msg_overload_1">Yavaş ilerliyoruz</string>
     <string name="splash_msg_overload_2">Benimle nefes al</string>
     <string name="splash_msg_overload_3">Nazik tempo</string>
-    <string name="splash_msg_calm_1">Huzur sizi bekliyor</string>
+    <string name="splash_msg_calm_1">Huzur bekliyor</string>
     <string name="splash_msg_calm_2">Dinginlik modu</string>
     <string name="splash_msg_calm_3">Sakin sular</string>
-    <string name="splash_msg_adhd_energized_1">Haydi gidelim! ⚡</string>
-    <string name="splash_msg_adhd_energized_2">Enerji açığa çıktı</string>
+    <string name="splash_msg_adhd_energized_1">Hadi başlayalım! ⚡</string>
+    <string name="splash_msg_adhd_energized_2">Enerji açıldı</string>
     <string name="splash_msg_adhd_energized_3">Parlama zamanı</string>
     <string name="splash_msg_adhd_low_dopamine_1">Isınıyoruz</string>
-    <string name="splash_msg_adhd_low_dopamine_2">Kıvılcımını buluyoruz</string>
-    <string name="splash_msg_adhd_low_dopamine_3">Yapabilirsin</string>
+    <string name="splash_msg_adhd_low_dopamine_2">Kıvılcımınızı buluyoruz</string>
+    <string name="splash_msg_adhd_low_dopamine_3">Başarabilirsiniz</string>
     <string name="splash_msg_adhd_task_mode_1">Görev modu</string>
     <string name="splash_msg_adhd_task_mode_2">Bir seferde bir şey</string>
-    <string name="splash_msg_adhd_task_mode_3">Odaklanma aktif</string>
+    <string name="splash_msg_adhd_task_mode_3">Odak aktif</string>
     <string name="splash_msg_autism_routine_1">Her zamanki gibi</string>
     <string name="splash_msg_autism_routine_2">Tanıdık desenler</string>
     <string name="splash_msg_autism_routine_3">Rutinde konfor</string>
     <string name="splash_msg_autism_sensory_seek_1">Duyusal keyif</string>
     <string name="splash_msg_autism_sensory_seek_2">Desenleri hisset</string>
-    <string name="splash_msg_autism_sensory_seek_3">Tatmin edici hisler</string>
+    <string name="splash_msg_autism_sensory_seek_3">Tatmin edici havalar</string>
     <string name="splash_msg_autism_low_stim_1">Sessiz mod</string>
     <string name="splash_msg_autism_low_stim_2">Yumuşak ve nazik</string>
-    <string name="splash_msg_autism_low_stim_3">Duyularını dinlendir</string>
+    <string name="splash_msg_autism_low_stim_3">Duyularınızı dinlendirin</string>
     <string name="splash_msg_anxiety_soothe_1">Burada güvendesiniz</string>
     <string name="splash_msg_anxiety_soothe_2">Nefes al, nefes ver</string>
     <string name="splash_msg_anxiety_soothe_3">Her şey yolunda</string>
     <string name="splash_msg_anxiety_grounding_1">Ayaklar yerde</string>
-    <string name="splash_msg_anxiety_grounding_2">Şu an</string>
+    <string name="splash_msg_anxiety_grounding_2">Şimdiki an</string>
     <string name="splash_msg_anxiety_grounding_3">Kararlı ve güvenli</string>
     <string name="splash_msg_dyslexia_friendly_1">Net ve okunabilir</string>
     <string name="splash_msg_dyslexia_friendly_2">Sizin yolunuz</string>
@@ -136,15 +128,15 @@
     <string name="splash_msg_blind_large_1">Büyük ve net</string>
     <string name="splash_msg_blind_large_2">Kolay okuma</string>
     <string name="splash_msg_blind_large_3">Sizin yolunuz</string>
-    <string name="splash_msg_mood_tired_1">Rahat ol</string>
+    <string name="splash_msg_mood_tired_1">Rahat olun</string>
     <string name="splash_msg_mood_tired_2">Acele yok</string>
     <string name="splash_msg_mood_tired_3">Nazik başlangıç</string>
-    <string name="splash_msg_mood_anxious_1">İyisin</string>
-    <string name="splash_msg_mood_anxious_2">Bu da geçer</string>
+    <string name="splash_msg_mood_anxious_1">İyisiniz</string>
+    <string name="splash_msg_mood_anxious_2">Bu da geçecek</string>
     <string name="splash_msg_mood_anxious_3">Güvenli alan</string>
     <string name="splash_msg_mood_happy_1">Merhaba güneş! ☀️</string>
-    <string name="splash_msg_mood_happy_2">Harika hisler</string>
-    <string name="splash_msg_mood_happy_3">Neşe seni bekliyor</string>
+    <string name="splash_msg_mood_happy_2">Harika havalar</string>
+    <string name="splash_msg_mood_happy_3">Neşe bekliyor</string>
     <string name="splash_msg_mood_overwhelmed_1">Bir nefes</string>
     <string name="splash_msg_mood_overwhelmed_2">Yavaşlıyoruz</string>
     <string name="splash_msg_mood_overwhelmed_3">Yanınızdayız</string>
@@ -155,9 +147,7 @@
     <string name="splash_msg_rainbow_2">🌈 Eşsiz zihninizi kutlayın</string>
     <string name="splash_msg_rainbow_3">✨ Nöroçeşitlilik sihirdir</string>
     <string name="splash_msg_rainbow_4">🧠 Beyniniz güzel</string>
-    <string name="splash_msg_rainbow_5">💜 Farklılık güçtür</string>
-
-    <!-- NeuroState Categories -->
+    <string name="splash_msg_rainbow_5">💜 Farklı olmak güçtür</string>
     <string name="neuro_category_basic">Temel Temalar</string>
     <string name="neuro_category_adhd">DEHB Temaları</string>
     <string name="neuro_category_autism">Otizm Temaları</string>
@@ -167,10 +157,8 @@
     <string name="neuro_category_blind">Görme Engelli ve Az Gören</string>
     <string name="neuro_category_mood">Nasıl Hissediyorsunuz?</string>
     <string name="neuro_category_secret">🦄 Gizli Temalar</string>
-
-    <!-- NeuroState Names -->
     <string name="neuro_state_default">Varsayılan</string>
-    <string name="neuro_state_hyperfocus">Hiperfoküs</string>
+    <string name="neuro_state_hyperfocus">Hiper Odak</string>
     <string name="neuro_state_overload">Duyusal Aşırı Yük</string>
     <string name="neuro_state_calm">Sakin</string>
     <string name="neuro_state_adhd_energized">DEHB - Enerjik</string>
@@ -180,7 +168,7 @@
     <string name="neuro_state_autism_sensory_seek">Otizm - Duyusal Arayış</string>
     <string name="neuro_state_autism_low_stim">Otizm - Düşük Uyaran</string>
     <string name="neuro_state_anxiety_soothe">Anksiyete - Yatıştırma</string>
-    <string name="neuro_state_anxiety_grounding">Anksiyete - Toprağa Bağlanma</string>
+    <string name="neuro_state_anxiety_grounding">Anksiyete - Topraklama</string>
     <string name="neuro_state_dyslexia_friendly">Disleksi Dostu</string>
     <string name="neuro_state_colorblind_deuter">Deuteranopia</string>
     <string name="neuro_state_colorblind_protan">Protanopia</string>
@@ -190,25 +178,23 @@
     <string name="neuro_state_blind_high_contrast">Maksimum Kontrast</string>
     <string name="neuro_state_blind_large_text">Büyük Yazı Modu</string>
     <string name="neuro_state_mood_tired">Yorgun Hissediyorum</string>
-    <string name="neuro_state_mood_anxious">Kaygılı Hissediyorum</string>
+    <string name="neuro_state_mood_anxious">Endişeli Hissediyorum</string>
     <string name="neuro_state_mood_happy">Mutlu Hissediyorum</string>
     <string name="neuro_state_mood_overwhelmed">Bunalmış Hissediyorum</string>
     <string name="neuro_state_mood_creative">Yaratıcı Hissediyorum</string>
     <string name="neuro_state_rainbow_brain">Gökkuşağı Beyin</string>
-
-    <!-- NeuroState Descriptions -->
     <string name="neuro_state_default_desc">Dengeli renklerle standart tema</string>
     <string name="neuro_state_hyperfocus_desc">Derin konsantrasyon için yüksek kontrast</string>
     <string name="neuro_state_overload_desc">Uyaranı azaltmak için yumuşak, sakin renkler</string>
     <string name="neuro_state_calm_desc">Rahatlama için yumuşak, yatıştırıcı renkler</string>
-    <string name="neuro_state_adhd_energized_desc">Verimli günler için parlak, ilgi çekici renkler</string>
-    <string name="neuro_state_adhd_low_dopamine_desc">Ruh halini yükseltmek için sıcak, uyarıcı renkler</string>
-    <string name="neuro_state_adhd_task_mode_desc">Minimum dikkat dağınıklığı, odak artırıcı palet</string>
+    <string name="neuro_state_adhd_energized_desc">Verimli günler için parlak, çekici renkler</string>
+    <string name="neuro_state_adhd_low_dopamine_desc">Ruh halini artırmak için sıcak, uyarıcı renkler</string>
+    <string name="neuro_state_adhd_task_mode_desc">Minimum dikkat dağıtıcı, odak artırıcı palet</string>
     <string name="neuro_state_autism_routine_desc">Öngörülebilir, tutarlı renk desenleri</string>
     <string name="neuro_state_autism_sensory_seek_desc">Zengin dokular ve tatmin edici kontrastlar</string>
     <string name="neuro_state_autism_low_stim_desc">Çok yumuşak, nazik renkler</string>
     <string name="neuro_state_anxiety_soothe_desc">Endişeyi hafifletmek için serin, güven verici renkler</string>
-    <string name="neuro_state_anxiety_grounding_desc">Merkezleme için toprak tonlarında, kararlı renkler</string>
+    <string name="neuro_state_anxiety_grounding_desc">Merkezleme için toprak, kararlı renkler</string>
     <string name="neuro_state_dyslexia_friendly_desc">Optimum kontrastla yüksek okunabilirlik</string>
     <string name="neuro_state_colorblind_deuter_desc">Kırmızı-yeşil (yeşil zayıf) renk körlüğü için optimize edildi</string>
     <string name="neuro_state_colorblind_protan_desc">Kırmızı-yeşil (kırmızı zayıf) renk körlüğü için optimize edildi</string>
@@ -223,42 +209,34 @@
     <string name="neuro_state_mood_overwhelmed_desc">Basitleştirilmiş, sessiz palet</string>
     <string name="neuro_state_mood_creative_desc">Hayal gücünü besleyen ilham verici renkler</string>
     <string name="neuro_state_rainbow_brain_desc">Güzelce eşsiz nöroçeşitli zihninizi kutlayın! 🌈🧠</string>
-
-    <!-- Accessibility Strings -->
-    <string name="accessibility_selected">seçili</string>
-    <string name="accessibility_not_selected">seçili değil</string>
-    <string name="expand_category">%1$s\'yı genişlet</string>
-    <string name="collapse_category">%1$s\'yı daralt</string>
-
-    <!-- Easter Egg Dialog -->
+    <string name="accessibility_selected">seçildi</string>
+    <string name="accessibility_not_selected">seçilmedi</string>
+    <string name="expand_category">%1$s genişlet</string>
+    <string name="collapse_category">%1$s daralt</string>
     <string name="easter_egg_secret_unlocked">🎊 Gizli Açıldı! 🎊</string>
     <string name="easter_egg_welcome_back">🦄 Tekrar Hoş Geldiniz! 🦄</string>
-
-    <!-- Navigation/Screen Titles -->
     <string name="nav_feed">Akış</string>
     <string name="nav_explore">Keşfet</string>
     <string name="nav_messages">Mesajlar</string>
     <string name="nav_notifications">Bildirimler</string>
     <string name="nav_settings">Ayarlar</string>
-
-    <!-- Direct Messages (DM) -->
     <string name="dm_title">Mesajlar</string>
-    <string name="dm_search_placeholder">Mesajlarda ara</string>
+    <string name="dm_search_placeholder">Mesaj ara</string>
     <string name="dm_empty_title">Henüz konuşma yok</string>
-    <string name="dm_empty_subtitle">Birisi sana mesaj gönderdiğinde burada göreceksin.</string>
+    <string name="dm_empty_subtitle">Biri size mesaj attığında, burada göreceksiniz.</string>
     <string name="dm_no_conversations">Konuşma yok</string>
     <string name="dm_conversation_count">%d konuşma</string>
     <string name="dm_conversations_count">%d konuşma</string>
     <string name="dm_filtered_count">%1$d / %2$d</string>
-    <string name="dm_new_message_hint">Birinin profilinden yeni bir konuşma başlat! 💬</string>
+    <string name="dm_new_message_hint">Birinin profilinden yeni bir konuşma başlatın! 💬</string>
     <string name="dm_new_message">Yeni Mesaj</string>
     <string name="dm_kids_disabled_title">Mesajlar kapatıldı</string>
-    <string name="dm_kids_disabled_body">Doğrudan mesajlar çocuk modu için kapalıdır (13 yaş altı). Bir ebeveyn bunu Ayarlar → Güvenlik ve Ebeveyn Kontrolleri\'nden değiştirebilir.</string>
-    <string name="dm_conversation_options">Sohbet seçenekleri</string>
+    <string name="dm_kids_disabled_body">Çocuk modu için (13 yaş altı) Direkt Mesajlar devre dışı bırakıldı.</string>
+    <string name="dm_conversation_options">Konuşma seçenekleri</string>
     <string name="dm_safety_title">Güvenlik</string>
-    <string name="dm_safety_body">Bir şey yanlış hissediyorsa, uygunsuz mesajları bildirin. 13 yaş altı hesaplar DM kullanamaz.</string>
+    <string name="dm_safety_body">Bir şey yanlış hissediyorsa, kötüye kullanım mesajlarını bildirin.</string>
     <string name="dm_message_placeholder">Mesaj</string>
-    <string name="dm_search_conversations_placeholder">Sohbet ara</string>
+    <string name="dm_search_conversations_placeholder">Sohbetlerde ara</string>
     <string name="dm_reply_to_placeholder">%s\'a yanıt ver…</string>
     <string name="create_post_share_thoughts">Düşüncelerinizi toplulukla paylaşın…</string>
     <string name="image_editor_type_text">Metninizi yazın…</string>
@@ -268,32 +246,28 @@
     <string name="dm_report">Bildir</string>
     <string name="dm_flagged_badge">İşaretlendi</string>
     <string name="dm_flagged_explainer">İnceleme için işaretlendi</string>
-    <string name="dm_slow_down">Yavaşla…</string>
+    <string name="dm_slow_down">Yavaşlayın…</string>
     <string name="dm_copy">Kopyala</string>
     <string name="dm_block_user">Kullanıcıyı engelle</string>
     <string name="dm_unblock_user">Engeli kaldır</string>
     <string name="dm_mute_user">Sessize al</string>
-    <string name="dm_unmute_user">Sessizi kaldır</string>
+    <string name="dm_unmute_user">Sessizden çıkar</string>
     <string name="dm_block_confirm_title">%s engellensin mi?</string>
-    <string name="dm_block_confirm_body">Size mesaj gönderemeyecek ve bu sohbet gizlenecek.</string>
+    <string name="dm_block_confirm_body">Size mesaj gönderemezler ve bu konuşma gizlenecek.</string>
     <string name="dm_unblock_confirm_title">%s engeli kaldırılsın mı?</string>
-    <string name="dm_unblock_confirm_body">Size tekrar mesaj gönderebilecek.</string>
+    <string name="dm_unblock_confirm_body">Size tekrar mesaj gönderebilecekler.</string>
     <string name="dm_copied">Kopyalandı</string>
     <string name="dm_sending">Gönderiliyor…</string>
     <string name="dm_failed">Başarısız</string>
-    <string name="dm_tap_to_retry">Tekrar denemek için dokun</string>
+    <string name="dm_tap_to_retry">Yeniden denemek için dokunun</string>
     <string name="dm_blocked_banner">Bu kullanıcıyı engellediniz.</string>
     <string name="dm_rate_limited">Çok fazla mesaj. Lütfen yavaşlayın.</string>
-    <string name="dm_send_failed">Mesaj gönderilemedi. Tekrar denemek için dokunun.</string>
-
- th    <!-- Status Indicators -->
+    <string name="dm_send_failed">Mesaj gönderilemedi. Dokunun ve yeniden deneyin.</string>
     <string name="status_online">Çevrimiçi</string>
     <string name="status_offline">Çevrimdışı</string>
     <string name="status_blocked">Engellendi</string>
     <string name="status_muted">Sessize alındı</string>
     <string name="status_away">Uzakta</string>
-
-    <!-- Settings Screen -->
     <string name="settings_profile_group">Profil</string>
     <string name="settings_badges_title">Rozetler</string>
     <string name="settings_badges_subtitle">Kazandığınız başarıları ve hedefleri görün.</string>
@@ -335,8 +309,6 @@
     <string name="settings_nuke_db_dialog_cancel">İptal</string>
     <string name="settings_language_test_title">Uygulama Dili (Test)</string>
     <string name="settings_language_test_subtitle">Dili manuel olarak ayarlayın. Uygulama yeniden başlatma gerektirir.</string>
-
-    <!-- Badges Screen -->
     <string name="badges_screen_title">Rozetleriniz</string>
     <string name="badges_earned_section_title">Kazanılan Rozetler</string>
     <string name="badges_locked_section_title">Kilitli Rozetler</string>
@@ -348,27 +320,19 @@
     <string name="badge_name_hyperfocus_master">HyperFocus Ustası</string>
     <string name="badge_name_community_pillar">Topluluk Direği</string>
     <string name="badge_name_quiet_achiever">Sessiz Başarıcı</string>
-
-    <!-- Comment Sheet -->
     <string name="comments_title">Yorumlar</string>
     <string name="comments_add_comment_placeholder">Yorum ekle…</string>
     <string name="comments_send_button_description">Gönder</string>
-
-
-    <!-- Text Scale Factor Names -->
     <string name="text_scale_small">Küçük</string>
     <string name="text_scale_medium">Orta</string>
     <string name="text_scale_large">Büyük</string>
     <string name="text_scale_xlarge">Çok Büyük</string>
-
-    <!-- Story & Post Creation -->
     <string name="create_post_title">Gönderi Oluştur</string>
     <string name="create_post_hint">Aklından ne geçiyor?</string>
     <string name="create_post_image_url_hint">İsteğe bağlı: Resim URL\'si</string>
     <string name="create_post_video_url_hint">İsteğe bağlı: Video URL\'si</string>
     <string name="create_post_button">PAYLAŞ</string>
     <string name="create_post_cancel">İptal</string>
-
     <string name="create_story_title">Yeni Hikaye Oluştur</string>
     <string name="create_story_image_url_hint">Hikayeniz için resim URL\'si</string>
     <string name="create_story_duration_hint">Saniye cinsinden süre (ör., 5)</string>
@@ -390,13 +354,9 @@
     <string name="story_add_button_content_description">Hikaye ekle</string>
     <string name="story_your_story_label">Hikayeniz</string>
     <string name="story_user_story_content_description">%s\'in Hikayesi</string>
-
-    <!-- Moments/Stories Section -->
     <string name="moments_title">Anlar</string>
     <string name="moments_new_count">%d yeni</string>
     <string name="moments_your_story">Hikayeniz</string>
-
-    <!-- Story Screen (Viewer) -->
     <string name="story_content_description">Hikaye içeriği</string>
     <string name="story_close_button_content_description">Hikayeyi kapat</string>
     <string name="story_delete_button_content_description">Hikayeyi sil</string>
@@ -404,20 +364,14 @@
     <string name="story_delete_dialog_text">Bu hikayeyi kalıcı olarak silecektir. Bu işlem geri alınamaz.</string>
     <string name="story_delete_dialog_confirm">SİL</string>
     <string name="story_delete_dialog_cancel">İptal</string>
-
-    <!-- Toast Messages -->
     <string name="simulate_badge_notification_toast">Simüle edildi: Yeni Rozet Bildirimi!</string>
     <string name="notification_badge_earned_title">Rozet kazanıldı: %s</string>
     <string name="notification_badge_earned_message">Başarıyı kazandınız: %s</string>
-
-    <!-- Notification Custom View -->
     <string name="notification_icon_description">Bildirim simgesi</string>
     <string name="notification_action_dismiss">Kapat</string>
     <string name="notification_action_reply">Yanıtla</string>
     <string name="notification_action_view">Görüntüle</string>
     <string name="notification_action_mark_read">Okundu olarak işaretle</string>
-
-    <!-- Generic content descriptions for FeedScreen -->
     <string name="user_avatar_content_description">Kullanıcı avatarı</string>
     <string name="unknown_user_id">Bilinmiyor</string>
     <string name="more_options_content_description">Daha fazla seçenek</string>
@@ -425,8 +379,6 @@
     <string name="share_button_content_description">Paylaş</string>
     <string name="comment_button_content_description">Yorum yap</string>
     <string name="like_button_content_description">Beğen</string>
-
-    <!-- Post Actions -->
     <string name="post_following_indicator">• Takip ediliyor</string>
     <string name="post_follow_user">@%s takip et</string>
     <string name="post_unfollow_user">@%s takibi bırak</string>
@@ -448,18 +400,12 @@
     <string name="post_block_user">@%s engelle</string>
     <string name="post_report_post">Gönderiyi bildir</string>
     <string name="post_delete_post">Gönderiyi sil</string>
-
-    <!-- Report Dialog -->
     <string name="report_dialog_title">İçeriği bildir</string>
     <string name="report_dialog_reason_hint">Bize daha fazla anlatın (isteğe bağlı)</string>
     <string name="report_dialog_submit">Bildirimi gönder</string>
     <string name="report_dialog_cancel">İptal</string>
-
-    <!-- Premium Dialog -->
     <string name="premium_dialog_title">Premium</string>
     <string name="premium_dialog_message">Premium yükseltmeler bu demo sürümünde bağlı değil.</string>
-
-    <!-- Common Buttons -->
     <string name="button_ok">Tamam</string>
     <string name="button_cancel">İptal</string>
     <string name="button_yes">Evet</string>
@@ -468,12 +414,8 @@
     <string name="button_save">Kaydet</string>
     <string name="button_delete">Sil</string>
     <string name="button_edit">Düzenle</string>
-
-    <!-- Parental Controls Dialogs -->
     <string name="posting_restricted_title">Gönderi Kısıtlı</string>
     <string name="posting_restricted_message">Gönderi paylaşma ebeveyn kontrolleri tarafından devre dışı bırakıldı. Bu ayarı değiştirmek için bir ebeveyn veya veliden isteyin.</string>
-
-    <!-- Menu Items -->
     <string name="menu_view_profile">Profili Görüntüle</string>
     <string name="menu_search_chat">Sohbette Ara</string>
     <string name="menu_mute_notifications">Bildirimleri Sustur</string>
@@ -484,8 +426,6 @@
     <string name="menu_copy_link">Bağlantıyı Kopyala</string>
     <string name="menu_hide">Gizle</string>
     <string name="menu_report">Bildir</string>
-
-    <!-- Toast Messages -->
     <string name="toast_profile_coming_soon">Profil yakında! 👤</string>
     <string name="toast_search_coming_soon">Arama yakında! 🔍</string>
     <string name="toast_notifications_muted">Bildirimler susturuldu 🔕</string>
@@ -496,8 +436,6 @@
     <string name="toast_shared">Paylaşıldı!</string>
     <string name="toast_reported">Bildirildi, teşekkürler!</string>
     <string name="toast_hidden">Akıştan gizlendi</string>
-
-    <!-- Message Actions -->
     <string name="action_copy">Kopyala</string>
     <string name="action_react">Tepki ver…</string>
     <string name="action_retry">Yeniden dene</string>
@@ -505,22 +443,16 @@
     <string name="action_unpin">Sabitlemeyi kaldır</string>
     <string name="action_archive">Arşivle</string>
     <string name="action_delete_chat">Sohbeti sil</string>
-
-    <!-- Explore Screen -->
     <string name="explore_title">Keşfet</string>
     <string name="explore_subtitle">Toplulukları ve kaynakları keşfet</string>
     <string name="explore_featured">Öne Çıkanlar</string>
     <string name="explore_trending">Trendler</string>
     <string name="explore_for_you">Senin İçin</string>
     <string name="explore_search_placeholder">Konu ara…</string>
-
-    <!-- Notifications Screen -->
     <string name="notifications_title">Bildirimler</string>
     <string name="notifications_empty">Bildirim yok</string>
     <string name="notifications_mark_all_read">Tümünü okundu işaretle</string>
     <string name="notifications_unread_count">%d okunmamış</string>
-
-    <!-- Feed Screen -->
     <string name="feed_title">Akış</string>
     <string name="feed_empty">Henüz gönderi yok</string>
     <string name="feed_refresh">Yenilemek için çekin</string>
@@ -531,18 +463,12 @@
     <string name="feed_removed_from_saved">Kaydedilenlerden kaldırıldı</string>
     <string name="feed_save_post">Gönderiyi kaydet</string>
     <string name="feed_content_hidden_kids">Çocuk modu için içerik gizlendi</string>
-
-    <!-- Create Post Dialog -->
     <string name="create_post_tone_label">Ton</string>
     <string name="create_post_add_image">Resim ekle</string>
     <string name="create_post_add_video">Video ekle</string>
     <string name="create_post_posting">Paylaşılıyor…</string>
-
-    <!-- Hide Post -->
     <string name="post_hide">Gönderiyi gizle</string>
     <string name="post_hidden">Gönderi gizlendi</string>
-
-    <!-- Emotional Tones -->
     <string name="tone_neutral">Nötr</string>
     <string name="tone_happy">Pozitif titreşimler</string>
     <string name="tone_excited">Heyecan verici!</string>
@@ -554,16 +480,12 @@
     <string name="tone_celebration">Kutlama!</string>
     <string name="tone_informative">Bilgilendirici</string>
     <string name="tone_may_be_intense">Yoğun olabilir</string>
-
-    <!-- Dev Options -->
     <string name="dev_options_title">Geliştirici Seçenekleri</string>
     <string name="dev_phone_format_test">Telefon Numarası Biçimlendirme</string>
     <string name="dev_phone_format_test_desc">Farklı bölgeler için otomatik biçimlendirmeyi test edin</string>
     <string name="dev_phone_format_style">Biçim Stili</string>
     <string name="dev_phone_test_input">Telefon numarasını girin</string>
     <string name="dev_phone_format_pattern">Desen</string>
-
-    <!-- Mock Notifications -->
     <string name="mock_notif_welcome_title">NeuroComet\'e hoş geldiniz! 👋</string>
     <string name="mock_notif_welcome_msg">Burada olduğunuz için çok mutluyuz. Burası nöroçeşitli zihinler için tasarlanmış güvenli bir alan.</string>
     <string name="mock_notif_badge_title">Yeni Rozet Kazanıldı</string>
@@ -577,13 +499,11 @@
     <string name="mock_notif_mention_title">Bahsedildiniz</string>
     <string name="mock_notif_mention_msg">@%s sizden bahsetti: \"Bu erişilebilirlik ipucuna bakın!\"</string>
     <string name="mock_notif_repost_title">Gönderiniz paylaşıldı</string>
-    <string name="mock_notif_repost_msg">%s, DEHB ipuçları hakkındaki gönderinizi %d takipçiyle paylaştı</string>
+    <string name="mock_notif_repost_msg" formatted="false">%s, DEHB ipuçları hakkındaki gönderinizi %d takipçiyle paylaştı</string>
     <string name="mock_notif_safety_title">Güvenlik hatırlatması</string>
     <string name="mock_notif_safety_msg">Mola vermeyi unutmayın! Bir süredir aktifsiniz. 💙</string>
     <string name="mock_notif_filtered_title">İçerik filtrelendi</string>
     <string name="mock_notif_filtered_msg">Uygun olmayabilecek bazı içerikleri gizledik. Bunu ayarlardan düzenleyebilirsiniz.</string>
-
-    <!-- Mock Posts - Kids -->
     <string name="mock_post_puzzle">🌈 Gökkuşağı bulmacamı bitirdim! 1000 parça tamamlandı! Başka kim bulmaca seviyor? 🧩</string>
     <string name="mock_post_dinosaur">Bugün dinozorların milyonlarca yıl önce yaşadığını öğrendim! 🦕 T-Rex favorim!</string>
     <string name="mock_post_cat">Kedim bugün yeni bir numara öğrendi! Artık çak beşlik yapabiliyor! 🐱✋ Onunla çok gurur duyuyorum!</string>
@@ -592,42 +512,30 @@
     <string name="mock_post_dog">🐕 Köpeğim en iyi yardımcım! Ödev yaparken yanımda oturuyor ve beni sakinleştiriyor! 🐾</string>
     <string name="mock_post_reading">📖 Okuma zamanı EN İYİSİ! Favori kitap serimin 10. bölümündeyim! Başka kim okumayı seviyor? 📚</string>
     <string name="mock_post_art">🎨 Bugün resim dersi çok eğlenceliydi! Gün batımları çizdik ve benimki TÜM renklere sahip! 🌅</string>
-
-    <!-- Mock Posts - Teen -->
     <string name="mock_post_hyperfocus">Projemde bir atılım yaşadım! Hiperfoküs, yönlendirebildiğinizde bir süper güç. Gece geç saatlerdeki kodlama seansları farklı hissettiriyor.</string>
     <string name="mock_post_weighted_vest">Bugün yeni ağırlıklı yelekimi deniyorum. Anında sakinlik, duyusal düzenleme için kesinlikle tavsiye ederim! Sınavlardaki anksiyetemle de yardımcı oluyor.</string>
     <string name="mock_post_dating_adhd">DEHB ile flört çılgınca. Yeni birine hiperfokuslanıp sonra 3 gün mesaj atmayı tamamen unutmak 😅 Başka biri?</string>
     <string name="mock_post_school_stress">Okul stresi şu an gerçek. Ara sınavlar + sosyal anksiyete = bir hafta boyunca odamda saklanmak istemek. En azından gürültü önleyici kulaklıklarım yardımcı oluyor.</string>
-
-    <!-- Mock Posts - Adult -->
     <string name="mock_post_quiet_space">Sessiz bir alana ihtiyacım var. Öğleden sonranın geri kalanı için Aşırı Yük Moduna giriyorum. Yarın görüşürüz. #SessizMod</string>
     <string name="mock_post_organizing">Tüm proje dosyalarımı kategorize klasörlere ayırmayı bitirdim. Görsel düzen inanılmaz tatmin edici. Terapistim bunun sağlıklı bir başa çıkma mekanizması olduğunu söylüyor.</string>
     <string name="mock_post_workplace">İş yeri düzenlemeleri sonunda yerinde! 6 ay savunuculuk aldı ama sessiz çalışma alanımı onaylattım. İK, belgeleri sağladığımda şaşırtıcı derecede destekleyiciydi.</string>
     <string name="mock_post_adulting">DEHB ile yetişkinlik: Kirayı tekrar ödemeyi unuttum, ama bir şekilde 10 yıl önce izlediğim bir filmin her repliğini hatırladım. Ev sahibim memnun değil.</string>
     <string name="mock_post_late_diagnosis">Duyuru: Yetişkin olarak teşhis konulması geçerlidir. Benimkini 34 yaşında aldım ve aniden tüm hayatım anlam kazandı. \"Ne olabilirdi\" yasası gerçek ama kendini nihayet anlama rahatlığı da öyle.</string>
-
-    <!-- Mock DM Conversations -->
     <string name="mock_dm_hey">Merhaba! Duyusal ipuçları hakkındaki gönderilerinizi seviyorum! 💜</string>
     <string name="mock_dm_thanks">Çok teşekkürler! Sizin içeriğiniz de süper yararlı!</string>
     <string name="mock_dm_question">Önerdiğiniz fidget oyuncağı hakkında hızlı bir soru?</string>
     <string name="mock_dm_sure">Tabii, yardımcı olmaktan mutluluk duyarım! Ne öğrenmek istersiniz?</string>
-
-    <!-- Additional Feed Posts -->
     <string name="mock_post_workspace">✨ Sonunda duyusal dostu çalışma alanımı kurdum! Gürültü önleyici kulaklıklar, yumuşak aydınlatma ve ağırlıklı kucak yastığım. Odaklanma için oyun değiştirici! 🎧💡</string>
     <string name="mock_post_brain_different">Hatırlatma: Beyniniz farklı çalışıyor, yanlış değil. 🧠💜 Dünyayı işleme biçiminizi kucaklayın!</string>
     <string name="mock_post_body_doubling">NeuroComet\'te body doubling\'i keşfettim ve VAY. Sanal çalışma arkadaşımla 3 saat aralıksız çalıştım! 📚🎉 Başka biri bunu yararlı buluyor mu?</string>
     <string name="mock_post_stim_toys">Stim oyuncak koleksiyonum büyüyor! 🌈 Bu fidget araçları toplantılarda bana çok yardımcı oldu. Stimming yapmaktan utanmayın! ✨</string>
     <string name="mock_post_launch_pad">Pro ipucu: Kapınızın yanında gün için ihtiyacınız olan her şeyi içeren bir \'fırlatma rampası\' oluşturun. Anahtarlar, cüzdan, ilaçlar, atıştırmalıklar - hepsi tek yerde! 🚀 DEHB hayat hilesi #247</string>
     <string name="mock_post_lunch_win">Bugünün zaferi: Öğle yemeği yemeyi hatırladım! 🎊 Temel ihtiyaçlar için telefon alarmları kurmak öz bakımdır. Kimsenin aksini söylemesine izin vermeyin. 💪</string>
-
-    <!-- Notification Filters -->
     <string name="filter_all">Tümü</string>
     <string name="filter_unread">Okunmamış</string>
     <string name="filter_mentions">Bahsetmeler</string>
     <string name="filter_likes">Beğeniler</string>
     <string name="filter_follows">Takipçiler</string>
-
-    <!-- Mock DM Messages -->
     <string name="mock_dm_conv1_msg1">Merhaba, bugün nasıl hissediyorsun?</string>
     <string name="mock_dm_conv1_msg2">İyiyim, teşekkürler! Sadece dinleniyorum.</string>
     <string name="mock_dm_conv2_msg1">Yeni dolandırıcılık gönderisini gördün mü? Kanma!</string>
@@ -660,14 +568,10 @@
     <string name="mock_dm_conv8_msg1">Bugün düşük enerji günü 😴 Nasıl idare ediyorsun?</string>
     <string name="mock_dm_conv8_msg2">Aynı burada. Tüm zorunlu olmayan planları iptal etmeye karar verdim.</string>
     <string name="mock_dm_conv8_msg3">Bu akıllıca! Öz bakım bencillik değil. İyi dinlen! 💜</string>
-
-    <!-- Explore Categories -->
     <string name="explore_adhd">DEHB</string>
     <string name="explore_autism">Otizm</string>
     <string name="explore_sensory">Duyusal</string>
     <string name="explore_anxiety">Anksiyete</string>
-
-    <!-- Settings Sections -->
     <string name="settings_section_account">Hesap</string>
     <string name="settings_section_premium">Premium</string>
     <string name="settings_section_appearance">Görünüm ve Ekran</string>
@@ -677,8 +581,6 @@
     <string name="settings_section_safety">Güvenlik ve Sağlık</string>
     <string name="settings_section_support">Yardım ve Destek</string>
     <string name="settings_section_about">Hakkında</string>
-
-    <!-- Settings Items -->
     <string name="settings_my_profile">Profilim</string>
     <string name="settings_my_profile_desc">Profilini, enerji durumunu ve tercihlerini görüntüle ve düzenle</string>
     <string name="settings_premium_active">Premium Aktif ✨</string>
@@ -737,8 +639,6 @@
     <string name="settings_terms">Hizmet Şartları</string>
     <string name="settings_privacy_policy">Gizlilik Politikası</string>
     <string name="settings_licenses">Açık Kaynak Lisansları</string>
-
-    <!-- Explore Section Titles -->
     <string name="explore_section_daily_living">Günlük Yaşam</string>
     <string name="explore_section_sensory">Duyusal ve Düzenleme</string>
     <string name="explore_section_social">Sosyal ve İletişim</string>
@@ -746,8 +646,6 @@
     <string name="explore_section_interests">Özel İlgi Alanları ve Hobiler</string>
     <string name="explore_section_health">Sağlık ve Zindelik</string>
     <string name="explore_section_family">Aile ve Ebeveynlik</string>
-
-    <!-- Explore Topic Names -->
     <string name="explore_topic_adhd_hacks">DEHB İpuçları</string>
     <string name="explore_topic_adhd_hacks_desc">DEHB beyinleri için verimlilik ipuçları, zaman yönetimi ve hayat hileleri</string>
     <string name="explore_topic_safe_foods">Güvenli Yiyecekler</string>
@@ -796,8 +694,6 @@
     <string name="explore_topic_parenting_desc">Nörofarklı ebeveynler ve ND çocuk yetiştirme</string>
     <string name="explore_topic_late_diagnosed">Geç Tanı</string>
     <string name="explore_topic_late_diagnosed_desc">Yetişkin tanı deneyimleri ve kimlik keşfi</string>
-
-    <!-- LGBTQ+ Explore Topics -->
     <string name="explore_section_lgbtq">LGBTQ+ ve Kimlik</string>
     <string name="explore_topic_lgbtq_nd">LGBTQ+ ve Nörofarklı</string>
     <string name="explore_topic_lgbtq_nd_desc">Kuir ve nörofarklı kimliklerin kesişimini kutlamak</string>
@@ -811,20 +707,14 @@
     <string name="explore_topic_nonbinary_desc">Non-binary, genderqueer ve gender-fluid topluluk</string>
     <string name="explore_topic_coming_out">Açılma Hikayeleri</string>
     <string name="explore_topic_coming_out_desc">Açılma yolculuklarını paylaşmak ve kabul bulmak</string>
-
-    <!-- Explore Stats -->
     <string name="explore_members">%s üye</string>
     <string name="explore_posts">%s gönderi</string>
     <string name="explore_popular">Popüler</string>
     <string name="explore_new">Yeni</string>
     <string name="explore_see_all">Tümünü gör</string>
     <string name="explore_online_now">%d şu anda çevrimiçi</string>
-
-    <!-- Social Settings -->
     <string name="social_show_online_status">Çevrimiçi Durumu Göster</string>
     <string name="social_show_online_status_desc">Başkalarının sizi aktif olarak görmesine izin ver</string>
-
-    <!-- Quick Tips & Tricks -->
     <string name="tips_title">Hızlı İpuçları ve Püf Noktaları</string>
     <string name="tips_tap_expand">%d faydalı ipucu görmek için dokun</string>
     <string name="tips_tap_collapse">Daraltmak için dokun</string>
@@ -839,7 +729,7 @@
     <string name="tip_readability_title">Daha İyi Okunabilirlik</string>
     <string name="tip_readability_desc">Nörofarklı okuyucular için tasarlanmış Lexend veya Atkinson Hyperlegible fontlarını dene</string>
     <string name="tip_calm_title">Sakin Deneyim</string>
-    <string name="tip_calm_desc">Ayarlar > Animasyonlar\'da tüm animasyonları kapat ve Sakin veya Aşırı Yük temasını kullan</string>
+    <string name="tip_calm_desc">Ayarlar &gt; Animasyonlar\'da tüm animasyonları kapat ve Sakin veya Aşırı Yük temasını kullan</string>
     <string name="tip_focus_title">Odaklan</string>
     <string name="tip_focus_desc">Minimum dikkat dağınıklığı için DEHB Görev Modu teması + Hiperfokus kullan</string>
     <string name="tip_kids_title">Çocukları Koru</string>
@@ -849,21 +739,15 @@
     <string name="tip_themes_title">25+ Tema</string>
     <string name="tip_themes_desc">DEHB, Otizm, Anksiyete, Renk Körlüğü, Düşük Görme ve mevcut ruh halin için temaları keşfet</string>
     <string name="tip_fonts_title">12+ Font</string>
-    <string name="tip_fonts_desc">Ayarlar > Font ve Okuma\'da disleksi dostu, DEHB dostu ve erişilebilirlik fontları arasından seç</string>
-
-    <!-- App Tutorial -->
+    <string name="tip_fonts_desc">Ayarlar &gt; Font ve Okuma\'da disleksi dostu, DEHB dostu ve erişilebilirlik fontları arasından seç</string>
     <string name="tutorial_title">Uygulama Eğitimi</string>
     <string name="tutorial_description">Başlangıç kılavuzunu tekrar izle</string>
-
-    <!-- Developer Section -->
     <string name="settings_section_developer">Geliştirici</string>
     <string name="settings_developer_subtitle">Hata ayıklama ve test araçları</string>
     <string name="settings_fake_premium">Sahte Premium Modu</string>
     <string name="settings_fake_premium_enabled">Premium özellikleri test için açıldı</string>
     <string name="settings_fake_premium_disabled">Premium özellikleri test etmek için etkinleştir</string>
     <string name="settings_dev_options_desc">Test ve hata ayıklama için gelişmiş seçenekler</string>
-
-    <!-- NeuroGames - Stim-dostu Oyunlar -->
     <string name="games_hub_title">NeuroOyunlar</string>
     <string name="games_subtitle">Beyniniz için stim-dostu eğlence</string>
     <string name="games_play_now">Oyun Oyna</string>
@@ -876,12 +760,10 @@
     <string name="games_requires_achievements">%d başarı gerektirir</string>
     <string name="games_coming_soon">Yakında</string>
     <string name="games_coming_soon_message">Bu oyun hâlâ geliştiriliyor. Yakında tekrar bakın!</string>
-
-    <!-- Bireysel Oyunlar -->
     <string name="game_bubble_pop">Balon Patlatma</string>
     <string name="game_bubble_pop_desc">Sakinleştirici bir stim deneyimi için tatmin edici balonları patlatın</string>
     <string name="game_bubble_pop_hint">Patlatmak için balonlara dokunun! ✨</string>
-    <string name="game_fidget_spinner">Fidget Spinner</string>
+    <string name="game_fidget_spinner">Stres Çarkı</string>
     <string name="game_fidget_spinner_desc">Gönlünüzce döndürün - limit yok, sadece iyi hisler</string>
     <string name="game_fidget_spinner_hint">Döndürmek için kaydırın! Ne kadar hızlı kaydırırsanız, o kadar hızlı döner 🌀</string>
     <string name="game_color_flow">Renk Akışı</string>
@@ -902,8 +784,6 @@
     <string name="game_sound_garden">Ses Bahçesi</string>
     <string name="game_sound_garden_desc">Ses çiçekleri dikerek ortam sesleri oluşturun</string>
     <string name="game_sound_garden_hint">Dikmek için dokunun, kaldırmak için basılı tutun. Sesleri birleştirin! 🌸</string>
-
-    <!-- Geliştirme Aşamasındaki Oyunlar -->
     <string name="game_stim_sequencer">Stim Sıralayıcı</string>
     <string name="game_stim_sequencer_desc">Kendi tatmin edici ritim kalıplarınızı oluşturun</string>
     <string name="game_stim_sequencer_hint">Ritminizi oluşturmak için karelere dokunun! Temizlemek için basılı tutun 🎵</string>
@@ -927,12 +807,10 @@
     <string name="game_mood_mixer_hint">Yeni duygular oluşturmak için renkleri birlikte sürükleyin 🎨</string>
     <string name="game_coming_soon">Yakında</string>
     <string name="game_in_development">🚧 Geliştirme Aşamasında</string>
-
-    <!-- Topic Detail Screen -->
     <string name="topic_not_found">Konu bulunamadı</string>
     <string name="topic_share">Konuyu Paylaş</string>
     <string name="topic_more_options_soon">Daha fazla seçenek yakında! ⚙️</string>
-    <string name="topic_members_posts">%s üye • %s gönderi</string>
+    <string name="topic_members_posts" formatted="false">%s üye • %s gönderi</string>
     <string name="topic_joined">Katıldı</string>
     <string name="topic_join_community">Topluluğa Katıl</string>
     <string name="topic_tab_posts">Gönderiler</string>
@@ -940,8 +818,6 @@
     <string name="topic_tab_events">Etkinlikler</string>
     <string name="topic_tab_members">Üyeler</string>
     <string name="topic_share_text">NeuroComet\'te %s topluluğuna göz atın! 🧠✨</string>
-
-    <!-- Topic Resources Section -->
     <string name="topic_resources_title">Kaynaklar</string>
     <string name="resource_getting_started">Başlangıç Rehberi</string>
     <string name="resource_getting_started_desc">Temel bilgileri ve topluluk kurallarını öğrenin</string>
@@ -976,8 +852,6 @@
     <string name="resource_reading">Önerilen Okumalar</string>
     <string name="resource_reading_desc">Üyeler tarafından önerilen kitaplar ve makaleler</string>
     <string name="resource_reading_count">45 öğe</string>
-
-    <!-- Topic Events Section -->
     <string name="topic_events_title">Yaklaşan Etkinlikler</string>
     <string name="event_weekly_chat">Haftalık Topluluk Sohbeti</string>
     <string name="event_weekly_chat_time">Her Cumartesi saat 15:00 TSİ</string>
@@ -997,8 +871,6 @@
     <string name="event_live">CANLI</string>
     <string name="event_rsvp">KATIL</string>
     <string name="event_join">Katıl</string>
-
-    <!-- Topic Members Section -->
     <string name="topic_members_title">Topluluk Üyeleri</string>
     <string name="member_role_moderator">Moderatör</string>
     <string name="member_role_contributor">En İyi Katkıda Bulunan</string>
@@ -1008,13 +880,9 @@
     <string name="member_role_new">Yeni Üye</string>
     <string name="member_follow">Takip Et</string>
     <string name="member_share">Paylaş</string>
-
-    <!-- Time Ago Strings -->
     <string name="time_minutes_ago">%d dk önce</string>
     <string name="time_hours_ago">%d sa önce</string>
     <string name="time_days_ago">%d gün önce</string>
-
-    <!-- Mock Post Content - ADHD Hacks -->
     <string name="post_adhd_1_author">OdaklıFinn</string>
     <string name="post_adhd_1_content">🧠 Beden ikizlemenin gücünü yeni keşfettim! Birinin yanında çalışmak (sanal olsa bile) görevde kalmama çok yardımcı oluyor.</string>
     <string name="post_adhd_2_author">ZamankörüTina</string>
@@ -1025,8 +893,6 @@
     <string name="post_adhd_4_content">Dış yapı iskelem süper gücüm! Görsel hatırlatıcılar, uygulamalar, alarmlar - çevrem hatırlıyor, ben hatırlamak zorunda kalmıyorum 📝</string>
     <string name="post_adhd_5_author">DürtüselIvy</string>
     <string name="post_adhd_5_content">\'Uygulama niyetleri\' kullanmaya başladım - \'Egzersiz yapacağım\' yerine \'Saat 7\'de ayakkabılarımı giyip yürüyeceğim\' diyorum. İşe yarıyor! 🏃‍♀️</string>
-
-    <!-- Mock Post Content - Safe Foods -->
     <string name="post_safefood_1_author">DokuHassas</string>
     <string name="post_safefood_1_content">Yeni güvenli yiyecek buldum! Bu pirinç krakerler çok gürültülü olmadan mükemmel çıtırtıya sahip. Markayı yorumlarda paylaşıyorum 🍘</string>
     <string name="post_safefood_2_author">BeijYemekKulübü</string>
@@ -1037,8 +903,6 @@
     <string name="post_safefood_4_content">Başka kimsenin \'güvenli restoranları\' var mı? Tam olarak ne sipariş edeceğinizi bildiğiniz ve her zaman tutarlı olan yerler?</string>
     <string name="post_safefood_5_author">YemekHazırlıkMolly</string>
     <string name="post_safefood_5_content">Pazar günü güvenli yiyeceklerimi toplu pişirmek = tüm hafta daha az karar yorgunluğu! Şu anda gerçekten sevdiğim 5 yemeği dönüşümlü yapıyorum 💪</string>
-
-    <!-- Mock Post Content - Sleep & Rest -->
     <string name="post_sleep_1_author">GecekuşuNate</string>
     <string name="post_sleep_1_content">Sonunda beni aşırı ısıtmayan ağırlıklı battaniye buldum! Derin basınç + serin kumaş = gerçekten uyumak 😴</string>
     <string name="post_sleep_2_author">HuzursuzRachel</string>
@@ -1049,8 +913,6 @@
     <string name="post_sleep_4_content">Beyaz gürültü vs kahverengi gürültü vs pembe gürültü - hangisi sizin için işe yarıyor? Ben kahverengi gürültü takımındayım, kulaklarım için sarılma gibi 🔊</string>
     <string name="post_sleep_5_author">RüyacıDan</string>
     <string name="post_sleep_5_content">Karartma perdeleri VE uyku maskesi kullanmaya başladım. Tamamen karanlık oda = sonunda derin uyku döngüleri alıyorum!</string>
-
-    <!-- Mock Post Content - Stimming -->
     <string name="post_stim_1_author">StimEkibi</string>
     <string name="post_stim_1_content">Yeni stim oyuncağı incelemesi! Bu dokulu fidget yüzüğü ÇOK tatmin edici. Toplantılar için yeterince sessiz, düzenleme için yeterince stimli ✨</string>
     <string name="post_stim_2_author">MutluSallayan</string>
@@ -1061,8 +923,6 @@
     <string name="post_stim_4_content">Hareket ilaçtır! Açıkça stim yapamadığımda masamın altında ayak parmaklarımı oynatıyorum. İnce ama yine de yardımcı oluyor 🦶</string>
     <string name="post_stim_5_author">DuyusalArayan</string>
     <string name="post_stim_5_content">Çantam için bir \'stim kiti\' hazırladım: macun, dokulu kartlar, fidget küpü. Düzenleme ihtiyaçlarına her zaman hazır!</string>
-
-    <!-- Mock Post Content - Sensory Tips -->
     <string name="post_sensory_1_author">BunalmışOllie</string>
     <string name="post_sensory_1_content">Loop kulaklıklar HAYATIMI DEĞİŞTİRDİ. Hâlâ konuşmaları duyuyorum ama duyusal aşırı yüklenme ortamlarının keskinliğini alıyor 🎧</string>
     <string name="post_sensory_2_author">IşığaDuyarlıLuna</string>
@@ -1073,8 +933,6 @@
     <string name="post_sensory_4_content">Kokusuz her şey yol. Gerçekten parfümsüz ürünlerin listesini yaptım, paylaşmaktan mutluluk duyarım!</string>
     <string name="post_sensory_5_author">SessizQuinn</string>
     <string name="post_sensory_5_content">Şehrimin \'duyusal haritasını\' oluşturdum - sessiz kafeler, düşük uyaranlı mağazalar, erişilebilir kaçış rotaları. Süper yardımcı! 🗺️</string>
-
-    <!-- Mock Post Content - Meltdown Support -->
     <string name="post_meltdown_1_author">İyileşmeRen</string>
     <string name="post_meltdown_1_content">Hatırlatma: Erimeler \'kötü davranış\' değildir - sinir sistemi aşırı yüklenmesidir. Sonrasında kendinize nazik olun 💙</string>
     <string name="post_meltdown_2_author">BaşaçıkmacıCarla</string>
@@ -1085,8 +943,6 @@
     <string name="post_meltdown_4_content">Evimde loş ışıklar, yumuşak dokular ve HİÇBİR talep olmayan bir \'sakin köşe\' oluşturdum. Temel iyileşme bölgesi 🏠</string>
     <string name="post_meltdown_5_author">DestekleyiciSue</string>
     <string name="post_meltdown_5_content">Eriyiş sonrası öz bakım: dinlenme, hidrasyon, konfor yemeği ve kesinlikle öz eleştiri YOK. İyileşme zaman alır 🌸</string>
-
-    <!-- Mock Post Content - Social Skills -->
     <string name="post_social_1_author">SohbetKoçu</string>
     <string name="post_social_1_content">Küçük sohbet için senaryolar! \'Günün nasıl geçiyor?\' → \'Hafta sonu planların var mı?\' → \'Bu güzel görünüyor!\' Ezberlenmiş kalıplar yardımcı oluyor! 💬</string>
     <string name="post_social_2_author">ArkadaşlıkFred</string>
@@ -1097,8 +953,6 @@
     <string name="post_social_4_content">\'Bunu düşünmem gerekiyor\' tam bir cümledir. Hemen yanıt verme baskısı yok!</string>
     <string name="post_social_5_author">ParalelPaul</string>
     <string name="post_social_5_content">Paralel oyun geçerli bir yetişkin arkadaşlığıdır! Birlikte oyun oynamak, aynı odada el işi yapmak - sürekli etkileşim olmadan bağlantı</string>
-
-    <!-- Mock Post Content - Masking -->
     <string name="post_mask_1_author">MaskeAtanUri</string>
     <string name="post_mask_1_content">Sonunda evde maskeyi çıkarıyorum. Tüm gün \'normal\' gibi davranmak yorucu. Güvenli alanlar önemli 🎭</string>
     <string name="post_mask_2_author">TükenmişBeth</string>
@@ -1109,8 +963,6 @@
     <string name="post_mask_4_content">Maskelemenin bedeli: migren, yorgunluk, kimlik karmaşası. \'Uyum sağlamak\' sağlığıma değer mi? Yeniden düşünüyorum…</string>
     <string name="post_mask_5_author">GelişenGrace</string>
     <string name="post_mask_5_content">Kamusal alanda stim yapmaya başladım. İlk başta kalbim hızlandı ama kimse umursamadı. Korku gerçeklikten büyüktü 💪</string>
-
-    <!-- Mock Post Content - Special Interests -->
     <string name="post_special_1_author">DinozorDave</string>
     <string name="post_special_1_content">Dinozor tüyü evrimini üç saat araştırdım ve HİÇBİR ŞEY için pişman değilim! Archaeopteryx hakkında duymak isteyen var mı? 🦕</string>
     <string name="post_special_2_author">TrenTakipçisi</string>
@@ -1121,8 +973,6 @@
     <string name="post_special_4_content">Yürüyüşlerimde bulunan her mantarı belgeliyorum. Şimdiye kadar 47 tür! Mikoloji büyüleyici 🍄</string>
     <string name="post_special_5_author">TarihHayranıHenry</string>
     <string name="post_special_5_content">Herhangi bir tarihsel dönem hakkında bana sorun, muhtemelen bir saat konuşabilirim. Özel ilgi alanları hediyelerdir! 📚</string>
-
-    <!-- Feedback Hub -->
     <string name="feedback_hub_title">Geri Bildirim Merkezi</string>
     <string name="feedback_submit_tab">Gönder</string>
     <string name="feedback_requests_tab">İstekler</string>
@@ -1172,15 +1022,10 @@
     <string name="feedback_severity_high">Yüksek</string>
     <string name="feedback_severity_critical">Kritik</string>
     <string name="feedback_votes">%d oy</string>
-
-    <!-- Debug Performance -->
     <string name="debug_tools_title">Hata Ayıklama Araçları</string>
     <string name="debug_performance_overlay">Performans Göstergesi</string>
     <string name="debug_performance_desc">FPS, bellek ve kaydırma istatistiklerini gösterir</string>
     <string name="debug_reset_counters">Sayaçları Sıfırla</string>
-
-
-    <!-- Credential Storage Dev Options -->
     <string name="dev_credential_title">Kimlik Bilgisi Deposu</string>
     <string name="dev_credential_test_save">Kaydetmeyi Test Et</string>
     <string name="dev_credential_test_retrieve">Almayı Test Et</string>
@@ -1190,4 +1035,683 @@
     <string name="dev_credential_create_session">Test Oturumu Oluştur</string>
     <string name="dev_credential_end_session">Oturumu Sonlandır</string>
     <string name="dev_credential_extend_session">Oturumu Uzat</string>
+    <string name="messages_empty_title">Henüz konuşma yok</string>
+    <string name="messages_empty_subtitle">Birine mesaj attığınızda, burada görünecek.</string>
+    <string name="messages_empty_hint">İpucu: Keşfet → bir profile dokunun → Mesaj (mock).</string>
+    <string name="messages_no_results_title">Sonuç yok</string>
+    <string name="messages_no_results_subtitle">Farklı bir arama deneyin veya Tümü\'ne geri dönün.</string>
+    <string name="messages_filtering_unread">Okunmamış olanlara filtreliyorsunuz.</string>
+    <string name="settings_logout">Çıkış Yap</string>
+    <string name="settings_youre_awesome">Harikasın! 🙌</string>
+    <string name="settings_not_authenticated">Kullanıcı doğrulanmamış.</string>
+    <string name="emoji_thumbs_up" translatable="false">👍</string>
+    <string name="emoji_heart" translatable="false">❤️</string>
+    <string name="emoji_smile" translatable="false">😊</string>
+    <string name="emoji_hands" translatable="false">🙌</string>
+    <string name="emoji_more" translatable="false">+</string>
+    <string name="avatar_title">Profil Resmi</string>
+    <string name="avatar_customize">Avatarı Özelleştir</string>
+    <string name="avatar_choose_photo">Fotoğraf Seç</string>
+    <string name="avatar_take_selfie">Selfie Çek</string>
+    <string name="avatar_from_gallery">Galeriden</string>
+    <string name="avatar_remove_photo">Fotoğrafı Kaldır</string>
+    <string name="avatar_use_default">Varsayılan Avatarı Kullan</string>
+    <string name="avatar_create_custom">Özel Avatar Oluştur</string>
+    <string name="avatar_edit">Avatarı Düzenle</string>
+    <string name="avatar_save">Avatarı Kaydet</string>
+    <string name="avatar_cancel">İptal</string>
+    <string name="avatar_preview">Önizleme</string>
+    <string name="avatar_saved_success">Avatar kaydedildi! ✨</string>
+    <string name="avatar_upload_failed">Yükleme başarısız. Tekrar deneyin.</string>
+    <string name="avatar_permission_camera">Selfie için kamera izni gerekli</string>
+    <string name="avatar_permission_gallery">Galeri için depolama izni gerekli</string>
+    <string name="avatar_crop_title">Fotoğrafı Kırp</string>
+    <string name="avatar_crop_hint">Yakınlaştırmak için sıkıştır, ayarlamak için sürükle</string>
+    <string name="avatar_style_title">Avatar Stili</string>
+    <string name="avatar_style_photo">Fotoğraf</string>
+    <string name="avatar_style_illustrated">İllüstrasyon</string>
+    <string name="avatar_style_pixel">Piksel Sanatı</string>
+    <string name="avatar_style_abstract">Soyut</string>
+    <string name="avatar_background_title">Arka Plan</string>
+    <string name="avatar_background_solid">Düz Renk</string>
+    <string name="avatar_background_gradient">Gradyan</string>
+    <string name="avatar_background_pride">Pride Bayrağı</string>
+    <string name="avatar_background_pattern">Desen</string>
+    <string name="avatar_accessories_title">Aksesuarlar</string>
+    <string name="avatar_accessories_none">Yok</string>
+    <string name="avatar_accessories_glasses">Gözlük</string>
+    <string name="avatar_accessories_hat">Şapka</string>
+    <string name="avatar_accessories_headphones">Kulaklık</string>
+    <string name="avatar_frame_title">Çerçeve</string>
+    <string name="avatar_frame_none">Çerçeve Yok</string>
+    <string name="avatar_frame_circle">Daire</string>
+    <string name="avatar_frame_rounded">Yuvarlak</string>
+    <string name="avatar_frame_pride">Pride Çerçevesi</string>
+    <string name="avatar_frame_neurodivergent">Sonsuzluk Çerçevesi ∞</string>
+    <string name="avatar_colors_title">Renkler</string>
+    <string name="avatar_skin_tone">Ten Rengi</string>
+    <string name="avatar_hair_color">Saç Rengi</string>
+    <string name="avatar_eye_color">Göz Rengi</string>
+    <string name="avatar_expression_title">İfade</string>
+    <string name="avatar_expression_happy">Mutlu</string>
+    <string name="avatar_expression_calm">Sakin</string>
+    <string name="avatar_expression_confident">Kendinden Emin</string>
+    <string name="avatar_expression_playful">Şakacı</string>
+    <string name="avatar_randomize">Rastgele</string>
+    <string name="avatar_reset">Sıfırla</string>
+    <string name="avatar_premium_feature">Premium Özellik ✨</string>
+    <string name="avatar_premium_unlock">Premium ile daha fazla seçenek aç!</string>
+    <string name="post_save">Gönderiyi Kaydet</string>
+    <string name="post_unsave">Kaydedilenlerden Kaldır</string>
+    <string name="post_share">Paylaş</string>
+    <string name="post_share_via">Share via…</string>
+    <string name="post_share_post_via">Share post via</string>
+    <string name="post_share_story">Share Story</string>
+    <string name="post_share_topic">Share Topic</string>
+    <string name="create_post_close">Kapat</string>
+    <string name="create_post_how_feeling">Nasıl hissediyorsunuz?</string>
+    <string name="create_post_placeholder">Aklından ne geçiyor?</string>
+    <string name="create_post_add_media">Medya Ekle</string>
+    <string name="create_post_image_url">Image URL</string>
+    <string name="create_post_video_url">Video URL</string>
+    <string name="create_post_content_warning">Content Warning</string>
+    <string name="create_post_content_warning_desc">This post may contain sensitive content</string>
+    <string name="create_post_post">Paylaş</string>
+    <string name="create_post_chars_remaining">%d characters remaining</string>
+    <string name="create_post_chars_over">%d characters over limit</string>
+    <string name="premium_lifetime_member">You\'re a Lifetime Member!</string>
+    <string name="premium_now_premium">You\'re Now Premium!</string>
+    <string name="premium_welcome_back">Welcome Back, Premium Member!</string>
+    <string name="premium_welcome">Welcome to Premium!</string>
+    <string name="share_sheet_title">Share Post</string>
+    <string name="share_sheet_copy_link">Copy Link</string>
+    <string name="share_sheet_copy_link_desc">Copy post link to clipboard</string>
+    <string name="share_sheet_share_via">Share via…</string>
+    <string name="share_sheet_share_via_desc">Share to other apps</string>
+    <string name="share_sheet_send_dm">Send in DM</string>
+    <string name="share_sheet_send_dm_desc">Share directly to a friend</string>
+    <string name="share_sheet_repost">Repost</string>
+    <string name="share_sheet_repost_desc">Share to your feed</string>
+    <string name="post_action_like">Like</string>
+    <string name="post_action_comment">Comment</string>
+    <string name="post_action_share">Share</string>
+    <string name="post_action_save">Save</string>
+    <string name="post_likes_count">%d likes</string>
+    <string name="post_comments_shares_count" formatted="false">%d comments • %d shares</string>
+    <string name="post_content_hidden_kids">Content hidden for kids mode</string>
+    <string name="delete_post_title">Delete Post?</string>
+    <string name="delete_post_message">This action cannot be undone. Are you sure you want to delete this post?</string>
+    <string name="time_just_now">Şimdi</string>
+    <string name="time_format_minutes">%d dk önce</string>
+    <string name="time_format_hours">%d sa önce</string>
+    <string name="time_format_days">%d gün önce</string>
+    <string name="settings_app_icon">App Icon</string>
+    <string name="settings_app_icon_desc">Choose your favorite icon style</string>
+    <string name="icon_style_default">Default Comet</string>
+    <string name="icon_style_default_desc">The classic NeuroComet icon</string>
+    <string name="icon_style_calm">Calm Waters</string>
+    <string name="icon_style_calm_desc">Soothing blue tones for relaxation</string>
+    <string name="icon_style_focus">Focus Mode</string>
+    <string name="icon_style_focus_desc">Minimal design to reduce distractions</string>
+    <string name="icon_style_energy">Energy Burst</string>
+    <string name="icon_style_energy_desc">Vibrant colors for motivation</string>
+    <string name="icon_style_sensory">Sensory Friendly</string>
+    <string name="icon_style_sensory_desc">Muted tones gentle on the eyes</string>
+    <string name="icon_style_pride">Neurodiversity Pride</string>
+    <string name="icon_style_pride_desc">Celebrate neurodivergent identity</string>
+    <string name="icon_customization_title">Choose Your Icon</string>
+    <string name="icon_customization_subtitle">Pick an icon that matches your mood and needs</string>
+    <string name="icon_applied">Icon applied! Restart your launcher if it doesn\'t update. 🎨</string>
+    <string name="game_pattern_tap_hint">Watch the pattern, then tap the tiles in order! 🎯</string>
+    <string name="game_infinity_draw_hint">Drag your finger to draw - create anything you want! ✨</string>
+    <string name="game_sensory_rain_hint">Adjust the slider for more rain. Tap to create ripples! 🌧️</string>
+    <string name="community_back">Geri</string>
+    <string name="community_share">Topluluğu paylaş</string>
+    <string name="community_more_options">Daha fazla seçenek</string>
+    <string name="community_join">Topluluğa katıl</string>
+    <string name="community_leave">Topluluktan ayrıl</string>
+    <string name="community_joined_toast">%s topluluğuna katıldın</string>
+    <string name="community_left_toast">%s topluluğundan ayrıldın</string>
+    <string name="community_mute_notifications">Bildirimleri sessize al</string>
+    <string name="community_turn_on_notifications">Bildirimleri aç</string>
+    <string name="community_notifications_on_toast">%s bildirimleri açıldı</string>
+    <string name="community_notifications_muted_toast">%s bildirimleri sessize alındı</string>
+    <string name="community_save">Topluluğu kaydet</string>
+    <string name="community_saved_toast">%s yer imlerine kaydedildi</string>
+    <string name="community_link_copied">Bağlantı panoya kopyalandı</string>
+    <string name="community_rules">Topluluk kuralları</string>
+    <string name="community_rules_coming_soon">Topluluk kuralları yakında</string>
+    <string name="community_report">Topluluğu bildir</string>
+    <string name="community_reported_toast">Rapor gönderildi. Teşekkürler!</string>
+    <string name="community_compose">Yaz</string>
+    <string name="post_mental_1_author">AnxietyAlly</string>
+    <string name="post_mental_1_content">ADHD + anxiety is a rough combo. Tips that help me: structured routines, movement breaks, and lots of self-compassion 🧘</string>
+    <string name="post_mental_2_author">DepressionDiana</string>
+    <string name="post_mental_2_content">Some days, just existing is an achievement. Be proud of the small wins. You\'re doing better than you think 💙</string>
+    <string name="post_mental_3_author">TherapyTom</string>
+    <string name="post_mental_3_content">Finally found a neurodivergent-affirming therapist! They understand that \'just try harder\' isn\'t helpful. Game changer!</string>
+    <string name="post_mental_4_author">HealingHannah</string>
+    <string name="post_mental_4_content">Journaling prompts for rough days: What\'s draining me? What\'s one kind thing I can do for myself right now?</string>
+    <string name="post_mental_5_author">CopingChris</string>
+    <string name="post_mental_5_content">Medication isn\'t a failure - it\'s a tool. Just like glasses for vision. No shame in chemical support 💊</string>
+    <string name="post_work_1_author">AccommodationAce</string>
+    <string name="post_work_1_content">Got my workplace accommodations approved! Noise-canceling headphones, flexible hours, written instructions. Know your rights! 💼</string>
+    <string name="post_work_2_author">StudentSara</string>
+    <string name="post_work_2_content">College disability services changed everything. Extra time, quiet testing rooms, note-taking support. Ask for help! 🎓</string>
+    <string name="post_work_3_author">RemoteRick</string>
+    <string name="post_work_3_content">WFH is my dream. No fluorescent lights, no open offices, no surprise social interactions. Productivity skyrocketed!</string>
+    <string name="post_work_4_author">MeetingMary</string>
+    <string name="post_work_4_content">Cameras off in meetings when I need them. Standing during calls. These \'small\' accommodations make huge differences</string>
+    <string name="post_work_5_author">CareerCoach</string>
+    <string name="post_work_5_content">Neurodivergent-friendly career paths: programming, research, art, writing, data analysis. Play to your strengths! 📈</string>
+    <string name="post_late_1_author">LateBloomLisa</string>
+    <string name="post_late_1_content">Diagnosed at 35. Everything suddenly makes sense - the struggles, the differences, the \'quirks\'. Grief and relief mixed 🔍</string>
+    <string name="post_late_2_author">MidlifeMike</string>
+    <string name="post_late_2_content">Spent decades thinking I was broken. Turns out I\'m just wired differently. Late diagnosis is still valid diagnosis 💜</string>
+    <string name="post_late_3_author">IdentityCrisis</string>
+    <string name="post_late_3_content">Unmasking after 40 years is HARD. Who am I without the performance? Slowly rediscovering myself</string>
+    <string name="post_late_4_author">GriefAndGrowth</string>
+    <string name="post_late_4_content">Grieving the support I could have had growing up. But also grateful for finally understanding myself 🌱</string>
+    <string name="post_late_5_author">NewChapter</string>
+    <string name="post_late_5_content">It\'s never too late to learn about yourself. Late-diagnosed at 52, and life is finally making sense!</string>
+    <string name="post_lgbtq_1_author">RainbowBrain</string>
+    <string name="post_lgbtq_1_content">The overlap between LGBTQ+ and ND communities is SO real! Finding people who understand BOTH identities is everything 🏳️‍🌈♾️</string>
+    <string name="post_lgbtq_2_author">ProudAndAutistic</string>
+    <string name="post_lgbtq_2_content">Happy to be queer AND neurodivergent! Both are part of who I am, and both are valid and beautiful ✨</string>
+    <string name="post_lgbtq_3_author">IntersectionAlex</string>
+    <string name="post_lgbtq_3_content">Research shows ND folks are more likely to be LGBTQ+. We break the mold in so many ways! 💜</string>
+    <string name="post_lgbtq_4_author">CommunityCarla</string>
+    <string name="post_lgbtq_4_content">This space accepting ALL of me without questions is healing. Thank you for being here 🙏</string>
+    <string name="post_lgbtq_5_author">AlliedAndy</string>
+    <string name="post_lgbtq_5_content">Whether you\'re figuring out identity, already out, or just supporting - you belong here! 🏳️‍🌈</string>
+    <string name="post_trans_1_author">TransAndProud</string>
+    <string name="post_trans_1_content">Being trans AND autistic means processing identity on multiple levels. It\'s complex but beautiful 🏳️‍⚧️</string>
+    <string name="post_trans_2_author">GenderExplorer</string>
+    <string name="post_trans_2_content">ND brains often experience gender differently. Our journeys are valid even if they\'re not \'typical\' 💙💗🤍</string>
+    <string name="post_trans_3_author">SupportiveSpace</string>
+    <string name="post_trans_3_content">Name and pronoun stickers in my profile! Respect is non-negotiable here 🏳️‍⚧️</string>
+    <string name="post_trans_4_author">TransitionTips</string>
+    <string name="post_trans_4_content">Navigating healthcare as trans AND ND can be extra challenging. Let\'s share resources and support! 💪</string>
+    <string name="post_trans_5_author">AuthenticMe</string>
+    <string name="post_trans_5_content">Finally living as my true self. The ND community has been incredibly welcoming. Grateful 💜</string>
+    <string name="post_pride_1_author">PrideParade</string>
+    <string name="post_pride_1_content">Pride month may be June, but we celebrate ALL year! Queer joy is ND-friendly joy 🌈✨</string>
+    <string name="post_pride_2_author">QueerCommunity</string>
+    <string name="post_pride_2_content">Sensory-friendly pride events are the BEST. Pride with ear plugs and sunglasses! 🎉🏳️‍🌈</string>
+    <string name="post_pride_3_author">LoveIsLove</string>
+    <string name="post_pride_3_content">Remember: you don\'t need to \'prove\' your identity to anyone. Your experience is valid! 💖</string>
+    <string name="post_pride_4_author">JoyfulQueer</string>
+    <string name="post_pride_4_content">Celebrating queer joy today! What makes you happy about being part of this community? 🎊</string>
+    <string name="post_pride_5_author">PrideHistory</string>
+    <string name="post_pride_5_content">Learning LGBTQ+ history has been my special interest this month. So much to celebrate and honor! 📚🏳️‍🌈</string>
+    <string name="post_ace_1_author">AceSpace</string>
+    <string name="post_ace_1_content">Asexual AND autistic - the \'double A\' club! Understanding both has been a journey of self-discovery 🖤🤍💜</string>
+    <string name="post_ace_2_author">AroAceVibes</string>
+    <string name="post_ace_2_content">Aromantic spectrum representation matters! QPRs, chosen families, and friendship-centered lives are beautiful 💚</string>
+    <string name="post_ace_3_author">SpectrumExplorer</string>
+    <string name="post_ace_3_content">Gray-ace, demi, aego - so many ways to experience (or not experience) attraction. All valid! 🖤🩶🤍💜</string>
+    <string name="post_ace_4_author">NormalizeAce</string>
+    <string name="post_ace_4_content">Not experiencing attraction the \'typical\' way doesn\'t make us broken. Different is just different 💜</string>
+    <string name="post_ace_5_author">AcePride</string>
+    <string name="post_ace_5_content">Ace week resources coming up! Educational content and community stories to share 🖤🩶🤍💜</string>
+    <string name="post_nb_1_author">NonBinaryNinja</string>
+    <string name="post_nb_1_content">Non-binary and neurodivergent! Gender is a construct I\'m happily deconstructing 💛🤍💜🖤</string>
+    <string name="post_nb_2_author">TheyThemThem</string>
+    <string name="post_nb_2_content">They/them pronouns please! Our community respects everyone\'s identity 💜</string>
+    <string name="post_nb_3_author">GenderFluid</string>
+    <string name="post_nb_3_content">Some days more femme, some days more masc, some days ??? And all of it is valid! ✨</string>
+    <string name="post_nb_4_author">EnbyExplorer</string>
+    <string name="post_nb_4_content">Finding gender-affirming clothing that\'s also sensory-friendly is an adventure! Share your finds! 👕</string>
+    <string name="post_nb_5_author">IdentityJourney</string>
+    <string name="post_nb_5_content">It took me years to understand my gender. ND brain + gender exploration = complex but worth it 💛🤍💜🖤</string>
+    <string name="post_coming_1_author">CameOutCarla</string>
+    <string name="post_coming_1_content">Coming out as both ND and queer to my family was terrifying but freeing. You do it on YOUR timeline! 🚪💜</string>
+    <string name="post_coming_2_author">SafeHarbor</string>
+    <string name="post_coming_2_content">This community is a safe space to explore. You don\'t have to have all the answers yet 💙</string>
+    <string name="post_coming_3_author">JourneyStories</string>
+    <string name="post_coming_3_content">Sharing coming out stories helps others feel less alone. Comment yours if you\'re comfortable! 🌈</string>
+    <string name="post_coming_4_author">StillFiguringOut</string>
+    <string name="post_coming_4_content">Not sure about labels yet and that\'s okay! Questioning is part of the journey, not the end 💜</string>
+    <string name="post_coming_5_author">FoundFamily</string>
+    <string name="post_coming_5_content">Chosen family when bio family doesn\'t understand. The ND+LGBTQ+ community has your back 🏠💜</string>
+    <string name="post_default_1_author">CommunityMember</string>
+    <string name="post_default_1_content">Welcome to this community! Share your experiences and support each other. We\'re all in this together 💙</string>
+    <string name="post_default_2_author">HelpfulHelen</string>
+    <string name="post_default_2_content">Remember: everyone\'s journey is different. What works for one person might not work for another, and that\'s okay!</string>
+    <string name="post_default_3_author">ResourceRon</string>
+    <string name="post_default_3_content">Great resources in the pinned post! Check them out if you\'re new here 📚</string>
+    <string name="post_default_4_author">SupportiveSue</string>
+    <string name="post_default_4_content">This is a judgment-free zone. Ask questions, share struggles, celebrate wins. We\'ve got you! 🌟</string>
+    <string name="post_default_5_author">WelcomingWill</string>
+    <string name="post_default_5_content">New members: introduce yourself! What brings you here? What do you hope to learn or share?</string>
+    <string name="profile_my_profile">Profilim</string>
+    <string name="profile_edit">Profili Düzenle</string>
+    <string name="profile_share">Profili Paylaş</string>
+    <string name="profile_more_options">More Options</string>
+    <string name="profile_verified">Doğrulanmış</string>
+    <string name="profile_following">Takip Edilen</string>
+    <string name="profile_follow">Takip Et</string>
+    <string name="profile_message">Mesaj</string>
+    <string name="profile_mutual_friends">Mutual Friends</string>
+    <string name="profile_posts">Gönderiler</string>
+    <string name="profile_followers">Takipçiler</string>
+    <string name="profile_communication_preferences">Communication &amp; Preferences</string>
+    <string name="profile_how_to_communicate">How to communicate with me</string>
+    <string name="profile_special_interests">Special Interests ✨</string>
+    <string name="profile_interests_subtitle">These topics bring them joy - ask about them!</string>
+    <string name="profile_badges_achievements">Badges &amp; Achievements</string>
+    <string name="profile_no_badges_yet">No badges yet</string>
+    <string name="profile_share_first_post">Share your first post!</string>
+    <string name="profile_no_posts_yet">No posts yet</string>
+    <string name="profile_posts_will_appear">When you share photos or videos, they\'ll appear here.</string>
+    <string name="profile_about">About</string>
+    <string name="profile_joined">Joined</string>
+    <string name="profile_website">Website</string>
+    <string name="profile_earned">Earned</string>
+    <string name="profile_how_feeling">How are you feeling?</string>
+    <string name="profile_selected">Selected</string>
+    <string name="profile_cancel">Cancel</string>
+    <string name="profile_got_it">Got it!</string>
+    <string name="comments_close">Yorumları kapat</string>
+    <string name="comments_replying_to">%s\'e yanıt</string>
+    <string name="comments_no_comments_yet">Henüz yorum yok</string>
+    <string name="comments_be_first">Düşüncelerini ilk paylaşan sen ol!</string>
+    <string name="comments_send_comment">Yorum gönder</string>
+    <string name="comments_view_all">Tüm %d yorumu gör</string>
+    <string name="share_category_text">Check out the %1$s community on NeuroComet! 🧠✨\n\nJoin a supportive space for neurodivergent individuals.\n\nhttps://NeuroComet.app/community/%2$s</string>
+    <string name="share_category_subject">%s - NeuroComet Community</string>
+    <string name="share_category_chooser">Share %s</string>
+    <string name="share_story_text">Check out %1$s\'s story! %2$s</string>
+    <string name="share_story_chooser">Share Story</string>
+    <string name="share_explore_topic_text">Check out the %1$s community on NeuroComet! %2$s\n\n%3$s\n\n👥 %4$s members\n📝 %5$s posts\n\nJoin the conversation: NeuroComet.app/explore/%6$s</string>
+    <string name="share_explore_topic_subject">%1$s %2$s - NeuroComet Community</string>
+    <string name="share_explore_topic_chooser">Share %s</string>
+    <string name="story_reply">Reply</string>
+    <string name="story_like">Like</string>
+    <string name="story_liked">Liked</string>
+    <string name="security_rooted_device">This app cannot run on rooted devices for your security.</string>
+    <string name="security_debug_not_allowed">Debugging is not allowed in production builds.</string>
+    <string name="security_tampering_detected">Security framework tampering detected.</string>
+    <string name="security_integrity_failed">App integrity verification failed.</string>
+    <string name="security_emulator_not_allowed">This app cannot run on emulators.</string>
+    <string name="security_check_failed">Security check failed. This app cannot run on this device.</string>
+    <string name="security_status_excellent">✅ Device security: Excellent</string>
+    <string name="security_status_good">✅ Device security: Good</string>
+    <string name="security_status_fair">⚠️ Device security: Fair - Some features may be restricted</string>
+    <string name="security_status_at_risk">🔴 Device security: At risk - Security features enabled</string>
+    <string name="security_status_critical">🚨 Device security: Critical - App restrictions active</string>
+    <string name="theme_settings_title">Theme Settings</string>
+    <string name="theme_settings_subtitle">Choose a theme that works for you</string>
+    <string name="theme_current_theme">Current Theme</string>
+    <string name="theme_quick_settings">Quick Settings</string>
+    <string name="theme_dynamic_colors">Dynamic Colors</string>
+    <string name="theme_dynamic_colors_active">Dynamic Colors Active</string>
+    <string name="theme_dynamic_colors_hint">Disable Dynamic Colors in Quick Settings below to use custom themes.</string>
+    <string name="theme_dynamic_colors_desc">Use colors from your device wallpaper (Material You)</string>
+    <string name="theme_dynamic_colors_unavailable">Requires Android 12 or higher</string>
+    <string name="theme_disabled_dynamic_active">Disabled (Dynamic Colors active)</string>
+    <string name="theme_rainbow_unlocked">🦄 You\'ve unlocked the Rainbow Brain theme!\nScroll down to Secret Themes to try it!</string>
+    <string name="theme_made_with_love">Made with 💜 for every unique mind</string>
+    <string name="easter_egg_rainbow_unlocked">🦄 You\'ve unlocked the Rainbow Brain theme!\nFind it in Theme Settings → Secret Themes</string>
+    <string name="ads_loading">Reklam yükleniyor…</string>
+    <string name="ads_premium_no_ads">Reklam yok - Premium üye</string>
+    <string name="ads_watch_to_support">NeuroComet\'i desteklemek için kısa bir reklam izle</string>
+    <string name="ads_rewarded_complete">Teşekkürler! Ödül kazandınız.</string>
+    <string name="ads_disabled_kids">Çocuk Modunda reklamlar devre dışı</string>
+    <string name="ads_error_load_failed">Reklam yüklenemedi</string>
+    <string name="widget_focus_timer">Focus Timer</string>
+    <string name="widget_energy_level">Energy Level</string>
+    <string name="widget_social_battery">Social Battery</string>
+    <string name="widget_task_checklist">Today\'s Tasks</string>
+    <string name="widget_calm_corner">Calm Corner</string>
+    <string name="widget_daily_checkin">How are you feeling?</string>
+    <string name="widget_sensory_status">Sensory Status</string>
+    <string name="widget_minutes_remaining">minutes remaining</string>
+    <string name="widget_add_task">Add Task</string>
+    <string name="image_edit_title">Edit Image</string>
+    <string name="image_edit_filters">Filters</string>
+    <string name="image_edit_adjust">Adjust</string>
+    <string name="image_edit_text">Text</string>
+    <string name="image_edit_stickers">Stickers</string>
+    <string name="image_edit_draw">Draw</string>
+    <string name="image_edit_crop">Crop</string>
+    <string name="image_edit_brightness">Brightness</string>
+    <string name="image_edit_contrast">Contrast</string>
+    <string name="image_edit_saturation">Saturation</string>
+    <string name="image_edit_add_text">Add text…</string>
+    <string name="image_edit_drawing_on">Drawing mode on</string>
+    <string name="image_edit_undo">Undo</string>
+    <string name="image_edit_done">Done</string>
+    <string name="explore_view_grid">Grid</string>
+    <string name="explore_view_compact">Compact</string>
+    <string name="explore_view_standard">Standard</string>
+    <string name="explore_view_large">Large</string>
+    <string name="post_media_count" formatted="false">%d of %d</string>
+    <string name="post_max_media_reached">Maximum %d items allowed</string>
+    <string name="post_add_more_media">Add more</string>
+    <string name="post_remove_media">Remove</string>
+    <string name="post_video_indicator">Video</string>
+    <string name="post_photos_count">%d photos</string>
+    <string name="widget_energy_name">Energy Level</string>
+    <string name="widget_energy_description">Track your energy and social battery level from your home screen</string>
+    <string name="widget_focus_timer_name">Focus Timer</string>
+    <string name="widget_focus_timer_description">Start and manage focus sessions directly from your home screen</string>
+    <string name="widget_mood_name">Mood Tracker</string>
+    <string name="widget_mood_description">Quick mood check-ins from your home screen</string>
+    <string name="widget_spoon_name">Spoon Counter</string>
+    <string name="widget_spoon_description">Track your daily energy spoons using spoon theory</string>
+    <string name="widget_affirmation_name">Daily Affirmation</string>
+    <string name="widget_affirmation_description">Neurodivergent-affirming daily messages to brighten your day</string>
+    <string name="widget_stim_break_name">Stim Break</string>
+    <string name="widget_stim_break_description">Track and remind yourself to take sensory regulation breaks</string>
+    <string name="pull_to_refresh">Pull to refresh</string>
+    <string name="release_to_refresh">Release to refresh</string>
+    <string name="refreshing">Refreshing…</string>
+    <string name="refresh_complete">Refresh complete</string>
+    <string name="location_permission_title">Location Access</string>
+    <string name="location_permission_desc">Used for location sharing and finding nearby community members</string>
+    <string name="location_high_accuracy">High Accuracy</string>
+    <string name="location_balanced">Balanced</string>
+    <string name="location_low_power">Battery Saver</string>
+    <string name="sensor_accelerometer">Accelerometer</string>
+    <string name="sensor_magnetometer">Magnetometer</string>
+    <string name="sensor_barometer">Barometer</string>
+    <string name="sensor_monitoring">Sensor Monitoring</string>
+    <string name="error_something_went_wrong">Bir şeyler ters gitti</string>
+    <string name="error_content_unavailable">İçerik mevcut değil</string>
+    <string name="error_try_again">Tekrar Dene</string>
+    <string name="error_go_home">Ana Sayfaya Git</string>
+    <string name="error_get_help">Yardım Al</string>
+    <string name="error_data_safe">Endişelenme, verilerin güvende!</string>
+    <string name="error_temporary">Bu sadece geçici bir sorun. Uygulama kendini düzeltmeye çalışıyor!</string>
+    <string name="error_taking_longer">Beklenenden uzun sürüyor</string>
+    <string name="error_still_loading">İçerik hâlâ yükleniyor. Bekleyebilir veya tekrar deneyebilirsiniz.</string>
+    <string name="error_offline">Çevrimdışısın</string>
+    <string name="error_check_connection">Bağlantını kontrol et ve tekrar dene</string>
+    <string name="error_feature_unavailable">%s mevcut değil</string>
+    <string name="error_empty_title">Henüz burada bir şey yok</string>
+    <string name="error_empty_message">Bu alan doldurulmayı bekliyor!</string>
+    <string name="error_show_details">Teknik Detayları Göster</string>
+    <string name="error_hide_details">Detayları Gizle</string>
+    <string name="comments_empty">Henüz yorum yok</string>
+    <string name="comments_load_more">Daha fazla yükle</string>
+    <string name="comments_replies">%d yanıt</string>
+    <string name="comments_reply">Yanıtla</string>
+    <string name="community_members">%d üye</string>
+    <string name="community_posts">%d gönderi</string>
+    <string name="create_post_add_link">Link ekle</string>
+    <string name="create_post_add_poll">Anket ekle</string>
+    <string name="create_post_discard">Vazgeç</string>
+    <string name="create_post_discard_message">Gönderiniz kaybolacak.</string>
+    <string name="create_post_discard_title">Gönderiden vazgeç?</string>
+    <string name="explore_bipolar">Bipolar</string>
+    <string name="explore_communities">Topluluklar</string>
+    <string name="explore_depression">Depresyon</string>
+    <string name="explore_dyslexia">Disleksi</string>
+    <string name="explore_lgbtq">LGBTQ+</string>
+    <string name="explore_nonbinary">Non-binary</string>
+    <string name="explore_ocd">OKB</string>
+    <string name="explore_people">Kişiler</string>
+    <string name="explore_ptsd">TSSB</string>
+    <string name="explore_topics">Konular</string>
+    <string name="explore_trans">Transgender</string>
+    <string name="feed_empty_subtitle">Kişileri ve toplulukları takip et</string>
+    <string name="feed_empty_title">Henüz burada bir şey yok</string>
+    <string name="feed_error">Yükleme hatası</string>
+    <string name="feed_loading">Yükleniyor…</string>
+    <string name="feed_retry">Tekrar dene</string>
+    <string name="feedback_category">Kategori</string>
+    <string name="feedback_description">Açıklama</string>
+    <string name="feedback_description_placeholder">Detaylı açıkla…</string>
+    <string name="feedback_severity">Önem derecesi</string>
+    <string name="feedback_thanks">Geri bildiriminiz için teşekkürler!</string>
+    <string name="neuro_category_dyslexia">Disleksi</string>
+    <string name="notification_commented">gönderine yorum yaptı</string>
+    <string name="notification_followed">seni takip etmeye başladı</string>
+    <string name="notification_liked_post">gönderini beğendi</string>
+    <string name="notification_mentioned">senden bahsetti</string>
+    <string name="notification_replied">yorumuna yanıt verdi</string>
+    <string name="notifications_mark_read">Okundu olarak işaretle</string>
+    <string name="notifications_settings">Bildirim ayarları</string>
+    <string name="post_comment">Yorum</string>
+    <string name="post_copy_link">Linki kopyala</string>
+    <string name="post_edit">Düzenle</string>
+    <string name="post_like">Beğen</string>
+    <string name="post_unlike">Beğenmekten vazgeç</string>
+    <string name="settings_about">Uygulama hakkında</string>
+    <string name="settings_contact">Bize ulaş</string>
+    <string name="settings_help">Yardım ve Destek</string>
+    <string name="settings_rate_app">Uygulamayı puanla</string>
+    <string name="settings_share_app">Uygulamayı paylaş</string>
+    <string name="settings_terms_of_service">Kullanım Şartları</string>
+    <string name="time_months_ago">%d ay önce</string>
+    <string name="time_weeks_ago">%d hafta önce</string>
+    <string name="time_years_ago">%d yıl önce</string>
+    <string name="story_swipe_to_close">Kapatmak için aşağı kaydır</string>
+    <string name="story_release_to_close">Kapatmak için bırak</string>
+    <string name="story_image_content_description">Story image</string>
+    <string name="story_paused">Paused</string>
+    <string name="story_send_reply_content_description">Send reply</string>
+    <string name="story_counter">%1$d of %2$d</string>
+    <string name="create_story_choose_type">Choose how to create your story:</string>
+    <string name="create_story_preview_content_description">Story preview</string>
+    <string name="create_story_share_button">Hikayeyi Paylaş</string>
+    <string name="time_seconds_short">%1$ds</string>
+    <string-array name="create_post_prompts">
+        <item>What\'s on your mind today?</item>
+        <item>Share a small win!</item>
+        <item>What are you grateful for?</item>
+        <item>Any new hyperfixations?</item>
+        <item>How is your energy level?</item>
+        <item>Learned anything new recently?</item>
+        <item>Vent space: let it out.</item>
+        <item>Share a sensory joy!</item>
+        <item>What\'s inspiring you right now?</item>
+        </string-array>
+    <string name="neuro_state_cinnamon_bun">Cinnamon Bun</string>
+    <string name="neuro_state_cinnamon_bun_desc">Warm, cozy, and comforting like a freshly baked treat 🥐</string>
+    <string name="splash_tagline_cinnamon_bun">Cozy and comforting</string>
+    <string name="splash_msg_cinnamon_bun_1">Warm and cozy</string>
+    <string name="splash_msg_cinnamon_bun_2">Sweet comfort</string>
+    <string name="splash_msg_cinnamon_bun_3">Safe and warm</string>
+    <string name="beta_welcome_title">Beta\'ya Hoş Geldiniz! 🚀</string>
+    <string name="beta_welcome_message">NeuroComet\'i test ettiğiniz için teşekkürler! Geri bildiriminiz bize yardımcı oluyor.</string>
+    <string name="beta_feedback_prompt">Bir hata mı buldunuz yoksa bir öneriniz mi var?</string>
+    <string name="beta_feedback_button">Geri Bildirim Gönder</string>
+    <string name="beta_version_notice">Beta Sürümü %s</string>
+    <string name="settings_section_legal">Legal</string>
+    <string name="settings_privacy_policy_url">Privacy Policy</string>
+    <string name="settings_privacy_policy_desc">How we protect your data</string>
+    <string name="settings_terms_url">Terms of Service</string>
+    <string name="settings_terms_desc">Rules for using NeuroComet</string>
+    <string name="settings_licenses_desc">Open source libraries we use</string>
+    <string name="settings_about_app">About NeuroComet</string>
+    <string name="settings_about_app_desc">Version info, credits &amp; more</string>
+    <string name="about_title">NeuroComet Hakkında</string>
+    <string name="about_tagline">Her zihin için güvenli bir alan ✨</string>
+    <string name="about_description">NeuroComet, nöroçeşitli zihinler için tasarlanmış bir sosyal platformdur.</string>
+    <string name="about_credits">NeuroComet ekibi tarafından 💜 ile yapıldı</string>
+    <string name="about_version">Sürüm %1$s (Yapı %2$d)</string>
+    <string name="about_copyright">© 2024–2026 NeuroComet. Tüm hakları saklıdır.</string>
+    <string name="whats_new_title">What\'s New</string>
+    <string name="whats_new_see_all">See all updates</string>
+    <string name="mood_happy">Mutlu</string>
+    <string name="mood_thoughtful">Thoughtful</string>
+    <string name="mood_tired">Tired</string>
+    <string name="mood_celebrating">Celebrating</string>
+    <string name="mood_motivated">Motivasyonlu</string>
+    <string name="mood_calm">Sakin</string>
+    <string name="mood_mind_blown">Mind-blown</string>
+    <string name="mood_inspired">İlham Almış</string>
+        <string name="loading">Yükleniyor...</string>
+    <string name="action_save">Kaydet</string>
+    <string name="action_cancel">İptal</string>
+    <string name="action_delete">Sil</string>
+    <string name="messaging_search_conversations">Sohbet ara…</string>
+    <string name="messaging_no_results">Sonuç bulunamadı</string>
+    <string name="messaging_no_conversations_yet">Henüz sohbet yok</string>
+    <string name="messaging_start_conversation">Biriyle sohbet başlat!</string>
+    <string name="messaging_start_your_conversation">Sohbetini başlat</string>
+    <string name="messaging_user_blocked">Kullanıcı engellendi</string>
+    <string name="messaging_unblock_to_send">Mesaj göndermek için engeli kaldır</string>
+    <string name="messaging_tap_to_retry">Tekrar denemek için dokun</string>
+    <string name="messaging_quick_emoji">Hızlı emoji</string>
+    <string name="messaging_close_search">Aramayı kapat</string>
+    <string name="age_verify_your_age">Yaşınız</string>
+    <string name="age_confirm">Onayla</string>
+    <string name="age_skip_for_now">Şimdilik geç</string>
+    <string name="badges_badge_unlocked">🎉 Rozet Açıldı! 🎉</string>
+    <string name="badges_xp_earned">+%d XP kazanıldı</string>
+    <string name="badges_unlocked_count">%d açıldı</string>
+    <string name="badges_close">Kapat</string>
+    <string name="badges_awesome">Harika!</string>
+    <string name="badges_all">Tümü</string>
+    <string name="category_no_posts">\'%s\' içinde gönderi yok</string>
+    <string name="category_be_first">İlk paylaşan sen ol!</string>
+    <string name="create_moment">An Oluştur</string>
+    <string name="debug_tools">🔧 Debug Araçları</string>
+    <string name="debug_performance_overlay_title">Performans Katmanı</string>
+    <string name="dev_go_back">Go Back</string>
+    <string name="dev_developer_options">Developer Options</string>
+    <string name="dev_reset_mock_data">Reset All Mock Data</string>
+    <string name="dev_restart_app">Restart App (Show Splash)</string>
+    <string name="dev_reset_stay_signed_in">Reset Stay Signed In Prompt</string>
+    <string name="dev_loading_stress_test">Loading stress testing…</string>
+    <string name="dev_reset_audience">Reset Forced Audience</string>
+    <string name="dev_apply_audience">Apply Current Audience</string>
+    <string name="dev_force_under_13">Force Under 13</string>
+    <string name="dev_force_teen">Force Teen</string>
+    <string name="dev_force_adult">Force Adult</string>
+    <string name="dev_launch_age_popup">Launch Age Popup</string>
+    <string name="dev_reset_age_overrides">Reset Age Overrides</string>
+    <string name="dev_refresh_counts">Refresh Counts</string>
+    <string name="dev_send_test_post">Send Test Post</string>
+    <string name="dev_send_test_like">Send Test Like</string>
+    <string name="dev_send_test_user">Send Test User</string>
+    <string name="dev_send_bulk_posts">Send 5 Bulk Posts</string>
+    <string name="dev_clear_test_data">Clear All Test Data</string>
+    <string name="dev_reset_achievements">Reset Achievements</string>
+    <string name="dev_test_arabic_rtl">🇸🇦 Test Arabic RTL</string>
+    <string name="dev_reset_system_language">Reset to System Language</string>
+    <string name="dev_apply_restart">Apply &amp; Restart</string>
+    <string name="dev_email">Email</string>
+    <string name="dev_password">Password</string>
+    <string name="dev_phone_number">Phone Number</string>
+    <string name="dev_phone_placeholder">(555) 123-4567</string>
+
+    <!-- Additional translations -->
+    <string name="debug_fps">FPS: %d</string>
+    <string name="debug_jank">⚠️ TAKINTI</string>
+    <string name="debug_drops">Düşmeler: %d</string>
+    <string name="debug_mem">Bellek: %.1f MB</string>
+    <string name="debug_scroll">Kaydırma: %d px/s</string>
+    <string name="account_delete">Hesabı Sil</string>
+    <string name="account_delete_confirm">Hesabınızı silmek istediğinizden emin misiniz?</string>
+    <string name="account_delete_warning">Bu işlem geri alınamaz. Tüm verileriniz kalıcı olarak silinecektir.</string>
+    <string name="account_delete_scheduled">Hesap 14 gün içinde silinmek üzere planlandı. İptal etmek için tekrar giriş yapın.</string>
+    <string name="account_delete_cancel">Silmeyi İptal Et</string>
+    <string name="account_delete_cancelled">Hesap silme iptal edildi</string>
+    <string name="email_verification">E-posta Doğrulama</string>
+    <string name="email_resend_verification">Doğrulama E-postasını Tekrar Gönder</string>
+    <string name="email_verification_sent">Doğrulama e-postası gönderildi!</string>
+    <string name="email_not_verified">E-postanız doğrulanmamış</string>
+    <string name="email_verify">E-postayı Doğrula</string>
+    <string name="password_update">Şifreyi Güncelle</string>
+    <string name="password_updated">Şifre başarıyla güncellendi</string>
+    <string name="email_update">E-postayı Güncelle</string>
+    <string name="password_current">Mevcut Şifre</string>
+    <string name="password_new">Yeni Şifre</string>
+    <string name="user_blocked">Kullanıcı engellendi</string>
+    <string name="user_unblocked">Kullanıcının engeli kaldırıldı</string>
+    <string name="user_muted">Kullanıcı susturuldu</string>
+    <string name="user_unmuted">Kullanıcının sesi açıldı</string>
+    <string name="report_submitted">Rapor gönderildi. En kısa sürede inceleyeceğiz.</string>
+    <string name="report_reason">Raporlama nedeni</string>
+    <string name="report_details">Ek ayrıntılar (isteğe bağlı)</string>
+    <string name="report_spam">Spam</string>
+    <string name="report_harassment">Taciz</string>
+    <string name="report_hate_speech">Nefret söylemi</string>
+    <string name="report_misinformation">Yanlış bilgi</string>
+    <string name="report_violence">Şiddet</string>
+    <string name="report_other">Diğer</string>
+    <string name="action_unblock">Engeli Kaldır</string>
+    <string name="action_unmute">Sesi Aç</string>
+    <string name="blocked_users_empty">Engellenen kullanıcı yok</string>
+    <string name="muted_users_empty">Sessize alınan kullanıcı yok</string>
+    <string name="bookmark">Yer İmi</string>
+    <string name="bookmark_added">Gönderi yer imlerine eklendi</string>
+    <string name="bookmark_removed">Yer imi kaldırıldı</string>
+    <string name="bookmarks">Yer İmleri</string>
+    <string name="bookmarks_empty">Henüz yer imi yok</string>
+    <string name="bookmarks_hint">Yer imlerine eklediğiniz gönderiler burada görünecek.</string>
+    <string name="error_connection">Bağlantı hatası. Lütfen internetinizi kontrol edin.</string>
+    <string name="error_server">Sunucu hatası. Lütfen daha sonra tekrar deneyin.</string>
+    <string name="error_unknown">Bir şeyler ters gitti. Lütfen tekrar deneyin.</string>
+    <string name="toast_offline">Çevrimdışısınız</string>
+    <string name="toast_online">Tekrar çevrimiçi</string>
+    <string name="error_session_expired">Oturum süresi doldu. Lütfen tekrar giriş yapın.</string>
+    <string name="error_rate_limited">Çok fazla istek. Lütfen bir süre bekleyin.</string>
+    <string name="error_no_internet">İnternet bağlantısı yok</string>
+    <string name="action_try_again">Tekrar Dene</string>
+    <string name="action_dismiss">Kapat</string>
+    <string name="search_users">Kullanıcı ara</string>
+    <string name="search_posts">Gönderi ara</string>
+    <string name="search_no_results">Sonuç bulunamadı</string>
+    <string name="search_hint">Farklı bir arama terimi deneyin</string>
+    <string name="comments_view_replies">%d yanıtı görüntüle</string>
+    <string name="comments_hide_replies">Yanıtları gizle</string>
+    <string name="time_seconds_ago">%ds önce</string>
+    <string name="time_minute_ago">1 dakika önce</string>
+    <string name="time_hour_ago">1 saat önce</string>
+    <string name="time_day_ago">1 gün önce</string>
+    <string name="time_week_ago">1 hafta önce</string>
+    <string name="time_month_ago">1 ay önce</string>
+    <string name="time_year_ago">1 yıl önce</string>
+    <string name="a11y_skip_to_content">İçeriğe atla</string>
+    <string name="a11y_close_dialog">İletişim kutusunu kapat</string>
+    <string name="a11y_open_menu">Menüyü aç</string>
+    <string name="a11y_close_menu">Menüyü kapat</string>
+    <string name="a11y_go_back">Geri git</string>
+    <string name="a11y_scroll_to_top">Yukarı kaydır</string>
+    <string name="a11y_load_more">Daha fazla yükle</string>
+    <string name="a11y_refresh">İçeriği yenile</string>
+    <string name="a11y_image_desc">Resim açıklaması</string>
+    <string name="a11y_video_desc">Video açıklaması</string>
+    <string name="conversation_video_call">Görüntülü arama</string>
+    <string name="conversation_voice_call">Sesli arama</string>
+    <string name="conversation_back">Geri</string>
+    <string name="conversation_profile_picture">Profil fotoğrafı</string>
+    <string name="conversation_more_options">Daha fazla seçenek</string>
+    <string name="conversation_scroll_to_bottom">Aşağı kaydır</string>
+    <string name="conversation_remove_attachment">Eki kaldır</string>
+    <string name="conversation_cancel_recording">Kaydı iptal et</string>
+    <string name="conversation_take_photo">Fotoğraf çek</string>
+    <string name="conversation_sending">Gönderiliyor</string>
+    <string name="conversation_sent">Gönderildi</string>
+    <string name="conversation_failed">Başarısız</string>
+    <string name="conversation_verified">Doğrulandı</string>
+    <string name="conversation_search">Ara</string>
+    <string name="conversation_practice_calls">Pratik Aramalar</string>
+    <string name="conversation_new_message">Yeni Mesaj</string>
+    <string name="sim_offline_error">Ağ bağlantısı yok (simüle edilmiş çevrimdışı)</string>
+    <string name="sim_server_error">Simüle edilmiş sunucu hatası (HTTP 500)</string>
+    <string name="camera_permission_required">Kamera izni gerekli</string>
+    <string name="location_permission_required">Konum izni gerekli</string>
+    <string name="contacts_permission_required">Kişiler izni gerekli</string>
+    <string name="microphone_permission_required">Mikrofon izni gerekli</string>
+    <string name="getting_location">Konum alınıyor…</string>
+    <string name="location_shared">Konum paylaşıldı</string>
+    <string name="unable_to_get_location">Konum alınamadı</string>
+    <string name="shared_location">Paylaşılan Konum</string>
+    <string name="new_chat">Yeni Sohbet</string>
+    <string name="sync_contacts">Kişileri Senkronize Et</string>
+    <string name="allow_access_find_friends">NeuroComet\'te arkadaşlarınızı bulmak için erişime izin verin</string>
+    <string name="not_now">Şimdi Değil</string>
+    <string name="allow">İzin Ver</string>
+    <string name="contacts_synced">Kişiler senkronize edildi</string>
+    <string name="email_required">E-posta gerekli</string>
+    <string name="invalid_email">Lütfen geçerli bir e-posta adresi girin</string>
+    <string name="password_required">Şifre gerekli</string>
+    <string name="password_too_short">Şifre en az 6 karakter olmalıdır</string>
+    <string name="auth_required">Kimlik doğrulama gerekli</string>
 </resources>

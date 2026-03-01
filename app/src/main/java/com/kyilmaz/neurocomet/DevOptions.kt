@@ -1,37 +1,78 @@
 package com.kyilmaz.neurocomet
 
-import com.kyilmaz.neurocomet.Audience
-import com.kyilmaz.neurocomet.KidsFilterLevel
 
 /**
- * Developer options are intended for DEBUG/testing only.
+ * Environment targets for backend configuration.
  */
-data class DevOptions(
-    // Global
-    val devMenuEnabled: Boolean = false,
-    val showDmDebugOverlay: Boolean = false,
+enum class DevEnvironment {
+    PRODUCTION,
+    STAGING,
+    LOCAL
+}
 
-    // DM delivery simulation
-    val dmForceSendFailure: Boolean = false,
-    val dmArtificialSendDelayMs: Long = 0L, // No artificial delay by default
-
-    // DM throttling - DISABLED by default (no rate limits)
-    val dmDisableRateLimit: Boolean = true, // Rate limits disabled by default
-    val dmMinIntervalOverrideMs: Long? = null,
-
-    // Moderation override
-    val moderationOverride: DevModerationOverride = DevModerationOverride.OFF,
-
-    // Safety overrides (used by SafetyViewModel)
-    val forceAudience: Audience? = null,
-    val forceKidsFilterLevel: KidsFilterLevel? = null,
-    val forcePinSet: Boolean = false,
-    val forcePinVerifySuccess: Boolean = false
-)
-
+/**
+ * Content moderation override for testing.
+ */
 enum class DevModerationOverride {
     OFF,
     CLEAN,
     FLAGGED,
     BLOCKED
 }
+
+/**
+ * Developer options state – intended for DEBUG/testing only.
+ *
+ * SECURITY: These options are only active in debuggable builds.
+ * In production builds, [DevOptionsSettings.get] always returns the
+ * hardened defaults (all overrides disabled).
+ */
+data class DevOptions(
+    // ── Global ──────────────────────────────────────────────
+    val devMenuEnabled: Boolean = false,
+    val verboseLogging: Boolean = false,
+
+    // ── Environment ─────────────────────────────────────────
+    val environment: DevEnvironment = DevEnvironment.PRODUCTION,
+
+    // ── Feature Flags ───────────────────────────────────────
+    val enableNewFeedLayout: Boolean = false,
+    val enableVideoChat: Boolean = false,
+    val enableStoryReactions: Boolean = false,
+    val enableAdvancedSearch: Boolean = false,
+    val enableAiSuggestions: Boolean = false,
+
+    // ── Cross-Device ──────────────────────────────────────────
+    val enableHandoff: Boolean = true,
+
+    // ── DM Debug ────────────────────────────────────────────
+    val showDmDebugOverlay: Boolean = false,
+    val dmForceSendFailure: Boolean = false,
+    val dmArtificialSendDelayMs: Long = 0L,
+    val dmDisableRateLimit: Boolean = true,
+    val dmMinIntervalOverrideMs: Long? = null,
+
+    // ── Content Moderation ──────────────────────────────────
+    val moderationOverride: DevModerationOverride = DevModerationOverride.OFF,
+
+    // ── Content Safety Overrides ────────────────────────────
+    val forceAudience: Audience? = null,
+    val forceKidsFilterLevel: KidsFilterLevel? = null,
+    val forcePinSet: Boolean = false,
+    val forcePinVerifySuccess: Boolean = false,
+
+    // ── Rendering / Network Simulation ──────────────────────
+    val simulateOffline: Boolean = false,
+    val simulateLoadingError: Boolean = false,
+    val infiniteLoading: Boolean = false,
+    val showFallbackUi: Boolean = false,
+    val networkLatencyMs: Long = 0L,
+
+    // ── Auth Overrides ──────────────────────────────────────
+    val forceLoggedOut: Boolean = false,
+    val bypassBiometric: Boolean = false,
+    val force2FA: Boolean = false,
+
+    // ── Performance ─────────────────────────────────────────
+    val showPerformanceOverlay: Boolean = false
+)

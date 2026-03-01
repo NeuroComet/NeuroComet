@@ -22,7 +22,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
@@ -39,7 +38,6 @@ import androidx.compose.ui.window.DialogProperties
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import kotlinx.coroutines.launch
-import kotlin.math.abs
 import kotlin.math.roundToInt
 
 /**
@@ -56,14 +54,14 @@ fun StoryViewerDialog(
     story: Story,
     onDismiss: () -> Unit,
     onStoryViewed: (Story) -> Unit,
-    onReply: (Story, String) -> Unit = { _, _ -> }
+    onReply: (Story, String) -> Unit = { _, _ -> },
+    enableReactions: Boolean = true
 ) {
     var currentItemIndex by remember { mutableIntStateOf(0) }
     var isPaused by remember { mutableStateOf(false) }
     var showReplyField by remember { mutableStateOf(false) }
     var replyText by remember { mutableStateOf("") }
     var isLiked by remember { mutableStateOf(false) }
-    var showShareSheet by remember { mutableStateOf(false) }
     val context = LocalContext.current
     val appContext = remember { context.applicationContext }
 
@@ -83,27 +81,57 @@ fun StoryViewerDialog(
     val currentItem = story.items.getOrNull(currentItemIndex)
     val progress = remember { Animatable(0f) }
 
+    // Detect if current item is video
+    val isVideo = remember(currentItem) {
+        currentItem?.imageUrl?.let { url ->
+            url.endsWith(".mp4", ignoreCase = true) ||
+            url.endsWith(".mov", ignoreCase = true) ||
+            url.endsWith(".webm", ignoreCase = true) ||
+            url.endsWith(".mkv", ignoreCase = true) ||
+            url.endsWith(".avi", ignoreCase = true) ||
+            url.contains("video", ignoreCase = true) ||
+            (url.startsWith("content://") && url.contains("video"))
+        } == true
+    }
+
     // Mark story as viewed
     LaunchedEffect(story.id) {
         onStoryViewed(story)
     }
 
-    // Auto-advance timer
+    // Reset progress when item changes
+    LaunchedEffect(currentItemIndex) {
+        progress.snapTo(0f)
+    }
+
+    // Auto-advance timer (only for images)
     LaunchedEffect(currentItemIndex, isPaused) {
-        if (!isPaused && currentItem != null) {
-            progress.snapTo(0f)
-            progress.animateTo(
-                targetValue = 1f,
-                animationSpec = tween(
-                    durationMillis = currentItem.duration.toInt(),
-                    easing = LinearEasing
+        if (!isPaused && currentItem != null && !isVideo) {
+            val duration = currentItem.duration.toFloat()
+            val currentProgress = progress.value
+            val remainingTime = (duration * (1f - currentProgress)).toLong()
+
+            if (remainingTime > 0) {
+                progress.animateTo(
+                    targetValue = 1f,
+                    animationSpec = tween(
+                        durationMillis = remainingTime.toInt(),
+                        easing = LinearEasing
+                    )
                 )
-            )
-            // Move to next item or close
-            if (currentItemIndex < story.items.size - 1) {
-                currentItemIndex++
-            } else {
-                onDismiss()
+                // Move to next item or close
+                if (currentItemIndex < story.items.size - 1) {
+                    currentItemIndex++
+                } else {
+                    onDismiss()
+                }
+            } else if (progress.value >= 0.99f) {
+                 // Move to next if already finished (edge case)
+                 if (currentItemIndex < story.items.size - 1) {
+                    currentItemIndex++
+                } else {
+                    onDismiss()
+                }
             }
         }
     }
@@ -135,7 +163,7 @@ fun StoryViewerDialog(
                     ) {
                         Icon(
                             Icons.Default.KeyboardArrowDown,
-                            contentDescription = "Swipe down to close",
+                            contentDescription = stringResource(R.string.story_swipe_to_close),
                             tint = Color.White,
                             modifier = Modifier
                                 .size(32.dp)
@@ -143,7 +171,7 @@ fun StoryViewerDialog(
                         )
                         if (swipeProgress > 0.5f) {
                             Text(
-                                text = "Release to close",
+                                text = stringResource(R.string.story_release_to_close),
                                 color = Color.White.copy(alpha = 0.9f),
                                 style = MaterialTheme.typography.labelMedium
                             )
@@ -246,15 +274,6 @@ fun StoryViewerDialog(
             ) {
             // Story content - detect if video or image
             currentItem?.let { item ->
-                val isVideo = item.imageUrl.let { url ->
-                    url.endsWith(".mp4", ignoreCase = true) ||
-                    url.endsWith(".mov", ignoreCase = true) ||
-                    url.endsWith(".webm", ignoreCase = true) ||
-                    url.endsWith(".mkv", ignoreCase = true) ||
-                    url.endsWith(".avi", ignoreCase = true) ||
-                    url.contains("video", ignoreCase = true) ||
-                    url.startsWith("content://") && url.contains("video")
-                }
 
                 if (isVideo) {
                     // Video story
@@ -284,7 +303,7 @@ fun StoryViewerDialog(
                             // No size constraints - load at full resolution
                             .size(coil.size.Size.ORIGINAL)
                             .build(),
-                        contentDescription = "Story image",
+                        contentDescription = stringResource(R.string.story_image_content_description),
                         modifier = Modifier.fillMaxSize(),
                         contentScale = ContentScale.Fit
                     )
@@ -349,7 +368,7 @@ fun StoryViewerDialog(
                 ) {
                     AsyncImage(
                         model = story.userAvatar,
-                        contentDescription = "User avatar",
+                        contentDescription = stringResource(R.string.user_avatar_content_description),
                         modifier = Modifier
                             .size(40.dp)
                             .clip(CircleShape),
@@ -366,7 +385,7 @@ fun StoryViewerDialog(
                             color = Color.White
                         )
                         Text(
-                            text = "${currentItemIndex + 1} of ${story.items.size}",
+                            text = stringResource(R.string.story_counter, currentItemIndex + 1, story.items.size),
                             style = MaterialTheme.typography.bodySmall,
                             color = Color.White.copy(alpha = 0.7f)
                         )
@@ -376,7 +395,7 @@ fun StoryViewerDialog(
                     if (isPaused) {
                         Icon(
                             imageVector = Icons.Filled.Pause,
-                            contentDescription = "Paused",
+                            contentDescription = stringResource(R.string.story_paused),
                             tint = Color.White,
                             modifier = Modifier.size(24.dp)
                         )
@@ -386,7 +405,7 @@ fun StoryViewerDialog(
                     IconButton(onClick = onDismiss) {
                         Icon(
                             imageVector = Icons.Filled.Close,
-                            contentDescription = "Close",
+                            contentDescription = stringResource(R.string.story_close_button_content_description),
                             tint = Color.White
                         )
                     }
@@ -394,7 +413,8 @@ fun StoryViewerDialog(
 
                 Spacer(Modifier.weight(1f))
 
-                // Bottom reply section
+                // Bottom reply section (gated by enableReactions flag)
+                if (enableReactions) {
                 if (showReplyField) {
                     Row(
                         modifier = Modifier
@@ -430,7 +450,7 @@ fun StoryViewerDialog(
                         ) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.Send,
-                                contentDescription = "Send reply",
+                                contentDescription = stringResource(R.string.story_send_reply_content_description),
                                 tint = Color.White
                             )
                         }
@@ -482,6 +502,7 @@ fun StoryViewerDialog(
                         )
                     }
                 }
+                } // end enableReactions gate
             }
             } // End of swipe-down content Box
         } // End of outer container Box
@@ -546,13 +567,11 @@ private fun StoryActionButton(
 fun EnhancedCreateStoryDialog(
     onDismiss: () -> Unit,
     onPost: (String, Long) -> Unit,
-    safetyState: SafetyState = SafetyState()
+    @Suppress("UNUSED_PARAMETER") safetyState: SafetyState = SafetyState()
 ) {
-    var storyItems by remember { mutableStateOf(listOf<StoryItemDraft>()) }
     var currentImageUrl by remember { mutableStateOf("") }
     var currentDuration by remember { mutableStateOf("5") }
     var currentTextOverlay by remember { mutableStateOf("") }
-    var showPreview by remember { mutableStateOf(false) }
     var selectedBackgroundColor by remember { mutableStateOf(0) }
 
     val backgroundColors = listOf(
@@ -581,12 +600,12 @@ fun EnhancedCreateStoryDialog(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "Create Story",
+                        text = stringResource(R.string.create_story_title),
                         style = MaterialTheme.typography.headlineSmall,
                         fontWeight = FontWeight.Bold
                     )
                     IconButton(onClick = onDismiss) {
-                        Icon(Icons.Filled.Close, contentDescription = "Close")
+                        Icon(Icons.Filled.Close, contentDescription = stringResource(R.string.create_post_close))
                     }
                 }
 
@@ -594,7 +613,7 @@ fun EnhancedCreateStoryDialog(
 
                 // Story type tabs
                 Text(
-                    text = "Choose how to create your story:",
+                    text = stringResource(R.string.create_story_choose_type),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -628,7 +647,7 @@ fun EnhancedCreateStoryDialog(
                         FilterChip(
                             selected = currentDuration == duration,
                             onClick = { currentDuration = duration },
-                            label = { Text("${duration}s") }
+                            label = { Text(stringResource(R.string.time_seconds_short, duration.toInt())) }
                         )
                     }
                 }
@@ -687,7 +706,7 @@ fun EnhancedCreateStoryDialog(
                         Box(modifier = Modifier.fillMaxSize()) {
                             AsyncImage(
                                 model = currentImageUrl,
-                                contentDescription = "Story preview",
+                                contentDescription = stringResource(R.string.create_story_preview_content_description),
                                 modifier = Modifier.fillMaxSize(),
                                 contentScale = ContentScale.Crop
                             )
@@ -719,7 +738,7 @@ fun EnhancedCreateStoryDialog(
                     horizontalArrangement = Arrangement.End
                 ) {
                     TextButton(onClick = onDismiss) {
-                        Text("Cancel")
+                        Text(stringResource(R.string.create_story_cancel))
                     }
                     Spacer(Modifier.width(8.dp))
                     Button(
@@ -734,7 +753,7 @@ fun EnhancedCreateStoryDialog(
                     ) {
                         Icon(Icons.Filled.Add, contentDescription = null)
                         Spacer(Modifier.width(8.dp))
-                        Text("Share Story")
+                        Text(stringResource(R.string.create_story_share_button))
                     }
                 }
             }

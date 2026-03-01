@@ -1,6 +1,7 @@
 package com.kyilmaz.neurocomet
 
 import android.net.Uri
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -30,6 +31,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -429,6 +431,7 @@ fun ImageCustomizationEditor(
                         )
                         EditorTab.CROP -> CropPanel(
                             rotation = state.rotation,
+                            selectedAspectRatio = state.cropAspectRatio,
                             onRotate = { state = state.copy(rotation = state.rotation + it) },
                             onAspectRatioSelect = { state = state.copy(cropAspectRatio = it) }
                         )
@@ -924,6 +927,7 @@ private fun DrawingPanel(
 @Composable
 private fun CropPanel(
     rotation: Float,
+    selectedAspectRatio: Float? = null,
     onRotate: (Float) -> Unit,
     onAspectRatioSelect: (Float?) -> Unit
 ) {
@@ -963,7 +967,7 @@ private fun CropPanel(
                 "9:16" to 9f/16f
             ).forEach { (label, ratio) ->
                 FilterChip(
-                    selected = false,
+                    selected = selectedAspectRatio == ratio,
                     onClick = { onAspectRatioSelect(ratio) },
                     label = { Text(label, fontSize = 10.sp) }
                 )
@@ -973,9 +977,50 @@ private fun CropPanel(
 }
 
 // ═══════════════════════════════════════════════════════════════
-// PROFILE PICTURE EDITOR
+// PROFILE PICTURE EDITOR & AVATAR MAKER
 // ═══════════════════════════════════════════════════════════════
 
+// Avatar configuration data
+data class AvatarConfig(
+    val skinTone: Color = Color(0xFFF5D6B8),
+    val faceShape: String = "circle",   // circle, rounded, square
+    val eyes: String = "😊",
+    val mouth: String = "smile",       // smile, grin, neutral, open
+    val hair: String = "none",          // none, short, long, curly, spiky, bun
+    val hairColor: Color = Color(0xFF4A3728),
+    val accessory: String = "none",     // none, glasses, sunglasses, headphones, hat, bow
+    val bgColor: Color = Color(0xFF7C4DFF)
+)
+
+private val SKIN_TONES = listOf(
+    Color(0xFFFDEBD0), Color(0xFFF5D6B8), Color(0xFFE8B88A),
+    Color(0xFFD4956A), Color(0xFFB87333), Color(0xFF8B5E3C),
+    Color(0xFF6B4226), Color(0xFF3D2B1F)
+)
+
+private val HAIR_COLORS = listOf(
+    Color(0xFF1A1A1A), Color(0xFF4A3728), Color(0xFF8B6914),
+    Color(0xFFD4A017), Color(0xFFCC5500), Color(0xFFB22222),
+    Color(0xFF8B008B), Color(0xFF4169E1), Color(0xFF2E8B57),
+    Color(0xFFFF69B4)
+)
+
+private val BG_COLORS = listOf(
+    Color(0xFF7C4DFF), Color(0xFF448AFF), Color(0xFF00BCD4),
+    Color(0xFF4CAF50), Color(0xFFFF9800), Color(0xFFE91E63),
+    Color(0xFF9C27B0), Color(0xFF607D8B), Color(0xFFFF5722),
+    Color(0xFF3F51B5), Color(0xFF009688), Color(0xFF795548)
+)
+
+private val FACE_SHAPES = listOf("circle", "rounded", "square")
+private val EYE_OPTIONS = listOf("😊", "😄", "🙂", "😎", "🤓", "😌", "🥹", "😏")
+private val MOUTH_OPTIONS = listOf("smile", "grin", "neutral", "open")
+private val HAIR_OPTIONS = listOf("none", "short", "long", "curly", "spiky", "bun")
+private val ACCESSORY_OPTIONS = listOf("none", "glasses", "sunglasses", "headphones", "hat", "bow")
+
+private enum class AvatarTab { SKIN, HAIR, EYES, MOUTH, ACCESSORY, BACKGROUND }
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfilePictureEditor(
     currentImageUri: Uri?,
@@ -983,18 +1028,28 @@ fun ProfilePictureEditor(
     onDismiss: () -> Unit,
     onPickImage: () -> Unit
 ) {
-    var showEditor by remember { mutableStateOf(false) }
+    var showPhotoEditor by remember { mutableStateOf(false) }
+    var showAvatarMaker by remember { mutableStateOf(false) }
     var selectedUri by remember { mutableStateOf(currentImageUri) }
 
-    if (showEditor && selectedUri != null) {
+    if (showPhotoEditor && selectedUri != null) {
         ImageCustomizationEditor(
             imageUri = selectedUri,
             onSave = { state ->
                 onSave(state)
-                showEditor = false
+                showPhotoEditor = false
             },
-            onDismiss = { showEditor = false },
+            onDismiss = { showPhotoEditor = false },
             title = "Edit Profile Picture"
+        )
+    } else if (showAvatarMaker) {
+        AvatarMakerSheet(
+            onDismiss = { showAvatarMaker = false },
+            onSave = {
+                // For now, the avatar is drawn in-app — dismiss and pass a placeholder
+                showAvatarMaker = false
+                onSave(ImageCustomizationState())
+            }
         )
     } else {
         Dialog(onDismissRequest = onDismiss) {
@@ -1002,24 +1057,44 @@ fun ProfilePictureEditor(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),
-                shape = RoundedCornerShape(20.dp)
+                shape = RoundedCornerShape(28.dp),
+                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
             ) {
                 Column(
-                    modifier = Modifier.padding(20.dp),
+                    modifier = Modifier.padding(24.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
                         text = "Profile Picture",
-                        style = MaterialTheme.typography.titleLarge,
+                        style = MaterialTheme.typography.headlineSmall,
                         fontWeight = FontWeight.Bold
                     )
 
-                    Spacer(modifier = Modifier.height(20.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Text(
+                        text = "Choose how to set your profile picture",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        textAlign = TextAlign.Center
+                    )
+
+                    Spacer(modifier = Modifier.height(24.dp))
 
                     // Current avatar preview
                     Box(
                         modifier = Modifier
                             .size(120.dp)
+                            .clip(CircleShape)
+                            .background(
+                                Brush.linearGradient(
+                                    listOf(
+                                        MaterialTheme.colorScheme.primary,
+                                        MaterialTheme.colorScheme.tertiary
+                                    )
+                                )
+                            )
+                            .padding(3.dp)
                             .clip(CircleShape)
                             .background(MaterialTheme.colorScheme.surfaceVariant),
                         contentAlignment = Alignment.Center
@@ -1035,34 +1110,104 @@ fun ProfilePictureEditor(
                             Icon(
                                 Icons.Filled.Person,
                                 contentDescription = null,
-                                modifier = Modifier.size(60.dp),
+                                modifier = Modifier.size(56.dp),
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
                     }
 
-                    Spacer(modifier = Modifier.height(20.dp))
+                    Spacer(modifier = Modifier.height(28.dp))
 
-                    // Action buttons
+                    // Action cards
                     Row(
-                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        modifier = Modifier.fillMaxWidth()
                     ) {
-                        OutlinedButton(onClick = onPickImage) {
-                            Icon(Icons.Filled.PhotoLibrary, contentDescription = null)
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text("Choose")
+                        // Choose Photo
+                        Surface(
+                            onClick = onPickImage,
+                            modifier = Modifier.weight(1f),
+                            shape = RoundedCornerShape(16.dp),
+                            color = MaterialTheme.colorScheme.primaryContainer
+                        ) {
+                            Column(
+                                modifier = Modifier.padding(16.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Icon(
+                                    Icons.Filled.PhotoLibrary,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                                    modifier = Modifier.size(28.dp)
+                                )
+                                Spacer(Modifier.height(8.dp))
+                                Text(
+                                    "Gallery",
+                                    style = MaterialTheme.typography.labelLarge,
+                                    fontWeight = FontWeight.SemiBold,
+                                    color = MaterialTheme.colorScheme.onPrimaryContainer
+                                )
+                            }
                         }
 
+                        // Avatar Maker
+                        Surface(
+                            onClick = { showAvatarMaker = true },
+                            modifier = Modifier.weight(1f),
+                            shape = RoundedCornerShape(16.dp),
+                            color = MaterialTheme.colorScheme.tertiaryContainer
+                        ) {
+                            Column(
+                                modifier = Modifier.padding(16.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Icon(
+                                    Icons.Filled.Face,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.onTertiaryContainer,
+                                    modifier = Modifier.size(28.dp)
+                                )
+                                Spacer(Modifier.height(8.dp))
+                                Text(
+                                    "Avatar",
+                                    style = MaterialTheme.typography.labelLarge,
+                                    fontWeight = FontWeight.SemiBold,
+                                    color = MaterialTheme.colorScheme.onTertiaryContainer
+                                )
+                            }
+                        }
+
+                        // Edit Photo (if image selected)
                         if (selectedUri != null) {
-                            Button(onClick = { showEditor = true }) {
-                                Icon(Icons.Filled.Edit, contentDescription = null)
-                                Spacer(modifier = Modifier.width(8.dp))
-                                Text("Edit")
+                            Surface(
+                                onClick = { showPhotoEditor = true },
+                                modifier = Modifier.weight(1f),
+                                shape = RoundedCornerShape(16.dp),
+                                color = MaterialTheme.colorScheme.secondaryContainer
+                            ) {
+                                Column(
+                                    modifier = Modifier.padding(16.dp),
+                                    horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+                                    Icon(
+                                        Icons.Filled.Edit,
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.onSecondaryContainer,
+                                        modifier = Modifier.size(28.dp)
+                                    )
+                                    Spacer(Modifier.height(8.dp))
+                                    Text(
+                                        "Edit",
+                                        style = MaterialTheme.typography.labelLarge,
+                                        fontWeight = FontWeight.SemiBold,
+                                        color = MaterialTheme.colorScheme.onSecondaryContainer
+                                    )
+                                }
                             }
                         }
                     }
 
-                    Spacer(modifier = Modifier.height(12.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
 
                     TextButton(onClick = onDismiss) {
                         Text("Cancel")
@@ -1070,6 +1215,420 @@ fun ProfilePictureEditor(
                 }
             }
         }
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// AVATAR MAKER - Full composable avatar builder
+// ═══════════════════════════════════════════════════════════════
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun AvatarMakerSheet(
+    onDismiss: () -> Unit,
+    onSave: () -> Unit
+) {
+    var config by remember { mutableStateOf(AvatarConfig()) }
+    var selectedTab by remember { mutableStateOf(AvatarTab.SKIN) }
+
+    Dialog(
+        onDismissRequest = onDismiss,
+        properties = DialogProperties(usePlatformDefaultWidth = false)
+    ) {
+        Surface(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 32.dp),
+            shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
+            color = MaterialTheme.colorScheme.surface
+        ) {
+            Column(modifier = Modifier.fillMaxSize()) {
+                // Top bar
+                TopAppBar(
+                    title = {
+                        Text("Create Avatar ✨", fontWeight = FontWeight.Bold)
+                    },
+                    navigationIcon = {
+                        IconButton(onClick = onDismiss) {
+                            Icon(Icons.Filled.Close, "Cancel")
+                        }
+                    },
+                    actions = {
+                        Button(
+                            onClick = onSave,
+                            modifier = Modifier.padding(end = 8.dp)
+                        ) {
+                            Text("Save")
+                        }
+                    }
+                )
+
+                // Avatar preview
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f),
+                    contentAlignment = Alignment.Center
+                ) {
+                    AvatarPreview(config = config, size = 200)
+                }
+
+                // Tab selector
+                ScrollableTabRow(
+                    selectedTabIndex = AvatarTab.entries.indexOf(selectedTab),
+                    edgePadding = 16.dp,
+                    containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
+                    divider = {}
+                ) {
+                    AvatarTab.entries.forEach { tab ->
+                        Tab(
+                            selected = selectedTab == tab,
+                            onClick = { selectedTab = tab },
+                            text = {
+                                Text(
+                                    when (tab) {
+                                        AvatarTab.SKIN -> "🧑 Skin"
+                                        AvatarTab.HAIR -> "💇 Hair"
+                                        AvatarTab.EYES -> "👀 Eyes"
+                                        AvatarTab.MOUTH -> "👄 Mouth"
+                                        AvatarTab.ACCESSORY -> "🎀 Extras"
+                                        AvatarTab.BACKGROUND -> "🎨 BG"
+                                    },
+                                    fontWeight = if (selectedTab == tab) FontWeight.Bold else FontWeight.Normal
+                                )
+                            }
+                        )
+                    }
+                }
+
+                // Tab content
+                Surface(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(220.dp),
+                    color = MaterialTheme.colorScheme.surfaceContainerLow
+                ) {
+                    when (selectedTab) {
+                        AvatarTab.SKIN -> AvatarSkinPanel(config) { config = it }
+                        AvatarTab.HAIR -> AvatarHairPanel(config) { config = it }
+                        AvatarTab.EYES -> AvatarEyesPanel(config) { config = it }
+                        AvatarTab.MOUTH -> AvatarMouthPanel(config) { config = it }
+                        AvatarTab.ACCESSORY -> AvatarAccessoryPanel(config) { config = it }
+                        AvatarTab.BACKGROUND -> AvatarBackgroundPanel(config) { config = it }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun AvatarPreview(config: AvatarConfig, size: Int) {
+    Box(
+        modifier = Modifier
+            .size(size.dp)
+            .clip(CircleShape)
+            .background(config.bgColor)
+            .border(4.dp, Color.White.copy(alpha = 0.3f), CircleShape),
+        contentAlignment = Alignment.Center
+    ) {
+        // Face Group
+        Box(
+            modifier = Modifier
+                .size((size * 0.75f).dp)
+                .offset(y = (size * 0.05f).dp),
+            contentAlignment = Alignment.Center
+        ) {
+            // Face Shape
+            val faceShape = when (config.faceShape) {
+                "rounded" -> RoundedCornerShape(35)
+                "square" -> RoundedCornerShape(20)
+                else -> CircleShape
+            }
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clip(faceShape)
+                    .background(config.skinTone)
+            )
+
+            // Features Column
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+                modifier = Modifier.fillMaxSize()
+            ) {
+                // Eyes
+                Text(
+                    text = config.eyes,
+                    fontSize = (size * 0.2f).sp,
+                    modifier = Modifier.padding(bottom = (size * 0.02f).dp)
+                )
+
+                // Mouth
+                val mouthEmoji = when (config.mouth) {
+                    "smile" -> "👄"
+                    "grin" -> "😃"
+                    "neutral" -> "😐"
+                    "open" -> "😮"
+                    else -> "👄"
+                }
+
+                if (mouthEmoji.length > 1) {
+                    Text(mouthEmoji, fontSize = (size * 0.12f).sp)
+                } else {
+                    // Simple mouth line
+                    Box(
+                        modifier = Modifier
+                            .width((size * 0.15f).dp)
+                            .height((size * 0.02f).dp)
+                            .background(Color(0xFF8B5E3C).copy(alpha = 0.6f), RoundedCornerShape(50))
+                    )
+                }
+            }
+
+            // Hair (layered on top of face)
+            if (config.hair != "none") {
+                val hairEmoji = when (config.hair) {
+                    "short" -> "💇‍♂️"
+                    "long" -> "💇‍♀️"
+                    "curly" -> "👨‍🦱"
+                    "spiky" -> "🌵"
+                    "bun" -> "👱‍♀️"
+                    else -> ""
+                }
+
+                // Hair positioning - covering top
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.TopCenter)
+                        .offset(y = (-size * 0.1f).dp)
+                ) {
+                    Text(
+                        text = hairEmoji,
+                        fontSize = (size * 0.45f).sp
+                    )
+                }
+            }
+        }
+
+        // Accessory overlay (layered on very top)
+        when (config.accessory) {
+            "glasses" -> Text("👓", fontSize = (size * 0.25f).sp, modifier = Modifier.offset(y = (size * 0.02f).dp))
+            "sunglasses" -> Text("🕶️", fontSize = (size * 0.25f).sp, modifier = Modifier.offset(y = (size * 0.02f).dp))
+            "headphones" -> Text("🎧", fontSize = (size * 0.35f).sp, modifier = Modifier.offset(y = (size * 0.05f).dp))
+            "hat" -> Text("🎩", fontSize = (size * 0.35f).sp, modifier = Modifier.offset(y = (-size * 0.25f).dp))
+            "bow" -> Text("🎀", fontSize = (size * 0.2f).sp, modifier = Modifier.offset(x = (size * 0.2f).dp, y = (-size * 0.25f).dp))
+        }
+    }
+}
+
+@Composable
+private fun AvatarSkinPanel(config: AvatarConfig, onChange: (AvatarConfig) -> Unit) {
+    Column(modifier = Modifier.padding(16.dp)) {
+        Text("Skin Tone", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold)
+        Spacer(Modifier.height(12.dp))
+        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            SKIN_TONES.forEach { color ->
+                Box(
+                    modifier = Modifier
+                        .size(40.dp)
+                        .clip(CircleShape)
+                        .background(color)
+                        .border(
+                            width = if (config.skinTone == color) 3.dp else 1.dp,
+                            color = if (config.skinTone == color) MaterialTheme.colorScheme.primary else Color.Gray.copy(alpha = 0.3f),
+                            shape = CircleShape
+                        )
+                        .clickable { onChange(config.copy(skinTone = color)) }
+                )
+            }
+        }
+
+        Spacer(Modifier.height(20.dp))
+
+        Text("Face Shape", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold)
+        Spacer(Modifier.height(12.dp))
+        Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            FACE_SHAPES.forEach { shape ->
+                val shapeCompose = when (shape) {
+                    "rounded" -> RoundedCornerShape(30)
+                    "square" -> RoundedCornerShape(15)
+                    else -> CircleShape
+                }
+                Surface(
+                    onClick = { onChange(config.copy(faceShape = shape)) },
+                    shape = shapeCompose,
+                    color = if (config.faceShape == shape) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceContainerHigh,
+                    border = if (config.faceShape == shape) BorderStroke(2.dp, MaterialTheme.colorScheme.primary) else null,
+                    modifier = Modifier.size(48.dp)
+                ) {
+                    Box(contentAlignment = Alignment.Center) {
+                        Text(shape.replaceFirstChar { it.uppercaseChar() }, fontSize = 10.sp)
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun AvatarHairPanel(config: AvatarConfig, onChange: (AvatarConfig) -> Unit) {
+    Column(modifier = Modifier.padding(16.dp)) {
+        Text("Hair Style", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold)
+        Spacer(Modifier.height(12.dp))
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            HAIR_OPTIONS.forEach { hair ->
+                val label = when (hair) {
+                    "none" -> "❌"
+                    "short" -> "〰️"
+                    "long" -> "🌊"
+                    "curly" -> "〽️"
+                    "spiky" -> "⚡"
+                    "bun" -> "🔵"
+                    else -> "?"
+                }
+                Surface(
+                    onClick = { onChange(config.copy(hair = hair)) },
+                    shape = RoundedCornerShape(12.dp),
+                    color = if (config.hair == hair) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceContainerHigh,
+                    border = if (config.hair == hair) BorderStroke(2.dp, MaterialTheme.colorScheme.primary) else null,
+                    modifier = Modifier.size(48.dp)
+                ) {
+                    Box(contentAlignment = Alignment.Center) { Text(label, fontSize = 20.sp) }
+                }
+            }
+        }
+
+        Spacer(Modifier.height(16.dp))
+        Text("Hair Color", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold)
+        Spacer(Modifier.height(12.dp))
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            HAIR_COLORS.forEach { color ->
+                Box(
+                    modifier = Modifier
+                        .size(32.dp)
+                        .clip(CircleShape)
+                        .background(color)
+                        .border(
+                            width = if (config.hairColor == color) 3.dp else 1.dp,
+                            color = if (config.hairColor == color) MaterialTheme.colorScheme.primary else Color.Gray.copy(alpha = 0.3f),
+                            shape = CircleShape
+                        )
+                        .clickable { onChange(config.copy(hairColor = color)) }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun AvatarEyesPanel(config: AvatarConfig, onChange: (AvatarConfig) -> Unit) {
+    Column(modifier = Modifier.padding(16.dp)) {
+        Text("Eyes", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold)
+        Spacer(Modifier.height(12.dp))
+        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            EYE_OPTIONS.forEach { eyes ->
+                Surface(
+                    onClick = { onChange(config.copy(eyes = eyes)) },
+                    shape = RoundedCornerShape(12.dp),
+                    color = if (config.eyes == eyes) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceContainerHigh,
+                    border = if (config.eyes == eyes) BorderStroke(2.dp, MaterialTheme.colorScheme.primary) else null,
+                    modifier = Modifier.size(52.dp)
+                ) {
+                    Box(contentAlignment = Alignment.Center) { Text(eyes, fontSize = 26.sp) }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun AvatarMouthPanel(config: AvatarConfig, onChange: (AvatarConfig) -> Unit) {
+    Column(modifier = Modifier.padding(16.dp)) {
+        Text("Mouth", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold)
+        Spacer(Modifier.height(12.dp))
+        Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            MOUTH_OPTIONS.forEach { mouth ->
+                val display = when (mouth) {
+                    "smile" -> "😊"
+                    "grin" -> "😄"
+                    "neutral" -> "😐"
+                    "open" -> "😮"
+                    else -> "🙂"
+                }
+                Surface(
+                    onClick = { onChange(config.copy(mouth = mouth)) },
+                    shape = RoundedCornerShape(12.dp),
+                    color = if (config.mouth == mouth) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceContainerHigh,
+                    border = if (config.mouth == mouth) BorderStroke(2.dp, MaterialTheme.colorScheme.primary) else null,
+                    modifier = Modifier.size(56.dp)
+                ) {
+                    Box(contentAlignment = Alignment.Center) { Text(display, fontSize = 28.sp) }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun AvatarAccessoryPanel(config: AvatarConfig, onChange: (AvatarConfig) -> Unit) {
+    Column(modifier = Modifier.padding(16.dp)) {
+        Text("Accessories", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold)
+        Spacer(Modifier.height(12.dp))
+        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            ACCESSORY_OPTIONS.forEach { acc ->
+                val display = when (acc) {
+                    "none" -> "❌"
+                    "glasses" -> "👓"
+                    "sunglasses" -> "🕶️"
+                    "headphones" -> "🎧"
+                    "hat" -> "🎩"
+                    "bow" -> "🎀"
+                    else -> "?"
+                }
+                Surface(
+                    onClick = { onChange(config.copy(accessory = acc)) },
+                    shape = RoundedCornerShape(12.dp),
+                    color = if (config.accessory == acc) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceContainerHigh,
+                    border = if (config.accessory == acc) BorderStroke(2.dp, MaterialTheme.colorScheme.primary) else null,
+                    modifier = Modifier.size(52.dp)
+                ) {
+                    Box(contentAlignment = Alignment.Center) { Text(display, fontSize = 24.sp) }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun AvatarBackgroundPanel(config: AvatarConfig, onChange: (AvatarConfig) -> Unit) {
+    Column(modifier = Modifier.padding(16.dp)) {
+        Text("Background Color", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold)
+        Spacer(Modifier.height(12.dp))
+        LazyRow(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            items(BG_COLORS) { color ->
+                Box(
+                    modifier = Modifier
+                        .size(44.dp)
+                        .clip(CircleShape)
+                        .background(color)
+                        .border(
+                            width = if (config.bgColor == color) 3.dp else 1.dp,
+                            color = if (config.bgColor == color) Color.White else Color.Gray.copy(alpha = 0.3f),
+                            shape = CircleShape
+                        )
+                        .clickable { onChange(config.copy(bgColor = color)) }
+                )
+            }
+        }
+
+        Spacer(Modifier.height(16.dp))
+        Text(
+            "Tip: Your avatar is unique to you! Express yourself however feels right 💜",
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
     }
 }
 

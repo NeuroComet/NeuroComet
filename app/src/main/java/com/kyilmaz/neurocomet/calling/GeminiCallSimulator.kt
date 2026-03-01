@@ -2,6 +2,7 @@ package com.kyilmaz.neurocomet.calling
 
 import android.util.Log
 import com.kyilmaz.neurocomet.BuildConfig
+import com.kyilmaz.neurocomet.SecurityUtils
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -171,7 +172,7 @@ object GeminiCallSimulator {
      */
     fun isApiKeyConfigured(): Boolean {
         return try {
-            BuildConfig.GEMINI_API_KEY.isNotBlank()
+            SecurityUtils.decrypt(BuildConfig.GEMINI_API_KEY).isNotBlank()
         } catch (e: Exception) {
             Log.e(TAG, "Error checking API key", e)
             false
@@ -195,7 +196,7 @@ object GeminiCallSimulator {
         try {
             endCall()
 
-            val apiKey = BuildConfig.GEMINI_API_KEY
+            val apiKey = SecurityUtils.decrypt(BuildConfig.GEMINI_API_KEY)
             if (apiKey.isBlank()) {
                 _state.value = SimulatorState.Error("Gemini API key not configured. Add GEMINI_API_KEY to local.properties")
                 return
@@ -306,7 +307,7 @@ object GeminiCallSimulator {
      * Call the Gemini API directly using OkHttp
      */
     private fun callGeminiApi(history: List<Pair<String, String>>): String? {
-        val apiKey = BuildConfig.GEMINI_API_KEY
+        val apiKey = SecurityUtils.decrypt(BuildConfig.GEMINI_API_KEY)
         val url = "$GEMINI_API_BASE?key=$apiKey"
 
         // Build the request body

@@ -1,342 +1,112 @@
 package com.kyilmaz.neurocomet
 
-import android.Manifest
 import android.app.Application
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.os.Build
+import android.provider.ContactsContract
+import android.provider.ContactsPickerSessionContract
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Chat
+import androidx.compose.material.icons.automirrored.filled.List
+import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import coil.compose.AsyncImage
+import androidx.core.os.LocaleListCompat
+import androidx.fragment.app.FragmentActivity
+import com.kyilmaz.neurocomet.ads.GoogleAdsManager
+import com.kyilmaz.neurocomet.auth.AuthResult
+import com.kyilmaz.neurocomet.utils.StressTester
+import com.kyilmaz.neurocomet.utils.StressTestResult
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-
-/**
- * Developer Testing Section for Google Ads
- *
- * Features:
- * - Toggle ad state
- * - Simulate premium status
- * - Test different ad types
- * - View ad debug info
- * - Force load/show ads
- * - Simulate failures
- */
 
 @Composable
 fun GoogleAdsDevTestSection() {
-    val context = LocalContext.current
-    val app = context.applicationContext as Application
     val adsState by GoogleAdsManager.adsState.collectAsState()
-    var showDebugInfo by remember { mutableStateOf(false) }
-
-    DevSectionCard(
-        title = "Google Ads Testing",
-        icon = Icons.Filled.Tv
-    ) {
-        // Status overview
+    DevSectionCard(title = "Google Ads Testing", icon = Icons.Filled.Tv) {
         Card(
             colors = CardDefaults.cardColors(
                 containerColor = if (adsState.isPremium) Color(0xFF1B5E20).copy(alpha = 0.2f)
-                                else if (adsState.adsEnabled) Color(0xFFFFF3E0)
-                                else Color(0xFFE0E0E0)
+                else if (adsState.adsEnabled) Color(0xFFFFF3E0)
+                else Color(0xFFE0E0E0)
             ),
             shape = RoundedCornerShape(8.dp)
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(12.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+            Row(modifier = Modifier.fillMaxWidth().padding(12.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                 Column {
-                    Text(
-                        text = when {
-                            adsState.isPremium -> "🌟 Premium User"
-                            adsState.adsEnabled -> "📺 Ads Enabled"
-                            else -> "🚫 Ads Disabled"
-                        },
-                        style = MaterialTheme.typography.titleSmall,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Text(
-                        text = "Total ads shown: ${adsState.totalAdsShown}",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+                    Text(text = if (adsState.isPremium) "🌟 Premium User" else if (adsState.adsEnabled) "📺 Ads Enabled" else "🚫 Ads Disabled", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold)
+                    Text(text = "Total ads shown: ${adsState.totalAdsShown}", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
-                if (adsState.isLoading) {
-                    CircularProgressIndicator(modifier = Modifier.size(24.dp), strokeWidth = 2.dp)
-                }
+                if (adsState.isLoading) CircularProgressIndicator(modifier = Modifier.size(24.dp), strokeWidth = 2.dp)
             }
         }
-
         Spacer(Modifier.height(12.dp))
-
-        // Ad load status indicators
-        Text(
-            "Ad Load Status:",
-            style = MaterialTheme.typography.labelMedium,
-            fontWeight = FontWeight.SemiBold
-        )
-        Spacer(Modifier.height(4.dp))
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             AdStatusChip("Banner", adsState.bannerLoaded)
             AdStatusChip("Interstitial", adsState.interstitialLoaded)
             AdStatusChip("Rewarded", adsState.rewardedLoaded)
-            AdStatusChip("Native", adsState.nativeLoaded)
         }
-
         Spacer(Modifier.height(12.dp))
-        HorizontalDivider()
+        DevToggleRowSimple(title = "Simulate Premium", subtitle = "Pretend user has sub", isChecked = adsState.isPremium, onCheckedChange = { GoogleAdsManager.devSetSimulatePremium(it) })
+        DevToggleRowSimple(title = "Force Show Ads", subtitle = "Ignore premium status", isChecked = adsState.forceShowAds, onCheckedChange = { GoogleAdsManager.devSetForceShowAds(it) })
         Spacer(Modifier.height(12.dp))
-
-        // Toggle controls
-        DevToggleRowSimple(
-            title = "Simulate Premium User",
-            subtitle = "Pretend user has subscription",
-            isChecked = adsState.isPremium,
-            onCheckedChange = { GoogleAdsManager.devSetSimulatePremium(it) }
-        )
-
-        DevToggleRowSimple(
-            title = "Force Show Ads",
-            subtitle = "Show ads even for premium users",
-            isChecked = adsState.forceShowAds,
-            onCheckedChange = { GoogleAdsManager.devSetForceShowAds(it) }
-        )
-
-        DevToggleRowSimple(
-            title = "Simulate Ad Failure",
-            subtitle = "Make ad loads fail",
-            isChecked = adsState.simulateAdFailure,
-            onCheckedChange = { GoogleAdsManager.devSetSimulateAdFailure(it) }
-        )
-
-        DevToggleRowSimple(
-            title = "Use Test Ads",
-            subtitle = "Use Google's test ad unit IDs",
-            isChecked = adsState.useTestAds,
-            onCheckedChange = { GoogleAdsManager.devSetUseTestAds(it) }
-        )
-
-        Spacer(Modifier.height(12.dp))
-        HorizontalDivider()
-        Spacer(Modifier.height(12.dp))
-
-        // Action buttons
-        Text(
-            "Actions:",
-            style = MaterialTheme.typography.labelMedium,
-            fontWeight = FontWeight.SemiBold
-        )
-        Spacer(Modifier.height(8.dp))
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Button(
-                onClick = {
-                    GoogleAdsManager.devForceLoadAllAds()
-                    Toast.makeText(context, "All ads loaded", Toast.LENGTH_SHORT).show()
-                },
-                modifier = Modifier.weight(1f)
-            ) {
-                Icon(Icons.Filled.Download, null, Modifier.size(16.dp))
-                Spacer(Modifier.width(4.dp))
-                Text("Load All", fontSize = 12.sp)
-            }
-
-            Button(
-                onClick = {
-                    GoogleAdsManager.devResetSessionCounters()
-                    Toast.makeText(context, "Session counters reset", Toast.LENGTH_SHORT).show()
-                },
-                modifier = Modifier.weight(1f)
-            ) {
-                Icon(Icons.Filled.Refresh, null, Modifier.size(16.dp))
-                Spacer(Modifier.width(4.dp))
-                Text("Reset", fontSize = 12.sp)
-            }
-        }
-
-        Spacer(Modifier.height(8.dp))
-
-        OutlinedButton(
-            onClick = { showDebugInfo = true },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Icon(Icons.Filled.BugReport, contentDescription = null)
-            Spacer(Modifier.width(8.dp))
-            Text("View Debug Info")
-        }
-
-        // Error display
-        adsState.error?.let { error ->
-            Spacer(Modifier.height(8.dp))
-            Card(
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.errorContainer
-                ),
-                shape = RoundedCornerShape(8.dp)
-            ) {
-                Row(
-                    modifier = Modifier.padding(12.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        Icons.Filled.Error,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.error
-                    )
-                    Spacer(Modifier.width(8.dp))
-                    Text(
-                        text = error,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onErrorContainer
-                    )
-                }
-            }
-        }
-    }
-
-    // Debug info dialog
-    if (showDebugInfo) {
-        Dialog(onDismissRequest = { showDebugInfo = false }) {
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                shape = RoundedCornerShape(16.dp)
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Text(
-                        "📊 Ads Debug Info",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Spacer(Modifier.height(12.dp))
-
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(300.dp)
-                            .clip(RoundedCornerShape(8.dp))
-                            .background(Color(0xFF1E1E1E))
-                            .padding(12.dp)
-                            .verticalScroll(rememberScrollState())
-                    ) {
-                        Text(
-                            text = GoogleAdsManager.devGetDebugInfo(),
-                            style = MaterialTheme.typography.bodySmall,
-                            fontFamily = FontFamily.Monospace,
-                            color = Color(0xFF4EC9B0)
-                        )
-                    }
-
-                    Spacer(Modifier.height(12.dp))
-
-                    TextButton(
-                        onClick = { showDebugInfo = false },
-                        modifier = Modifier.align(Alignment.End)
-                    ) {
-                        Text("Close")
-                    }
-                }
-            }
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Button(onClick = { GoogleAdsManager.devForceLoadAllAds() }, modifier = Modifier.weight(1f)) { Text("Load All", fontSize = 12.sp) }
+            Button(onClick = { GoogleAdsManager.devResetSessionCounters() }, modifier = Modifier.weight(1f)) { Text("Reset", fontSize = 12.sp) }
         }
     }
 }
 
 @Composable
-private fun AdStatusChip(
-    label: String,
-    isLoaded: Boolean
-) {
-    Box(
-        modifier = Modifier
-            .clip(RoundedCornerShape(8.dp))
-            .background(
-                if (isLoaded) Color(0xFF4CAF50).copy(alpha = 0.2f)
-                else Color(0xFF9E9E9E).copy(alpha = 0.2f)
-            )
-            .padding(horizontal = 8.dp, vertical = 4.dp)
-    ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Box(
-                modifier = Modifier
-                    .size(8.dp)
-                    .clip(RoundedCornerShape(4.dp))
-                    .background(
-                        if (isLoaded) Color(0xFF4CAF50) else Color(0xFF9E9E9E)
-                    )
-            )
+private fun AdStatusChip(label: String, isLoaded: Boolean) {
+    Surface(color = if (isLoaded) Color(0xFF4CAF50).copy(alpha = 0.2f) else Color(0xFF9E9E9E).copy(alpha = 0.2f), shape = RoundedCornerShape(8.dp)) {
+        Row(Modifier.padding(horizontal = 8.dp, vertical = 4.dp), verticalAlignment = Alignment.CenterVertically) {
+            Box(Modifier.size(8.dp).background(if (isLoaded) Color(0xFF4CAF50) else Color(0xFF9E9E9E), CircleShape))
             Spacer(Modifier.width(4.dp))
-            Text(
-                text = label,
-                style = MaterialTheme.typography.labelSmall,
-                color = if (isLoaded) Color(0xFF2E7D32)
-                        else MaterialTheme.colorScheme.onSurfaceVariant
-            )
+            Text(text = label, style = MaterialTheme.typography.labelSmall)
         }
     }
 }
 
 @Composable
-private fun DevSectionCard(
-    title: String,
-    icon: ImageVector,
-    content: @Composable ColumnScope.() -> Unit
-) {
-    Card(
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
-        )
-    ) {
-        Column(modifier = Modifier.padding(16.dp)) {
+fun DevSectionCard(title: String, icon: ImageVector, content: @Composable ColumnScope.() -> Unit) {
+    Card(modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp), shape = RoundedCornerShape(16.dp)) {
+        Column(Modifier.padding(16.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(
-                    icon,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(20.dp)
-                )
-                Spacer(Modifier.width(8.dp))
-                Text(
-                    title,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold
-                )
+                Icon(icon, null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(20.dp))
+                Spacer(Modifier.width(12.dp))
+                Text(title, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
             }
             Spacer(Modifier.height(12.dp))
             content()
@@ -345,30 +115,15 @@ private fun DevSectionCard(
 }
 
 @Composable
-private fun DevToggleRowSimple(
-    title: String,
-    subtitle: String,
-    isChecked: Boolean,
-    onCheckedChange: (Boolean) -> Unit
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 4.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Column(modifier = Modifier.weight(1f)) {
+fun DevToggleRowSimple(title: String, subtitle: String, isChecked: Boolean, onCheckedChange: (Boolean) -> Unit) {
+    Row(Modifier.fillMaxWidth().padding(vertical = 4.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+        Column(Modifier.weight(1f)) {
             Text(title, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Medium)
             Text(subtitle, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
         Switch(checked = isChecked, onCheckedChange = onCheckedChange)
     }
 }
-
-// ═══════════════════════════════════════════════════════════════
-// NEURODIVERGENT WIDGETS DEV TEST SECTION
-// ═══════════════════════════════════════════════════════════════
 
 @Composable
 fun NeurodivergentWidgetsDevSection() {
@@ -424,25 +179,16 @@ fun NeurodivergentWidgetsDevSection() {
                 color = MaterialTheme.colorScheme.background
             ) {
                 Column {
-                    // Top bar
                     Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
+                        modifier = Modifier.fillMaxWidth().padding(16.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(
-                            "Widget Preview",
-                            style = MaterialTheme.typography.titleLarge,
-                            fontWeight = FontWeight.Bold
-                        )
+                        Text("Widget Preview", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
                         IconButton(onClick = { showWidgetPreview = false }) {
                             Icon(Icons.Filled.Close, "Close")
                         }
                     }
-
-                    // Widget dashboard
                     NeurodivergentWidgetDashboard(
                         highContrast = previewHighContrast,
                         reducedMotion = previewReducedMotion
@@ -453,19 +199,14 @@ fun NeurodivergentWidgetsDevSection() {
     }
 }
 
-// ═══════════════════════════════════════════════════════════════
-// IMAGE CUSTOMIZATION DEV TEST SECTION
-// ═══════════════════════════════════════════════════════════════
-
 @Composable
 fun ImageCustomizationDevSection() {
     var showEditor by remember { mutableStateOf(false) }
     var selectedImageUri by remember { mutableStateOf<android.net.Uri?>(null) }
     val context = LocalContext.current
 
-    // Image picker launcher
     val imagePickerLauncher = rememberLauncherForActivityResult(
-        contract = androidx.activity.result.contract.ActivityResultContracts.GetContent()
+        contract = ActivityResultContracts.GetContent()
     ) { uri ->
         uri?.let {
             selectedImageUri = it
@@ -478,122 +219,21 @@ fun ImageCustomizationDevSection() {
         icon = Icons.Filled.PhotoFilter
     ) {
         Text(
-            "Test the image editing features for posts, stories, and profile pictures.",
+            "Test image filters, stickers, and drawing tools.",
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
         Spacer(Modifier.height(12.dp))
 
-        // Filter count info
-        Card(
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f)
-            ),
-            shape = RoundedCornerShape(8.dp)
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(12.dp),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(
-                        "${AVAILABLE_FILTERS.size}",
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Text("Filters", style = MaterialTheme.typography.labelSmall)
-                }
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(
-                        "${AVAILABLE_STICKERS.size}",
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Text("Stickers", style = MaterialTheme.typography.labelSmall)
-                }
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(
-                        "${DRAWING_COLORS.size}",
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Text("Colors", style = MaterialTheme.typography.labelSmall)
-                }
-            }
-        }
-
-        Spacer(Modifier.height(12.dp))
-
-        // Selected image preview
-        selectedImageUri?.let { uri ->
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(12.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant
-                )
-            ) {
-                Column(
-                    modifier = Modifier.padding(12.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        "Selected Image",
-                        style = MaterialTheme.typography.labelMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                    Spacer(Modifier.height(8.dp))
-                    AsyncImage(
-                        model = uri,
-                        contentDescription = "Selected image",
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(150.dp)
-                            .clip(RoundedCornerShape(8.dp)),
-                        contentScale = ContentScale.Crop
-                    )
-                    Spacer(Modifier.height(8.dp))
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        OutlinedButton(
-                            onClick = { selectedImageUri = null },
-                            modifier = Modifier.weight(1f)
-                        ) {
-                            Icon(Icons.Filled.Clear, null, Modifier.size(16.dp))
-                            Spacer(Modifier.width(4.dp))
-                            Text("Clear", fontSize = 12.sp)
-                        }
-                        Button(
-                            onClick = { showEditor = true },
-                            modifier = Modifier.weight(1f)
-                        ) {
-                            Icon(Icons.Filled.Edit, null, Modifier.size(16.dp))
-                            Spacer(Modifier.width(4.dp))
-                            Text("Edit", fontSize = 12.sp)
-                        }
-                    }
-                }
-            }
-            Spacer(Modifier.height(12.dp))
-        }
-
-        // Action buttons
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             Button(
                 onClick = { imagePickerLauncher.launch("image/*") },
                 modifier = Modifier.weight(1f)
             ) {
-                Icon(Icons.Filled.Image, contentDescription = null, Modifier.size(18.dp))
+                Icon(Icons.Filled.Image, null, Modifier.size(18.dp))
                 Spacer(Modifier.width(6.dp))
-                Text("Select Image", fontSize = 12.sp)
+                Text("Select", fontSize = 12.sp)
             }
 
             OutlinedButton(
@@ -603,9 +243,9 @@ fun ImageCustomizationDevSection() {
                 },
                 modifier = Modifier.weight(1f)
             ) {
-                Icon(Icons.Filled.Draw, contentDescription = null, Modifier.size(18.dp))
+                Icon(Icons.Filled.Draw, null, Modifier.size(18.dp))
                 Spacer(Modifier.width(6.dp))
-                Text("Blank Canvas", fontSize = 12.sp)
+                Text("Draw", fontSize = 12.sp)
             }
         }
     }
@@ -613,7 +253,7 @@ fun ImageCustomizationDevSection() {
     if (showEditor) {
         ImageCustomizationEditor(
             imageUri = selectedImageUri,
-            onSave = {
+            onSave = { _ ->
                 showEditor = false
                 Toast.makeText(context, "Image saved!", Toast.LENGTH_SHORT).show()
             },
@@ -622,10 +262,6 @@ fun ImageCustomizationDevSection() {
         )
     }
 }
-
-// ═══════════════════════════════════════════════════════════════
-// EXPLORE VIEWS DEV TEST SECTION
-// ═══════════════════════════════════════════════════════════════
 
 @Composable
 fun ExploreViewsDevSection() {
@@ -644,35 +280,20 @@ fun ExploreViewsDevSection() {
 
         Spacer(Modifier.height(12.dp))
 
-        // View type selector
         Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
+            Text("Layout:", style = MaterialTheme.typography.labelMedium)
             ExploreViewType.entries.forEach { viewType ->
-                val isSelected = viewType == currentViewType
                 FilterChip(
-                    selected = isSelected,
+                    selected = viewType == currentViewType,
                     onClick = { currentViewType = viewType },
-                    label = { Text(viewType.label, fontSize = 11.sp) },
-                    leadingIcon = {
-                        Icon(
-                            viewType.icon,
-                            contentDescription = null,
-                            modifier = Modifier.size(16.dp)
-                        )
-                    }
+                    label = { Text(viewType.label, fontSize = 10.sp, maxLines = 1, softWrap = false) }
                 )
             }
         }
-
-        Spacer(Modifier.height(8.dp))
-
-        Text(
-            currentViewType.description,
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
 
         Spacer(Modifier.height(12.dp))
 
@@ -682,161 +303,61 @@ fun ExploreViewsDevSection() {
         ) {
             Icon(Icons.Filled.Preview, contentDescription = null)
             Spacer(Modifier.width(8.dp))
-            Text("Preview ${currentViewType.label} View")
+            Text("Preview ${currentViewType.label}")
         }
     }
 
     if (showPreview) {
-        Dialog(
-            onDismissRequest = { showPreview = false },
-            properties = DialogProperties(usePlatformDefaultWidth = false)
-        ) {
-            Surface(
-                modifier = Modifier.fillMaxSize(),
-                color = MaterialTheme.colorScheme.background
-            ) {
+        Dialog(onDismissRequest = { showPreview = false }, properties = DialogProperties(usePlatformDefaultWidth = false)) {
+            Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
                 val mockPosts = remember { generateMockExplorePostsWithMedia() }
-                val context = LocalContext.current
-
                 Column {
-                    // Top bar
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            "${currentViewType.label} View Preview",
-                            style = MaterialTheme.typography.titleLarge,
-                            fontWeight = FontWeight.Bold
-                        )
-                        IconButton(onClick = { showPreview = false }) {
-                            Icon(Icons.Filled.Close, "Close")
-                        }
+                    Row(modifier = Modifier.fillMaxWidth().padding(16.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                        Text("${currentViewType.label} Preview", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
+                        IconButton(onClick = { showPreview = false }) { Icon(Icons.Filled.Close, "Close") }
                     }
-
-                    // View type selector
-                    ExploreViewTypeSelector(
-                        currentViewType = currentViewType,
-                        onViewTypeChange = { currentViewType = it }
-                    )
-
-                    // Preview content
                     when (currentViewType) {
-                        ExploreViewType.GRID -> ExploreGridView(
-                            posts = mockPosts,
-                            onPostClick = {},
-                            onProfileClick = {}
-                        )
-                        ExploreViewType.COMPACT -> ExploreCompactView(
-                            posts = mockPosts,
-                            onPostClick = {},
-                            onLikePost = {},
-                            onProfileClick = {}
-                        )
-                        ExploreViewType.STANDARD -> ExploreStandardView(
-                            posts = mockPosts,
-                            onPostClick = {},
-                            onLikePost = {},
-                            onSharePost = { _, _ -> },
-                            onCommentPost = {},
-                            onProfileClick = {}
-                        )
-                        ExploreViewType.LARGE_CARDS -> ExploreLargeCardView(
-                            posts = mockPosts,
-                            onPostClick = {},
-                            onLikePost = {},
-                            onSharePost = { _, _ -> },
-                            onCommentPost = {},
-                            onProfileClick = {}
-                        )
+                        ExploreViewType.GRID -> ExploreGridView(posts = mockPosts, onPostClick = { _ -> }, onProfileClick = { _ -> })
+                        ExploreViewType.COMPACT -> ExploreCompactView(posts = mockPosts, onPostClick = { _ -> }, onLikePost = { _ -> }, onProfileClick = { _ -> })
+                        ExploreViewType.STANDARD -> ExploreStandardView(posts = mockPosts, onPostClick = { _ -> }, onLikePost = { _ -> }, onSharePost = { _, _ -> }, onCommentPost = { _ -> }, onProfileClick = { _ -> })
+                        ExploreViewType.LARGE_CARDS -> ExploreLargeCardView(posts = mockPosts, onPostClick = { _ -> }, onLikePost = { _ -> }, onSharePost = { _, _ -> }, onCommentPost = { _ -> }, onProfileClick = { _ -> })
                     }
                 }
             }
         }
     }
 }
-
-// ═══════════════════════════════════════════════════════════════
-// MULTI-MEDIA POST DEV TEST SECTION
-// ═══════════════════════════════════════════════════════════════
 
 @Composable
 fun MultiMediaPostDevSection() {
     val mockPosts = remember { generateMockExplorePostsWithMedia() }
 
     DevSectionCard(
-        title = "Multi-Media Posts (20 max)",
+        title = "Multi-Media Posts",
         icon = Icons.Filled.Collections
     ) {
         Text(
-            "Test posts with multiple images/videos (up to ${Post.MAX_MEDIA_ITEMS} items like Instagram).",
+            "Test posts with up to ${Post.MAX_MEDIA_ITEMS} items.",
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
-        Spacer(Modifier.height(12.dp))
+        Spacer(Modifier.height(8.dp))
 
-        // Show mock post stats
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(4.dp)
-        ) {
-            mockPosts.forEach { post ->
+        Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+            mockPosts.take(3).forEach { post ->
                 val mediaCount = post.mediaCount()
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        text = post.userId ?: "Unknown",
-                        style = MaterialTheme.typography.bodySmall,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.weight(1f)
-                    )
-                    Row {
-                        if (mediaCount > 0) {
-                            val hasVideo = post.getAllMedia().any { it.type == MediaType.VIDEO }
-                            Text(
-                                text = if (hasVideo) "🎬 $mediaCount" else "📷 $mediaCount",
-                                style = MaterialTheme.typography.labelSmall,
-                                color = MaterialTheme.colorScheme.primary
-                            )
-                        } else {
-                            Text(
-                                text = "📝 Text",
-                                style = MaterialTheme.typography.labelSmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
-                    }
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                    Text(text = post.userId ?: "User", style = MaterialTheme.typography.bodySmall, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.weight(1f))
+                    Text(text = "📷 $mediaCount items", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary)
                 }
             }
         }
-
-        Spacer(Modifier.height(8.dp))
-
-        Text(
-            "✓ Supports ${Post.MAX_MEDIA_ITEMS} images/videos per post\n" +
-            "✓ Mixed media (images + videos)\n" +
-            "✓ Legacy single image/video support\n" +
-            "✓ Carousel display for multiple items",
-            style = MaterialTheme.typography.labelSmall,
-            color = Color(0xFF4CAF50)
-        )
     }
 }
 
-// ═══════════════════════════════════════════════════════════════
-// ADAPTIVE NAVIGATION DEV TEST SECTION
-// ═══════════════════════════════════════════════════════════════
-
 @Composable
 fun AdaptiveNavigationDevSection() {
-    val context = LocalContext.current
     val navigationType = calculateNavigationType()
     val contentType = calculateContentType()
 
@@ -844,63 +365,51 @@ fun AdaptiveNavigationDevSection() {
         title = "Adaptive Navigation",
         icon = Icons.Filled.Dashboard
     ) {
-        Text(
-            "Test adaptive navigation for different screen sizes.",
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-
-        Spacer(Modifier.height(12.dp))
-
-        // Current navigation type
         Card(
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f)
-            ),
-            shape = RoundedCornerShape(8.dp)
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.2f)),
+            modifier = Modifier.fillMaxWidth()
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(12.dp)
-            ) {
-                Text(
-                    "Current Configuration:",
-                    style = MaterialTheme.typography.labelMedium,
-                    fontWeight = FontWeight.SemiBold
-                )
-                Spacer(Modifier.height(8.dp))
-                Text(
-                    "📱 Navigation Type: ${navigationType.name}",
-                    style = MaterialTheme.typography.bodyMedium
-                )
-                Text(
-                    "📐 Content Type: ${contentType.name}",
-                    style = MaterialTheme.typography.bodyMedium
-                )
+            Column(Modifier.padding(12.dp)) {
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                    Column {
+                        Text("Navigation", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        Text(navigationType.name, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold)
+                    }
+                    Column(horizontalAlignment = Alignment.End) {
+                        Text("Content", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        Text(contentType.name, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold)
+                    }
+                }
             }
         }
-
         Spacer(Modifier.height(8.dp))
-
-        Text(
-            "Navigation Types:\n" +
-            "• BOTTOM_NAVIGATION - < 600dp (phones)\n" +
-            "• NAVIGATION_RAIL - 600-840dp (tablets portrait)\n" +
-            "• PERMANENT_DRAWER - > 840dp (large screens)",
-            style = MaterialTheme.typography.labelSmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
+        Text("Navigation adapts based on screen width:", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        Spacer(Modifier.height(4.dp))
+        Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+            val entries = listOf(
+                "BOTTOM_NAV" to "< 600dp (phones)",
+                "NAV_RAIL" to "600–840dp (small tablets)",
+                "DRAWER" to "> 840dp (large tablets/desktop)"
+            )
+            entries.forEach { (type, desc) ->
+                val isActive = navigationType.name == type
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(if (isActive) "▶ " else "  ", fontSize = 10.sp, color = if (isActive) MaterialTheme.colorScheme.primary else Color.Transparent)
+                    Text(
+                        "$type — $desc",
+                        style = MaterialTheme.typography.labelSmall,
+                        fontWeight = if (isActive) FontWeight.Bold else FontWeight.Normal,
+                        color = if (isActive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+        }
     }
 }
 
-// ═══════════════════════════════════════════════════════════════
-// NEURODIVERGENT DIALOGS DEV TEST SECTION
-// ═══════════════════════════════════════════════════════════════
-
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun NeurodivergentDialogsDevSection() {
-    val context = LocalContext.current
     var showMessageDialog by remember { mutableStateOf(false) }
     var showInputDialog by remember { mutableStateOf(false) }
     var showChoiceDialog by remember { mutableStateOf(false) }
@@ -911,1042 +420,56 @@ fun NeurodivergentDialogsDevSection() {
         title = "Neurodivergent Dialogs",
         icon = Icons.Filled.ChatBubble
     ) {
-        Text(
-            "Test accessible pop-up messages and input dialogs.",
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-
+        Text("Test accessible pop-up messages and input dialogs.", style = MaterialTheme.typography.bodySmall)
         Spacer(Modifier.height(12.dp))
-
-        // Dialog type selector
-        Text("Dialog Type:", style = MaterialTheme.typography.labelMedium)
-        Spacer(Modifier.height(4.dp))
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(4.dp)
-        ) {
+        FlowRow(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
             DialogType.entries.take(5).forEach { type ->
-                FilterChip(
-                    selected = type == selectedDialogType,
-                    onClick = { selectedDialogType = type },
-                    label = { Text(type.name, fontSize = 10.sp) }
-                )
+                FilterChip(selected = type == selectedDialogType, onClick = { selectedDialogType = type }, label = { Text(type.name, fontSize = 10.sp) })
             }
         }
-
         Spacer(Modifier.height(12.dp))
-
-        // Test buttons
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Button(
-                onClick = { showMessageDialog = true },
-                modifier = Modifier.weight(1f)
-            ) {
-                Text("Message", fontSize = 11.sp)
-            }
-            Button(
-                onClick = { showInputDialog = true },
-                modifier = Modifier.weight(1f)
-            ) {
-                Text("Input", fontSize = 11.sp)
-            }
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Button(onClick = { showMessageDialog = true }, modifier = Modifier.weight(1f)) { Text("Message", fontSize = 11.sp) }
+            Button(onClick = { showInputDialog = true }, modifier = Modifier.weight(1f)) { Text("Input", fontSize = 11.sp) }
         }
-
         Spacer(Modifier.height(8.dp))
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Button(
-                onClick = { showChoiceDialog = true },
-                modifier = Modifier.weight(1f)
-            ) {
-                Text("Choice", fontSize = 11.sp)
-            }
-            Button(
-                onClick = { showLoadingDialog = true },
-                modifier = Modifier.weight(1f)
-            ) {
-                Text("Loading", fontSize = 11.sp)
-            }
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Button(onClick = { showChoiceDialog = true }, modifier = Modifier.weight(1f)) { Text("Choice", fontSize = 11.sp) }
+            Button(onClick = { showLoadingDialog = true }, modifier = Modifier.weight(1f)) { Text("Loading", fontSize = 11.sp) }
         }
     }
 
-    // Message dialog
     if (showMessageDialog) {
         NeurodivergentMessageDialog(
             config = DialogConfig(
                 type = selectedDialogType,
-                title = "Test ${selectedDialogType.name} Dialog",
-                message = "This is a neurodivergent-friendly dialog with clear messaging and large touch targets.",
-                emoji = when (selectedDialogType) {
-                    DialogType.INFO -> "ℹ️"
-                    DialogType.SUCCESS -> "✅"
-                    DialogType.WARNING -> "⚠️"
-                    DialogType.ERROR -> "❌"
-                    DialogType.QUESTION -> "❓"
-                    else -> "🧠"
-                },
-                primaryButtonText = "Got it!",
-                secondaryButtonText = "Learn more"
+                title = "Test ${selectedDialogType.name}",
+                message = "This is a neurodivergent-friendly dialog.",
+                primaryButtonText = "Got it!"
             ),
-            onDismiss = { showMessageDialog = false },
-            onSecondaryClick = {
-                Toast.makeText(context, "Learn more clicked!", Toast.LENGTH_SHORT).show()
-                showMessageDialog = false
-            }
+            onDismiss = { showMessageDialog = false }
         )
     }
-
-    // Input dialog
     if (showInputDialog) {
         NeurodivergentInputDialog(
-            title = "What's your name?",
-            message = "Enter your display name for the community.",
-            placeholder = "Enter your name...",
-            emoji = "👤",
+            title = "Name?", message = "Enter name", placeholder = "Name...",
             onDismiss = { showInputDialog = false },
-            onConfirm = { value ->
-                Toast.makeText(context, "Hello, $value!", Toast.LENGTH_SHORT).show()
-                showInputDialog = false
-            },
-            validation = { value ->
-                when {
-                    value.length < 2 -> "Name too short"
-                    value.length > 30 -> "Name too long"
-                    else -> null
-                }
-            }
+            onConfirm = { _ -> showInputDialog = false }
         )
     }
-
-    // Choice dialog
     if (showChoiceDialog) {
         NeurodivergentChoiceDialog(
-            title = "Choose your mood",
-            message = "How are you feeling right now?",
-            choices = listOf(
-                DialogChoice("happy", "Happy", "Feeling great!", emoji = "😊"),
-                DialogChoice("calm", "Calm", "Peaceful and relaxed", emoji = "😌"),
-                DialogChoice("tired", "Tired", "Need some rest", emoji = "😴"),
-                DialogChoice("anxious", "Anxious", "Feeling worried", emoji = "😰"),
-                DialogChoice("excited", "Excited", "Full of energy!", emoji = "🤩")
-            ),
+            title = "Mood", message = "How are you?",
+            choices = listOf(DialogChoice("happy", "Happy", emoji = "😊"), DialogChoice("calm", "Calm", emoji = "😌")),
             onDismiss = { showChoiceDialog = false },
-            onSelect = { choice ->
-                Toast.makeText(context, "You selected: ${choice.label}", Toast.LENGTH_SHORT).show()
-                showChoiceDialog = false
-            }
+            onSelect = { _ -> showChoiceDialog = false }
         )
     }
-
-    // Loading dialog
     if (showLoadingDialog) {
-        LaunchedEffect(Unit) {
-            kotlinx.coroutines.delay(3000)
-            showLoadingDialog = false
-        }
-
-        NeurodivergentLoadingDialog(
-            message = "Processing...",
-            subMessage = "This won't take long",
-            emoji = "🧠",
-            onDismiss = { showLoadingDialog = false }
-        )
+        LaunchedEffect(Unit) { delay(2000); showLoadingDialog = false }
+        NeurodivergentLoadingDialog(message = "Processing...", onDismiss = { showLoadingDialog = false })
     }
 }
-
-// ═══════════════════════════════════════════════════════════════
-// LOCATION & SENSORS DEV TEST SECTION
-// ═══════════════════════════════════════════════════════════════
-
-@Composable
-fun LocationSensorsDevSection() {
-    val context = LocalContext.current
-    val locationStatus by LocationService.locationStatus.collectAsState()
-    val currentLocation by LocationService.currentLocation.collectAsState()
-    val sensorData by LocationService.sensorData.collectAsState()
-    var isMonitoring by remember { mutableStateOf(false) }
-
-    DevSectionCard(
-        title = "Location & Sensors",
-        icon = Icons.Filled.LocationOn
-    ) {
-        Text(
-            "Test location and sensor services for accuracy.",
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-
-        Spacer(Modifier.height(12.dp))
-
-        // Permission status
-        val hasPermission = LocationService.hasLocationPermission(context)
-        Card(
-            colors = CardDefaults.cardColors(
-                containerColor = if (hasPermission) Color(0xFF4CAF50).copy(alpha = 0.1f)
-                                else Color(0xFFF44336).copy(alpha = 0.1f)
-            ),
-            shape = RoundedCornerShape(8.dp)
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(12.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    if (hasPermission) Icons.Filled.CheckCircle else Icons.Filled.Warning,
-                    contentDescription = null,
-                    tint = if (hasPermission) Color(0xFF4CAF50) else Color(0xFFF44336)
-                )
-                Spacer(Modifier.width(8.dp))
-                Text(
-                    if (hasPermission) "Location permission granted"
-                    else "Location permission not granted",
-                    style = MaterialTheme.typography.bodySmall
-                )
-            }
-        }
-
-        Spacer(Modifier.height(8.dp))
-
-        // Status
-        Text(
-            "Status: ${locationStatus.name}",
-            style = MaterialTheme.typography.labelMedium,
-            fontWeight = FontWeight.SemiBold
-        )
-
-        // Current location
-        currentLocation?.let { loc ->
-            Spacer(Modifier.height(4.dp))
-            Text(
-                "📍 ${loc.formatForDisplay()}",
-                style = MaterialTheme.typography.bodySmall,
-                fontFamily = FontFamily.Monospace
-            )
-        }
-
-        // Sensor data
-        if (isMonitoring) {
-            Spacer(Modifier.height(8.dp))
-            Text(
-                "Sensors:\n" +
-                "• Moving: ${sensorData.isMoving}\n" +
-                "• Pressure: ${String.format("%.1f", sensorData.pressure)} hPa\n" +
-                "• Alt (baro): ${String.format("%.1f", sensorData.barometerAltitude)}m",
-                style = MaterialTheme.typography.labelSmall,
-                fontFamily = FontFamily.Monospace
-            )
-        }
-
-        Spacer(Modifier.height(12.dp))
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Button(
-                onClick = {
-                    if (hasPermission) {
-                        isMonitoring = !isMonitoring
-                        if (isMonitoring) {
-                            LocationService.initialize(context)
-                            LocationService.startSensorMonitoring(context)
-                            LocationService.startLocationUpdates(
-                                context,
-                                LocationPriority.BALANCED,
-                                10000L
-                            ) {}
-                        } else {
-                            LocationService.stopLocationUpdates()
-                            LocationService.stopSensorMonitoring()
-                        }
-                    } else {
-                        Toast.makeText(context, "Permission needed", Toast.LENGTH_SHORT).show()
-                    }
-                },
-                modifier = Modifier.weight(1f)
-            ) {
-                Text(if (isMonitoring) "Stop" else "Start", fontSize = 12.sp)
-            }
-        }
-    }
-}
-
-// ═══════════════════════════════════════════════════════════════
-// CREDENTIAL STORAGE DEV TEST SECTION
-// ═══════════════════════════════════════════════════════════════
-
-@Composable
-fun CredentialTestSection() {
-    val context = LocalContext.current
-    val scope = rememberCoroutineScope()
-
-    var testKey by remember { mutableStateOf("test_credential") }
-    var testValue by remember { mutableStateOf("secret_value_123") }
-    var retrievedValue by remember { mutableStateOf<String?>(null) }
-    var operationResult by remember { mutableStateOf<String?>(null) }
-    var isLoading by remember { mutableStateOf(false) }
-
-    DevSectionCard(
-        title = "Credential Storage Testing",
-        icon = Icons.Filled.Key
-    ) {
-        Text(
-            "Test secure credential storage with Android Keystore encryption.",
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-
-        Spacer(Modifier.height(12.dp))
-
-        // Test key input
-        OutlinedTextField(
-            value = testKey,
-            onValueChange = { testKey = it },
-            label = { Text("Credential Key") },
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true
-        )
-
-        Spacer(Modifier.height(8.dp))
-
-        // Test value input
-        OutlinedTextField(
-            value = testValue,
-            onValueChange = { testValue = it },
-            label = { Text("Credential Value") },
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true
-        )
-
-        Spacer(Modifier.height(12.dp))
-
-        // Action buttons Row 1
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Button(
-                onClick = {
-                    scope.launch {
-                        isLoading = true
-                        try {
-                            CredentialStorage.storeCredential(context, testKey, testValue)
-                            operationResult = "✅ Credential stored successfully"
-                        } catch (e: Exception) {
-                            operationResult = "❌ Failed: ${e.message}"
-                        }
-                        isLoading = false
-                    }
-                },
-                modifier = Modifier.weight(1f),
-                enabled = !isLoading
-            ) {
-                Icon(Icons.Filled.Save, null, Modifier.size(16.dp))
-                Spacer(Modifier.width(4.dp))
-                Text("Store", fontSize = 12.sp)
-            }
-
-            Button(
-                onClick = {
-                    scope.launch {
-                        isLoading = true
-                        try {
-                            retrievedValue = CredentialStorage.retrieveCredential(context, testKey)
-                            operationResult = if (retrievedValue != null) {
-                                "✅ Retrieved: $retrievedValue"
-                            } else {
-                                "⚠️ No value found for key"
-                            }
-                        } catch (e: Exception) {
-                            operationResult = "❌ Failed: ${e.message}"
-                        }
-                        isLoading = false
-                    }
-                },
-                modifier = Modifier.weight(1f),
-                enabled = !isLoading
-            ) {
-                Icon(Icons.Filled.Download, null, Modifier.size(16.dp))
-                Spacer(Modifier.width(4.dp))
-                Text("Retrieve", fontSize = 12.sp)
-            }
-
-            Button(
-                onClick = {
-                    scope.launch {
-                        isLoading = true
-                        try {
-                            CredentialStorage.deleteCredential(context, testKey)
-                            operationResult = "✅ Credential deleted"
-                            retrievedValue = null
-                        } catch (e: Exception) {
-                            operationResult = "❌ Failed: ${e.message}"
-                        }
-                        isLoading = false
-                    }
-                },
-                modifier = Modifier.weight(1f),
-                enabled = !isLoading,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.error
-                )
-            ) {
-                Icon(Icons.Filled.Delete, null, Modifier.size(16.dp))
-                Spacer(Modifier.width(4.dp))
-                Text("Delete", fontSize = 12.sp)
-            }
-        }
-
-        Spacer(Modifier.height(8.dp))
-
-        // Auth Token Testing
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            OutlinedButton(
-                onClick = {
-                    scope.launch {
-                        try {
-                            val token = CredentialStorage.getAuthToken(context)
-                            operationResult = if (token != null) {
-                                "🔐 Auth token: ${token.take(20)}..."
-                            } else {
-                                "⚠️ No auth token stored"
-                            }
-                        } catch (e: Exception) {
-                            operationResult = "❌ Failed: ${e.message}"
-                        }
-                    }
-                },
-                modifier = Modifier.weight(1f)
-            ) {
-                Text("Get Auth Token", fontSize = 11.sp)
-            }
-
-            OutlinedButton(
-                onClick = {
-                    CredentialStorage.saveAuthToken(context, "test_token_${System.currentTimeMillis()}")
-                    operationResult = "✅ Test auth token saved"
-                },
-                modifier = Modifier.weight(1f)
-            ) {
-                Text("Save Test Token", fontSize = 11.sp)
-            }
-        }
-
-        // Result display
-        operationResult?.let { result ->
-            Spacer(Modifier.height(12.dp))
-            Card(
-                colors = CardDefaults.cardColors(
-                    containerColor = when {
-                        result.startsWith("✅") -> Color(0xFF4CAF50).copy(alpha = 0.2f)
-                        result.startsWith("❌") -> Color(0xFFF44336).copy(alpha = 0.2f)
-                        else -> Color(0xFFFFC107).copy(alpha = 0.2f)
-                    }
-                ),
-                shape = RoundedCornerShape(8.dp)
-            ) {
-                Text(
-                    text = result,
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.padding(12.dp)
-                )
-            }
-        }
-
-        if (isLoading) {
-            Spacer(Modifier.height(8.dp))
-            LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
-        }
-    }
-}
-
-// ═══════════════════════════════════════════════════════════════
-// LOCATION & SENSORS DEV TEST SECTION
-// ═══════════════════════════════════════════════════════════════
-
-@Composable
-fun LocationSensorTestSection() {
-    val context = LocalContext.current
-    val scope = rememberCoroutineScope()
-
-    val locationStatus by LocationService.locationStatus.collectAsState()
-    val currentLocation by LocationService.currentLocation.collectAsState()
-    val sensorData by LocationService.sensorData.collectAsState()
-
-    var testResult by remember { mutableStateOf<String?>(null) }
-    var isLoading by remember { mutableStateOf(false) }
-
-    val permissionLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.RequestMultiplePermissions()
-    ) { permissions ->
-        val granted = permissions.entries.all { it.value }
-        testResult = if (granted) "✅ Location permissions granted" else "❌ Some permissions denied"
-    }
-
-    DevSectionCard(
-        title = "Location & Sensors Testing",
-        icon = Icons.Filled.MyLocation
-    ) {
-        Text(
-            "Test location services and sensor access for enhanced accuracy.",
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-
-        Spacer(Modifier.height(12.dp))
-
-        // Status indicators
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            StatusChip(
-                label = "Permission",
-                isActive = LocationService.hasLocationPermission(context),
-                activeColor = Color(0xFF4CAF50),
-                inactiveColor = Color(0xFFF44336)
-            )
-            StatusChip(
-                label = "Background",
-                isActive = LocationService.hasBackgroundLocationPermission(context),
-                activeColor = Color(0xFF4CAF50),
-                inactiveColor = Color(0xFFFF9800)
-            )
-            StatusChip(
-                label = locationStatus.name,
-                isActive = locationStatus == LocationStatus.ACQUIRED,
-                activeColor = Color(0xFF2196F3),
-                inactiveColor = Color(0xFF9E9E9E)
-            )
-        }
-
-        Spacer(Modifier.height(12.dp))
-
-        // Current location display
-        currentLocation?.let { loc ->
-            Card(
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f)
-                ),
-                shape = RoundedCornerShape(8.dp)
-            ) {
-                Column(modifier = Modifier.padding(12.dp)) {
-                    Text("📍 Current Location", fontWeight = FontWeight.Bold)
-                    Text("Lat: ${loc.latitude}", style = MaterialTheme.typography.bodySmall)
-                    Text("Lng: ${loc.longitude}", style = MaterialTheme.typography.bodySmall)
-                    Text("Accuracy: ${loc.accuracy}m", style = MaterialTheme.typography.bodySmall)
-                    loc.altitude?.let { Text("Altitude: ${it}m", style = MaterialTheme.typography.bodySmall) }
-                }
-            }
-            Spacer(Modifier.height(8.dp))
-        }
-
-        // Sensor data display
-        Card(
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.5f)
-            ),
-            shape = RoundedCornerShape(8.dp)
-        ) {
-            Column(modifier = Modifier.padding(12.dp)) {
-                Text("🔄 Sensor Data", fontWeight = FontWeight.Bold)
-                Text("Accelerometer: (${String.format("%.2f", sensorData.accelerometerX)}, ${String.format("%.2f", sensorData.accelerometerY)}, ${String.format("%.2f", sensorData.accelerometerZ)})",
-                    style = MaterialTheme.typography.bodySmall)
-                Text("Heading: ${String.format("%.1f", LocationService.getHeading() ?: 0f)}°",
-                    style = MaterialTheme.typography.bodySmall)
-                Text("Motion: ${if (sensorData.isMoving) "Moving" else "Stationary"}",
-                    style = MaterialTheme.typography.bodySmall)
-            }
-        }
-
-        Spacer(Modifier.height(12.dp))
-
-        // Action buttons Row 1
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Button(
-                onClick = {
-                    permissionLauncher.launch(LocationService.getRequiredPermissions(false))
-                },
-                modifier = Modifier.weight(1f)
-            ) {
-                Icon(Icons.Filled.Security, null, Modifier.size(16.dp))
-                Spacer(Modifier.width(4.dp))
-                Text("Request", fontSize = 11.sp)
-            }
-
-            Button(
-                onClick = {
-                    scope.launch {
-                        isLoading = true
-                        val location = LocationService.getLastKnownLocation(context)
-                        testResult = if (location != null) {
-                            "✅ Last known: ${location.latitude}, ${location.longitude}"
-                        } else {
-                            "⚠️ No last known location"
-                        }
-                        isLoading = false
-                    }
-                },
-                modifier = Modifier.weight(1f),
-                enabled = !isLoading
-            ) {
-                Icon(Icons.Filled.History, null, Modifier.size(16.dp))
-                Spacer(Modifier.width(4.dp))
-                Text("Last Known", fontSize = 11.sp)
-            }
-        }
-
-        Spacer(Modifier.height(8.dp))
-
-        // Action buttons Row 2
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Button(
-                onClick = {
-                    scope.launch {
-                        isLoading = true
-                        testResult = "⏳ Getting current location (high accuracy)..."
-                        val location = LocationService.getCurrentLocation(context, LocationPriority.HIGH_ACCURACY)
-                        testResult = if (location != null) {
-                            "✅ Current: ${location.latitude}, ${location.longitude} (±${location.accuracy}m)"
-                        } else {
-                            "❌ Failed to get current location"
-                        }
-                        isLoading = false
-                    }
-                },
-                modifier = Modifier.weight(1f),
-                enabled = !isLoading && LocationService.hasLocationPermission(context)
-            ) {
-                Icon(Icons.Filled.GpsFixed, null, Modifier.size(16.dp))
-                Spacer(Modifier.width(4.dp))
-                Text("Get Current", fontSize = 11.sp)
-            }
-
-            Button(
-                onClick = {
-                    LocationService.startSensorMonitoring(context)
-                    testResult = "✅ Sensor updates started"
-                },
-                modifier = Modifier.weight(1f)
-            ) {
-                Icon(Icons.Filled.Sensors, null, Modifier.size(16.dp))
-                Spacer(Modifier.width(4.dp))
-                Text("Start Sensors", fontSize = 11.sp)
-            }
-        }
-
-        Spacer(Modifier.height(8.dp))
-
-        // Stop sensors
-        OutlinedButton(
-            onClick = {
-                LocationService.stopSensorMonitoring()
-                testResult = "⏹️ Sensor updates stopped"
-            },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Stop Sensor Updates")
-        }
-
-        // Result display
-        testResult?.let { result ->
-            Spacer(Modifier.height(12.dp))
-            Card(
-                colors = CardDefaults.cardColors(
-                    containerColor = when {
-                        result.startsWith("✅") -> Color(0xFF4CAF50).copy(alpha = 0.2f)
-                        result.startsWith("❌") -> Color(0xFFF44336).copy(alpha = 0.2f)
-                        else -> Color(0xFFFFC107).copy(alpha = 0.2f)
-                    }
-                ),
-                shape = RoundedCornerShape(8.dp)
-            ) {
-                Text(
-                    text = result,
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.padding(12.dp)
-                )
-            }
-        }
-
-        if (isLoading) {
-            Spacer(Modifier.height(8.dp))
-            LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
-        }
-    }
-}
-
-// ═══════════════════════════════════════════════════════════════
-// WIDGET DEV SECTION
-// ═══════════════════════════════════════════════════════════════
-
-@Composable
-fun WidgetDevSection() {
-    val context = LocalContext.current
-    var testResult by remember { mutableStateOf<String?>(null) }
-    var showFullPreview by remember { mutableStateOf(false) }
-
-    // Widget preview states
-    var focusMinutes by remember { mutableIntStateOf(25) }
-    var isTimerRunning by remember { mutableStateOf(false) }
-    var energyLevel by remember { mutableIntStateOf(70) }
-    var selectedMood by remember { mutableStateOf<MoodOption?>(null) }
-    var sensoryLevel by remember { mutableStateOf(SensoryLevel.GREEN) }
-
-    DevSectionCard(
-        title = "Home Screen Widgets",
-        icon = Icons.Filled.Widgets
-    ) {
-        Text(
-            "Preview actual home screen widgets.",
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-
-        Spacer(Modifier.height(12.dp))
-
-        // Mini widget previews grid
-        Text(
-            "Widget Previews",
-            style = MaterialTheme.typography.labelMedium,
-            fontWeight = FontWeight.SemiBold,
-            color = MaterialTheme.colorScheme.primary
-        )
-
-        Spacer(Modifier.height(8.dp))
-
-        // Focus Timer Mini Preview
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f)
-            ),
-            shape = RoundedCornerShape(12.dp)
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(12.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .size(40.dp)
-                            .clip(CircleShape)
-                            .background(MaterialTheme.colorScheme.primary),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text("⏱️", fontSize = 20.sp)
-                    }
-                    Column {
-                        Text(
-                            "Focus Timer",
-                            style = MaterialTheme.typography.labelMedium,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                        Text(
-                            "$focusMinutes min remaining",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                }
-                Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                    IconButton(
-                        onClick = { isTimerRunning = !isTimerRunning },
-                        modifier = Modifier.size(32.dp)
-                    ) {
-                        Icon(
-                            if (isTimerRunning) Icons.Filled.Pause else Icons.Filled.PlayArrow,
-                            null,
-                            Modifier.size(20.dp)
-                        )
-                    }
-                }
-            }
-        }
-
-        Spacer(Modifier.height(8.dp))
-
-        // Mood Check-in Mini Preview
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.3f)
-            ),
-            shape = RoundedCornerShape(12.dp)
-        ) {
-            Column(
-                modifier = Modifier.padding(12.dp)
-            ) {
-                Text(
-                    "How are you feeling?",
-                    style = MaterialTheme.typography.labelMedium,
-                    fontWeight = FontWeight.SemiBold
-                )
-                Spacer(Modifier.height(8.dp))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    listOf("😊" to "Happy", "😌" to "Calm", "😔" to "Sad", "😤" to "Angry", "😰" to "Anxious").forEach { (emoji, _) ->
-                        Box(
-                            modifier = Modifier
-                                .size(36.dp)
-                                .clip(CircleShape)
-                                .background(
-                                    if (selectedMood?.emoji == emoji)
-                                        MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
-                                    else Color.Transparent
-                                )
-                                .clickable {
-                                    selectedMood = MoodOption(emoji, "", Color.Transparent)
-                                },
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(emoji, fontSize = 20.sp)
-                        }
-                    }
-                }
-            }
-        }
-
-        Spacer(Modifier.height(8.dp))
-
-        // Energy Level Mini Preview
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.3f)
-            ),
-            shape = RoundedCornerShape(12.dp)
-        ) {
-            Column(
-                modifier = Modifier.padding(12.dp)
-            ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        "⚡ Energy Level",
-                        style = MaterialTheme.typography.labelMedium,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                    Text(
-                        "$energyLevel%",
-                        style = MaterialTheme.typography.bodyMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = when {
-                            energyLevel >= 70 -> Color(0xFF4CAF50)
-                            energyLevel >= 40 -> Color(0xFFFF9800)
-                            else -> Color(0xFFF44336)
-                        }
-                    )
-                }
-                Spacer(Modifier.height(8.dp))
-                LinearProgressIndicator(
-                    progress = { energyLevel / 100f },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(8.dp)
-                        .clip(RoundedCornerShape(4.dp)),
-                    color = when {
-                        energyLevel >= 70 -> Color(0xFF4CAF50)
-                        energyLevel >= 40 -> Color(0xFFFF9800)
-                        else -> Color(0xFFF44336)
-                    }
-                )
-            }
-        }
-
-        Spacer(Modifier.height(8.dp))
-
-        // Sensory Alert Mini Preview
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(
-                containerColor = when (sensoryLevel) {
-                    SensoryLevel.GREEN -> Color(0xFF4CAF50).copy(alpha = 0.1f)
-                    SensoryLevel.YELLOW -> Color(0xFFFFEB3B).copy(alpha = 0.1f)
-                    SensoryLevel.ORANGE -> Color(0xFFFF9800).copy(alpha = 0.1f)
-                    SensoryLevel.RED -> Color(0xFFF44336).copy(alpha = 0.1f)
-                }
-            ),
-            shape = RoundedCornerShape(12.dp)
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(12.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    Text(
-                        when (sensoryLevel) {
-                            SensoryLevel.GREEN -> "🟢"
-                            SensoryLevel.YELLOW -> "🟡"
-                            SensoryLevel.ORANGE -> "🟠"
-                            SensoryLevel.RED -> "🔴"
-                        },
-                        fontSize = 24.sp
-                    )
-                    Column {
-                        Text(
-                            "Sensory Status",
-                            style = MaterialTheme.typography.labelMedium,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                        Text(
-                            sensoryLevel.name,
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                }
-                Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                    SensoryLevel.entries.forEach { level ->
-                        Box(
-                            modifier = Modifier
-                                .size(24.dp)
-                                .clip(CircleShape)
-                                .background(
-                                    when (level) {
-                                        SensoryLevel.GREEN -> Color(0xFF4CAF50)
-                                        SensoryLevel.YELLOW -> Color(0xFFFFEB3B)
-                                        SensoryLevel.ORANGE -> Color(0xFFFF9800)
-                                        SensoryLevel.RED -> Color(0xFFF44336)
-                                    }
-                                )
-                                .then(
-                                    if (sensoryLevel == level) Modifier.border(
-                                        2.dp,
-                                        MaterialTheme.colorScheme.onSurface,
-                                        CircleShape
-                                    ) else Modifier
-                                )
-                                .clickable { sensoryLevel = level }
-                        )
-                    }
-                }
-            }
-        }
-
-        Spacer(Modifier.height(12.dp))
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Button(
-                onClick = { showFullPreview = true },
-                modifier = Modifier.weight(1f)
-            ) {
-                Icon(Icons.Filled.Fullscreen, null, Modifier.size(16.dp))
-                Spacer(Modifier.width(4.dp))
-                Text("Full View", fontSize = 12.sp)
-            }
-
-            Button(
-                onClick = {
-                    focusMinutes = 25
-                    isTimerRunning = false
-                    energyLevel = 70
-                    selectedMood = null
-                    sensoryLevel = SensoryLevel.GREEN
-                    testResult = "✅ Widgets reset to defaults"
-                },
-                modifier = Modifier.weight(1f)
-            ) {
-                Icon(Icons.Filled.Refresh, null, Modifier.size(16.dp))
-                Spacer(Modifier.width(4.dp))
-                Text("Reset", fontSize = 12.sp)
-            }
-        }
-
-        testResult?.let { result ->
-            Spacer(Modifier.height(8.dp))
-            Card(
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant
-                ),
-                shape = RoundedCornerShape(8.dp)
-            ) {
-                Text(
-                    text = result,
-                    modifier = Modifier.padding(12.dp),
-                    style = MaterialTheme.typography.bodySmall,
-                    fontFamily = FontFamily.Monospace
-                )
-            }
-        }
-    }
-
-    // Full widget preview dialog
-    if (showFullPreview) {
-        Dialog(
-            onDismissRequest = { showFullPreview = false },
-            properties = DialogProperties(usePlatformDefaultWidth = false)
-        ) {
-            Surface(
-                modifier = Modifier.fillMaxSize(),
-                color = MaterialTheme.colorScheme.background
-            ) {
-                Column {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            "Full Widget Dashboard",
-                            style = MaterialTheme.typography.titleLarge,
-                            fontWeight = FontWeight.Bold
-                        )
-                        IconButton(onClick = { showFullPreview = false }) {
-                            Icon(Icons.Filled.Close, "Close")
-                        }
-                    }
-                    NeurodivergentWidgetDashboard()
-                }
-            }
-        }
-    }
-}
-
-// ═══════════════════════════════════════════════════════════════
-// ENHANCED LOCATION & SENSORS DEV SECTION
-// ═══════════════════════════════════════════════════════════════
 
 @Composable
 fun EnhancedLocationSensorsDevSection() {
@@ -1959,502 +482,1492 @@ fun EnhancedLocationSensorsDevSection() {
     val scope = rememberCoroutineScope()
 
     DevSectionCard(
-        title = "Enhanced Location & Sensors",
+        title = "Location & Sensors",
         icon = Icons.Filled.Sensors
     ) {
-        Text(
-            "Advanced location and sensor testing with enhanced accuracy.",
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+        Text("Status: ${locationStatus.name}", style = MaterialTheme.typography.labelMedium)
+        currentLocation?.let { Text("📍 ${it.latitude}, ${it.longitude}", style = MaterialTheme.typography.bodySmall) }
+        if (isMonitoring) {
+            Text("Moving: ${sensorData.isMoving} | Pressure: ${sensorData.pressure}", style = MaterialTheme.typography.labelSmall)
+        }
+        Spacer(Modifier.height(12.dp))
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Button(
+                onClick = {
+                    isMonitoring = !isMonitoring
+                    if (isMonitoring) {
+                        LocationService.initialize(context)
+                        LocationService.startSensorMonitoring(context)
+                        LocationService.startLocationUpdates(context, LocationPriority.HIGH_ACCURACY, 5000L) {}
+                    } else {
+                        LocationService.stopLocationUpdates()
+                        LocationService.stopSensorMonitoring()
+                    }
+                },
+                modifier = Modifier.weight(1f)
+            ) { Text(if (isMonitoring) "Stop" else "Start") }
+
+            Button(
+                onClick = {
+                    scope.launch {
+                        val loc = LocationService.getCurrentLocation(context, LocationPriority.HIGH_ACCURACY)
+                        testResult = if (loc != null) "✅ Found" else "❌ Failed"
+                    }
+                },
+                modifier = Modifier.weight(1f)
+            ) { Text("Get GPS") }
+        }
+        testResult?.let { Text(it, style = MaterialTheme.typography.bodySmall) }
+    }
+}
+
+@Composable
+fun SupabaseTestDataSection() {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    var isLoading by remember { mutableStateOf(false) }
+    var postsCount by remember { mutableStateOf<Int?>(null) }
+    var statusMessage by remember { mutableStateOf<String?>(null) }
+    val isAvailable = remember { SupabaseTestData.isSupabaseAvailable() }
+
+    LaunchedEffect(Unit) {
+        try {
+            if (isAvailable) SupabaseTestData.getTableRowCount("posts").onSuccess { postsCount = it }
+        } catch (e: Throwable) {
+            Log.e("DevTestSections", "Failed to get table row count: ${e.javaClass.simpleName}", e)
+        }
+    }
+
+    DevSectionCard(title = "Supabase Data", icon = Icons.Filled.CloudUpload) {
+        if (!isAvailable) {
+            Text("Not Configured", color = MaterialTheme.colorScheme.error)
+        } else {
+            Text("Posts: ${postsCount ?: "\u2014"}", style = MaterialTheme.typography.bodyMedium)
+            Spacer(Modifier.height(12.dp))
+            Button(
+                onClick = {
+                    isLoading = true
+                    statusMessage = null
+                    scope.launch {
+                        try {
+                            val result = SupabaseTestData.sendTestPost()
+                            result.onSuccess { msg ->
+                                statusMessage = msg
+                                SupabaseTestData.getTableRowCount("posts").onSuccess { postsCount = it }
+                            }
+                            result.onFailure { err ->
+                                statusMessage = "Error: ${err.message}"
+                                Log.e("DevTestSections", "sendTestPost failed", err)
+                            }
+                        } catch (e: Throwable) {
+                            statusMessage = "Crash: ${e.javaClass.simpleName}: ${e.message}"
+                            Log.e("DevTestSections", "Uncaught error in sendTestPost", e)
+                        } finally {
+                            isLoading = false
+                        }
+                    }
+                },
+                enabled = !isLoading,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                if (isLoading) CircularProgressIndicator(Modifier.size(16.dp)) else Text("Send Test Post")
+            }
+            statusMessage?.let {
+                Spacer(Modifier.height(8.dp))
+                Text(
+                    it,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = if (it.startsWith("Error") || it.startsWith("Crash"))
+                        MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun GamesTestingSection(onNavigateToGame: (String) -> Unit) {
+    val context = LocalContext.current
+    var achievements by remember { mutableIntStateOf(com.kyilmaz.neurocomet.games.GameUnlockManager.getAchievementCount(context)) }
+
+    DevSectionCard(title = "Games", icon = Icons.Filled.SportsEsports) {
+        Text("Achievements: $achievements", fontWeight = FontWeight.Bold)
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Button(onClick = { com.kyilmaz.neurocomet.games.GameUnlockManager.addAchievement(context, 1); achievements++ }) { Text("+1") }
+            Button(onClick = { com.kyilmaz.neurocomet.games.GameUnlockManager.setAchievementCount(context, 0); achievements = 0 }) { Text("Reset") }
+        }
+        Spacer(Modifier.height(12.dp))
+        com.kyilmaz.neurocomet.games.ALL_GAMES.take(3).forEach { game ->
+            TextButton(onClick = { onNavigateToGame(game.id) }) { Text("Launch ${stringResource(game.nameRes)}") }
+        }
+    }
+}
+
+@Composable
+fun AuthenticationTestingSection(authViewModel: AuthViewModel?) {
+    val user by authViewModel?.user?.collectAsState() ?: remember { mutableStateOf(null) }
+    val is2FARequired by authViewModel?.is2FARequired?.collectAsState() ?: remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
+    var authResult by remember { mutableStateOf<String?>(null) }
+
+    DevSectionCard(title = "Auth & User session", icon = Icons.Filled.Lock) {
+        if (user != null) {
+            Card(
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f)),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Column(Modifier.padding(12.dp)) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Surface(Modifier.size(32.dp), shape = CircleShape, color = MaterialTheme.colorScheme.primary) {
+                            Box(contentAlignment = Alignment.Center) {
+                                Text(user?.name?.take(1)?.uppercase() ?: "?", color = MaterialTheme.colorScheme.onPrimary)
+                            }
+                        }
+                        Spacer(Modifier.width(12.dp))
+                        Column {
+                            Text(user?.name ?: "Unknown User", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold)
+                            Text("ID: ${user?.id?.take(12)}...", style = MaterialTheme.typography.labelSmall)
+                        }
+                    }
+                }
+            }
+            Spacer(Modifier.height(12.dp))
+            Button(
+                onClick = { authViewModel?.signOut() },
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
+            ) {
+                Icon(Icons.AutoMirrored.Filled.Logout, null, Modifier.size(18.dp))
+                Spacer(Modifier.width(8.dp))
+                Text("Sign Out")
+            }
+        } else {
+            Text("Current Status: Not Authenticated", style = MaterialTheme.typography.bodySmall)
+            Spacer(Modifier.height(12.dp))
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Button(
+                    onClick = {
+                        scope.launch {
+                            authResult = "🔄 Logging in as guest..."
+                            delay(800)
+                            authViewModel?.skipAuth()
+                            authResult = "✅ Logged in as Guest"
+                        }
+                    },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text("Quick Login", fontSize = 12.sp)
+                }
+
+                OutlinedButton(
+                    onClick = {
+                        val newState = !is2FARequired
+                        authViewModel?.toggle2FA(newState)
+                        authResult = "2FA ${if (newState) "Enabled" else "Disabled"}"
+                    },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text("Toggle 2FA", fontSize = 12.sp)
+                }
+            }
+            Spacer(Modifier.height(8.dp))
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                OutlinedButton(
+                    onClick = {
+                        scope.launch {
+                            authResult = "🔄 Signing in with mock credentials..."
+                            authViewModel?.signIn("dev@neurocomet.app", "password123")
+                            delay(1200)
+                            authResult = if (authViewModel?.user?.value != null) "✅ Signed in" else "⏳ 2FA Required"
+                        }
+                    },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text("Mock Sign In", fontSize = 12.sp)
+                }
+                OutlinedButton(
+                    onClick = {
+                        scope.launch {
+                            authResult = "🔄 Verifying 2FA code..."
+                            authViewModel?.verify2FA("123456")
+                            delay(600)
+                            authResult = if (authViewModel?.user?.value != null) "✅ 2FA Verified" else "❌ Verification failed"
+                        }
+                    },
+                    modifier = Modifier.weight(1f),
+                    enabled = is2FARequired
+                ) {
+                    Text("Verify 2FA", fontSize = 12.sp)
+                }
+            }
+        }
+        authResult?.let {
+            Spacer(Modifier.height(8.dp))
+            Text(it, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
+        }
+    }
+}
+
+@Composable
+fun LocalStorageDevSection() {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    var result by remember { mutableStateOf<String?>(null) }
+    var showInspector by remember { mutableStateOf(false) }
+
+    DevSectionCard(title = "Local Storage Management", icon = Icons.Filled.Storage) {
+        Text("Manage app preferences and encrypted credentials.", style = MaterialTheme.typography.labelSmall)
+        Spacer(Modifier.height(12.dp))
+
+        Text("Secure Credentials", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Button(onClick = {
+                scope.launch {
+                    val timestamp = System.currentTimeMillis()
+                    CredentialStorage.storeCredential(context, "dev_test_key", "secret_$timestamp")
+                    result = "Stored dev_test_key"
+                }
+            }, modifier = Modifier.weight(1f)) { Text("Save Test", fontSize = 11.sp) }
+
+            Button(onClick = {
+                scope.launch {
+                    val v = CredentialStorage.retrieveCredential(context, "dev_test_key")
+                    result = v ?: "Not Found"
+                }
+            }, modifier = Modifier.weight(1f)) { Text("Load Test", fontSize = 11.sp) }
+        }
+
+        Spacer(Modifier.height(12.dp))
+        HorizontalDivider(modifier = Modifier.alpha(0.2f))
+        Spacer(Modifier.height(12.dp))
+
+        Text("General Preferences", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            OutlinedButton(onClick = { showInspector = true }, modifier = Modifier.weight(1f)) {
+                Icon(Icons.AutoMirrored.Filled.List, null, Modifier.size(16.dp))
+                Spacer(Modifier.width(4.dp))
+                Text("Inspect Keys", fontSize = 11.sp)
+            }
+            OutlinedButton(
+                onClick = {
+                    scope.launch {
+                        CredentialStorage.clearAll(context)
+                        result = "All storage cleared"
+                    }
+                },
+                modifier = Modifier.weight(1f),
+                colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.error)
+            ) {
+                Icon(Icons.Filled.CleaningServices, null, Modifier.size(16.dp))
+                Spacer(Modifier.width(4.dp))
+                Text("Wipe All", fontSize = 11.sp)
+            }
+        }
+
+        result?.let {
+            Spacer(Modifier.height(8.dp))
+            Surface(
+                color = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.5f),
+                shape = RoundedCornerShape(4.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(it, modifier = Modifier.padding(8.dp), style = MaterialTheme.typography.labelSmall, fontFamily = FontFamily.Monospace)
+            }
+        }
+    }
+
+    if (showInspector) {
+        val prefs = context.getSharedPreferences("neurocomet_secure_prefs", Context.MODE_PRIVATE)
+        val allEntries = prefs.all
+        AlertDialog(
+            onDismissRequest = { showInspector = false },
+            title = { Text("SharedPrefs Inspector") },
+            text = {
+                Box(Modifier.heightIn(max = 400.dp)) {
+                    LazyColumn {
+                        items(allEntries.keys.toList()) { key ->
+                            Column(Modifier.padding(vertical = 4.dp)) {
+                                Text(key, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.labelMedium)
+                                Text(allEntries[key].toString(), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                HorizontalDivider(modifier = Modifier.padding(top = 4.dp).alpha(0.1f))
+                            }
+                        }
+                    }
+                }
+            },
+            confirmButton = { TextButton(onClick = { showInspector = false }) { Text("Close") } }
         )
+    }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+fun LanguageTestingSection(themeViewModel: ThemeViewModel?) {
+    val context = LocalContext.current
+    val currentLanguage = themeViewModel?.themeState?.collectAsState()?.value?.languageCode ?: "en"
+
+    val languages = listOf(
+        "English" to "en",
+        "Turkish" to "tr",
+        "Hindi" to "hi",
+        "Arabic" to "ar",
+        "Spanish" to "es"
+    )
+
+    DevSectionCard(title = "Language & Localization", icon = Icons.Filled.Language) {
+        Text("Active: $currentLanguage", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
+        Spacer(Modifier.height(8.dp))
+
+        FlowRow(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            languages.forEach { (name, code) ->
+                FilterChip(
+                    selected = currentLanguage == code,
+                    onClick = {
+                        themeViewModel?.setLanguageCode(code)
+                        val appLocale = LocaleListCompat.forLanguageTags(code)
+                        AppCompatDelegate.setApplicationLocales(appLocale)
+                        Toast.makeText(context, "Locale set to $code", Toast.LENGTH_SHORT).show()
+                    },
+                    label = { Text(name) }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun BiometricFidoDevSection(authViewModel: AuthViewModel?) {
+    val context = LocalContext.current
+    val hasHardware = context.packageManager.hasSystemFeature(android.content.pm.PackageManager.FEATURE_FINGERPRINT)
+    val biometricStatus = authViewModel?.checkBiometricStatus() ?: com.kyilmaz.neurocomet.auth.BiometricStatus.Unsupported
+    val biometricEnabled by authViewModel?.biometricEnabled?.collectAsState() ?: remember { mutableStateOf(false) }
+    val fido2Enabled by authViewModel?.fido2Enabled?.collectAsState() ?: remember { mutableStateOf(false) }
+    val fido2Credentials by authViewModel?.fido2Credentials?.collectAsState() ?: remember { mutableStateOf(emptyList()) }
+    val totpEnabled by authViewModel?.totpEnabled?.collectAsState() ?: remember { mutableStateOf(false) }
+    val backupCodesRemaining by authViewModel?.backupCodesRemaining?.collectAsState() ?: remember { mutableStateOf(0) }
+    var authTestResult by remember { mutableStateOf<String?>(null) }
+    var showBackupCodes by remember { mutableStateOf(false) }
+    var generatedBackupCodes by remember { mutableStateOf<List<String>>(emptyList()) }
+    var totpCode by remember { mutableStateOf("") }
+
+    DevSectionCard(title = "Biometric, FIDO2 & MFA", icon = Icons.Filled.Fingerprint) {
+        // --- Status Overview ---
+        Card(
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Text("Hardware Detected: ${if (hasHardware) "✅ Yes" else "❌ No"}", style = MaterialTheme.typography.bodySmall)
+                Text("Biometric Status: $biometricStatus", style = MaterialTheme.typography.bodySmall)
+                Text("FIDO2 Supported: ${if (authViewModel?.isFido2Supported() == true) "✅" else "❌"}", style = MaterialTheme.typography.bodySmall)
+                HorizontalDivider(Modifier.padding(vertical = 4.dp).alpha(0.2f))
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text(if (biometricEnabled) "🟢" else "🔴", fontSize = 16.sp)
+                        Text("Biometric", style = MaterialTheme.typography.labelSmall)
+                    }
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text(if (fido2Enabled) "🟢" else "🔴", fontSize = 16.sp)
+                        Text("FIDO2", style = MaterialTheme.typography.labelSmall)
+                    }
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text(if (totpEnabled) "🟢" else "🔴", fontSize = 16.sp)
+                        Text("TOTP", style = MaterialTheme.typography.labelSmall)
+                    }
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text("$backupCodesRemaining", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                        Text("Backup", style = MaterialTheme.typography.labelSmall)
+                    }
+                }
+            }
+        }
 
         Spacer(Modifier.height(12.dp))
 
-        // Permission status
-        val hasPermission = LocationService.hasLocationPermission(context)
+        // --- Biometric ---
+        Text("Biometric Authentication", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
+        Spacer(Modifier.height(4.dp))
+        DevToggleRowSimple(
+            title = "Biometric Enabled",
+            subtitle = "Allow fingerprint/face unlock",
+            isChecked = biometricEnabled,
+            onCheckedChange = { authViewModel?.setBiometricEnabled(it) }
+        )
+        Button(
+            onClick = {
+                val activity = context as? FragmentActivity
+                if (activity != null) {
+                    authViewModel?.authenticateWithBiometric(activity) { result ->
+                        authTestResult = when (result) {
+                            is AuthResult.Success -> "✅ Biometric auth succeeded"
+                            is AuthResult.Error -> "❌ ${result.message}"
+                            is AuthResult.NotAvailable -> "⚠️ Biometric not available"
+                            else -> "Result: $result"
+                        }
+                    }
+                } else {
+                    authTestResult = "❌ Context is not FragmentActivity"
+                }
+            },
+            modifier = Modifier.fillMaxWidth(),
+            enabled = hasHardware && biometricEnabled
+        ) {
+            Icon(Icons.Filled.LockOpen, null, Modifier.size(18.dp))
+            Spacer(Modifier.width(8.dp))
+            Text("Test Biometric Prompt")
+        }
+
+        Spacer(Modifier.height(12.dp))
+        HorizontalDivider(Modifier.alpha(0.2f))
+        Spacer(Modifier.height(12.dp))
+
+        // --- FIDO2 / Passkey ---
+        Text("FIDO2 / Passkey Credentials", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
+        Spacer(Modifier.height(4.dp))
+        if (fido2Credentials.isNotEmpty()) {
+            fido2Credentials.forEach { cred ->
+                Row(
+                    Modifier.fillMaxWidth().padding(vertical = 2.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(Modifier.weight(1f)) {
+                        Text(cred.displayName, style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Medium)
+                        Text("ID: ${cred.credentialId.take(16)}...", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    }
+                    IconButton(onClick = {
+                        authViewModel?.removeFido2Credential(cred.credentialId)
+                        authTestResult = "🗑️ Removed credential: ${cred.displayName}"
+                    }) {
+                        Icon(Icons.Filled.Delete, "Remove", tint = MaterialTheme.colorScheme.error, modifier = Modifier.size(18.dp))
+                    }
+                }
+            }
+        } else {
+            Text("No FIDO2 credentials registered", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        }
+        Spacer(Modifier.height(4.dp))
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Button(
+                onClick = {
+                    authViewModel?.registerFido2Credential("Dev Test Key") { result ->
+                        authTestResult = when (result) {
+                            is AuthResult.Success -> "✅ FIDO2 credential registered"
+                            is AuthResult.Error -> "❌ ${result.message}"
+                            else -> "Result: $result"
+                        }
+                    }
+                },
+                modifier = Modifier.weight(1f)
+            ) { Text("Register Key", fontSize = 11.sp) }
+            OutlinedButton(
+                onClick = {
+                    val activity = context as? FragmentActivity
+                    if (activity != null) {
+                        authViewModel?.authenticateWithFido2(activity) { result ->
+                            authTestResult = when (result) {
+                                is AuthResult.Success -> "✅ FIDO2 auth succeeded"
+                                is AuthResult.Error -> "❌ ${result.message}"
+                                else -> "Result: $result"
+                            }
+                        }
+                    }
+                },
+                modifier = Modifier.weight(1f),
+                enabled = fido2Credentials.isNotEmpty()
+            ) { Text("Test Auth", fontSize = 11.sp) }
+        }
+
+        Spacer(Modifier.height(12.dp))
+        HorizontalDivider(Modifier.alpha(0.2f))
+        Spacer(Modifier.height(12.dp))
+
+        // --- TOTP ---
+        Text("TOTP (Time-based One-Time Password)", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
+        Spacer(Modifier.height(4.dp))
+        if (totpEnabled) {
+            val currentCode = authViewModel?.getCurrentTotpCode()
+            if (currentCode != null) {
+                Card(
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f)),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Row(Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
+                        Text("Current Code: ", style = MaterialTheme.typography.bodySmall)
+                        Text(currentCode, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold, fontFamily = FontFamily.Monospace)
+                    }
+                }
+            }
+            Spacer(Modifier.height(4.dp))
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                OutlinedTextField(
+                    value = totpCode,
+                    onValueChange = { totpCode = it.filter { c -> c.isDigit() }.take(6) },
+                    label = { Text("Verify Code") },
+                    modifier = Modifier.weight(1f),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    singleLine = true
+                )
+                Button(
+                    onClick = {
+                        val valid = authViewModel?.verifyTotpCode(totpCode) == true
+                        authTestResult = if (valid) "✅ TOTP code valid" else "❌ Invalid code"
+                        totpCode = ""
+                    },
+                    modifier = Modifier.align(Alignment.CenterVertically),
+                    enabled = totpCode.length == 6
+                ) { Text("Verify") }
+            }
+            Spacer(Modifier.height(4.dp))
+            OutlinedButton(
+                onClick = {
+                    authViewModel?.disableTotp()
+                    authTestResult = "🗑️ TOTP disabled"
+                },
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.error)
+            ) { Text("Disable TOTP", fontSize = 12.sp) }
+        } else {
+            Button(
+                onClick = {
+                    authViewModel?.startTotpSetup("dev@neurocomet.app")
+                    authTestResult = "📱 TOTP setup started — use authenticator app to scan"
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) { Text("Setup TOTP") }
+        }
+
+        Spacer(Modifier.height(12.dp))
+        HorizontalDivider(Modifier.alpha(0.2f))
+        Spacer(Modifier.height(12.dp))
+
+        // --- Backup Codes ---
+        Text("Backup Codes", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
+        Text("Remaining: $backupCodesRemaining", style = MaterialTheme.typography.bodySmall)
+        Spacer(Modifier.height(4.dp))
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Button(
+                onClick = {
+                    generatedBackupCodes = authViewModel?.generateBackupCodes() ?: emptyList()
+                    showBackupCodes = true
+                    authTestResult = "🔑 Generated ${generatedBackupCodes.size} backup codes"
+                },
+                modifier = Modifier.weight(1f)
+            ) { Text("Generate", fontSize = 11.sp) }
+            OutlinedButton(
+                onClick = {
+                    authViewModel?.verifyBackupCode("BACKUP-001") { result ->
+                        authTestResult = when (result) {
+                            is AuthResult.Success -> "✅ Backup code accepted"
+                            is AuthResult.Error -> "❌ ${result.message}"
+                            else -> "Result: $result"
+                        }
+                    }
+                },
+                modifier = Modifier.weight(1f),
+                enabled = backupCodesRemaining > 0
+            ) { Text("Test Code", fontSize = 11.sp) }
+        }
+
+        // --- Result Display ---
+        authTestResult?.let {
+            Spacer(Modifier.height(8.dp))
+            Surface(
+                color = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.5f),
+                shape = RoundedCornerShape(4.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(it, modifier = Modifier.padding(8.dp), style = MaterialTheme.typography.labelSmall, fontFamily = FontFamily.Monospace)
+            }
+        }
+    }
+
+    if (showBackupCodes && generatedBackupCodes.isNotEmpty()) {
+        AlertDialog(
+            onDismissRequest = { showBackupCodes = false },
+            title = { Text("Backup Codes") },
+            text = {
+                Column {
+                    Text("Save these codes securely. Each can only be used once.", style = MaterialTheme.typography.bodySmall)
+                    Spacer(Modifier.height(8.dp))
+                    generatedBackupCodes.forEachIndexed { i, code ->
+                        Text("${i + 1}. $code", fontFamily = FontFamily.Monospace, style = MaterialTheme.typography.bodyMedium)
+                    }
+                }
+            },
+            confirmButton = { TextButton(onClick = { showBackupCodes = false }) { Text("Done") } }
+        )
+    }
+}
+
+@Composable
+fun StressTestingSection(feedViewModel: FeedViewModel?, context: Context) {
+    val scope = rememberCoroutineScope()
+    var isRunning by remember { mutableStateOf(false) }
+    var results by remember { mutableStateOf<List<StressTestResult>>(emptyList()) }
+
+    DevSectionCard(title = "System Stress Test", icon = Icons.Filled.Speed) {
+        Button(
+            onClick = {
+                scope.launch {
+                    isRunning = true
+                    results = emptyList()
+
+                    val tests = listOf(
+                        suspend { StressTester.runUIResponsivenessTest() },
+                        suspend { StressTester.runMemoryPressureTest(context) },
+                        suspend { StressTester.runDataLoadingStressTest(feedViewModel) },
+                        suspend { StressTester.runStorageIOTest(context) },
+                        suspend { StressTester.runNotificationChannelTest(context) },
+                        suspend { StressTester.runListScrollStressTest() }
+                    )
+
+                    val currentResults = mutableListOf<StressTestResult>()
+                    tests.forEach { test ->
+                        currentResults.add(test())
+                        results = currentResults.toList()
+                    }
+
+                    isRunning = false
+                }
+            },
+            enabled = !isRunning,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            if (isRunning) {
+                CircularProgressIndicator(Modifier.size(16.dp), color = MaterialTheme.colorScheme.onPrimary)
+                Spacer(Modifier.width(12.dp))
+                Text("Testing... (${results.size}/6)")
+            } else {
+                Text("Run Full System Diagnostic")
+            }
+        }
+
+        if (results.isNotEmpty()) {
+            Spacer(Modifier.height(12.dp))
+            results.forEach { res ->
+                Column(modifier = Modifier.padding(vertical = 4.dp)) {
+                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                        Text(res.testName, style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.SemiBold)
+                        Text(
+                            if (res.passed) "PASS" else "FAIL",
+                            color = if (res.passed) Color(0xFF4CAF50) else Color.Red,
+                            fontWeight = FontWeight.ExtraBold,
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                    }
+                    Text("${res.details} (${res.duration}ms)", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    if (res.errorMessage != null) {
+                        Text("Error: ${res.errorMessage}", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.error)
+                    }
+                    HorizontalDivider(modifier = Modifier.padding(top = 4.dp).alpha(0.2f))
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+fun DmDebugDevSection(devOptionsViewModel: DevOptionsViewModel) {
+    val context = LocalContext.current
+    val application = context.applicationContext as Application
+    val options by devOptionsViewModel.options.collectAsState()
+    var delayInput by remember { mutableStateOf(options.dmArtificialSendDelayMs.toString()) }
+
+    LaunchedEffect(Unit) { devOptionsViewModel.refresh(application) }
+
+    DevSectionCard(title = "DM Delivery Simulation", icon = Icons.AutoMirrored.Filled.Chat) {
+        Text("Control direct message behavior for testing edge cases.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        Spacer(Modifier.height(8.dp))
+
+        DevToggleRowSimple(
+            title = "Show DM Debug Overlay",
+            subtitle = "Display delivery status info on DM screen",
+            isChecked = options.showDmDebugOverlay,
+            onCheckedChange = { devOptionsViewModel.setShowDmDebugOverlay(application, it) }
+        )
+
+        DevToggleRowSimple(
+            title = "Force Send Failure",
+            subtitle = "Simulate message send failures",
+            isChecked = options.dmForceSendFailure,
+            onCheckedChange = { devOptionsViewModel.setDmForceSendFailure(application, it) }
+        )
+
+        DevToggleRowSimple(
+            title = "Disable Rate Limiting",
+            subtitle = "Remove message throttling",
+            isChecked = options.dmDisableRateLimit,
+            onCheckedChange = { devOptionsViewModel.setDmDisableRateLimit(application, it) }
+        )
+
+        Spacer(Modifier.height(8.dp))
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
+            OutlinedTextField(
+                value = delayInput,
+                onValueChange = { delayInput = it.filter { c -> c.isDigit() }.take(5) },
+                label = { Text("Send Delay (ms)") },
+                modifier = Modifier.weight(1f),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                singleLine = true
+            )
+            Button(onClick = {
+                val delay = delayInput.toLongOrNull() ?: 0L
+                devOptionsViewModel.setDmSendDelayMs(application, delay)
+                Toast.makeText(context, "Delay set to ${delay}ms", Toast.LENGTH_SHORT).show()
+            }) { Text("Apply") }
+        }
+
+        Spacer(Modifier.height(8.dp))
+        Text("Moderation Override", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
+        Spacer(Modifier.height(4.dp))
+        FlowRow(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            DevModerationOverride.entries.forEach { override ->
+                FilterChip(
+                    selected = options.moderationOverride == override,
+                    onClick = { devOptionsViewModel.setModerationOverride(application, override) },
+                    label = { Text(override.name, fontSize = 11.sp) }
+                )
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+fun ContentSafetyDevSection(devOptionsViewModel: DevOptionsViewModel, safetyViewModel: SafetyViewModel) {
+    val context = LocalContext.current
+    val application = context.applicationContext as Application
+    val options by devOptionsViewModel.options.collectAsState()
+    val safetyState by safetyViewModel.state.collectAsState()
+
+    LaunchedEffect(Unit) {
+        devOptionsViewModel.refresh(application)
+        safetyViewModel.refresh(application)
+    }
+
+    DevSectionCard(title = "Content Safety & Age Filtering", icon = Icons.Filled.Security) {
+        Text("Control audience targeting, kids mode, and parental PIN simulation.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        Spacer(Modifier.height(8.dp))
+
+        // Current state display
+        Card(
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                Text("Active Audience: ${safetyState.audience.name}", style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold)
+                Text("Kids Mode: ${if (safetyState.isKidsMode) "ON" else "OFF"}", style = MaterialTheme.typography.bodySmall)
+                Text("Filter Level: ${safetyState.kidsFilterLevel.name}", style = MaterialTheme.typography.bodySmall)
+                Text("Parental PIN Set: ${if (safetyState.isParentalPinSet) "Yes" else "No"}", style = MaterialTheme.typography.bodySmall)
+            }
+        }
+
+        Spacer(Modifier.height(12.dp))
+        Text("Force Audience", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
+        Spacer(Modifier.height(4.dp))
+        FlowRow(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            FilterChip(
+                selected = options.forceAudience == null,
+                onClick = {
+                    devOptionsViewModel.setForceAudience(application, null)
+                    safetyViewModel.refresh(application)
+                },
+                label = { Text("None", fontSize = 11.sp) }
+            )
+            Audience.entries.forEach { audience ->
+                FilterChip(
+                    selected = options.forceAudience == audience,
+                    onClick = {
+                        devOptionsViewModel.setForceAudience(application, audience)
+                        safetyViewModel.refresh(application)
+                    },
+                    label = { Text(audience.name, fontSize = 11.sp) }
+                )
+            }
+        }
+
+        Spacer(Modifier.height(8.dp))
+        Text("Force Kids Filter Level", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
+        Spacer(Modifier.height(4.dp))
+        FlowRow(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            FilterChip(
+                selected = options.forceKidsFilterLevel == null,
+                onClick = {
+                    devOptionsViewModel.setForceKidsFilterLevel(application, null)
+                    safetyViewModel.refresh(application)
+                },
+                label = { Text("None", fontSize = 11.sp) }
+            )
+            KidsFilterLevel.entries.forEach { level ->
+                FilterChip(
+                    selected = options.forceKidsFilterLevel == level,
+                    onClick = {
+                        devOptionsViewModel.setForceKidsFilterLevel(application, level)
+                        safetyViewModel.refresh(application)
+                    },
+                    label = { Text(level.name, fontSize = 11.sp) }
+                )
+            }
+        }
+
+        Spacer(Modifier.height(8.dp))
+        DevToggleRowSimple(
+            title = "Force Parental PIN Set",
+            subtitle = "Simulate parental PIN being configured",
+            isChecked = options.forcePinSet,
+            onCheckedChange = {
+                devOptionsViewModel.setForcePinSet(application, it)
+                safetyViewModel.refresh(application)
+            }
+        )
+
+        DevToggleRowSimple(
+            title = "Force PIN Verify Success",
+            subtitle = "Auto-pass PIN verification checks",
+            isChecked = options.forcePinVerifySuccess,
+            onCheckedChange = {
+                devOptionsViewModel.setForcePinVerifySuccess(application, it)
+                safetyViewModel.refresh(application)
+            }
+        )
+
+        Spacer(Modifier.height(12.dp))
+        OutlinedButton(
+            onClick = {
+                devOptionsViewModel.resetAll(application)
+                safetyViewModel.refresh(application)
+                Toast.makeText(context, "All dev options reset to defaults", Toast.LENGTH_SHORT).show()
+            },
+            modifier = Modifier.fillMaxWidth(),
+            colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.error)
+        ) {
+            Icon(Icons.Filled.RestartAlt, null, Modifier.size(18.dp))
+            Spacer(Modifier.width(8.dp))
+            Text("Reset All Dev Options")
+        }
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// NEW SECTIONS
+// ═══════════════════════════════════════════════════════════════
+
+@Composable
+fun AppInfoDevSection() {
+    val context = LocalContext.current
+    val packageInfo = remember {
+        runCatching {
+            context.packageManager.getPackageInfo(context.packageName, 0)
+        }.getOrNull()
+    }
+    val runtime = Runtime.getRuntime()
+    var memoryInfo by remember {
+        mutableStateOf(
+            Triple(
+                runtime.totalMemory() / (1024 * 1024),
+                runtime.freeMemory() / (1024 * 1024),
+                runtime.maxMemory() / (1024 * 1024)
+            )
+        )
+    }
+
+    DevSectionCard(title = "App Info & Diagnostics", icon = Icons.Filled.Info) {
+        val infoRows = listOf(
+            "Package" to context.packageName,
+            "Version" to (packageInfo?.versionName ?: "—"),
+            "Build" to (if (android.os.Build.VERSION.SDK_INT >= 28) packageInfo?.longVersionCode?.toString() else @Suppress("DEPRECATION") packageInfo?.versionCode?.toString() ?: "—"),
+            "Build Type" to if (BuildConfig.DEBUG) "DEBUG" else "RELEASE",
+            "Device" to "${android.os.Build.MANUFACTURER} ${android.os.Build.MODEL}",
+            "OS" to "Android ${android.os.Build.VERSION.RELEASE} (API ${android.os.Build.VERSION.SDK_INT})",
+            "Heap Used" to "${memoryInfo.first - memoryInfo.second} MB / ${memoryInfo.third} MB max"
+        )
+
+        infoRows.forEach { (label, value) ->
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(vertical = 3.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(label, style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.SemiBold)
+                Text(value, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            }
+        }
+
+        Spacer(Modifier.height(12.dp))
+        OutlinedButton(
+            onClick = {
+                val r = Runtime.getRuntime()
+                memoryInfo = Triple(
+                    r.totalMemory() / (1024 * 1024),
+                    r.freeMemory() / (1024 * 1024),
+                    r.maxMemory() / (1024 * 1024)
+                )
+            },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Icon(Icons.Filled.Refresh, null, Modifier.size(16.dp))
+            Spacer(Modifier.width(8.dp))
+            Text("Refresh Memory Stats")
+        }
+    }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+fun EnvironmentPickerDevSection(devOptionsViewModel: DevOptionsViewModel) {
+    val options by devOptionsViewModel.options.collectAsState()
+    var showConfirmDialog by remember { mutableStateOf<DevEnvironment?>(null) }
+
+    DevSectionCard(title = "Environment", icon = Icons.Filled.Cloud) {
+        Text(
+            "Switch between backend environments. Requires app restart to take effect.",
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Spacer(Modifier.height(12.dp))
+
+        FlowRow(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            DevEnvironment.entries.forEach { env ->
+                FilterChip(
+                    selected = options.environment == env,
+                    onClick = {
+                        if (options.environment != env) {
+                            showConfirmDialog = env
+                        }
+                    },
+                    label = { Text(env.name) },
+                    leadingIcon = {
+                        if (options.environment == env) {
+                            Icon(Icons.Filled.CheckCircle, null, Modifier.size(16.dp))
+                        }
+                    }
+                )
+            }
+        }
+
         Card(
             colors = CardDefaults.cardColors(
-                containerColor = if (hasPermission) Color(0xFF4CAF50).copy(alpha = 0.1f)
-                else Color(0xFFF44336).copy(alpha = 0.1f)
+                containerColor = when (options.environment) {
+                    DevEnvironment.PRODUCTION -> MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f)
+                    DevEnvironment.STAGING -> MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.3f)
+                    DevEnvironment.LOCAL -> MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.3f)
+                }
             ),
-            shape = RoundedCornerShape(8.dp)
+            modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(12.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+            Row(Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
                 Icon(
-                    if (hasPermission) Icons.Filled.CheckCircle else Icons.Filled.Warning,
-                    contentDescription = null,
-                    tint = if (hasPermission) Color(0xFF4CAF50) else Color(0xFFF44336)
+                    when (options.environment) {
+                        DevEnvironment.PRODUCTION -> Icons.Filled.VerifiedUser
+                        DevEnvironment.STAGING -> Icons.Filled.Science
+                        DevEnvironment.LOCAL -> Icons.Filled.Computer
+                    },
+                    null,
+                    Modifier.size(18.dp)
                 )
                 Spacer(Modifier.width(8.dp))
                 Text(
-                    if (hasPermission) "Location permission granted"
-                    else "Location permission required",
-                    style = MaterialTheme.typography.bodySmall
+                    "Active: ${options.environment.name}",
+                    style = MaterialTheme.typography.labelMedium,
+                    fontWeight = FontWeight.Bold
                 )
             }
         }
+    }
 
+    showConfirmDialog?.let { targetEnv ->
+        AlertDialog(
+            onDismissRequest = { showConfirmDialog = null },
+            title = { Text("Switch Environment?") },
+            text = { Text("Switching to ${targetEnv.name} environment. The app may need to be restarted for all changes to take effect.") },
+            confirmButton = {
+                TextButton(onClick = {
+                    devOptionsViewModel.setEnvironment(targetEnv)
+                    showConfirmDialog = null
+                }) { Text("Switch") }
+            },
+            dismissButton = {
+                TextButton(onClick = { showConfirmDialog = null }) { Text("Cancel") }
+            }
+        )
+    }
+}
+
+@Composable
+fun FeatureFlagsDevSection(devOptionsViewModel: DevOptionsViewModel) {
+    val options by devOptionsViewModel.options.collectAsState()
+
+    DevSectionCard(title = "Feature Flags", icon = Icons.Filled.Flag) {
+        Text(
+            "Toggle experimental features on/off. These are persisted across restarts.",
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
         Spacer(Modifier.height(8.dp))
 
-        // Status display
-        Text(
-            "Status: ${locationStatus.name}",
-            style = MaterialTheme.typography.labelMedium,
-            fontWeight = FontWeight.SemiBold
+        DevToggleRowSimple(
+            title = "New Feed Layout",
+            subtitle = "Use experimental feed grid layout",
+            isChecked = options.enableNewFeedLayout,
+            onCheckedChange = { devOptionsViewModel.setEnableNewFeedLayout(it) }
+        )
+        DevToggleRowSimple(
+            title = "Video Chat",
+            subtitle = "Enable video calling feature",
+            isChecked = options.enableVideoChat,
+            onCheckedChange = { devOptionsViewModel.setEnableVideoChat(it) }
+        )
+        DevToggleRowSimple(
+            title = "Story Reactions",
+            subtitle = "Allow emoji reactions on stories",
+            isChecked = options.enableStoryReactions,
+            onCheckedChange = { devOptionsViewModel.setEnableStoryReactions(it) }
+        )
+        DevToggleRowSimple(
+            title = "Advanced Search",
+            subtitle = "Enable full-text and filter search",
+            isChecked = options.enableAdvancedSearch,
+            onCheckedChange = { devOptionsViewModel.setEnableAdvancedSearch(it) }
+        )
+        DevToggleRowSimple(
+            title = "AI Suggestions",
+            subtitle = "Show AI-powered content suggestions",
+            isChecked = options.enableAiSuggestions,
+            onCheckedChange = { devOptionsViewModel.setEnableAiSuggestions(it) }
         )
 
-        currentLocation?.let { loc ->
-            Spacer(Modifier.height(4.dp))
-            Text(
-                "📍 ${loc.formatForDisplay()}",
-                style = MaterialTheme.typography.bodySmall,
-                fontFamily = FontFamily.Monospace
-            )
-        }
+        Spacer(Modifier.height(8.dp))
+        val activeFlags = listOf(
+            options.enableNewFeedLayout,
+            options.enableVideoChat,
+            options.enableStoryReactions,
+            options.enableAdvancedSearch,
+            options.enableAiSuggestions
+        ).count { it }
+        Text(
+            "$activeFlags of 5 flags enabled",
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+    }
 
-        if (isMonitoring) {
-            Spacer(Modifier.height(8.dp))
-            Text(
-                "Sensors:\n" +
-                        "• Moving: ${sensorData.isMoving}\n" +
-                        "• Pressure: ${String.format(java.util.Locale.US, "%.1f", sensorData.pressure)} hPa\n" +
-                        "• Alt (baro): ${String.format(java.util.Locale.US, "%.1f", sensorData.barometerAltitude)}m",
-                style = MaterialTheme.typography.labelSmall,
-                fontFamily = FontFamily.Monospace
-            )
-        }
+    // Cross-Device section (API 37+ only)
+    DevSectionCard(title = "Cross-Device", icon = Icons.Filled.Devices) {
+        Text(
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.CINNAMON_BUN)
+                "Android 17 cross-device handoff allows seamless activity transfer to nearby devices."
+            else
+                "Requires Android 17 (CinnamonBun). Not available on this device.",
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Spacer(Modifier.height(8.dp))
+
+        DevToggleRowSimple(
+            title = "Device Handoff",
+            subtitle = "Allow transferring the current screen to a nearby device",
+            isChecked = options.enableHandoff,
+            onCheckedChange = { devOptionsViewModel.setEnableHandoff(it) }
+        )
+    }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+fun RenderingNetworkDevSection(devOptionsViewModel: DevOptionsViewModel) {
+    val context = LocalContext.current
+    val options by devOptionsViewModel.options.collectAsState()
+    var latencyInput by remember { mutableStateOf(options.networkLatencyMs.toString()) }
+
+    DevSectionCard(title = "Rendering & Network Simulation", icon = Icons.Filled.NetworkCheck) {
+        Text(
+            "Test rendering edge cases and simulate network conditions.",
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Spacer(Modifier.height(8.dp))
+
+        DevToggleRowSimple(
+            title = "Simulate Offline",
+            subtitle = "Pretend device has no network",
+            isChecked = options.simulateOffline,
+            onCheckedChange = { devOptionsViewModel.setSimulateOffline(it) }
+        )
+        DevToggleRowSimple(
+            title = "Simulate Loading Error",
+            subtitle = "Force data fetches to fail",
+            isChecked = options.simulateLoadingError,
+            onCheckedChange = { devOptionsViewModel.setSimulateLoadingError(it) }
+        )
+        DevToggleRowSimple(
+            title = "Infinite Loading",
+            subtitle = "Keep loading spinners running forever",
+            isChecked = options.infiniteLoading,
+            onCheckedChange = { devOptionsViewModel.setInfiniteLoading(it) }
+        )
+        DevToggleRowSimple(
+            title = "Show Fallback UI",
+            subtitle = "Show fallback/placeholder UI components",
+            isChecked = options.showFallbackUi,
+            onCheckedChange = { devOptionsViewModel.setShowFallbackUi(it) }
+        )
+        DevToggleRowSimple(
+            title = "Performance Overlay",
+            subtitle = "Show FPS and rendering metrics",
+            isChecked = options.showPerformanceOverlay,
+            onCheckedChange = { devOptionsViewModel.setShowPerformanceOverlay(it) }
+        )
 
         Spacer(Modifier.height(12.dp))
-
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Button(
-                onClick = {
-                    if (hasPermission) {
-                        isMonitoring = !isMonitoring
-                        if (isMonitoring) {
-                            LocationService.initialize(context)
-                            LocationService.startSensorMonitoring(context)
-                            LocationService.startLocationUpdates(
-                                context,
-                                LocationPriority.HIGH_ACCURACY,
-                                5000L
-                            ) {}
-                            testResult = "✅ Enhanced monitoring started"
-                        } else {
-                            LocationService.stopLocationUpdates()
-                            LocationService.stopSensorMonitoring()
-                            testResult = "⏹️ Monitoring stopped"
-                        }
-                    } else {
-                        testResult = "❌ Location permission required"
-                    }
-                },
-                modifier = Modifier.weight(1f)
-            ) {
-                Icon(
-                    if (isMonitoring) Icons.Filled.Stop else Icons.Filled.PlayArrow,
-                    null,
-                    Modifier.size(16.dp)
-                )
-                Spacer(Modifier.width(4.dp))
-                Text(if (isMonitoring) "Stop" else "Start", fontSize = 12.sp)
-            }
-
-            Button(
-                onClick = {
-                    scope.launch {
-                        val location = LocationService.getCurrentLocation(context, LocationPriority.HIGH_ACCURACY)
-                        testResult = if (location != null) {
-                            "✅ Current: ${location.latitude}, ${location.longitude}"
-                        } else {
-                            "⚠️ Could not get current location"
-                        }
-                    }
-                },
+            OutlinedTextField(
+                value = latencyInput,
+                onValueChange = { latencyInput = it.filter { c -> c.isDigit() }.take(5) },
+                label = { Text("Network Latency (ms)") },
                 modifier = Modifier.weight(1f),
-                enabled = hasPermission
-            ) {
-                Icon(Icons.Filled.GpsFixed, null, Modifier.size(16.dp))
-                Spacer(Modifier.width(4.dp))
-                Text("Get GPS", fontSize = 12.sp)
-            }
-        }
-
-        testResult?.let { result ->
-            Spacer(Modifier.height(8.dp))
-            Text(
-                text = result,
-                style = MaterialTheme.typography.bodySmall,
-                color = if (result.startsWith("✅")) Color(0xFF4CAF50)
-                else if (result.startsWith("❌")) Color(0xFFF44336)
-                else MaterialTheme.colorScheme.onSurfaceVariant
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                singleLine = true
             )
+            Button(onClick = {
+                val ms = latencyInput.toLongOrNull() ?: 0L
+                devOptionsViewModel.setNetworkLatencyMs(ms)
+                Toast.makeText(context, "Latency set to ${ms}ms", Toast.LENGTH_SHORT).show()
+            }) { Text("Apply") }
         }
     }
 }
 
-// ═══════════════════════════════════════════════════════════════
-// CREDENTIAL STORAGE DEV SECTION
-// ═══════════════════════════════════════════════════════════════
+// ─── Contact Picker (Android 17 / CinnamonBun) ──────────────────
 
+/**
+ * Developer-options section that exercises the Android 17 (CinnamonBun / API 37)
+ * ContactsPickerSessionContract as well as the legacy PickContact() fallback.
+ *
+ * Displays device info, allows toggling between API 37+ and legacy paths, and
+ * shows the parsed result so QA can verify both code paths work correctly.
+ */
 @Composable
-fun CredentialStorageDevSection() {
+fun ContactPickerDevSection() {
     val context = LocalContext.current
-    val scope = rememberCoroutineScope()
-    var testResult by remember { mutableStateOf<String?>(null) }
+    val isApi37Plus = Build.VERSION.SDK_INT >= Build.VERSION_CODES.CINNAMON_BUN
+
+    // ── State ───────────────────────────────────────────────
+    var forceLegacy by remember { mutableStateOf(false) }
+    var allowMultiple by remember { mutableStateOf(false) }
+    var resultLog by remember { mutableStateOf<String?>(null) }
+    var errorLog by remember { mutableStateOf<String?>(null) }
+    var pickCount by remember { mutableIntStateOf(0) }
     var isLoading by remember { mutableStateOf(false) }
 
-    DevSectionCard(
-        title = "Credential Storage",
-        icon = Icons.Filled.Key
-    ) {
+    // ── Permission launcher (legacy path, API ≤ 36) ────────
+    var pendingLegacyLaunch by remember { mutableStateOf(false) }
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { granted ->
+        if (granted) {
+            pendingLegacyLaunch = true
+        } else {
+            errorLog = "READ_CONTACTS permission denied"
+        }
+    }
+
+    // ── Legacy contact picker launcher ──────────────────────
+    val legacyPickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickContact()
+    ) { uri ->
+        isLoading = false
+        if (uri != null) {
+            var displayName = "Unknown"
+            var resolveWarning: String? = null
+            try {
+                context.contentResolver.query(
+                    uri,
+                    arrayOf(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY),
+                    null, null, null
+                )?.use { cursor ->
+                    if (cursor.moveToFirst()) {
+                        val idx = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY)
+                        if (idx >= 0) displayName = cursor.getString(idx) ?: "Unknown"
+                    }
+                }
+            } catch (se: SecurityException) {
+                resolveWarning = "SecurityException: READ_CONTACTS not granted — name unavailable"
+                displayName = "(permission denied)"
+            } catch (e: Exception) {
+                resolveWarning = "Resolve error: ${e.message}"
+                displayName = "(error)"
+            }
+            pickCount++
+            resultLog = buildString {
+                appendLine("✅ Legacy picker result #$pickCount")
+                appendLine("Name: $displayName")
+                appendLine("URI: $uri")
+                resolveWarning?.let {
+                    appendLine()
+                    appendLine("⚠️ $it")
+                }
+            }
+            // Don't clear errorLog if we set a warning above about force legacy
+            if (resolveWarning != null && errorLog == null) {
+                errorLog = resolveWarning
+            }
+        } else {
+            resultLog = "Picker cancelled (no URI returned)"
+        }
+    }
+
+    // ── API 37+ session-based picker launcher ───────────────
+    // ContactsPickerSessionContract is an ActivityResultContract<Intent, Uri?>
+    // that returns the session URI directly (no ActivityResult wrapper).
+    @Suppress("NewApi")
+    val api37PickerLauncher = rememberLauncherForActivityResult(
+        contract = object : androidx.activity.result.contract.ActivityResultContract<Intent, Uri?>() {
+            override fun createIntent(context: Context, input: Intent): Intent = input
+            override fun parseResult(resultCode: Int, intent: Intent?): Uri? {
+                return if (resultCode == android.app.Activity.RESULT_OK) intent?.data else null
+            }
+        }
+    ) { sessionUri: Uri? ->
+        isLoading = false
+        if (sessionUri != null) {
+            try {
+                val contacts = AttachmentHelper.queryContactPickerSession(
+                    context.contentResolver, sessionUri
+                )
+                pickCount++
+                if (contacts.isNotEmpty()) {
+                    resultLog = buildString {
+                        appendLine("✅ Android 17 picker result #$pickCount (${contacts.size} contact${if (contacts.size != 1) "s" else ""})")
+                        appendLine()
+                        contacts.forEachIndexed { idx, c ->
+                            appendLine("── Contact ${idx + 1} ──")
+                            appendLine("  Name:  ${c.displayName}")
+                            appendLine("  Phone: ${c.phone ?: "—"}")
+                            appendLine("  Email: ${c.email ?: "—"}")
+                        }
+                        appendLine()
+                        appendLine("Session URI: $sessionUri")
+                    }
+                    errorLog = null
+                } else {
+                    resultLog = "Session returned 0 contacts"
+                    errorLog = "Empty cursor from session URI"
+                }
+            } catch (e: Exception) {
+                errorLog = "Session query failed: ${e.message}"
+                resultLog = null
+            }
+        } else {
+            resultLog = "Picker cancelled (no session URI returned)"
+        }
+    }
+
+    // ── Launch after permission granted (deferred) ──────────
+    LaunchedEffect(pendingLegacyLaunch) {
+        if (pendingLegacyLaunch) {
+            pendingLegacyLaunch = false
+            isLoading = true
+            legacyPickerLauncher.launch(null)
+        }
+    }
+
+    // ── Pick action ─────────────────────────────────────────
+    fun pickContact() {
+        errorLog = null
+        resultLog = null
+        if (isApi37Plus && !forceLegacy) {
+            // API 37+ — ContactsPickerSessionContract
+            try {
+                val intent = AttachmentHelper.buildContactsPickerIntent(allowMultiple = allowMultiple)
+                isLoading = true
+                api37PickerLauncher.launch(intent)
+            } catch (e: Exception) {
+                errorLog = "API 37 ContactsPickerSessionContract failed: ${e.message}\nFalling back to legacy…"
+                isLoading = true
+                legacyPickerLauncher.launch(null)
+            }
+        } else {
+            // Legacy path — PickContact() launches the system contacts UI which
+            // doesn't need READ_CONTACTS permission. However, resolving contact
+            // details from the returned URI does. On CinnamonBun+ with Force
+            // Legacy, we request READ_CONTACTS if not already granted.
+            if (isApi37Plus) {
+                // Force legacy on CinnamonBun+: warn but still launch
+                errorLog = "⚠️ Force Legacy on CinnamonBun+: using legacy picker " +
+                        "instead of ContactsPickerSessionContract. READ_CONTACTS may be needed."
+            }
+            isLoading = true
+            legacyPickerLauncher.launch(null)
+        }
+    }
+
+    // ── UI ──────────────────────────────────────────────────
+    DevSectionCard(title = "Contact Picker (API 37+)", icon = Icons.Filled.Contacts) {
         Text(
-            "Test secure credential storage and retrieval.",
+            "Test the Android 17 privacy-preserving Contact Picker and the legacy fallback.",
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
         Spacer(Modifier.height(12.dp))
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        // ── Device info card ────────────────────────────────
+        Card(
+            colors = CardDefaults.cardColors(
+                containerColor = if (isApi37Plus) Color(0xFF1B5E20).copy(alpha = 0.15f)
+                else Color(0xFFFFF3E0)
+            ),
+            shape = RoundedCornerShape(8.dp)
         ) {
-            Button(
-                onClick = {
-                    scope.launch {
-                        isLoading = true
-                        try {
-                            CredentialStorage.storeCredential(
-                                context,
-                                "test_key",
-                                "test_value_${System.currentTimeMillis()}"
-                            )
-                            testResult = "✅ Credential saved successfully"
-                        } catch (e: Exception) {
-                            testResult = "❌ Save failed: ${e.message}"
-                        }
-                        isLoading = false
-                    }
-                },
-                modifier = Modifier.weight(1f),
-                enabled = !isLoading
-            ) {
-                Icon(Icons.Filled.Save, null, Modifier.size(16.dp))
-                Spacer(Modifier.width(4.dp))
-                Text("Save", fontSize = 12.sp)
-            }
-
-            Button(
-                onClick = {
-                    scope.launch {
-                        isLoading = true
-                        try {
-                            val value = CredentialStorage.retrieveCredential(context, "test_key")
-                            testResult = if (value != null) {
-                                "✅ Retrieved: $value"
-                            } else {
-                                "⚠️ No credential found"
-                            }
-                        } catch (e: Exception) {
-                            testResult = "❌ Retrieve failed: ${e.message}"
-                        }
-                        isLoading = false
-                    }
-                },
-                modifier = Modifier.weight(1f),
-                enabled = !isLoading
-            ) {
-                Icon(Icons.Filled.Download, null, Modifier.size(16.dp))
-                Spacer(Modifier.width(4.dp))
-                Text("Load", fontSize = 12.sp)
-            }
-        }
-
-        Spacer(Modifier.height(8.dp))
-
-        OutlinedButton(
-            onClick = {
-                scope.launch {
-                    isLoading = true
-                    try {
-                        CredentialStorage.deleteCredential(context, "test_key")
-                        testResult = "✅ Credential deleted"
-                    } catch (e: Exception) {
-                        testResult = "❌ Delete failed: ${e.message}"
-                    }
-                    isLoading = false
-                }
-            },
-            modifier = Modifier.fillMaxWidth(),
-            enabled = !isLoading
-        ) {
-            Icon(Icons.Filled.Delete, null, Modifier.size(16.dp))
-            Spacer(Modifier.width(4.dp))
-            Text("Delete Test Credential")
-        }
-
-        if (isLoading) {
-            Spacer(Modifier.height(8.dp))
-            LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
-        }
-
-        testResult?.let { result ->
-            Spacer(Modifier.height(8.dp))
-            Card(
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant
-                ),
-                shape = RoundedCornerShape(8.dp)
-            ) {
+            Column(Modifier.padding(12.dp)) {
                 Text(
-                    text = result,
-                    modifier = Modifier.padding(12.dp),
+                    if (isApi37Plus) "✅ API 37+ detected — session picker available"
+                    else "⚠️ API ${Build.VERSION.SDK_INT} — using legacy picker",
+                    style = MaterialTheme.typography.labelMedium,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(Modifier.height(4.dp))
+                Text(
+                    "SDK: ${Build.VERSION.SDK_INT} • Release: ${Build.VERSION.RELEASE} • Device: ${Build.MODEL}",
                     style = MaterialTheme.typography.bodySmall,
-                    fontFamily = FontFamily.Monospace
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Text(
+                    "READ_CONTACTS granted: ${AttachmentHelper.hasContactsPermission(context)}" +
+                        if (isApi37Plus) " (not needed — session picker)" else "",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }
-    }
-}
 
-// ═══════════════════════════════════════════════════════════════
-// BACKGROUND TASKS DEV SECTION
-// ═══════════════════════════════════════════════════════════════
+        Spacer(Modifier.height(12.dp))
 
-@Composable
-fun BackgroundTasksDevSection() {
-    val context = LocalContext.current
-    var testResult by remember { mutableStateOf<String?>(null) }
-    var isRunning by remember { mutableStateOf(false) }
-    val scope = rememberCoroutineScope()
+        // ── Toggles ─────────────────────────────────────────
+        DevToggleRowSimple(
+            title = "Force Legacy Picker",
+            subtitle = "Bypass API 37 picker even on Android 17+",
+            isChecked = forceLegacy,
+            onCheckedChange = { forceLegacy = it }
+        )
 
-    DevSectionCard(
-        title = "Background Tasks",
-        icon = Icons.Filled.Schedule
-    ) {
-        Text(
-            "Test background task scheduling and execution.",
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+        DevToggleRowSimple(
+            title = "Allow Multiple",
+            subtitle = "Request multi-select (API 37+ only)",
+            isChecked = allowMultiple,
+            onCheckedChange = { allowMultiple = it }
         )
 
         Spacer(Modifier.height(12.dp))
 
+        // ── Pick button ─────────────────────────────────────
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Button(
-                onClick = {
-                    scope.launch {
-                        isRunning = true
-                        testResult = "⏳ Running background task..."
-                        kotlinx.coroutines.delay(2000)
-                        testResult = "✅ Background task completed successfully"
-                        isRunning = false
-                    }
-                },
+                onClick = { pickContact() },
                 modifier = Modifier.weight(1f),
-                enabled = !isRunning
+                enabled = !isLoading
             ) {
-                Icon(Icons.Filled.PlayArrow, null, Modifier.size(16.dp))
-                Spacer(Modifier.width(4.dp))
-                Text("Run Task", fontSize = 12.sp)
+                if (isLoading) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(18.dp),
+                        strokeWidth = 2.dp,
+                        color = MaterialTheme.colorScheme.onPrimary
+                    )
+                    Spacer(Modifier.width(8.dp))
+                }
+                Text(
+                    if (isApi37Plus && !forceLegacy) "Pick Contact (API 37)"
+                    else "Pick Contact (Legacy)",
+                    fontSize = 12.sp
+                )
             }
-
-            Button(
+            OutlinedButton(
                 onClick = {
-                    testResult = "✅ Task scheduled for later execution"
+                    resultLog = null
+                    errorLog = null
+                    pickCount = 0
+                    isLoading = false
                 },
-                modifier = Modifier.weight(1f),
-                enabled = !isRunning
+                modifier = Modifier.weight(0.5f)
             ) {
-                Icon(Icons.Filled.Schedule, null, Modifier.size(16.dp))
-                Spacer(Modifier.width(4.dp))
-                Text("Schedule", fontSize = 12.sp)
+                Text("Clear", fontSize = 12.sp)
             }
         }
 
-        Spacer(Modifier.height(8.dp))
-
-        OutlinedButton(
-            onClick = {
-                testResult = "✅ All pending tasks cancelled"
-            },
-            modifier = Modifier.fillMaxWidth(),
-            enabled = !isRunning
-        ) {
-            Icon(Icons.Filled.Cancel, null, Modifier.size(16.dp))
-            Spacer(Modifier.width(4.dp))
-            Text("Cancel All Tasks")
-        }
-
-        if (isRunning) {
-            Spacer(Modifier.height(8.dp))
-            LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
-        }
-
-        testResult?.let { result ->
+        // ── Picks counter ───────────────────────────────────
+        if (pickCount > 0) {
             Spacer(Modifier.height(8.dp))
             Text(
-                text = result,
-                style = MaterialTheme.typography.bodySmall,
-                color = if (result.startsWith("✅")) Color(0xFF4CAF50)
-                else if (result.startsWith("❌")) Color(0xFFF44336)
-                else MaterialTheme.colorScheme.onSurfaceVariant
+                "Total picks this session: $pickCount",
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.primary
             )
         }
-    }
-}
 
-// ═══════════════════════════════════════════════════════════════
-// ERROR BOUNDARY DEV SECTION
-// ═══════════════════════════════════════════════════════════════
-
-@Composable
-fun ErrorBoundaryDevSection() {
-    var testResult by remember { mutableStateOf<String?>(null) }
-    var showFallbackUI by remember { mutableStateOf(false) }
-
-    DevSectionCard(
-        title = "Error Boundary & Fallback UI",
-        icon = Icons.Filled.BugReport
-    ) {
-        Text(
-            "Test error handling and fallback UI behavior.",
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-
-        Spacer(Modifier.height(12.dp))
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Button(
-                onClick = {
-                    try {
-                        // Simulate a caught error
-                        throw RuntimeException("Test error for boundary")
-                    } catch (e: Exception) {
-                        testResult = "✅ Error caught successfully: ${e.message}"
-                    }
-                },
-                modifier = Modifier.weight(1f)
-            ) {
-                Icon(Icons.Filled.Error, null, Modifier.size(16.dp))
-                Spacer(Modifier.width(4.dp))
-                Text("Test Error", fontSize = 12.sp)
-            }
-
-            Button(
-                onClick = {
-                    showFallbackUI = !showFallbackUI
-                    testResult = if (showFallbackUI) "📱 Fallback UI shown" else "📱 Normal UI restored"
-                },
-                modifier = Modifier.weight(1f)
-            ) {
-                Icon(Icons.Filled.Visibility, null, Modifier.size(16.dp))
-                Spacer(Modifier.width(4.dp))
-                Text("Toggle Fallback", fontSize = 10.sp)
-            }
-        }
-
-        if (showFallbackUI) {
-            Spacer(Modifier.height(12.dp))
+        // ── Error display ───────────────────────────────────
+        errorLog?.let { err ->
+            Spacer(Modifier.height(8.dp))
             Card(
                 colors = CardDefaults.cardColors(
-                    containerColor = Color(0xFFFFF3E0)
+                    containerColor = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.3f)
                 ),
                 shape = RoundedCornerShape(8.dp)
             ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
+                Row(Modifier.padding(12.dp), verticalAlignment = Alignment.Top) {
                     Icon(
-                        Icons.Filled.Warning,
+                        Icons.Filled.Error,
                         contentDescription = null,
-                        tint = Color(0xFFFF9800),
-                        modifier = Modifier.size(32.dp)
+                        tint = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.size(16.dp)
                     )
-                    Spacer(Modifier.height(8.dp))
+                    Spacer(Modifier.width(8.dp))
                     Text(
-                        "Fallback UI Preview",
-                        style = MaterialTheme.typography.titleSmall,
+                        err,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
+            }
+        }
+
+        // ── Result display ──────────────────────────────────
+        resultLog?.let { result ->
+            Spacer(Modifier.height(8.dp))
+            Card(
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.2f)
+                ),
+                shape = RoundedCornerShape(8.dp)
+            ) {
+                Column(Modifier.padding(12.dp)) {
+                    Text(
+                        "Result",
+                        style = MaterialTheme.typography.labelMedium,
                         fontWeight = FontWeight.Bold,
-                        color = Color(0xFFE65100)
+                        color = MaterialTheme.colorScheme.primary
                     )
                     Spacer(Modifier.height(4.dp))
                     Text(
-                        "This is shown when the main UI fails to load.",
-                        style = MaterialTheme.typography.bodySmall,
-                        textAlign = TextAlign.Center,
-                        color = Color(0xFF6D4C41)
+                        result,
+                        style = MaterialTheme.typography.bodySmall.copy(fontFamily = FontFamily.Monospace),
+                        color = MaterialTheme.colorScheme.onSurface
                     )
-                    Spacer(Modifier.height(8.dp))
-                    OutlinedButton(
-                        onClick = { showFallbackUI = false }
-                    ) {
-                        Text("Retry")
-                    }
                 }
             }
-        }
-
-        testResult?.let { result ->
-            Spacer(Modifier.height(8.dp))
-            Text(
-                text = result,
-                style = MaterialTheme.typography.bodySmall,
-                color = if (result.startsWith("✅")) Color(0xFF4CAF50)
-                else MaterialTheme.colorScheme.onSurfaceVariant
-            )
-        }
-    }
-}
-
-@Composable
-private fun StatusChip(
-    label: String,
-    isActive: Boolean,
-    activeColor: Color,
-    inactiveColor: Color
-) {
-    Box(
-        modifier = Modifier
-            .clip(RoundedCornerShape(8.dp))
-            .background(
-                if (isActive) activeColor.copy(alpha = 0.2f)
-                else inactiveColor.copy(alpha = 0.2f)
-            )
-            .padding(horizontal = 8.dp, vertical = 4.dp)
-    ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Box(
-                modifier = Modifier
-                    .size(8.dp)
-                    .clip(CircleShape)
-                    .background(if (isActive) activeColor else inactiveColor)
-            )
-            Spacer(Modifier.width(4.dp))
-            Text(
-                text = label,
-                style = MaterialTheme.typography.labelSmall,
-                color = if (isActive) activeColor else inactiveColor
-            )
         }
     }
 }
