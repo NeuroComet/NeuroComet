@@ -1,11 +1,11 @@
-# NeuroComet ☄️
+# NeuroNet 🧠
 
 <p align="center">
-  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:FFD700,25:FF69B4,50:4169E1,75:32CD32,100:9B59B6&height=220&section=header&text=NeuroComet&fontSize=80&fontColor=ffffff&animation=twinkling&fontAlignY=35&desc=☄️%20Where%20Every%20Mind%20Shines%20☄️&descSize=24&descAlignY=58&descColor=ffffff" alt="NeuroComet Header"/>
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:6366f1,25:8b5cf6,50:a855f7,75:d946ef,100:ec4899&height=220&section=header&text=NeuroNet&fontSize=80&fontColor=ffffff&animation=twinkling&fontAlignY=35&desc=♾️%20Where%20Every%20Mind%20Belongs%20♾️&descSize=24&descAlignY=58&descColor=ffffff" alt="NeuroNet Header"/>
 </p>
 
 <p align="center">
-  <img src="https://readme-typing-svg.demolab.com?font=Poppins&weight=600&size=24&duration=4000&pause=1000&color=FFD700&center=true&vCenter=true&width=600&lines=☄️+Welcome+to+NeuroComet!+☄️;✨+A+safe+space+for+neurodivergent+minds+✨;🧠+Celebrate+your+unique+brain+🧠;🌈+Where+every+mind+belongs+🌈" alt="Welcome Message"/>
+  <img src="https://readme-typing-svg.demolab.com?font=Poppins&weight=600&size=24&duration=4000&pause=1000&color=A855F7&center=true&vCenter=true&width=500&lines=🎊+Happy+New+Year+2026!+🎊;✨+New+year%2C+new+connections+✨;🧠+Celebrate+neurodiversity+🧠" alt="New Year Greeting"/>
 </p>
 
 <p align="center">
@@ -16,36 +16,46 @@
 
 <p align="center">
   <a href="#"><img src="https://img.shields.io/badge/Min_SDK-26_(Oreo)-FF6F00?style=for-the-badge&logo=android&logoColor=white" alt="Min SDK"/></a>
-  <a href="#"><img src="https://img.shields.io/badge/Version-1.0.0--beta-FFD700?style=for-the-badge" alt="Version"/></a>
-  <a href="#"><img src="https://img.shields.io/github/stars/kyilmaz80/neurocomet?style=for-the-badge&logo=github&color=FFD700" alt="Stars"/></a>
+  <a href="#"><img src="https://img.shields.io/badge/Version-1.0.0--beta-A855F7?style=for-the-badge" alt="Version"/></a>
+  <a href="#"><img src="https://img.shields.io/github/stars/yourusername/neuronet?style=for-the-badge&logo=github&color=FFD600" alt="Stars"/></a>
 </p>
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Comet/3D/comet_3d.png" alt="Comet" width="50"/>
-  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Brain/3D/brain_3d.png" alt="Brain" width="50"/>
-  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Infinity/3D/infinity_3d.png" alt="Infinity" width="50"/>
+  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Brain/3D/brain_3d.png" alt="Brain" width="80"/>
+  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Infinity/3D/infinity_3d.png" alt="Infinity" width="80"/>
+  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Purple%20heart/3D/purple_heart_3d.png" alt="Purple Heart" width="80"/>
 </p>
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Glowing%20star/3D/glowing_star_3d.png" alt="Star" width="20"/>
-  <b>A social platform designed for neurodivergent minds</b>
-  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Glowing%20star/3D/glowing_star_3d.png" alt="Star" width="20"/>
+  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Waving%20hand/3D/waving_hand_3d.png" alt="Wave" width="35"/>
+  <b>A social platform for neurodivergent minds</b>
+  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Waving%20hand/3D/waving_hand_3d.png" alt="Wave" width="35"/>
+  <br/>
+  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Shield/3D/shield_3d.png" alt="Shield" width="25"/>
+  <sub>Built with accessibility & safety first</sub>
+  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Shield/3D/shield_3d.png" alt="Shield" width="25"/>
+</p>
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Glowing%20star/3D/glowing_star_3d.png" alt="Star" width="30"/>
+  <b>A social platform designed with neurodivergent users in mind</b>
+  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Glowing%20star/3D/glowing_star_3d.png" alt="Star" width="30"/>
   <br/>
   <sub>Built with accessibility, safety, and mental wellness as core priorities</sub>
 </p>
 
 <p align="center">
   <a href="#-features">
-    <img src="https://img.shields.io/badge/✨_Features-FFD700?style=flat-square" alt="Features"/>
+    <img src="https://img.shields.io/badge/✨_Features-6366F1?style=flat-square" alt="Features"/>
   </a>
   <a href="#-getting-started">
     <img src="https://img.shields.io/badge/🚀_Get_Started-10B981?style=flat-square" alt="Getting Started"/>
   </a>
   <a href="#-tech-stack">
-    <img src="https://img.shields.io/badge/🛠️_Tech_Stack-4169E1?style=flat-square" alt="Tech Stack"/>
+    <img src="https://img.shields.io/badge/🛠️_Tech_Stack-F59E0B?style=flat-square" alt="Tech Stack"/>
   </a>
   <a href="#-contributing">
-    <img src="https://img.shields.io/badge/🤝_Contribute-FF69B4?style=flat-square" alt="Contributing"/>
+    <img src="https://img.shields.io/badge/🤝_Contribute-EC4899?style=flat-square" alt="Contributing"/>
   </a>
 </p>
 
@@ -54,27 +64,9 @@
 ---
 
 <h2 align="center">
-  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Sparkles/3D/sparkles_3d.png" alt="Sparkles" width="24"/>
-  What is NeuroComet?
-  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Sparkles/3D/sparkles_3d.png" alt="Sparkles" width="24"/>
-</h2>
-
-<p align="center">
-  <b>NeuroComet</b> is a neurodivergent-first social platform that celebrates the unique ways our brains work. 
-  <br/>Like a comet blazing through the sky, every neurodivergent mind shines bright in its own way! ☄️
-</p>
-
-<p align="center">
-  <i>Formerly known as NeuroNet, we've evolved into NeuroComet — 
-  <br/>bringing you a more personalized, beautiful, and accessible experience.</i>
-</p>
-
----
-
-<h2 align="center">
-  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Sparkles/3D/sparkles_3d.png" alt="Sparkles" width="24"/>
+  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Sparkles/3D/sparkles_3d.png" alt="Sparkles" width="35"/>
   Features
-  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Sparkles/3D/sparkles_3d.png" alt="Sparkles" width="24"/>
+  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Sparkles/3D/sparkles_3d.png" alt="Sparkles" width="35"/>
 </h2>
 
 <p align="center">
@@ -88,109 +80,25 @@
 <td width="50%">
 
 ### 🎯 Core Social Features
-- **Feed** - Browse posts with no algorithmic pressure
+- **Feed** - Browse and interact with posts from the community
 - **Stories** - Share ephemeral content with customizable durations
-- **Direct Messages** - Private conversations with safety features
-- **Explore** - Discover communities and content
-- **Notifications** - Customizable, non-overwhelming alerts
+- **Direct Messages** - Private conversations with safety features built-in
+- **Explore** - Discover new content and categories
+- **Notifications** - Stay updated with customizable alerts
 
 </td>
 <td width="50%">
 
 ### 🧠 Neuro-Centric Design
-- **25+ Neuro-State Themes** - Adaptive UI for your mental state
-- **Neurodivergent-Friendly Animations** - Gentle, calming motions
-- **Adjustable Text & Fonts** - 12+ accessibility fonts
-- **High Contrast Modes** - For visual accessibility
-- **Production-Ready Splash Screens** - Beautiful, distinct animations
+- **Neuro-State Themes** - Adaptive UI themes based on mental states
+- **Smooth Animations** - Gentle, calming logo animations (no jarring movement)
+- **Adjustable Text Sizes** - Small, Medium, Large, X-Large options
+- **High Contrast Mode** - Pure black/white for visual accessibility
+- **Dark Mode** - Reduce eye strain with full dark theme support
 
 </td>
 </tr>
 </table>
-
-<details>
-<summary><h3>📞 Practice Calls - AI Communication Training (click to expand)</h3></summary>
-
-**Build communication confidence** with AI-powered practice calls:
-
-| Feature | Description |
-|---------|-------------|
-| 🤖 **AI Personas** | Practice with AI characters who understand neurodivergent experiences |
-| 📱 **Phone Practice** | Simulate real phone conversations in a safe environment |
-| 🎯 **Scenario Training** | Practice job interviews, appointments, ordering food, and more |
-| 💪 **Build Confidence** | Reduce phone anxiety through repetition and positive experiences |
-| 🔒 **Private & Safe** | Your practice sessions are completely private |
-
-Access Practice Calls from the phone icon in the Messages section!
-
-</details>
-
-<details>
-<summary><h3>🎨 App Icon Customization (click to expand)</h3></summary>
-
-**Personalize your home screen** with custom NeuroComet icons:
-
-| Style | Colors | Best For |
-|-------|--------|----------|
-| 🎯 **Default** | Gold, Pink, Blue, Green | Standard look |
-| 🧘 **Calm** | Soft blues and greens | Anxiety reduction |
-| ⚡ **Energy** | Vibrant oranges and yellows | ADHD energized states |
-| 🎯 **Focus** | Deep blues and purples | Hyperfocus mode |
-| 🌿 **Sensory Friendly** | Muted grays and blacks | Low stimulation |
-| 🌈 **Pride** | Rainbow gradient | Celebrate neurodiversity! |
-
-Create shortcuts with your preferred icon style from Settings!
-
-</details>
-
-<details>
-<summary><h3>🎬 Production-Ready Splash Screens (click to expand)</h3></summary>
-
-Each neuro-state has a **unique, beautiful splash animation**:
-
-| Animation | Style | Description |
-|-----------|-------|-------------|
-| 🌊 **Calm Waves** | Layered ocean waves | Soft, flowing motion with floating orbs |
-| 🎯 **Focus Pulse** | Concentric rings | Draws attention inward for focus |
-| 📊 **Routine Grid** | Predictable dots | Stable patterns for routine lovers |
-| ⚡ **Energy Burst** | Radiating rays | Dynamic but controlled energy |
-| 🌍 **Grounding Earth** | Earth strata layers | Anchoring, stabilizing visuals |
-| 🎨 **Creative Swirl** | Logarithmic spirals | Inspiring artistic patterns |
-| 🫧 **Gentle Float** | Floating bubbles | Weightless, calming motion |
-| ✨ **Sensory Sparkle** | Twinkling stars | Stimulating but not overwhelming |
-| ⭕ **Contrast Rings** | Dashed/solid patterns | Colorblind-friendly design |
-| 🔷 **Pattern Shapes** | Geometric forms | Shape-based, not color-based |
-| 🌈 **Rainbow Sparkle** | Pride celebration | Vibrant neurodiversity colors |
-
-All animations feature the **NeuroComet neural network logo** (gold center node with pink, blue, and green connections).
-
-</details>
-
-<details>
-<summary><h3>👋 Interactive App Tutorial (click to expand)</h3></summary>
-
-First-time users get a **clean, production-ready tutorial** with:
-
-| Feature | Description |
-|---------|-------------|
-| 🎨 **Per-Step Accent Colors** | Each step has its own color theme |
-| 📱 **Navigation Previews** | See which button to look for |
-| 📞 **Practice Calls Preview** | Visual guide to find the phone icon |
-| 📊 **Pill Progress Indicators** | Animated progress tracking |
-| 👆 **Swipe Navigation** | Swipe left/right to navigate |
-| ✨ **Smooth Animations** | Gentle entrance/exit effects |
-
-**Tutorial Steps:**
-1. ☄️ **Welcome** - Introduction to NeuroComet
-2. 🏠 **Feed** - Your home for posts
-3. 🔍 **Explore** - Discover communities
-4. 💬 **Messages** - Chat with friends
-5. 📞 **Practice Calls** - AI communication training
-6. 🔔 **Notifications** - Stay updated
-7. ⚙️ **Settings** - Personalize everything
-8. ✨ **Complete** - You're all set!
-
-</details>
 
 <details>
 <summary><h3>🎨 Neuro-State Themes (click to expand)</h3></summary>
@@ -236,19 +144,39 @@ Fine-grained control over animations for sensory-sensitive users:
 | Setting | Description |
 |---------|-------------|
 | 🎛️ **Master Toggle** | Disable all animations at once |
-| ☄️ **Logo Animations** | NeuroComet logo effects |
+| ♾️ **Logo Animations** | Rainbow infinity, shimmer text |
 | 📖 **Story Animations** | Story circle spinning effects |
 | 📰 **Feed Animations** | Post card and like animations |
 | 🔄 **Transitions** | Screen transition effects |
 | 🔘 **Button Animations** | Button press effects |
 | ⏳ **Loading Animations** | Spinners and skeleton screens |
 
+**Tip:** Tap the infinity logo on the login screen to quickly toggle animations!
+
+</details>
+
+<details>
+<summary><h3>👋 Interactive Welcome Tutorial (click to expand)</h3></summary>
+
+First-time users get a gentle, step-by-step introduction:
+
+| Step | What You Learn |
+|:----:|----------------|
+| 1️⃣ **Welcome** | Introduction to NeuroNet as a safe, inclusive space |
+| 2️⃣ **Animation Toggle** | Tap the infinity logo to disable/enable animations anytime |
+| 3️⃣ **Get Started** | Sign in or create an account to join the community |
+
+The tutorial uses:
+- 🎯 **Visual highlights** - Pulsing rings draw attention to interactive elements
+- ➡️ **Animated pointers** - Arrows guide you to the next action
+- 📖 **Clear explanations** - Simple, friendly language
+
 </details>
 
 <details>
 <summary><h3>🎄 Holiday & Awareness Theming (click to expand)</h3></summary>
 
-The app automatically celebrates holidays and awareness events:
+The app automatically celebrates holidays and awareness events with themed logos:
 
 | Date | Event | Special Features |
 |:----:|-------|------------------|
@@ -265,22 +193,27 @@ The app automatically celebrates holidays and awareness events:
 | 🕎 **December** | Hanukkah | Blue & silver |
 | 🎄 **Dec 24-26** | Christmas | Red, green & gold |
 
+**Special ND Celebrations** (extra festive animations!):
+- Autism Awareness Day
+- ADHD Awareness Month
+- Neurodiversity Celebration Week
+- Pride Month
+
 </details>
 
 <details>
-<summary><h3>🛠️ Developer Tools (click to expand)</h3></summary>
+<summary><h3>💡 Quick Tips & Tricks (click to expand)</h3></summary>
 
-Powerful developer options for testing and debugging:
-
-| Tool | Description |
-|------|-------------|
-| 🔍 **String Checkers** | Verify translation completeness |
-| 📊 **Dev String Checker** | Check developer section translations |
-| ⚙️ **General String Checker** | Check general settings translations |
-| 🎨 **Theme Tester** | Preview all neuro-state themes |
-| 📱 **Mock Mode** | Test with fake data |
-| 💎 **Premium Simulator** | Test premium features |
-| 🗄️ **Database Tools** | Manage local data |
+| Tip | How To |
+|-----|--------|
+| 🔄 **Quick animation toggle** | Tap the ♾️ infinity logo on the login screen |
+| 🦄 **Unlock Rainbow Brain** | Complete secret achievements (hint: explore everything!) |
+| 🌙 **Reduce eye strain** | Enable Dark Mode + Low Stimulation theme |
+| 📖 **Better readability** | Try Lexend or Atkinson Hyperlegible fonts |
+| 🧘 **Calm experience** | Disable all animations + use Calm theme |
+| ⚡ **Stay focused** | Use ADHD Task Mode + Hyperfocus theme |
+| 👶 **Protect kids** | Set up Parental Controls with PIN |
+| 🔔 **Less overwhelm** | Customize notification settings |
 
 </details>
 
@@ -319,7 +252,6 @@ Powerful developer options for testing and debugging:
 <td width="50%">
 
 ### 📞 Communication
-- **Practice Calls** - AI-powered phone practice
 - **WebRTC Voice & Video Calls** - Real-time communication
 - **Real-time Messaging** - Instant delivery via Supabase
 - **Typing Indicators** - See when others are typing
@@ -339,9 +271,9 @@ Powerful developer options for testing and debugging:
 ---
 
 <h2 align="center">
-  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Hammer%20and%20wrench/3D/hammer_and_wrench_3d.png" alt="Tools" width="24"/>
+  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Hammer%20and%20wrench/3D/hammer_and_wrench_3d.png" alt="Tools" width="35"/>
   Tech Stack
-  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Hammer%20and%20wrench/3D/hammer_and_wrench_3d.png" alt="Tools" width="24"/>
+  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Hammer%20and%20wrench/3D/hammer_and_wrench_3d.png" alt="Tools" width="35"/>
 </h2>
 
 <p align="center">
@@ -375,9 +307,9 @@ Powerful developer options for testing and debugging:
 ---
 
 <h2 align="center">
-  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Rocket/3D/rocket_3d.png" alt="Rocket" width="24"/>
+  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Rocket/3D/rocket_3d.png" alt="Rocket" width="35"/>
   Getting Started
-  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Rocket/3D/rocket_3d.png" alt="Rocket" width="24"/>
+  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Rocket/3D/rocket_3d.png" alt="Rocket" width="35"/>
 </h2>
 
 <p align="center">
@@ -387,8 +319,8 @@ Powerful developer options for testing and debugging:
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/kyilmaz80/NeuroComet.git
-cd NeuroComet
+git clone https://github.com/yourusername/NeuroNet.git
+cd NeuroNet
 ```
 
 ### 2. Configure local.properties
@@ -411,7 +343,7 @@ DEVELOPER_DEVICE_HASH=your_device_hash
 
 1. Go to [Firebase Console](https://console.firebase.google.com/)
 2. Create a new project or select existing
-3. Add Android app with package: `com.kyilmaz.neurocomet`
+3. Add Android app with package: `com.kyilmaz.neuronetworkingtitle`
 4. Download `google-services.json` and place in `app/` directory
 
 ### 4. Set Up Supabase
@@ -435,12 +367,12 @@ Or use Android Studio: **Run > Run 'app'**
 
 ```
 app/src/main/
-├── java/com/kyilmaz/neurocomet/
+├── java/com/kyilmaz/neuronetworkingtitle/
 │   ├── MainActivity.kt           # App entry point
-│   ├── NeuroCometApplication.kt  # Application class
+│   ├── NeuroNetApplication.kt    # Application class
 │   │
 │   ├── # Authentication
-│   ├── AuthScreen.kt             # Login/Register UI with tutorial
+│   ├── AuthScreen.kt             # Login/Register UI
 │   ├── AuthViewModel.kt          # Auth state management
 │   │
 │   ├── # Feed & Posts
@@ -457,24 +389,13 @@ app/src/main/
 │   ├── # Messaging
 │   ├── DmScreens.kt              # Direct messages UI
 │   ├── ChatViewModel.kt          # Chat state management
-│   ├── calling/                  # Voice/video calls
-│   │   ├── PracticeCallScreen.kt # AI practice calls
-│   │   ├── WebRTCCallManager.kt  # WebRTC integration
-│   │   └── GeminiCallSimulator.kt # AI call simulation
-│   │
-│   ├── # Splash & Onboarding
-│   ├── SplashScreen.kt           # Animated splash screens
-│   ├── SplashConfigs.kt          # Splash configuration per state
-│   ├── TutorialSystem.kt         # Interactive app tutorial
+│   ├── calling/                  # WebRTC voice/video calls
 │   │
 │   ├── # Settings & Themes
 │   ├── SettingsScreen.kt         # Settings UI
-│   ├── DevOptionsScreen.kt       # Developer options
 │   ├── ThemeSettings.kt          # Theme configuration
 │   ├── Theming.kt                # Theme definitions
 │   ├── NeuroState.kt             # Neuro-centric states
-│   ├── IconCustomization.kt      # App icon customization
-│   ├── FontSettingsScreen.kt     # Font customization
 │   │
 │   ├── # Safety
 │   ├── ParentalControls.kt       # Parental control logic
@@ -489,54 +410,10 @@ app/src/main/
 │       └── SupabaseClient.kt     # Supabase configuration
 │
 └── res/
-    ├── drawable/                  # App icons and vectors
-    │   ├── neuro_comet_icon_*.xml # NeuroComet logo assets
-    │   └── icon_*_background.xml  # Custom icon backgrounds
     ├── values/
-    │   └── strings.xml           # English strings
-    ├── values-*/                  # 25+ language translations
+    │   └── strings.xml           # Localized strings
     └── ...
 ```
-
----
-
-## 🌍 Localization
-
-NeuroComet supports **25+ languages**:
-
-| Region | Languages |
-|--------|-----------|
-| 🇺🇸🇬🇧🇦🇺🇨🇦 | English (US, UK, AU, CA) |
-| 🇪🇸🇲🇽 | Spanish |
-| 🇫🇷 | French |
-| 🇩🇪 | German |
-| 🇮🇹 | Italian |
-| 🇵🇹🇧🇷 | Portuguese |
-| 🇳🇱 | Dutch |
-| 🇸🇪 | Swedish |
-| 🇩🇰 | Danish |
-| 🇳🇴 | Norwegian |
-| 🇫🇮 | Finnish |
-| 🇮🇸 | Icelandic |
-| 🇹🇷 | Turkish |
-| 🇸🇦 | Arabic |
-| 🇮🇱 | Hebrew |
-| 🇮🇳 | Hindi |
-| 🇵🇰 | Urdu |
-| 🇷🇺 | Russian |
-| 🇺🇦 | Ukrainian |
-| 🇵🇱 | Polish |
-| 🇨🇿 | Czech |
-| 🇭🇺 | Hungarian |
-| 🇷🇴 | Romanian |
-| 🇬🇷 | Greek |
-| 🇨🇳 | Chinese (Simplified) |
-| 🇯🇵 | Japanese |
-| 🇰🇷 | Korean |
-| 🇻🇳 | Vietnamese |
-| 🇹🇭 | Thai |
-| 🇮🇩 | Indonesian |
-| 🇲🇾 | Malay |
 
 ---
 
@@ -554,8 +431,8 @@ NeuroComet supports **25+ languages**:
 
 | Product ID | Type | Price |
 |------------|------|-------|
-| `neurocomet_premium_monthly` | Subscription | $2.00/month |
-| `neurocomet_premium_lifetime` | In-app product | $60.00 |
+| `neuronet_premium_monthly` | Subscription | $2.00/month |
+| `neuronet_premium_lifetime` | In-app product | $60.00 |
 
 ---
 
@@ -569,20 +446,18 @@ Developer options are available for testing and debugging. To enable:
 4. Add `DEVELOPER_DEVICE_HASH=<hash>` to `local.properties`
 
 ### Available Dev Options
-- String translation checkers (Dev, General, Settings)
 - Force verify user status
 - Simulate premium subscription
 - Mock interface with fake data
 - Simulate badge notifications
 - Database management tools
-- Theme preview tools
 
 ---
 
 <h2 align="center">
-  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Mobile%20phone/3D/mobile_phone_3d.png" alt="Phone" width="24"/>
+  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Mobile%20phone/3D/mobile_phone_3d.png" alt="Phone" width="35"/>
   Screenshots
-  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Mobile%20phone/3D/mobile_phone_3d.png" alt="Phone" width="24"/>
+  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Mobile%20phone/3D/mobile_phone_3d.png" alt="Phone" width="35"/>
 </h2>
 
 <p align="center">
@@ -590,21 +465,21 @@ Developer options are available for testing and debugging. To enable:
 </p>
 
 <p align="center">
-  <img src="https://placehold.co/200x400/FFD700/1a1a2e?text=Splash&font=roboto" alt="Splash"/>
+  <img src="https://placehold.co/200x400/6366F1/FFFFFF?text=Feed&font=roboto" alt="Feed"/>
   &nbsp;&nbsp;
-  <img src="https://placehold.co/200x400/FF69B4/1a1a2e?text=Feed&font=roboto" alt="Feed"/>
+  <img src="https://placehold.co/200x400/A855F7/FFFFFF?text=Stories&font=roboto" alt="Stories"/>
   &nbsp;&nbsp;
-  <img src="https://placehold.co/200x400/4169E1/FFFFFF?text=Messages&font=roboto" alt="Messages"/>
+  <img src="https://placehold.co/200x400/EC4899/FFFFFF?text=Messages&font=roboto" alt="Messages"/>
   &nbsp;&nbsp;
-  <img src="https://placehold.co/200x400/32CD32/1a1a2e?text=Settings&font=roboto" alt="Settings"/>
+  <img src="https://placehold.co/200x400/10B981/FFFFFF?text=Settings&font=roboto" alt="Settings"/>
 </p>
 
 ---
 
 <h2 align="center">
-  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Handshake/3D/handshake_3d.png" alt="Handshake" width="24"/>
+  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Handshake/3D/handshake_3d.png" alt="Handshake" width="35"/>
   Contributing
-  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Handshake/3D/handshake_3d.png" alt="Handshake" width="24"/>
+  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Handshake/3D/handshake_3d.png" alt="Handshake" width="35"/>
 </h2>
 
 <p align="center">
@@ -630,13 +505,6 @@ git push origin feature/amazing-feature
 # 5. Open a Pull Request 🎉
 ```
 
-### Areas We Need Help With
-- 🌍 **Translations** - Help complete translations for all 25+ languages
-- ♿ **Accessibility Testing** - Test with screen readers and assistive tech
-- 🎨 **UI/UX Improvements** - Make the app even more beautiful
-- 🧪 **Testing** - Write unit and integration tests
-- 📖 **Documentation** - Improve guides and docs
-
 ---
 
 ## 📄 License
@@ -657,35 +525,35 @@ For support, please open an issue on GitHub or contact the development team.
 - [Supabase](https://supabase.com/) - Open source Firebase alternative
 - [Stream WebRTC](https://getstream.io/) - Real-time communication
 - [RevenueCat](https://www.revenuecat.com/) - In-app subscription management
-- The neurodivergent community for inspiration and feedback ♾️
+- The neurodivergent community for inspiration and feedback
 
 ---
 
 <p align="center">
-  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:FFD700,25:FF69B4,50:4169E1,75:32CD32,100:9B59B6&height=120&section=footer" alt="Footer Wave"/>
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:6366f1,25:8b5cf6,50:a855f7,75:d946ef,100:ec4899&height=120&section=footer" alt="Footer Wave"/>
 </p>
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Comet/3D/comet_3d.png" alt="Comet" width="40"/>
+  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Smiling%20face%20with%20open%20hands/3D/smiling_face_with_open_hands_3d.png" alt="Hugging Face" width="50"/>
   <br/>
   <b>Made with</b>
-  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Beating%20heart/3D/beating_heart_3d.png" alt="Heart" width="20"/>
+  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Beating%20heart/3D/beating_heart_3d.png" alt="Heart" width="25"/>
   <b>for the neurodivergent community</b>
 </p>
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Sparkles/3D/sparkles_3d.png" alt="Sparkles" width="20"/>
-  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Brain/3D/brain_3d.png" alt="Brain" width="20"/>
-  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Infinity/3D/infinity_3d.png" alt="Infinity" width="20"/>
-  <b><i>Every mind shines bright!</i></b>
-  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Infinity/3D/infinity_3d.png" alt="Infinity" width="20"/>
-  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Brain/3D/brain_3d.png" alt="Brain" width="20"/>
-  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Sparkles/3D/sparkles_3d.png" alt="Sparkles" width="20"/>
+  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Party%20popper/3D/party_popper_3d.png" alt="Party" width="30"/>
+  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Fireworks/3D/fireworks_3d.png" alt="Fireworks" width="30"/>
+  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Sparkles/3D/sparkles_3d.png" alt="Sparkles" width="30"/>
+  <b><i>Cheers to an amazing 2026!</i></b>
+  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Sparkles/3D/sparkles_3d.png" alt="Sparkles" width="30"/>
+  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Fireworks/3D/fireworks_3d.png" alt="Fireworks" width="30"/>
+  <img src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Party%20popper/3D/party_popper_3d.png" alt="Party" width="30"/>
 </p>
 
 <p align="center">
-  <a href="#neurocomet-️">
-    <img src="https://img.shields.io/badge/⬆️_Back_to_Top-FFD700?style=for-the-badge" alt="Back to Top"/>
+  <a href="#neuronet-">
+    <img src="https://img.shields.io/badge/⬆️_Back_to_Top-6366F1?style=for-the-badge" alt="Back to Top"/>
   </a>
 </p>
 

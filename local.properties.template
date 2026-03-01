@@ -1,0 +1,21 @@
+# NeuroComet API Keys Template
+# Fill these with your actual keys and rename this file to local.properties
+
+# Supabase
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_KEY=your-anon-key
+
+# Gemini AI
+GEMINI_API_KEY=your-gemini-key
+
+# RevenueCat
+REVENUECAT_API_KEY=goog_your_key
+
+# AdMob
+ADMOB_APP_ID=ca-app-pub-XXXXXXXXXX~XXXXXXXXXX
+ADMOB_BANNER_ID=ca-app-pub-XXXXXXXXXX/XXXXXXXXXX
+ADMOB_INTERSTITIAL_ID=ca-app-pub-XXXXXXXXXX/XXXXXXXXXX
+ADMOB_REWARDED_ID=ca-app-pub-XXXXXXXXXX/XXXXXXXXXX
+
+# Developer
+DEVELOPER_DEVICE_HASH=your-hash
