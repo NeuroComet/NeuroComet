@@ -10,6 +10,8 @@ import com.kyilmaz.neurocomet.auth.AuthenticationManager
 import com.kyilmaz.neurocomet.auth.BiometricStatus
 import com.kyilmaz.neurocomet.auth.Fido2Credential
 import com.kyilmaz.neurocomet.auth.TotpSecret
+import io.github.jan.supabase.auth.auth
+import io.github.jan.supabase.auth.providers.builtin.Email
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -308,20 +310,45 @@ class AuthViewModel : ViewModel() {
                     return@launch
                 }
 
-                delay(1000) // Simulate network
-                if (_is2FAEnabled.value) {
-                    _is2FARequired.value = true
+                val client = AppSupabaseClient.client
+                if (client != null) {
+                    // Real Supabase Auth
+                    client.auth.signInWith(Email) {
+                        this.email = trimmedEmail
+                        this.password = trimmedPassword
+                    }
+                    val session = client.auth.currentSessionOrNull()
+                    val userId = session?.user?.id
+                    if (userId != null) {
+                        val meta = session.user?.userMetadata
+                        _user.value = User(
+                            id = userId,
+                            name = meta?.get("display_name")?.toString()?.removeSurrounding("\"")
+                                ?: trimmedEmail.substringBefore("@"),
+                            avatarUrl = meta?.get("avatar_url")?.toString()?.removeSurrounding("\"") ?: "",
+                            isVerified = true,
+                            personality = "NeuroComet user"
+                        )
+                    } else {
+                        _error.value = "Sign in failed. Please check your credentials."
+                    }
                 } else {
-                    _user.value = User(
-                        id = "mock_user_id",
-                        name = "Mock User",
-                        avatarUrl = "",
-                        isVerified = true,
-                        personality = "A mock user."
-                    )
+                    // Mock mode fallback
+                    delay(1000)
+                    if (_is2FAEnabled.value) {
+                        _is2FARequired.value = true
+                    } else {
+                        _user.value = User(
+                            id = "mock_user_id",
+                            name = trimmedEmail.substringBefore("@"),
+                            avatarUrl = "",
+                            isVerified = true,
+                            personality = "A mock user."
+                        )
+                    }
                 }
             } catch (e: Exception) {
-                _error.value = e.message
+                _error.value = e.message ?: "Sign in failed"
             }
         }
     }
@@ -372,40 +399,78 @@ class AuthViewModel : ViewModel() {
 
     fun signUp(email: String, password: String, audience: Audience?) {
         viewModelScope.launch {
-            // Input validation — prevent sign-up with empty or malformed credentials
-            val trimmedEmail = email.trim()
-            val trimmedPassword = password.trim()
+            try {
+                // Input validation — prevent sign-up with empty or malformed credentials
+                val trimmedEmail = email.trim()
+                val trimmedPassword = password.trim()
 
-            if (trimmedEmail.isBlank()) {
-                _error.value = "Email is required"
-                return@launch
-            }
-            if (!trimmedEmail.contains("@") || !trimmedEmail.contains(".")) {
-                _error.value = "Please enter a valid email address"
-                return@launch
-            }
-            if (trimmedPassword.isBlank()) {
-                _error.value = "Password is required"
-                return@launch
-            }
-            if (trimmedPassword.length < 6) {
-                _error.value = "Password must be at least 6 characters"
-                return@launch
-            }
+                if (trimmedEmail.isBlank()) {
+                    _error.value = "Email is required"
+                    return@launch
+                }
+                if (!trimmedEmail.contains("@") || !trimmedEmail.contains(".")) {
+                    _error.value = "Please enter a valid email address"
+                    return@launch
+                }
+                if (trimmedPassword.isBlank()) {
+                    _error.value = "Password is required"
+                    return@launch
+                }
+                if (trimmedPassword.length < 6) {
+                    _error.value = "Password must be at least 6 characters"
+                    return@launch
+                }
 
-            delay(1000)
-            _user.value = User(
-                id = "mock_user_id",
-                name = "Mock User",
-                avatarUrl = "",
-                isVerified = true,
-                personality = "A mock user."
-            )
-            audience?.let { _ageVerifiedAudience.value = it }
+                val client = AppSupabaseClient.client
+                if (client != null) {
+                    // Real Supabase Auth
+                    val displayName = trimmedEmail.substringBefore("@")
+                    client.auth.signUpWith(Email) {
+                        this.email = trimmedEmail
+                        this.password = trimmedPassword
+                        this.data = kotlinx.serialization.json.buildJsonObject {
+                            put("display_name", kotlinx.serialization.json.JsonPrimitive(displayName))
+                            put("username", kotlinx.serialization.json.JsonPrimitive("user_${System.currentTimeMillis() % 100000}"))
+                        }
+                    }
+                    val session = client.auth.currentSessionOrNull()
+                    val userId = session?.user?.id
+                    if (userId != null) {
+                        _user.value = User(
+                            id = userId,
+                            name = displayName,
+                            avatarUrl = "",
+                            isVerified = false,
+                            personality = "NeuroComet user"
+                        )
+                    } else {
+                        // Supabase may require email confirmation
+                        _error.value = "Check your email to confirm your account, then sign in."
+                    }
+                } else {
+                    // Mock mode fallback
+                    delay(1000)
+                    _user.value = User(
+                        id = "mock_user_id",
+                        name = trimmedEmail.substringBefore("@"),
+                        avatarUrl = "",
+                        isVerified = true,
+                        personality = "A mock user."
+                    )
+                }
+                audience?.let { _ageVerifiedAudience.value = it }
+            } catch (e: Exception) {
+                _error.value = e.message ?: "Sign up failed"
+            }
         }
     }
 
     fun signOut() {
+        viewModelScope.launch {
+            try {
+                AppSupabaseClient.client?.auth?.signOut()
+            } catch (_: Exception) {}
+        }
         _user.value = null
         _is2FARequired.value = false
     }

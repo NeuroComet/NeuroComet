@@ -467,7 +467,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                         description: 'Read our terms of service',
                         icon: Icons.description_rounded,
                         iconColor: AppColors.secondaryTeal,
-                        onTap: () => _launchUrl('https://neurocomet.app/terms'),
+                        onTap: () => _launchUrl('https://neurocomet.github.io/NeuroComet/terms.html'),
                       ),
                       _ModernSettingsDivider(),
                       _ModernSettingsItem(

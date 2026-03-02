@@ -11,8 +11,10 @@ package com.kyilmaz.neurocomet
 
 import android.util.Log
 import io.github.jan.supabase.SupabaseClient
+import io.github.jan.supabase.auth.Auth
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.postgrest.Postgrest
+import io.github.jan.supabase.realtime.Realtime
 
 /**
  * Supabase client wrapper that handles missing API keys gracefully.
@@ -82,6 +84,8 @@ object AppSupabaseClient {
                     supabaseKey = key
                 ) {
                     install(Postgrest)
+                    install(Auth)
+                    install(Realtime)
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to initialize Supabase client", e)

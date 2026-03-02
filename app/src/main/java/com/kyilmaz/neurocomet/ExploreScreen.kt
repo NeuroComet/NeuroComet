@@ -51,6 +51,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -857,6 +858,7 @@ private fun ForYouTab(
     onProfileClick: (String) -> Unit = {}
 ) {
     val context = LocalContext.current
+    var selectedChip by remember { mutableStateOf<String?>(null) }
 
     // Rich mock posts for "For You" feed
     val forYouPosts = remember {
@@ -874,7 +876,8 @@ private fun ForYouTab(
                 isLiked = false,
                 isVerified = true,
                 imageUrl = null,
-                tags = listOf("ADHDHacks", "ExecutiveFunction")
+                tags = listOf("ADHDHacks", "ExecutiveFunction"),
+                category = "ADHD Tips"
             ),
             ExploreMockPost(
                 id = 2,
@@ -889,7 +892,8 @@ private fun ForYouTab(
                 isLiked = true,
                 isVerified = false,
                 imageUrl = "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800",
-                tags = listOf("SensoryFriendly", "AnxietyRelief")
+                tags = listOf("SensoryFriendly", "AnxietyRelief"),
+                category = "Anxiety"
             ),
             ExploreMockPost(
                 id = 3,
@@ -904,7 +908,8 @@ private fun ForYouTab(
                 isLiked = false,
                 isVerified = true,
                 imageUrl = null,
-                tags = listOf("Neurodiversity", "SelfAcceptance")
+                tags = listOf("Neurodiversity", "SelfAcceptance"),
+                category = "Autism"
             ),
             ExploreMockPost(
                 id = 4,
@@ -919,7 +924,8 @@ private fun ForYouTab(
                 isLiked = true,
                 isVerified = false,
                 imageUrl = "https://images.unsplash.com/photo-1416339442236-8ceb164046f8?w=800",
-                tags = listOf("SensoryKit", "WorkplaceAccommodations")
+                tags = listOf("SensoryKit", "WorkplaceAccommodations"),
+                category = "Anxiety"
             ),
             ExploreMockPost(
                 id = 5,
@@ -934,9 +940,112 @@ private fun ForYouTab(
                 isLiked = false,
                 isVerified = true,
                 imageUrl = null,
-                tags = listOf("BodyDoubling", "ADHDCommunity")
+                tags = listOf("BodyDoubling", "ADHDCommunity"),
+                category = "ADHD Tips"
+            ),
+            ExploreMockPost(
+                id = 6,
+                username = "MindfulMeditator",
+                displayName = "Priya Sharma",
+                avatar = "https://i.pravatar.cc/150?u=mindfulmeditator",
+                content = "5-minute grounding technique that actually works for racing thoughts: Name 5 things you see, 4 you hear, 3 you can touch, 2 you smell, 1 you taste. Saved me in a meeting today 🧘 #Mindfulness #GroundingTechnique",
+                likes = 4312,
+                comments = 389,
+                shares = 678,
+                timeAgo = "3h",
+                isLiked = false,
+                isVerified = true,
+                imageUrl = null,
+                tags = listOf("Mindfulness", "GroundingTechnique"),
+                category = "Mindfulness"
+            ),
+            ExploreMockPost(
+                id = 7,
+                username = "SleepyNeuro",
+                displayName = "Taylor Brooks",
+                avatar = "https://i.pravatar.cc/150?u=sleepyneuro",
+                content = "Finally found my perfect sleep stack: weighted blanket + brown noise + 68°F room + lavender pillow spray 😴 Went from 2hr to fall asleep → 15min. ADHD brains CAN sleep! #SleepTips #ADHD",
+                likes = 3789,
+                comments = 521,
+                shares = 412,
+                timeAgo = "5h",
+                isLiked = true,
+                isVerified = false,
+                imageUrl = "https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?w=800",
+                tags = listOf("SleepTips", "SleepHygiene"),
+                category = "Sleep"
+            ),
+            ExploreMockPost(
+                id = 8,
+                username = "ZenCoder",
+                displayName = "Lin Wei",
+                avatar = "https://i.pravatar.cc/150?u=zencoder",
+                content = "Started doing walking meditations during lunch and my afternoon focus is 10x better. Not sitting-still meditation — actual moving meditation. Perfect for restless brains! 🚶‍♂️✨ #Mindfulness #WalkingMeditation",
+                likes = 2156,
+                comments = 178,
+                shares = 234,
+                timeAgo = "7h",
+                isLiked = false,
+                isVerified = true,
+                imageUrl = null,
+                tags = listOf("Mindfulness", "WalkingMeditation"),
+                category = "Mindfulness"
+            ),
+            ExploreMockPost(
+                id = 9,
+                username = "SpectrumStories",
+                displayName = "Jamie Nguyen",
+                avatar = "https://i.pravatar.cc/150?u=spectrumstories",
+                content = "Reminder: masking is exhausting. If you need to unmask today, that's okay. Your comfort matters more than anyone else's convenience. 🌈💜 #Autism #Unmasking #AutismAcceptance",
+                likes = 6234,
+                comments = 567,
+                shares = 1023,
+                timeAgo = "1h",
+                isLiked = true,
+                isVerified = true,
+                imageUrl = null,
+                tags = listOf("Autism", "Unmasking", "AutismAcceptance"),
+                category = "Autism"
+            ),
+            ExploreMockPost(
+                id = 10,
+                username = "NightOwlNeuro",
+                displayName = "Casey Adams",
+                avatar = "https://i.pravatar.cc/150?u=nightowlneuro",
+                content = "Hot take: 'sleep hygiene' advice is often ableist. 'Just put your phone away' doesn't address why our brains won't shut off. What helped me: accepting my chronotype and adapting my schedule instead of fighting it 🌙 #Sleep #Chronotype",
+                likes = 4567,
+                comments = 623,
+                shares = 567,
+                timeAgo = "9h",
+                isLiked = false,
+                isVerified = false,
+                imageUrl = null,
+                tags = listOf("Sleep", "Chronotype"),
+                category = "Sleep"
+            ),
+            ExploreMockPost(
+                id = 11,
+                username = "ADHDDadLife",
+                displayName = "Marcus Johnson",
+                avatar = "https://i.pravatar.cc/150?u=adhddadlife",
+                content = "Pro tip from an ADHD dad: visual timers are a game changer for kids AND adults. My 7yo and I both use them now. He calls it 'the rainbow clock' 🌈⏰ #ADHDParenting #ADHDTips",
+                likes = 3421,
+                comments = 298,
+                shares = 456,
+                timeAgo = "11h",
+                isLiked = false,
+                isVerified = false,
+                imageUrl = "https://images.unsplash.com/photo-1501139083538-0139583c060f?w=800",
+                tags = listOf("ADHDParenting", "ADHDTips"),
+                category = "ADHD Tips"
             )
         )
+    }
+
+    // Filter posts based on selected chip
+    val filteredPosts = remember(selectedChip, forYouPosts) {
+        if (selectedChip == null) forYouPosts
+        else forYouPosts.filter { it.category == selectedChip }
     }
 
     LazyColumn(
@@ -964,19 +1073,57 @@ private fun ForYouTab(
                     icon = Icons.Outlined.Bolt
                 )
                 Spacer(modifier = Modifier.height(12.dp))
-                QuickAccessChips()
+                QuickAccessChips(
+                    selectedChip = selectedChip,
+                    onChipSelected = { chipLabel ->
+                        hapticFeedback(context, light = true)
+                        selectedChip = if (selectedChip == chipLabel) null else chipLabel
+                    }
+                )
             }
         }
 
         // For You Posts
         item {
             SectionHeader(
-                title = "Curated For You",
-                icon = Icons.Outlined.Favorite
+                title = if (selectedChip != null) "$selectedChip Posts" else "Curated For You",
+                icon = if (selectedChip != null) Icons.Outlined.FilterList else Icons.Outlined.Favorite
             )
         }
 
-        itemsIndexed(forYouPosts) { index, post ->
+        if (filteredPosts.isEmpty()) {
+            item {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 48.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text(
+                            text = "🔍",
+                            fontSize = 48.sp
+                        )
+                        Spacer(Modifier.height(16.dp))
+                        Text(
+                            text = "No posts found for \"$selectedChip\"",
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            textAlign = TextAlign.Center
+                        )
+                        Spacer(Modifier.height(8.dp))
+                        Text(
+                            text = "Try a different category or check back later",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.outline,
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                }
+            }
+        }
+
+        itemsIndexed(filteredPosts) { index, post ->
             ExplorePostCard(
                 post = post,
                 animationDelay = index * 80,
@@ -2532,7 +2679,8 @@ private data class ExploreMockPost(
     val isLiked: Boolean,
     val isVerified: Boolean,
     val imageUrl: String? = null,
-    val tags: List<String> = emptyList()
+    val tags: List<String> = emptyList(),
+    val category: String = ""
 )
 
 private data class TrendingHashtag(
@@ -2696,17 +2844,16 @@ private fun StoryItem(story: StoryData) {
 // ============================================================================
 
 @Composable
-private fun QuickAccessChips(onChipClick: (String) -> Unit = {}) {
-    val primaryColor = MaterialTheme.colorScheme.primary
-    val secondaryColor = MaterialTheme.colorScheme.secondary
-    val tertiaryColor = MaterialTheme.colorScheme.tertiary
-
+private fun QuickAccessChips(
+    selectedChip: String? = null,
+    onChipSelected: (String) -> Unit = {}
+) {
     val chips = listOf(
-        QuickChipData("🎯 ADHD Tips", MaterialTheme.colorScheme.inversePrimary),
-        QuickChipData("🧘 Mindfulness", secondaryColor),
-        QuickChipData("💙 Anxiety", MaterialTheme.colorScheme.primaryContainer),
-        QuickChipData("🌈 Autism", primaryColor),
-        QuickChipData("😴 Sleep", tertiaryColor)
+        QuickChipData("ADHD Tips", "🎯", Color(0xFFFF7043)),
+        QuickChipData("Mindfulness", "🧘", Color(0xFF66BB6A)),
+        QuickChipData("Anxiety", "💙", Color(0xFF42A5F5)),
+        QuickChipData("Autism", "🌈", Color(0xFF7C4DFF)),
+        QuickChipData("Sleep", "😴", Color(0xFFAB47BC))
     )
 
     LazyRow(
@@ -2714,28 +2861,54 @@ private fun QuickAccessChips(onChipClick: (String) -> Unit = {}) {
     ) {
         items(chips.size) { index ->
             val chip = chips[index]
+            val isSelected = selectedChip == chip.label
+
+
             Surface(
                 modifier = Modifier.clickable {
-                    // Extract the label text without emoji for topic navigation
-                    val topicName = chip.label.replace(Regex("^\\S+\\s+"), "")
-                    onChipClick(topicName)
+                    onChipSelected(chip.label)
                 },
                 shape = RoundedCornerShape(20.dp),
-                color = chip.color.copy(alpha = 0.15f)
+                color = if (isSelected) {
+                    chip.color
+                } else {
+                    chip.color.copy(alpha = 0.15f)
+                },
+                border = if (!isSelected) {
+                    BorderStroke(1.dp, chip.color.copy(alpha = 0.5f))
+                } else null,
+                shadowElevation = if (isSelected) 4.dp else 0.dp
             ) {
-                Text(
-                    text = chip.label,
+                Row(
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp),
-                    style = MaterialTheme.typography.labelLarge,
-                    fontWeight = FontWeight.Medium,
-                    color = chip.color
-                )
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    Text(
+                        text = chip.emoji,
+                        fontSize = 14.sp
+                    )
+                    Text(
+                        text = chip.label,
+                        style = MaterialTheme.typography.labelLarge,
+                        fontWeight = FontWeight.SemiBold,
+                        color = if (isSelected) Color.White else chip.color
+                    )
+                    if (isSelected) {
+                        Icon(
+                            imageVector = Icons.Default.Close,
+                            contentDescription = "Clear filter",
+                            modifier = Modifier.size(14.dp),
+                            tint = Color.White.copy(alpha = 0.8f)
+                        )
+                    }
+                }
             }
         }
     }
 }
 
-private data class QuickChipData(val label: String, val color: Color)
+private data class QuickChipData(val label: String, val emoji: String, val color: Color)
 
 // ============================================================================
 // Explore Post Card

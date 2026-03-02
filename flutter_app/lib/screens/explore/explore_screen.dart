@@ -323,7 +323,7 @@ class _ExploreFilterTabs extends StatelessWidget {
 }
 
 /// Individual filter pill matching Notifications/Messages style
-class _FilterPill extends StatelessWidget {
+class _FilterPill extends StatefulWidget {
   final String label;
   final IconData icon;
   final bool isSelected;
@@ -337,61 +337,98 @@ class _FilterPill extends StatelessWidget {
   });
 
   @override
+  State<_FilterPill> createState() => _FilterPillState();
+}
+
+class _FilterPillState extends State<_FilterPill>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 150),
+      vsync: this,
+    );
+    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.95).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
     final primaryColor = theme.colorScheme.primary;
 
-    return Material(
-      color: isSelected
-          ? primaryColor.withOpacity(isDark ? 0.25 : 0.15)
-          : isDark
-              ? Colors.white.withOpacity(0.10)
-              : theme.colorScheme.surfaceContainerHighest,
-      borderRadius: BorderRadius.circular(24),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(24),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-          decoration: isSelected
-              ? BoxDecoration(
-                  borderRadius: BorderRadius.circular(24),
-                  border: Border.all(
+    return GestureDetector(
+      onTapDown: (_) => _controller.forward(),
+      onTapUp: (_) {
+        _controller.reverse();
+        widget.onTap();
+      },
+      onTapCancel: () => _controller.reverse(),
+      child: AnimatedBuilder(
+        animation: _scaleAnimation,
+        builder: (context, child) {
+          return Transform.scale(
+            scale: _scaleAnimation.value,
+            child: child,
+          );
+        },
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeOutCubic,
+          padding: EdgeInsets.symmetric(
+            horizontal: widget.isSelected ? 16 : 14,
+            vertical: 10,
+          ),
+          decoration: BoxDecoration(
+            color: widget.isSelected
+                ? primaryColor.withOpacity(0.15)
+                : theme.colorScheme.surfaceContainerHighest,
+            borderRadius: BorderRadius.circular(20),
+            border: widget.isSelected
+                ? Border.all(
                     color: primaryColor.withOpacity(0.4),
                     width: 1.5,
-                  ),
-                )
-              : BoxDecoration(
-                  borderRadius: BorderRadius.circular(24),
-                  border: Border.all(
-                    color: isDark
-                        ? Colors.white.withOpacity(0.12)
-                        : Colors.black.withOpacity(0.08),
-                  ),
-                ),
+                  )
+                : null,
+            boxShadow: widget.isSelected
+                ? [
+                    BoxShadow(
+                      color: primaryColor.withOpacity(0.15),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ]
+                : null,
+          ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               Icon(
-                icon,
-                size: 18,
-                color: isSelected
+                widget.icon,
+                size: 16,
+                color: widget.isSelected
                     ? primaryColor
-                    : isDark
-                        ? Colors.white.withOpacity(0.8)
-                        : theme.colorScheme.onSurfaceVariant,
+                    : theme.colorScheme.onSurfaceVariant,
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: 6),
               Text(
-                label,
+                widget.label,
                 style: theme.textTheme.labelLarge?.copyWith(
-                  color: isSelected
+                  color: widget.isSelected
                       ? primaryColor
-                      : isDark
-                          ? Colors.white.withOpacity(0.8)
-                          : theme.colorScheme.onSurfaceVariant,
-                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                      : theme.colorScheme.onSurface,
+                  fontWeight: widget.isSelected ? FontWeight.w600 : FontWeight.w500,
                 ),
               ),
             ],
@@ -1430,6 +1467,7 @@ class _QuickAccessChips extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final chips = [
       ('🎯 ADHD Tips', AppColors.categoryADHD),
       ('🧘 Mindfulness', AppColors.calmGreen),
@@ -1451,12 +1489,18 @@ class _QuickAccessChips extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               decoration: BoxDecoration(
-                color: color.withOpacity(0.15),
+                color: theme.colorScheme.surfaceContainerHighest,
                 borderRadius: BorderRadius.circular(20),
+                border: Border.all(
+                  color: color.withOpacity(0.4),
+                ),
               ),
               child: Text(
                 label,
-                style: TextStyle(color: color, fontWeight: FontWeight.w600),
+                style: TextStyle(
+                  color: color,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           );

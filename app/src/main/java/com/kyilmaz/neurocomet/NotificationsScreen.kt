@@ -37,6 +37,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.DoneAll
 import androidx.compose.material.icons.filled.Favorite
@@ -61,12 +62,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.SwipeToDismissBox
-import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
-import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -212,52 +210,20 @@ fun NotificationsScreen(
                             items = items,
                             key = { _, item -> item.id }
                         ) { index, notification ->
-                            val dismissState = rememberSwipeToDismissBoxState(
-                                confirmValueChange = { value ->
-                                    if (value != SwipeToDismissBoxValue.Settled) {
-                                        onDismissNotification?.invoke(notification.id)
-                                        true
-                                    } else false
-                                }
-                            )
-                            SwipeToDismissBox(
-                                state = dismissState,
-                                backgroundContent = {
-                                    val color by animateColorAsState(
-                                        when (dismissState.targetValue) {
-                                            SwipeToDismissBoxValue.Settled -> Color.Transparent
-                                            else -> MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.8f)
-                                        }, label = "dismissBackground"
-                                    )
-                                    Box(
-                                        modifier = Modifier
-                                            .fillMaxSize()
-                                            .clip(RoundedCornerShape(16.dp))
-                                            .background(color)
-                                            .padding(horizontal = 24.dp),
-                                        contentAlignment = Alignment.CenterEnd
-                                    ) {
-                                        Icon(
-                                            imageVector = Icons.Default.Delete,
-                                            contentDescription = "Dismiss",
-                                            tint = MaterialTheme.colorScheme.onErrorContainer,
-                                            modifier = Modifier.scale(if (dismissState.progress > 0.5f) 1.2f else 1f)
-                                        )
+                            EnhancedNotificationTile(
+                                notification = notification,
+                                onClick = {
+                                    if (!notification.isRead) {
+                                        onMarkAsRead?.invoke(notification.id)
                                     }
-                                }
-                            ) {
-                                EnhancedNotificationTile(
-                                    notification = notification,
-                                    onClick = {
-                                        if (!notification.isRead) {
-                                            onMarkAsRead?.invoke(notification.id)
-                                        }
-                                        onNotificationClick?.invoke(notification)
-                                    },
-                                    isDark = isDark,
-                                    animationDelay = index * 50
-                                )
-                            }
+                                    onNotificationClick?.invoke(notification)
+                                },
+                                onDismiss = {
+                                    onDismissNotification?.invoke(notification.id)
+                                },
+                                isDark = isDark,
+                                animationDelay = index * 50
+                            )
                         }
                     }
                 }
@@ -593,6 +559,7 @@ private fun AnimatedSectionHeader(
 private fun EnhancedNotificationTile(
     notification: NotificationItem,
     onClick: () -> Unit,
+    onDismiss: (() -> Unit)? = null,
     isDark: Boolean,
     animationDelay: Int = 0
 ) {
@@ -629,7 +596,7 @@ private fun EnhancedNotificationTile(
         }
     ) {
         Row(
-            modifier = Modifier.padding(horizontal = 12.dp, vertical = 12.dp),
+            modifier = Modifier.padding(start = 12.dp, top = 12.dp, bottom = 12.dp, end = 4.dp),
             verticalAlignment = Alignment.Top,
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
@@ -720,7 +687,7 @@ private fun EnhancedNotificationTile(
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.weight(1f, fill = false)
                     )
-                    Spacer(Modifier.width(8.dp))
+                    Spacer(Modifier.width(4.dp))
                     Text(
                         text = notification.timestamp,
                         style = MaterialTheme.typography.labelSmall,
@@ -747,6 +714,28 @@ private fun EnhancedNotificationTile(
                                 .background(primaryColor, CircleShape)
                         )
                     }
+                }
+            }
+
+            // Dismiss button
+            if (onDismiss != null) {
+                Box(
+                    modifier = Modifier
+                        .size(32.dp)
+                        .clip(CircleShape)
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = androidx.compose.material3.ripple(bounded = true, radius = 16.dp),
+                            onClick = onDismiss
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Close,
+                        contentDescription = "Remove notification",
+                        modifier = Modifier.size(16.dp),
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                    )
                 }
             }
         }

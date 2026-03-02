@@ -7,6 +7,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+// ...existing code...
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -15,12 +17,28 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.Logout
+import androidx.compose.material.icons.filled.Accessibility
+import androidx.compose.material.icons.filled.Animation
+import androidx.compose.material.icons.filled.AppShortcut
+import androidx.compose.material.icons.filled.Bedtime
+import androidx.compose.material.icons.filled.BugReport
 import androidx.compose.material.icons.filled.Build
+import androidx.compose.material.icons.filled.DarkMode
+import androidx.compose.material.icons.filled.Description
+import androidx.compose.material.icons.filled.Feedback
+import androidx.compose.material.icons.filled.FilterList
+import androidx.compose.material.icons.filled.FormatSize
+import androidx.compose.material.icons.filled.Games
+import androidx.compose.material.icons.filled.Lightbulb
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Palette
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Shield
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.Tonality
+import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -106,6 +124,7 @@ fun SettingsScreen(
     }
 
     Scaffold(
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         topBar = {
             TopAppBar(
                 title = { Text(stringResource(R.string.nav_settings)) },
@@ -127,12 +146,14 @@ fun SettingsScreen(
             SettingsRow(
                 title = stringResource(R.string.settings_my_profile),
                 subtitle = authUser?.name ?: stringResource(R.string.settings_not_authenticated),
-                onClick = onOpenMyProfile
+                onClick = onOpenMyProfile,
+                icon = Icons.Default.Person
             )
             SettingsRow(
                 title = stringResource(R.string.settings_logout),
                 subtitle = authUser?.id ?: "",
-                onClick = { showLogoutConfirm = true }
+                onClick = { showLogoutConfirm = true },
+                icon = Icons.AutoMirrored.Filled.Logout
             )
 
             HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
@@ -142,7 +163,8 @@ fun SettingsScreen(
                 title = if (isPremium) stringResource(R.string.settings_premium_active) else stringResource(R.string.settings_go_premium),
                 subtitle = if (isPremium) stringResource(R.string.settings_premium_thanks) else stringResource(R.string.settings_premium_price),
                 onClick = if (isPremium) { {} } else onOpenSubscription,
-                enabled = !isPremium
+                enabled = !isPremium,
+                icon = Icons.Default.Star
             )
 
             HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
@@ -151,29 +173,34 @@ fun SettingsScreen(
             SettingsRow(
                 title = stringResource(R.string.settings_theme),
                 subtitle = stringResource(R.string.settings_theme_desc),
-                onClick = onOpenThemeSettings
+                onClick = onOpenThemeSettings,
+                icon = Icons.Default.Palette
             )
             SettingsRow(
                 title = stringResource(R.string.settings_animation),
                 subtitle = stringResource(R.string.settings_animation_desc),
-                onClick = onOpenAnimationSettings
+                onClick = onOpenAnimationSettings,
+                icon = Icons.Default.Animation
             )
             SettingsRow(
                 title = stringResource(R.string.settings_app_icon),
                 subtitle = stringResource(R.string.settings_app_icon_desc),
-                onClick = onOpenIconCustomization
+                onClick = onOpenIconCustomization,
+                icon = Icons.Default.AppShortcut
             )
             SettingsToggleRow(
                 title = stringResource(R.string.settings_dark_mode),
                 subtitle = stringResource(R.string.settings_dark_mode_desc),
                 checked = themeState.isDarkMode,
-                onCheckedChange = themeViewModel::setDarkMode
+                onCheckedChange = themeViewModel::setDarkMode,
+                icon = Icons.Default.DarkMode
             )
             SettingsToggleRow(
                 title = stringResource(R.string.settings_high_contrast),
                 subtitle = stringResource(R.string.settings_high_contrast_desc),
                 checked = themeState.isHighContrast,
-                onCheckedChange = themeViewModel::setIsHighContrast
+                onCheckedChange = themeViewModel::setIsHighContrast,
+                icon = Icons.Default.Tonality
             )
 
             HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
@@ -197,7 +224,8 @@ fun SettingsScreen(
                 checked = safetyState.isKidsMode,
                 onCheckedChange = { enabled ->
                     safetyViewModel.setAudience(if (enabled) Audience.UNDER_13 else Audience.ADULT, app)
-                }
+                },
+                icon = Icons.Default.Visibility
             )
 
             HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
@@ -216,7 +244,8 @@ fun SettingsScreen(
             SettingsRow(
                 title = stringResource(R.string.settings_content_filters),
                 subtitle = stringResource(R.string.settings_content_filters_desc),
-                onClick = onOpenContentSettings
+                onClick = onOpenContentSettings,
+                icon = Icons.Default.FilterList
             )
 
             HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
@@ -225,17 +254,20 @@ fun SettingsScreen(
             SettingsRow(
                 title = stringResource(R.string.settings_text_display),
                 subtitle = stringResource(R.string.settings_text_display_desc),
-                onClick = onOpenFontSettings
+                onClick = onOpenFontSettings,
+                icon = Icons.Default.FormatSize
             )
             SettingsRow(
                 title = stringResource(R.string.settings_reduce_motion),
                 subtitle = stringResource(R.string.settings_reduce_motion_desc),
-                onClick = onOpenAccessibilitySettings
+                onClick = onOpenAccessibilitySettings,
+                icon = Icons.Default.Accessibility
             )
             SettingsRow(
                 title = stringResource(R.string.settings_break_reminders),
                 subtitle = stringResource(R.string.settings_break_reminders_desc),
-                onClick = onOpenWellbeingSettings
+                onClick = onOpenWellbeingSettings,
+                icon = Icons.Default.Bedtime
             )
 
             HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
@@ -244,7 +276,8 @@ fun SettingsScreen(
             SettingsRow(
                 title = stringResource(R.string.games_play_now),
                 subtitle = stringResource(R.string.games_play_now_desc),
-                onClick = onOpenGames
+                onClick = onOpenGames,
+                icon = Icons.Default.Games
             )
 
             HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
@@ -253,17 +286,20 @@ fun SettingsScreen(
             SettingsRow(
                 title = stringResource(R.string.feedback_report_bug_title),
                 subtitle = stringResource(R.string.feedback_report_bug_desc),
-                onClick = onOpenBugReport
+                onClick = onOpenBugReport,
+                icon = Icons.Default.BugReport
             )
             SettingsRow(
                 title = stringResource(R.string.feedback_request_feature_title),
                 subtitle = stringResource(R.string.feedback_request_feature_desc),
-                onClick = onOpenFeatureRequest
+                onClick = onOpenFeatureRequest,
+                icon = Icons.Default.Lightbulb
             )
             SettingsRow(
                 title = stringResource(R.string.feedback_send_title),
                 subtitle = stringResource(R.string.feedback_send_desc),
-                onClick = onOpenGeneralFeedback
+                onClick = onOpenGeneralFeedback,
+                icon = Icons.Default.Feedback
             )
 
             HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
@@ -273,7 +309,7 @@ fun SettingsScreen(
                 title = stringResource(R.string.settings_privacy_policy),
                 subtitle = stringResource(R.string.settings_privacy_policy_desc),
                 onClick = {
-                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://neurocomet.github.io/NeuroComet/"))
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://neurocomet.github.io/NeuroComet/privacy.html"))
                     context.startActivity(intent)
                 },
                 icon = Icons.Default.Lock
@@ -282,9 +318,10 @@ fun SettingsScreen(
                 title = stringResource(R.string.settings_terms),
                 subtitle = stringResource(R.string.settings_terms_desc),
                 onClick = {
-                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://neurocomet.github.io/NeuroComet/"))
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://neurocomet.github.io/NeuroComet/terms.html"))
                     context.startActivity(intent)
-                }
+                },
+                icon = Icons.Default.Description
             )
 
             if (canShowDevOptions) {
@@ -357,13 +394,15 @@ fun ThemeSettingsScreen(
                 title = stringResource(R.string.settings_dark_mode),
                 subtitle = stringResource(R.string.settings_dark_mode_desc),
                 checked = themeState.isDarkMode,
-                onCheckedChange = themeViewModel::setDarkMode
+                onCheckedChange = themeViewModel::setDarkMode,
+                icon = Icons.Default.DarkMode
             )
             SettingsToggleRow(
                 title = stringResource(R.string.settings_high_contrast),
                 subtitle = stringResource(R.string.settings_high_contrast_desc),
                 checked = themeState.isHighContrast,
-                onCheckedChange = themeViewModel::setIsHighContrast
+                onCheckedChange = themeViewModel::setIsHighContrast,
+                icon = Icons.Default.Tonality
             )
             Spacer(modifier = Modifier.height(16.dp))
         }

@@ -299,10 +299,18 @@ fun NeuroCometApp(
     val app = remember(context) { context.applicationContext as android.app.Application }
     val devOptionsViewModel: DevOptionsViewModel = viewModel()
     val devOptions by devOptionsViewModel.options.collectAsState()
+    val messagesViewModel: MessagesViewModel = viewModel()
+    val messagesState by messagesViewModel.state.collectAsState()
 
     LaunchedEffect(Unit) {
         devOptionsViewModel.refresh(app)
         safetyViewModel.refresh(app)
+        messagesViewModel.initialize()
+    }
+
+    // Keep mock conversations in sync when in mock mode
+    LaunchedEffect(feedState.conversations) {
+        messagesViewModel.setMockConversations(feedState.conversations)
     }
 
     // Sync social settings → consuming components on startup and when returning from settings
@@ -546,16 +554,15 @@ fun NeuroCometApp(
                     )
                 }
                 composable(Screen.Messages.route) {
-                    val state by feedViewModel.uiState.collectAsState()
                     NeuroInboxScreen(
-                        conversations = state.conversations,
+                        conversations = messagesState.conversations,
                         safetyState = safetyState,
                         onOpenConversation = { conversationId ->
-                            feedViewModel.openConversation(conversationId)
+                            messagesViewModel.openConversation(conversationId)
                             navController.navigate(Screen.Conversation.route(conversationId))
                         },
                         onStartNewChat = { userId ->
-                            val conversationId = feedViewModel.startOrOpenConversation(userId)
+                            val conversationId = messagesViewModel.startOrOpenConversation(userId)
                             navController.navigate(Screen.Conversation.route(conversationId))
                         },
                         onOpenCallHistory = {
@@ -568,19 +575,19 @@ fun NeuroCometApp(
                 }
                 composable(Screen.Conversation.route) { backStackEntry ->
                     val conversationId = backStackEntry.arguments?.getString("conversationId")
-                    val state by feedViewModel.uiState.collectAsState()
-                    val conv = state.conversations.find { it.id == conversationId } ?: state.activeConversation
+                    val conv = messagesState.conversations.find { it.id == conversationId }
+                        ?: messagesState.activeConversation
                     if (conv == null) {
                         NeuroInboxScreen(
-                            conversations = state.conversations,
+                            conversations = messagesState.conversations,
                             safetyState = safetyState,
                             onOpenConversation = { id ->
-                                feedViewModel.openConversation(id)
+                                messagesViewModel.openConversation(id)
                                 navController.navigate(Screen.Conversation.route(id))
                             },
                             onStartNewChat = { userId ->
-                                val conversationId = feedViewModel.startOrOpenConversation(userId)
-                                navController.navigate(Screen.Conversation.route(conversationId))
+                                val cId = messagesViewModel.startOrOpenConversation(userId)
+                                navController.navigate(Screen.Conversation.route(cId))
                             },
                             onBack = { navController.popBackStack() },
                             onOpenCallHistory = {
@@ -595,22 +602,22 @@ fun NeuroCometApp(
                             conversation = conv,
                             onBack = {
                                 navController.popBackStack()
-                                feedViewModel.dismissConversation()
+                                messagesViewModel.dismissConversation()
                             },
                             onSend = { recipientId, content ->
-                                feedViewModel.sendDirectMessage(recipientId, content)
+                                messagesViewModel.sendDirectMessage(recipientId, content)
                             },
                             onReport = { messageId ->
-                                feedViewModel.reportMessage(messageId)
+                                messagesViewModel.reportMessage(messageId)
                             },
                             onRetryMessage = { convId, msgId ->
-                                feedViewModel.retryDirectMessage(convId, msgId)
+                                messagesViewModel.retryDirectMessage(convId, msgId)
                             },
                             onReactToMessage = { messageId, emoji ->
-                                feedViewModel.reactToMessage(conv.id, messageId, emoji)
+                                messagesViewModel.reactToMessage(conv.id, messageId, emoji)
                             },
-                            isBlocked = { feedViewModel.isUserBlocked(it) },
-                            isMuted = { feedViewModel.isUserMuted(it) },
+                            isBlocked = { messagesViewModel.isUserBlocked(it) },
+                            isMuted = { messagesViewModel.isUserMuted(it) },
                             enableVideoChat = devOptions.enableVideoChat
                         )
                     }

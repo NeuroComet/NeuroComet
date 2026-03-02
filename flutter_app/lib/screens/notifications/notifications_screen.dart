@@ -599,7 +599,7 @@ class _FilterPillState extends State<_FilterPill>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+    final primaryColor = theme.colorScheme.primary;
 
     return GestureDetector(
       onTapDown: (_) => _controller.forward(),
@@ -625,22 +625,19 @@ class _FilterPillState extends State<_FilterPill>
           ),
           decoration: BoxDecoration(
             color: widget.isSelected
-                ? theme.colorScheme.primary
-                : isDark
-                    ? Colors.white.withOpacity(0.08)
-                    : Colors.black.withOpacity(0.05),
+                ? primaryColor.withOpacity(0.15)
+                : theme.colorScheme.surfaceContainerHighest,
             borderRadius: BorderRadius.circular(20),
             border: widget.isSelected
-                ? null
-                : Border.all(
-                    color: isDark
-                        ? Colors.white.withOpacity(0.1)
-                        : Colors.black.withOpacity(0.08),
-                  ),
+                ? Border.all(
+                    color: primaryColor.withOpacity(0.4),
+                    width: 1.5,
+                  )
+                : null,
             boxShadow: widget.isSelected
                 ? [
                     BoxShadow(
-                      color: theme.colorScheme.primary.withOpacity(0.3),
+                      color: primaryColor.withOpacity(0.15),
                       blurRadius: 8,
                       offset: const Offset(0, 2),
                     ),
@@ -654,7 +651,7 @@ class _FilterPillState extends State<_FilterPill>
                 widget.icon,
                 size: 16,
                 color: widget.isSelected
-                    ? Colors.white
+                    ? primaryColor
                     : theme.colorScheme.onSurfaceVariant,
               ),
               const SizedBox(width: 6),
@@ -662,7 +659,7 @@ class _FilterPillState extends State<_FilterPill>
                 widget.label,
                 style: theme.textTheme.labelLarge?.copyWith(
                   color: widget.isSelected
-                      ? Colors.white
+                      ? primaryColor
                       : theme.colorScheme.onSurface,
                   fontWeight: widget.isSelected ? FontWeight.w600 : FontWeight.w500,
                 ),
@@ -672,9 +669,7 @@ class _FilterPillState extends State<_FilterPill>
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
-                    color: widget.isSelected
-                        ? Colors.white.withOpacity(0.2)
-                        : theme.colorScheme.primary.withOpacity(0.15),
+                    color: primaryColor.withOpacity(0.2),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Text(
@@ -682,9 +677,7 @@ class _FilterPillState extends State<_FilterPill>
                     style: TextStyle(
                       fontSize: 11,
                       fontWeight: FontWeight.bold,
-                      color: widget.isSelected
-                          ? Colors.white
-                          : theme.colorScheme.primary,
+                      color: primaryColor,
                     ),
                   ),
                 ),
@@ -1041,139 +1034,126 @@ class _EnhancedNotificationTileState extends State<_EnhancedNotificationTile>
         position: _slideAnimation,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-          child: Dismissible(
-            key: Key(notification.id),
-            direction: DismissDirection.endToStart,
-            confirmDismiss: (_) async {
-              widget.onDismiss?.call();
-              return false; // We handle removal via provider; don't auto-remove widget
-            },
-            background: Container(
-              decoration: BoxDecoration(
-                color: theme.colorScheme.errorContainer,
-                borderRadius: BorderRadius.circular(16),
-              ),
-              alignment: Alignment.centerRight,
-              padding: const EdgeInsets.only(right: 24),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.delete_rounded,
-                    color: theme.colorScheme.onErrorContainer,
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    'Remove',
-                    style: TextStyle(
-                      color: theme.colorScheme.onErrorContainer,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            child: Material(
-              color: notification.isRead
-                  ? (isDark ? Colors.white.withOpacity(0.03) : Colors.white)
-                  : (isDark
-                      ? theme.colorScheme.primaryContainer.withOpacity(0.15)
-                      : theme.colorScheme.primaryContainer.withOpacity(0.3)),
+          child: Material(
+            color: notification.isRead
+                ? (isDark ? Colors.white.withOpacity(0.03) : Colors.white)
+                : (isDark
+                    ? theme.colorScheme.primaryContainer.withOpacity(0.15)
+                    : theme.colorScheme.primaryContainer.withOpacity(0.3)),
+            borderRadius: BorderRadius.circular(16),
+            clipBehavior: Clip.antiAlias,
+            elevation: notification.isRead ? 0 : 1,
+            shadowColor: theme.colorScheme.primary.withOpacity(0.1),
+            child: InkWell(
+              onTap: widget.onTap,
               borderRadius: BorderRadius.circular(16),
-              clipBehavior: Clip.antiAlias,
-              elevation: notification.isRead ? 0 : 1,
-              shadowColor: theme.colorScheme.primary.withOpacity(0.1),
-              child: InkWell(
-                onTap: widget.onTap,
-                borderRadius: BorderRadius.circular(16),
-                child: Container(
-                  padding: const EdgeInsets.all(14),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(
-                      color: notification.isRead
-                          ? (isDark ? Colors.white.withOpacity(0.06) : Colors.black.withOpacity(0.04))
-                          : theme.colorScheme.primary.withOpacity(0.2),
+              child: Container(
+                padding: const EdgeInsets.fromLTRB(14, 14, 6, 14),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                    color: notification.isRead
+                        ? (isDark ? Colors.white.withOpacity(0.06) : Colors.black.withOpacity(0.04))
+                        : theme.colorScheme.primary.withOpacity(0.2),
+                  ),
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Avatar with type indicator
+                    _NotificationAvatarEnhanced(
+                      avatarUrl: notification.actorAvatarUrl,
+                      actorName: notification.actorName,
+                      icon: icon,
+                      color: color,
+                      gradient: gradient,
                     ),
-                  ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Avatar with type indicator
-                      _NotificationAvatarEnhanced(
-                        avatarUrl: notification.actorAvatarUrl,
-                        actorName: notification.actorName,
-                        icon: icon,
-                        color: color,
-                        gradient: gradient,
-                      ),
-                      const SizedBox(width: 14),
+                    const SizedBox(width: 14),
 
-                      // Content
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    notification.title ?? notification.actorName ?? 'Notification',
-                                    style: theme.textTheme.titleSmall?.copyWith(
-                                      fontWeight: notification.isRead
-                                          ? FontWeight.w500
-                                          : FontWeight.bold,
-                                    ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
+                    // Content
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  notification.title ?? notification.actorName ?? 'Notification',
+                                  style: theme.textTheme.titleSmall?.copyWith(
+                                    fontWeight: notification.isRead
+                                        ? FontWeight.w500
+                                        : FontWeight.bold,
                                   ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
-                                const SizedBox(width: 8),
-                                _TimeChip(
-                                  dateTime: notification.createdAt,
-                                  isUnread: !notification.isRead,
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 6),
-                            Text(
-                              notification.message,
-                              style: theme.textTheme.bodyMedium?.copyWith(
-                                color: theme.colorScheme.onSurfaceVariant,
-                                height: 1.4,
                               ),
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
+                              const SizedBox(width: 4),
+                              _TimeChip(
+                                dateTime: notification.createdAt,
+                                isUnread: !notification.isRead,
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 6),
+                          Text(
+                            notification.message,
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: theme.colorScheme.onSurfaceVariant,
+                              height: 1.4,
                             ),
-                            // Action hint
-                            if (!notification.isRead)
-                              Padding(
-                                padding: const EdgeInsets.only(top: 10),
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      Icons.touch_app_rounded,
-                                      size: 14,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          // Action hint
+                          if (!notification.isRead)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 10),
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.touch_app_rounded,
+                                    size: 14,
+                                    color: theme.colorScheme.primary.withOpacity(0.7),
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    'Tap to view',
+                                    style: theme.textTheme.labelSmall?.copyWith(
                                       color: theme.colorScheme.primary.withOpacity(0.7),
+                                      fontWeight: FontWeight.w500,
                                     ),
-                                    const SizedBox(width: 4),
-                                    Text(
-                                      'Tap to view',
-                                      style: theme.textTheme.labelSmall?.copyWith(
-                                        color: theme.colorScheme.primary.withOpacity(0.7),
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
-                          ],
-                        ),
+                            ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+
+                    // Delete button
+                    SizedBox(
+                      width: 36,
+                      height: 36,
+                      child: IconButton(
+                        onPressed: () {
+                          HapticFeedback.mediumImpact();
+                          widget.onDismiss?.call();
+                        },
+                        icon: Icon(
+                          Icons.close_rounded,
+                          size: 18,
+                          color: theme.colorScheme.onSurfaceVariant.withOpacity(0.5),
+                        ),
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                        splashRadius: 18,
+                        tooltip: 'Remove',
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
