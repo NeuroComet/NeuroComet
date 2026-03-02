@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms of Service | NeuroComet</title>
+    <script>
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] },
+                    colors: { brand: { 50: '#f0f5ff', 500: '#3b82f6', 600: '#2563eb', 900: '#0f172a' } }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="font-sans text-gray-800 dark:text-gray-200 antialiased bg-[#f8fafc] dark:bg-gray-900 transition-colors duration-300">
+
+<nav class="w-full z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200/50 dark:border-gray-800/50 sticky top-0">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-20">
+            <a href="index.html" class="flex items-center gap-3 group">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-500 to-purple-600 flex items-center justify-center text-white shadow-lg group-hover:scale-105 transition-transform">
+                    <i class="fa-solid fa-meteor"></i>
+                </div>
+                <span class="font-extrabold text-xl text-gray-900 dark:text-white">NeuroComet</span>
+            </a>
+            <a href="index.html" class="text-sm font-semibold text-gray-500 dark:text-gray-400 hover:text-brand-600 transition-colors">
+                <i class="fa-solid fa-arrow-left mr-2"></i>Back to Home
+            </a>
+        </div>
+    </div>
+</nav>
+
+<main class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div class="mb-12">
+        <h1 class="text-4xl font-extrabold text-gray-900 dark:text-white mb-4">Terms of Service</h1>
+        <p class="text-gray-500 dark:text-gray-400">Last Updated: <script>document.write(new Date().toLocaleDateString())</script></p>
+    </div>
+
+    <div class="space-y-8 text-gray-600 dark:text-gray-300 leading-relaxed">
+
+        <section>
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">1. Acceptance of Terms</h2>
+            <p>By downloading, accessing, or using the NeuroComet application and website, you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use the platform. NeuroComet is designed to provide a customizable, sensory-friendly environment for the neurodivergent community.</p>
+        </section>
+
+        <section>
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">2. Medical & Health Disclaimer</h2>
+            <p><strong>NeuroComet is not a medical device or a replacement for professional healthcare.</strong></p>
+            <p class="mt-2">Features such as "Spoon Tracking" (energy level monitoring), NeuroGames (coping and stimming mechanisms), and sensory profile adjustments are self-management tools. They are not intended to diagnose, treat, cure, or prevent any mental health condition or neurodevelopmental disorder. Always seek the advice of a qualified healthcare provider with any questions regarding a medical condition.</p>
+        </section>
+
+        <section>
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">3. AI Mock Call Simulator</h2>
+            <p>Our Mock Call feature utilizes third-party artificial intelligence (Google Gemini) to simulate real-world conversations for the purpose of alleviating phone anxiety. By using this feature, you acknowledge that:</p>
+            <ul class="list-disc pl-5 space-y-2 mt-2">
+                <li>You are interacting with an AI, not a human being.</li>
+                <li>The AI's responses are generated programmatically and should not be relied upon for factual accuracy, especially in mock medical or legal scenarios.</li>
+                <li>Audio input is processed in real-time to facilitate the practice call and is governed by our Privacy Policy.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">4. User Conduct & Safe Space Guarantee</h2>
+            <p>NeuroComet is built to be a safe sanctuary free from the overwhelming noise of traditional social media. To maintain this environment, you agree to adhere strictly to our community guidelines. We employ rigorous Content Filtering and trigger-word blocking. You agree not to:</p>
+            <ul class="list-disc pl-5 space-y-2 mt-2">
+                <li>Intentionally bypass trigger-word filters or post content intended to cause sensory overload or distress.</li>
+                <li>Engage in harassment, hate speech, bullying, or discrimination of any kind.</li>
+                <li>Exploit the Direct Message (DM) system to send unsolicited or harmful content.</li>
+            </ul>
+            <p class="mt-2 text-sm italic">Violation of these rules will result in immediate account suspension or termination.</p>
+        </section>
+
+        <section>
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">5. Caregiver & Linked Accounts</h2>
+            <p>NeuroComet offers optional Parental and Caregiver Control modules. If an account is linked to a caregiver, the primary user and caregiver acknowledge that the caregiver may have the ability to block specific screens, manage privacy settings, or monitor certain app usages to assist the primary user. Both parties consent to this linked framework upon activation.</p>
+        </section>
+
+        <section>
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">6. Account Security</h2>
+            <p>You are responsible for safeguarding your login credentials (managed via Supabase). You must promptly notify us of any unauthorized use of your account. NeuroComet is not liable for any loss or damage arising from your failure to protect your login information.</p>
+        </section>
+
+        <section>
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">7. Changes to the Service & Terms</h2>
+            <p>We reserve the right to modify, suspend, or discontinue any aspect of NeuroComet at any time without notice. We may also update these Terms periodically. Continued use of the app after any such changes constitutes your consent to the updated Terms.</p>
+        </section>
+    </div>
+</main>
+
+<footer class="bg-gray-50 dark:bg-gray-950 border-t border-gray-200 dark:border-gray-800 py-8 text-center mt-12">
+    <p class="text-gray-400 dark:text-gray-500 text-sm">
+        &copy; <script>document.write(new Date().getFullYear())</script> NeuroComet. All rights reserved.
+    </p>
+</footer>
+</body>
+</html>

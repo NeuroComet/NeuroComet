@@ -209,7 +209,7 @@ class FeedNotifier extends Notifier<AsyncValue<List<Post>>> {
         'Mindfulness doesn\'t have to mean sitting still. Walking meditation, cooking meditation, stimming meditation — all valid 🌿',
       ],
       'sensory_sam': [
-        'Fidget toy review #204: This $3 fidget slug is genuinely the best sensory tool I\'ve tested this year 🐌 Full review dropping tomorrow!',
+        'Fidget toy review #204: This \$3 fidget slug is genuinely the best sensory tool I\'ve tested this year 🐌 Full review dropping tomorrow!',
         'Unpopular opinion: the best sensory tools aren\'t marketed as "fidget toys." Hair ties, smooth stones, pen caps — use what works 🙌',
       ],
       'autism_chris': [

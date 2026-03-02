@@ -1039,39 +1039,41 @@ class _EnhancedNotificationTileState extends State<_EnhancedNotificationTile>
       opacity: _fadeAnimation,
       child: SlideTransition(
         position: _slideAnimation,
-        child: Dismissible(
-          key: Key(notification.id),
-          direction: DismissDirection.endToStart,
-          background: Container(
-            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-            decoration: BoxDecoration(
-              color: theme.colorScheme.errorContainer,
-              borderRadius: BorderRadius.circular(16),
-            ),
-            alignment: Alignment.centerRight,
-            padding: const EdgeInsets.only(right: 24),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.delete_rounded,
-                  color: theme.colorScheme.onErrorContainer,
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  'Remove',
-                  style: TextStyle(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+          child: Dismissible(
+            key: Key(notification.id),
+            direction: DismissDirection.endToStart,
+            confirmDismiss: (_) async {
+              widget.onDismiss?.call();
+              return false; // We handle removal via provider; don't auto-remove widget
+            },
+            background: Container(
+              decoration: BoxDecoration(
+                color: theme.colorScheme.errorContainer,
+                borderRadius: BorderRadius.circular(16),
+              ),
+              alignment: Alignment.centerRight,
+              padding: const EdgeInsets.only(right: 24),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.delete_rounded,
                     color: theme.colorScheme.onErrorContainer,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
                   ),
-                ),
-              ],
+                  const SizedBox(height: 4),
+                  Text(
+                    'Remove',
+                    style: TextStyle(
+                      color: theme.colorScheme.onErrorContainer,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-          onDismissed: (_) => widget.onDismiss?.call(),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
             child: Material(
               color: notification.isRead
                   ? (isDark ? Colors.white.withOpacity(0.03) : Colors.white)

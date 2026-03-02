@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../providers/theme_provider.dart';
+import '../../providers/message_delete_mode_provider.dart';
 import '../../services/supabase_service.dart';
 import '../../l10n/app_localizations.dart';
 import '../../core/theme/app_colors.dart';
@@ -96,6 +98,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
     final themeMode = ref.watch(themeModeProvider);
     final highContrast = ref.watch(highContrastProvider);
     final reducedMotion = ref.watch(reducedMotionProvider);
+    final deleteMode = ref.watch(messageDeleteModeProvider);
 
     return Scaffold(
       backgroundColor: theme.colorScheme.surface,
@@ -280,6 +283,30 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                   const SizedBox(height: 20),
 
                   // ═══════════════════════════════════════════════════════════════
+                  // MESSAGES SECTION
+                  // ═══════════════════════════════════════════════════════════════
+                  _SettingsSectionHeader(
+                    title: l10n.messagesSettings,
+                    icon: Icons.chat_outlined,
+                  ),
+                  _ModernSettingsCard(
+                    children: [
+                      _ModernSettingsItem(
+                        title: l10n.messageDeleteMode,
+                        description: deleteMode == MessageDeleteMode.swipe
+                            ? l10n.swipeToDelete
+                            : l10n.longPressToDelete,
+                        icon: deleteMode == MessageDeleteMode.swipe
+                            ? Icons.swipe_left_rounded
+                            : Icons.touch_app_rounded,
+                        iconColor: const Color(0xFF42A5F5),
+                        onTap: () => _showDeleteModeDialog(context, deleteMode),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+
+                  // ═══════════════════════════════════════════════════════════════
                   // ACCESSIBILITY & WELLBEING SECTION
                   // ═══════════════════════════════════════════════════════════════
                   _SettingsSectionHeader(
@@ -432,7 +459,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                         description: 'Read our privacy policy',
                         icon: Icons.privacy_tip_rounded,
                         iconColor: AppColors.primaryPurple,
-                        onTap: () => _launchUrl('https://neurocomet.app/privacy'),
+                        onTap: () => _launchUrl('https://neurocomet.github.io/NeuroComet/privacy.html'),
                       ),
                       _ModernSettingsDivider(),
                       _ModernSettingsItem(
@@ -577,15 +604,21 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
     );
   }
 
-  void _launchUrl(String url) {
+  Future<void> _launchUrl(String url) async {
     HapticFeedback.lightImpact();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Opening $url'),
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      ),
-    );
+    final uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } else {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Could not open link'),
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        ),
+      );
+    }
   }
 
   void _showLicensesDialog(BuildContext context) {
@@ -627,6 +660,139 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
           ],
         );
       },
+    );
+  }
+
+  void _showDeleteModeDialog(BuildContext context, MessageDeleteMode currentMode) {
+    final l10n = context.l10n;
+    final theme = Theme.of(context);
+
+    showDialog(
+      context: context,
+      builder: (ctx) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+          title: Text(l10n.deleteMethodLabel),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                l10n.messageDeleteModeDesc,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+              const SizedBox(height: 16),
+              _DeleteModeOption(
+                icon: Icons.swipe_left_rounded,
+                title: l10n.swipeToDelete,
+                description: l10n.swipeToDeleteDesc,
+                isSelected: currentMode == MessageDeleteMode.swipe,
+                onTap: () {
+                  HapticFeedback.selectionClick();
+                  ref.read(messageDeleteModeProvider.notifier).setMode(MessageDeleteMode.swipe);
+                  Navigator.pop(ctx);
+                },
+              ),
+              const SizedBox(height: 8),
+              _DeleteModeOption(
+                icon: Icons.touch_app_rounded,
+                title: l10n.longPressToDelete,
+                description: l10n.longPressToDeleteDesc,
+                isSelected: currentMode == MessageDeleteMode.longPress,
+                onTap: () {
+                  HapticFeedback.selectionClick();
+                  ref.read(messageDeleteModeProvider.notifier).setMode(MessageDeleteMode.longPress);
+                  Navigator.pop(ctx);
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+
+/// Radio-style option card for delete mode selection
+class _DeleteModeOption extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String description;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  const _DeleteModeOption({
+    required this.icon,
+    required this.title,
+    required this.description,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final primaryColor = theme.colorScheme.primary;
+
+    return Material(
+      color: isSelected
+          ? primaryColor.withOpacity(0.1)
+          : theme.colorScheme.surfaceContainerHighest.withOpacity(0.3),
+      borderRadius: BorderRadius.circular(16),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(16),
+        child: Padding(
+          padding: const EdgeInsets.all(14),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: isSelected
+                      ? primaryColor.withOpacity(0.15)
+                      : theme.colorScheme.surfaceContainerHighest,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                  icon,
+                  color: isSelected ? primaryColor : theme.colorScheme.onSurfaceVariant,
+                  size: 22,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                        color: isSelected ? primaryColor : null,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      description,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Radio<bool>(
+                value: true,
+                groupValue: isSelected,
+                onChanged: (_) => onTap(),
+                activeColor: primaryColor,
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

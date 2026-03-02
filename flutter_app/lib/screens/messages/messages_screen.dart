@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../models/conversation.dart';
 import '../../providers/messages_provider.dart';
+import '../../providers/message_delete_mode_provider.dart';
 import '../../widgets/common/neuro_avatar.dart';
 import '../../widgets/common/neuro_loading.dart';
 import '../../l10n/app_localizations.dart';
@@ -140,6 +141,7 @@ class _MessagesScreenState extends ConsumerState<MessagesScreen>
     final unreadCount = conversations.fold<int>(
       0, (sum, c) => sum + c.unreadCount);
     final filteredConversations = _filterConversations(conversations);
+    final deleteMode = ref.watch(messageDeleteModeProvider);
 
     return CustomScrollView(
       physics: const BouncingScrollPhysics(
@@ -155,6 +157,7 @@ class _MessagesScreenState extends ConsumerState<MessagesScreen>
               onNewMessage: () => _showNewMessageSheet(context),
               onSearch: () => setState(() => _isSearching = true),
               onPracticeCall: () => context.push('/practice-calls'),
+              onDeleteModeSettings: () => _showDeleteModeSheet(context),
               l10n: l10n,
             ),
           ),
@@ -203,11 +206,52 @@ class _MessagesScreenState extends ConsumerState<MessagesScreen>
               delegate: SliverChildBuilderDelegate(
                 (context, index) {
                   final conversation = filteredConversations[index];
-                  return _ConversationTile(
+                  final tile = _ConversationTile(
                     conversation: conversation,
                     onTap: () => _openConversation(conversation),
-                    onLongPress: () => _showConversationOptions(conversation),
+                    onLongPress: deleteMode == MessageDeleteMode.longPress
+                        ? () => _showConversationOptions(conversation)
+                        : null,
                   );
+
+                  // Swipe-to-delete mode: wrap with Dismissible
+                  if (deleteMode == MessageDeleteMode.swipe) {
+                    return Dismissible(
+                      key: Key(conversation.id),
+                      direction: DismissDirection.endToStart,
+                      confirmDismiss: (_) => _confirmDeleteSwipe(conversation),
+                      background: Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.errorContainer,
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        alignment: Alignment.centerRight,
+                        padding: const EdgeInsets.only(right: 24),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.delete_rounded,
+                              color: Theme.of(context).colorScheme.onErrorContainer,
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              'Delete',
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.onErrorContainer,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      child: tile,
+                    );
+                  }
+
+                  return tile;
                 },
                 childCount: filteredConversations.length,
               ),
@@ -331,11 +375,138 @@ class _MessagesScreenState extends ConsumerState<MessagesScreen>
         actions: [
           TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
           FilledButton(
-            onPressed: () => Navigator.pop(ctx),
+            onPressed: () {
+              Navigator.pop(ctx);
+              ref.read(conversationsProvider.notifier).deleteConversation(conversation.id);
+            },
             style: FilledButton.styleFrom(backgroundColor: Theme.of(ctx).colorScheme.error),
             child: const Text('Delete'),
           ),
         ],
+      ),
+    );
+  }
+
+  /// Used by Dismissible.confirmDismiss – returns true only if user taps "Delete".
+  Future<bool> _confirmDeleteSwipe(Conversation conversation) async {
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Delete Conversation?'),
+        content: const Text('This will permanently delete this conversation.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            style: FilledButton.styleFrom(backgroundColor: Theme.of(ctx).colorScheme.error),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+    if (result == true) {
+      ref.read(conversationsProvider.notifier).deleteConversation(conversation.id);
+      return true;
+    }
+    return false;
+  }
+
+  void _showDeleteModeSheet(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    final currentMode = ref.read(messageDeleteModeProvider);
+
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (ctx) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Drag handle
+              Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: theme.dividerColor,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(height: 20),
+              // Title
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryPurple.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Icon(
+                      Icons.delete_sweep_rounded,
+                      color: AppColors.primaryPurple,
+                      size: 22,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          l10n.messageDeleteMode,
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          l10n.messageDeleteModeDesc,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              // Swipe option
+              _DeleteModeOptionTile(
+                icon: Icons.swipe_left_rounded,
+                title: l10n.swipeToDelete,
+                description: l10n.swipeToDeleteDesc,
+                isSelected: currentMode == MessageDeleteMode.swipe,
+                onTap: () {
+                  HapticFeedback.selectionClick();
+                  ref.read(messageDeleteModeProvider.notifier).setMode(MessageDeleteMode.swipe);
+                  Navigator.pop(ctx);
+                },
+              ),
+              const SizedBox(height: 10),
+              // Long-press option
+              _DeleteModeOptionTile(
+                icon: Icons.touch_app_rounded,
+                title: l10n.longPressToDelete,
+                description: l10n.longPressToDeleteDesc,
+                isSelected: currentMode == MessageDeleteMode.longPress,
+                onTap: () {
+                  HapticFeedback.selectionClick();
+                  ref.read(messageDeleteModeProvider.notifier).setMode(MessageDeleteMode.longPress);
+                  Navigator.pop(ctx);
+                },
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -703,6 +874,7 @@ class _MessagesHeader extends StatelessWidget {
   final VoidCallback onNewMessage;
   final VoidCallback onSearch;
   final VoidCallback onPracticeCall;
+  final VoidCallback onDeleteModeSettings;
   final AppLocalizations l10n;
 
   const _MessagesHeader({
@@ -710,6 +882,7 @@ class _MessagesHeader extends StatelessWidget {
     required this.onNewMessage,
     required this.onSearch,
     required this.onPracticeCall,
+    required this.onDeleteModeSettings,
     required this.l10n,
   });
 
@@ -768,6 +941,11 @@ class _MessagesHeader extends StatelessWidget {
                     icon: Icons.phone_rounded,
                     onPressed: onPracticeCall,
                     tooltip: 'Practice Calls',
+                  ),
+                  _HeaderIconButton(
+                    icon: Icons.tune_rounded,
+                    onPressed: onDeleteModeSettings,
+                    tooltip: 'Message Options',
                   ),
                   _HeaderIconButton(
                     icon: Icons.edit_square,
@@ -1137,3 +1315,87 @@ class _ModerationBadge extends StatelessWidget {
     }
   }
 }
+
+/// Radio-style option tile for delete mode selection in the Messages tab
+class _DeleteModeOptionTile extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String description;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  const _DeleteModeOptionTile({
+    required this.icon,
+    required this.title,
+    required this.description,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final primaryColor = theme.colorScheme.primary;
+
+    return Material(
+      color: isSelected
+          ? primaryColor.withOpacity(0.1)
+          : theme.colorScheme.surfaceContainerHighest.withOpacity(0.3),
+      borderRadius: BorderRadius.circular(16),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(16),
+        child: Padding(
+          padding: const EdgeInsets.all(14),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: isSelected
+                      ? primaryColor.withOpacity(0.15)
+                      : theme.colorScheme.surfaceContainerHighest,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                  icon,
+                  color: isSelected ? primaryColor : theme.colorScheme.onSurfaceVariant,
+                  size: 22,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                        color: isSelected ? primaryColor : null,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      description,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Radio<bool>(
+                value: true,
+                groupValue: isSelected,
+                onChanged: (_) => onTap(),
+                activeColor: primaryColor,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+

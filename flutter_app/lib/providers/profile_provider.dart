@@ -1103,7 +1103,7 @@ List<Post> _generatePersonalityPosts(FakeProfileData profile) {
             'Zero meltdowns. Zero overwhelm. Technology is beautiful 🎧',
         'Unpopular opinion: "just get used to it" is the worst advice for sensory issues. '
             'Our nervous systems aren\'t broken — environments are just poorly designed.',
-        'New review dropping tomorrow: 5 weighted lap pads under $30. Spoiler: the purple one wins 💜',
+        'New review dropping tomorrow: 5 weighted lap pads under \$30. Spoiler: the purple one wins 💜',
       ]);
     case 'NeuroNurse':
       posts.addAll([

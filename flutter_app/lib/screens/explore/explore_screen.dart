@@ -339,17 +339,37 @@ class _FilterPill extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final primaryColor = theme.colorScheme.primary;
 
     return Material(
       color: isSelected
-          ? theme.colorScheme.primaryContainer
-          : theme.colorScheme.surfaceContainerHighest,
+          ? primaryColor.withOpacity(isDark ? 0.25 : 0.15)
+          : isDark
+              ? Colors.white.withOpacity(0.10)
+              : theme.colorScheme.surfaceContainerHighest,
       borderRadius: BorderRadius.circular(24),
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(24),
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          decoration: isSelected
+              ? BoxDecoration(
+                  borderRadius: BorderRadius.circular(24),
+                  border: Border.all(
+                    color: primaryColor.withOpacity(0.4),
+                    width: 1.5,
+                  ),
+                )
+              : BoxDecoration(
+                  borderRadius: BorderRadius.circular(24),
+                  border: Border.all(
+                    color: isDark
+                        ? Colors.white.withOpacity(0.12)
+                        : Colors.black.withOpacity(0.08),
+                  ),
+                ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -357,16 +377,20 @@ class _FilterPill extends StatelessWidget {
                 icon,
                 size: 18,
                 color: isSelected
-                    ? theme.colorScheme.primary
-                    : theme.colorScheme.onSurfaceVariant,
+                    ? primaryColor
+                    : isDark
+                        ? Colors.white.withOpacity(0.8)
+                        : theme.colorScheme.onSurfaceVariant,
               ),
               const SizedBox(width: 8),
               Text(
                 label,
                 style: theme.textTheme.labelLarge?.copyWith(
                   color: isSelected
-                      ? theme.colorScheme.primary
-                      : theme.colorScheme.onSurfaceVariant,
+                      ? primaryColor
+                      : isDark
+                          ? Colors.white.withOpacity(0.8)
+                          : theme.colorScheme.onSurfaceVariant,
                   fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                 ),
               ),

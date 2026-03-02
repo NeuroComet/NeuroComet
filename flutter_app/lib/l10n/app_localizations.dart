@@ -256,6 +256,14 @@ class AppLocalizations {
       'typing': 'typing',
       'justNow': 'Just Now',
       'now': 'Now',
+      'messageDeleteMode': 'Delete Method',
+      'messageDeleteModeDesc': 'Choose how to delete conversations',
+      'swipeToDelete': 'Swipe to Delete',
+      'swipeToDeleteDesc': 'Swipe left on a conversation to delete it',
+      'longPressToDelete': 'Long Press to Delete',
+      'longPressToDeleteDesc': 'Long press a conversation for options including delete',
+      'messagesSettings': 'Messages',
+      'deleteMethodLabel': 'Conversation Delete Method',
       // Notifications
       'notificationsTitle': 'Notifications',
       'markAllRead': 'Mark All as Read',
@@ -11950,6 +11958,14 @@ class AppLocalizations {
   String get typing => get('typing');
   String get justNow => get('justNow');
   String get now => get('now');
+  String get messageDeleteMode => get('messageDeleteMode');
+  String get messageDeleteModeDesc => get('messageDeleteModeDesc');
+  String get swipeToDelete => get('swipeToDelete');
+  String get swipeToDeleteDesc => get('swipeToDeleteDesc');
+  String get longPressToDelete => get('longPressToDelete');
+  String get longPressToDeleteDesc => get('longPressToDeleteDesc');
+  String get messagesSettings => get('messagesSettings');
+  String get deleteMethodLabel => get('deleteMethodLabel');
 
   // Notifications
   String get notificationsTitle => get('notificationsTitle');
