@@ -37,6 +37,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.revenuecat.purchases.*
+import kotlinx.coroutines.launch
 import com.revenuecat.purchases.interfaces.ReceiveCustomerInfoCallback
 import com.kyilmaz.neurocomet.calling.NeurodivergentPersona
 import com.kyilmaz.neurocomet.calling.PracticeCallScreen
@@ -328,6 +329,8 @@ fun NeuroCometApp(
     val messagesViewModel: MessagesViewModel = viewModel()
     val messagesState by messagesViewModel.state.collectAsState()
     val abExperiments by ABTestManager.experiments.collectAsState()
+    val pendingAccountAction by authViewModel.pendingAccountAction.collectAsState()
+    val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
         devOptionsViewModel.refresh(app)
@@ -430,6 +433,64 @@ fun NeuroCometApp(
             onSkip = if (BuildConfig.DEBUG) {{ authViewModel.skipAuth() }} else null
         )
     } else {
+        when (val action = pendingAccountAction) {
+            is PendingAccountAction.ScheduledDeletion -> {
+                AlertDialog(
+                    onDismissRequest = {},
+                    title = { Text("Account deletion is scheduled") },
+                    text = {
+                        Text(
+                            "This account is set to be deleted after the 14-day grace period. Cancel it to keep using the app, or stay signed out and let the deletion continue."
+                        )
+                    },
+                    confirmButton = {
+                        TextButton(onClick = {
+                            authViewModel.cancelScheduledDeletion { _, message ->
+                                coroutineScope.launch {
+                                    snackbarHostState.showSnackbar(message)
+                                }
+                            }
+                        }) {
+                            Text("Cancel deletion")
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = { authViewModel.keepScheduledDeletion() }) {
+                            Text("Keep scheduled")
+                        }
+                    }
+                )
+            }
+            is PendingAccountAction.DetoxActive -> {
+                AlertDialog(
+                    onDismissRequest = {},
+                    title = { Text("Detox mode is active") },
+                    text = {
+                        Text(
+                            "Your account is taking a break until ${action.until ?: "your scheduled return"}. End detox early if you're ready to come back, or stay signed out and keep your break intact."
+                        )
+                    },
+                    confirmButton = {
+                        TextButton(onClick = {
+                            authViewModel.endDetoxMode { _, message ->
+                                coroutineScope.launch {
+                                    snackbarHostState.showSnackbar(message)
+                                }
+                            }
+                        }) {
+                            Text("End detox")
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = { authViewModel.continueDetoxBreak() }) {
+                            Text("Stay on break")
+                        }
+                    }
+                )
+            }
+            null -> Unit
+        }
+
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = navBackStackEntry?.destination?.route
 
@@ -831,7 +892,8 @@ fun NeuroCometApp(
                 }
                 composable(Screen.PrivacySettings.route) {
                     PrivacySettingsScreen(
-                        onBack = { navController.popBackStack() }
+                        onBack = { navController.popBackStack() },
+                        authViewModel = authViewModel
                     )
                 }
                 composable(Screen.NotificationSettings.route) {
@@ -851,7 +913,8 @@ fun NeuroCometApp(
                 }
                 composable(Screen.WellbeingSettings.route) {
                     WellbeingSettingsScreen(
-                        onBack = { navController.popBackStack() }
+                        onBack = { navController.popBackStack() },
+                        authViewModel = authViewModel
                     )
                 }
                 composable(Screen.FontSettings.route) {
@@ -1048,11 +1111,11 @@ fun NeuroCometApp(
 
             RegulationLiveSessionHost(
                 modifier = Modifier
-                    .align(Alignment.BottomCenter)
+                    .align(Alignment.TopCenter)
                     .padding(
                         start = 16.dp,
                         end = 16.dp,
-                        bottom = innerPadding.calculateBottomPadding() + 12.dp
+                        top = innerPadding.calculateTopPadding() + 12.dp
                     )
             )
         }
