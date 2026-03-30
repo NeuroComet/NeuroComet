@@ -7,13 +7,16 @@
 
 package com.kyilmaz.neurocomet
 
+import android.content.ComponentName
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.material.icons.automirrored.filled.MenuOpen
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
@@ -22,6 +25,7 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -51,16 +55,16 @@ sealed class Screen(val route: String, val labelId: Int, val iconFilled: ImageVe
     data object Messages : Screen("messages", R.string.nav_messages, Icons.Filled.Mail, Icons.Outlined.Mail)
     data object Notifications : Screen("notifications", R.string.nav_notifications, Icons.Filled.Notifications, Icons.Outlined.Notifications)
     data object Settings : Screen("settings", R.string.nav_settings, Icons.Filled.Settings, Icons.Outlined.Settings)
-    data object ThemeSettings : Screen("theme_settings", R.string.nav_settings, Icons.Filled.Palette, Icons.Outlined.Palette)
-    data object AnimationSettings : Screen("animation_settings", R.string.nav_settings, Icons.Filled.Animation, Icons.Outlined.Animation)
-    data object IconCustomization : Screen("icon_customization", R.string.settings_app_icon, Icons.Filled.Palette, Icons.Outlined.Palette)
-    data object PrivacySettings : Screen("privacy_settings", R.string.nav_settings, Icons.Filled.Lock, Icons.Outlined.Lock)
-    data object NotificationSettings : Screen("notification_settings", R.string.nav_settings, Icons.Filled.Notifications, Icons.Outlined.Notifications)
-    data object ContentSettings : Screen("content_settings", R.string.nav_settings, Icons.Filled.PlayArrow, Icons.Outlined.PlayArrow)
-    data object AccessibilitySettingsScreen : Screen("accessibility_settings", R.string.nav_settings, Icons.Filled.Accessibility, Icons.Outlined.Accessibility)
-    data object WellbeingSettings : Screen("wellbeing_settings", R.string.nav_settings, Icons.Filled.Spa, Icons.Outlined.Spa)
-    data object FontSettings : Screen("font_settings", R.string.nav_settings, Icons.Filled.TextFields, Icons.Outlined.TextFields)
-    data object ParentalControls : Screen("parental_controls", R.string.nav_settings, Icons.Filled.Shield, Icons.Outlined.Shield)
+    data object ThemeSettings : Screen("theme_settings", R.string.settings_theme, Icons.Filled.Palette, Icons.Outlined.Palette)
+    data object AnimationSettings : Screen("animation_settings", R.string.settings_animation, Icons.Filled.Animation, Icons.Outlined.Animation)
+    data object IconCustomization : Screen("icon_customization", R.string.settings_app_icon, Icons.Filled.AppShortcut, Icons.Filled.AppShortcut)
+    data object PrivacySettings : Screen("privacy_settings", R.string.settings_privacy, Icons.Filled.Lock, Icons.Outlined.Lock)
+    data object NotificationSettings : Screen("notification_settings", R.string.settings_notif_prefs, Icons.Filled.Notifications, Icons.Outlined.Notifications)
+    data object ContentSettings : Screen("content_settings", R.string.settings_content_filters, Icons.Filled.FilterList, Icons.Filled.FilterList)
+    data object AccessibilitySettingsScreen : Screen("accessibility_settings", R.string.settings_reduce_motion, Icons.Filled.Accessibility, Icons.Outlined.Accessibility)
+    data object WellbeingSettings : Screen("wellbeing_settings", R.string.settings_break_reminders, Icons.Filled.Bedtime, Icons.Filled.Bedtime)
+    data object FontSettings : Screen("font_settings", R.string.settings_text_display, Icons.Filled.FormatSize, Icons.Filled.FormatSize)
+    data object ParentalControls : Screen("parental_controls", R.string.settings_parental, Icons.Filled.Shield, Icons.Outlined.Shield)
     data object Conversation : Screen("conversation/{conversationId}", R.string.nav_messages, Icons.Filled.Mail, Icons.Outlined.Mail) {
         fun route(conversationId: String) = "conversation/$conversationId"
     }
@@ -69,7 +73,7 @@ sealed class Screen(val route: String, val labelId: Int, val iconFilled: ImageVe
     data object TopicDetail : Screen("topic/{topicId}", R.string.nav_explore, Icons.Filled.Search, Icons.Outlined.Search) {
         fun route(topicId: String) = "topic/$topicId"
     }
-    data object Subscription : Screen("subscription", R.string.nav_settings, Icons.Filled.Star, Icons.Outlined.Star)
+    data object Subscription : Screen("subscription", R.string.settings_go_premium, Icons.Filled.Star, Icons.Outlined.Star)
     data object CallHistory : Screen("call_history", R.string.nav_messages, Icons.Filled.Phone, Icons.Outlined.Phone)
     data object PracticeCallSelection : Screen("practice_call_selection", R.string.nav_messages, Icons.Filled.Headset, Icons.Outlined.Headset)
     data object PracticeCall : Screen("practice_call/{personaId}", R.string.nav_messages, Icons.Filled.Phone, Icons.Outlined.Phone) {
@@ -78,29 +82,29 @@ sealed class Screen(val route: String, val labelId: Int, val iconFilled: ImageVe
     data object Profile : Screen("profile/{userId}", R.string.nav_settings, Icons.Filled.Person, Icons.Outlined.Person) {
         fun route(userId: String) = "profile/$userId"
     }
-    data object MyProfile : Screen("my_profile", R.string.nav_settings, Icons.Filled.AccountCircle, Icons.Outlined.AccountCircle)
-    data object GamesHub : Screen("games_hub", R.string.games_hub_title, Icons.Filled.SportsEsports, Icons.Outlined.SportsEsports)
-    data object GamePlay : Screen("game/{gameId}", R.string.games_hub_title, Icons.Filled.SportsEsports, Icons.Outlined.SportsEsports) {
+    data object MyProfile : Screen("my_profile", R.string.settings_my_profile, Icons.Filled.Person, Icons.Outlined.Person)
+    data object GamesHub : Screen("games_hub", R.string.games_hub_title, Icons.Filled.Games, Icons.Outlined.Games)
+    data object GamePlay : Screen("game/{gameId}", R.string.games_hub_title, Icons.Filled.Games, Icons.Outlined.Games) {
         fun route(gameId: String) = "game/$gameId"
     }
     data object FeedbackHub : Screen("feedback_hub/{action}", R.string.feedback_hub_title, Icons.Filled.Feedback, Icons.Outlined.Feedback) {
         fun route(action: String = "none") = "feedback_hub/$action"
     }
-    data object BackupSettings : Screen("backup_settings", R.string.nav_settings, Icons.Filled.Cloud, Icons.Outlined.Cloud)
+    data object BackupSettings : Screen("backup_settings", R.string.backup_title, Icons.Filled.CloudUpload, Icons.Filled.CloudUpload)
 }
 
-class MainActivity : AppCompatActivity() {
+open class MainActivity : AppCompatActivity() {
 
     private fun configureOrientationForDevice() {
         val displayMetrics = resources.displayMetrics
-        val widthDp = displayMetrics.widthPixels / displayMetrics.density
-        val heightDp = displayMetrics.heightPixels / displayMetrics.density
-        val smallestWidthDp = minOf(widthDp, heightDp)
+        val widthDp = (displayMetrics.widthPixels / displayMetrics.density).toInt()
+        val heightDp = (displayMetrics.heightPixels / displayMetrics.density).toInt()
+        val canonicalLayout = canonicalLayoutForDp(widthDp = widthDp, heightDp = heightDp)
 
-        requestedOrientation = if (smallestWidthDp >= 600) {
-            android.content.pm.ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+        requestedOrientation = if (canonicalLayout.deviceFamily == CanonicalDeviceFamily.PHONE) {
+            android.content.pm.ActivityInfo.SCREEN_ORIENTATION_FULL_USER
         } else {
-            android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+            android.content.pm.ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
         }
     }
 
@@ -121,6 +125,9 @@ class MainActivity : AppCompatActivity() {
         // Android 17+: Enable cross-device handoff by default.
         // Per-route toggling is handled in NeuroCometApp via HandoffManager.
         HandoffManager.setHandoffEnabled(this, true)
+        
+        // Register Android 17 ProfilingManager triggers
+        ProfilingManagerHelper.registerTracerTriggers(this)
 
         PerformanceOverlayState.init(this)
         SettingsManager.init(this)
@@ -130,11 +137,14 @@ class MainActivity : AppCompatActivity() {
         try {
             SecurityManager.performSecurityCheck(this)
             if (!BuildConfig.DEBUG) {
-                SecurityManager.enforceSecurity(
-                    context = this,
-                    allowEmulator = false,
-                    allowDeveloperOptions = true
-                )
+                // RELAXED SECURITY FOR BETA TESTING:
+                // We'll only enforce critical integrity and rooting checks.
+                // We allow emulators and don't explicitly call enforceSecurity(allowEmulator=false)
+                // which might be too aggressive for different beta tester devices.
+                val result = SecurityManager.performSecurityCheck(this)
+                if (result.isRooted || result.isAppTampered) {
+                    throw SecurityException("Security check failed")
+                }
             }
         } catch (_: SecurityException) {
             finish()
@@ -147,22 +157,27 @@ class MainActivity : AppCompatActivity() {
             NotificationChannels.requestNotificationPermission(this)
         }
 
-        // RevenueCat: only configure when a real release key is present.
-        // Debug builds stay in SubscriptionManager test mode.
-        val billingConfigured = if (!BuildConfig.DEBUG) {
-            val revenueCatKey = SecurityUtils.decrypt(BuildConfig.REVENUECAT_API_KEY)
-            if (revenueCatKey.isNotBlank()) {
-                Purchases.logLevel = LogLevel.DEBUG
-                Purchases.configure(PurchasesConfiguration.Builder(this, revenueCatKey).build())
-                true
-            } else {
-                Log.e("MainActivity", "RevenueCat key missing in release build; billing disabled")
-                false
-            }
+        // RevenueCat: Automagically configure if a valid API key is present.
+        // Even in debug builds, if the developer supplied a real key, we should allow
+        // them to test real sandbox transactions rather than forcing simulated UI testing.
+        val revenueCatKey = SecurityUtils.decrypt(BuildConfig.REVENUECAT_API_KEY)
+        val billingConfigured = if (revenueCatKey.isNotBlank() && !revenueCatKey.startsWith("goog_your_")) {
+            Purchases.logLevel = LogLevel.DEBUG
+            Purchases.configure(PurchasesConfiguration.Builder(this, revenueCatKey).build())
+            
+            // Explicitly disable test mode since we have a real key configured
+            SubscriptionManager.testMode = false
+            Log.d("MainActivity", "💰 RevenueCat configured with real key. Simulated test mode disabled.")
+            true
         } else {
-            Log.d("MainActivity", "🧪 TEST MODE: RevenueCat SDK skipped — purchases will be simulated")
+            if (!BuildConfig.DEBUG) {
+                Log.e("MainActivity", "🚨 RevenueCat key missing in release build; billing disabled!")
+            } else {
+                Log.d("MainActivity", "🧪 TEST MODE: RevenueCat SDK skipped — purchases will be simulated. Add your real key to local.properties to test sandbox billing.")
+            }
             false
         }
+
         SubscriptionManager.setBillingConfigured(
             isConfigured = billingConfigured,
             errorMessage = if (!BuildConfig.DEBUG && !billingConfigured) {
@@ -198,10 +213,25 @@ class MainActivity : AppCompatActivity() {
             }
 
             val themeState by themeViewModel.themeState.collectAsState()
-            val isDark = themeState.isDarkMode
+            
+            // Determine effective dark theme mode
+            val isSystemDark = androidx.compose.foundation.isSystemInDarkTheme()
+            val isDark = when (themeState.themeMode) {
+                com.kyilmaz.neurocomet.ui.theme.ThemeMode.DARK -> true
+                com.kyilmaz.neurocomet.ui.theme.ThemeMode.LIGHT -> false
+                else -> isSystemDark
+            }
+            
+            // Sync themeViewModel.setDarkMode if SYSTEM mode changes the actual dark/light status
+            LaunchedEffect(isSystemDark, themeState.themeMode) {
+                if (themeState.themeMode == com.kyilmaz.neurocomet.ui.theme.ThemeMode.SYSTEM) {
+                    themeViewModel.setDarkMode(isSystemDark)
+                }
+            }
             
             SideEffect {
                 val windowInsetsController = WindowInsetsControllerCompat(window, window.decorView)
+                // AppearanceLightStatusBars: true means dark text (light background)
                 windowInsetsController.isAppearanceLightStatusBars = !isDark
                 windowInsetsController.isAppearanceLightNavigationBars = !isDark
             }
@@ -248,46 +278,71 @@ class MainActivity : AppCompatActivity() {
             }
 
             NeuroThemeApplication(themeViewModel = themeViewModel) {
-                if (showSplash) {
-                    NeuroSplashScreen(
-                        onFinished = { showSplash = false },
-                        neuroState = themeState.selectedState
-                    )
-                } else if (showStaySignedIn && authState != null) {
-                    StaySignedInScreen(
-                        userEmail = authState?.id ?: "",
-                        userDisplayName = authState?.name,
-                        onYes = { dontShowAgain ->
-                            StaySignedInSettings.savePreference(
-                                context = this@MainActivity,
-                                staySignedIn = true,
-                                dontShowAgain = dontShowAgain
-                            )
-                            showStaySignedIn = false
-                            staySignedInHandled = true
-                        },
-                        onNo = { dontShowAgain ->
-                            StaySignedInSettings.savePreference(
-                                context = this@MainActivity,
-                                staySignedIn = false,
-                                dontShowAgain = dontShowAgain
-                            )
-                            showStaySignedIn = false
-                            staySignedInHandled = true
-                        }
-                    )
-                } else {
-                    NeuroCometApp(
-                        feedViewModel = feedViewModel,
-                        authViewModel = authViewModel,
-                        themeViewModel = themeViewModel,
-                        safetyViewModel = safetyViewModel,
-                        authError = authError,
-                        is2FARequired = is2FARequired,
-                        authState = authState
-                    )
+                ProvideCanonicalLayout {
+                    if (showSplash) {
+                        NeuroSplashScreen(
+                            onFinished = { showSplash = false },
+                            neuroState = themeState.selectedState,
+                            animationSettings = themeState.animationSettings
+                        )
+                    } else if (showStaySignedIn && authState != null) {
+                        StaySignedInScreen(
+                            userEmail = authState?.id ?: "",
+                            userDisplayName = authState?.name,
+                            onYes = { dontShowAgain ->
+                                StaySignedInSettings.savePreference(
+                                    context = this@MainActivity,
+                                    staySignedIn = true,
+                                    dontShowAgain = dontShowAgain
+                                )
+                                showStaySignedIn = false
+                                staySignedInHandled = true
+                            },
+                            onNo = { dontShowAgain ->
+                                StaySignedInSettings.savePreference(
+                                    context = this@MainActivity,
+                                    staySignedIn = false,
+                                    dontShowAgain = dontShowAgain
+                                )
+                                showStaySignedIn = false
+                                staySignedInHandled = true
+                            }
+                        )
+                    } else {
+                        NeuroCometApp(
+                            feedViewModel = feedViewModel,
+                            authViewModel = authViewModel,
+                            themeViewModel = themeViewModel,
+                            safetyViewModel = safetyViewModel,
+                            authError = authError,
+                            is2FARequired = is2FARequired,
+                            authState = authState
+                        )
+                    }
                 }
             }
+        }
+    }
+
+    /**
+     * Android 17+ (API 37): Provide data for cross-device handoff.
+     * Uses reflection to avoid compile-time dependency on preview SDK.
+     */
+    @Suppress("NewApi", "unused")
+    fun onHandoffActivityRequested(): Any? {
+        return if (Build.VERSION.SDK_INT >= 37) {
+            try {
+                val dataClass = Class.forName("android.app.HandoffActivityData")
+                val builderClass = Class.forName("android.app.HandoffActivityData\$Builder")
+                val constructor = builderClass.getConstructor(ComponentName::class.java)
+                val builder = constructor.newInstance(ComponentName(this, MainActivity::class.java))
+                builderClass.getMethod("build").invoke(builder)
+            } catch (e: Exception) {
+                Log.w("MainActivity", "Failed to build HandoffActivityData", e)
+                null
+            }
+        } else {
+            null
         }
     }
 }
@@ -307,12 +362,15 @@ fun NeuroCometApp(
     val feedState by feedViewModel.uiState.collectAsState()
     val safetyState by safetyViewModel.state.collectAsState()
     val themeState by themeViewModel.themeState.collectAsState()
+    val canonicalLayout = LocalCanonicalLayout.current
 
     val authedUser = authState
+    val isGuestUser = authedUser?.id == "guest_user"
     val isUserVerified = authedUser?.isVerified ?: CURRENT_USER.isVerified
 
     var showPremiumDialog by remember { mutableStateOf(false) }
     val snackbarHostState = remember { SnackbarHostState() }
+    var isPermanentDrawerCollapsed by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(feedState.errorMessage) {
         val msg = feedState.errorMessage
@@ -419,29 +477,50 @@ fun NeuroCometApp(
         }
     }
 
+    // Age-gate: show DOB verification for returning users who never completed it
+    var showSignInAgeGate by remember { mutableStateOf(false) }
+
+    // Detect when a user signs in but has no persisted audience
+    LaunchedEffect(authState) {
+        if (authState != null && AudiencePrefs.needsVerification(context)) {
+            showSignInAgeGate = true
+        }
+    }
+
     if (authState == null) {
         AuthScreen(
             onSignIn = { email, password -> authViewModel.signIn(email, password) },
             onSignUp = { email, password, audience ->
                 authViewModel.signUp(email, password, audience)
-                audience?.let { safetyViewModel.setAudienceDirect(it) }
+                audience?.let { safetyViewModel.setAudienceDirect(it, context) }
             },
             onVerify2FA = { code -> authViewModel.verify2FA(code) },
             is2FARequired = is2FARequired,
             error = authError,
+            animationSettings = themeState.animationSettings,
             // Only allow skipping auth in debug builds to prevent unauthorized access
             onSkip = if (BuildConfig.DEBUG) {{ authViewModel.skipAuth() }} else null
+        )
+    } else if (showSignInAgeGate) {
+        // Mandatory age verification for returning users who lack a persisted audience
+        AgeVerificationDialog(
+            onDismiss = { /* non-dismissable — user must verify */ },
+            onConfirm = { audience ->
+                safetyViewModel.setAudienceDirect(audience, context)
+                showSignInAgeGate = false
+            },
+            onSkip = null,          // no skip for returning users
+            title = stringResource(R.string.age_verify_title_returning),
+            subtitle = stringResource(R.string.age_verify_subtitle_returning)
         )
     } else {
         when (val action = pendingAccountAction) {
             is PendingAccountAction.ScheduledDeletion -> {
                 AlertDialog(
                     onDismissRequest = {},
-                    title = { Text("Account deletion is scheduled") },
+                    title = { Text(stringResource(R.string.account_deletion_scheduled_title)) },
                     text = {
-                        Text(
-                            "This account is set to be deleted after the 14-day grace period. Cancel it to keep using the app, or stay signed out and let the deletion continue."
-                        )
+                        Text(stringResource(R.string.account_deletion_scheduled_desc))
                     },
                     confirmButton = {
                         TextButton(onClick = {
@@ -451,12 +530,12 @@ fun NeuroCometApp(
                                 }
                             }
                         }) {
-                            Text("Cancel deletion")
+                            Text(stringResource(R.string.account_cancel_deletion))
                         }
                     },
                     dismissButton = {
                         TextButton(onClick = { authViewModel.keepScheduledDeletion() }) {
-                            Text("Keep scheduled")
+                            Text(stringResource(R.string.account_keep_scheduled))
                         }
                     }
                 )
@@ -464,10 +543,10 @@ fun NeuroCometApp(
             is PendingAccountAction.DetoxActive -> {
                 AlertDialog(
                     onDismissRequest = {},
-                    title = { Text("Detox mode is active") },
+                    title = { Text(stringResource(R.string.account_detox_active_title)) },
                     text = {
                         Text(
-                            "Your account is taking a break until ${action.until ?: "your scheduled return"}. End detox early if you're ready to come back, or stay signed out and keep your break intact."
+                            stringResource(R.string.account_detox_active_desc, action.until ?: stringResource(R.string.account_detox_active_desc_default))
                         )
                     },
                     confirmButton = {
@@ -478,12 +557,12 @@ fun NeuroCometApp(
                                 }
                             }
                         }) {
-                            Text("End detox")
+                            Text(stringResource(R.string.account_end_detox))
                         }
                     },
                     dismissButton = {
                         TextButton(onClick = { authViewModel.continueDetoxBreak() }) {
-                            Text("Stay on break")
+                            Text(stringResource(R.string.account_stay_on_break))
                         }
                     }
                 )
@@ -493,6 +572,7 @@ fun NeuroCometApp(
 
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = navBackStackEntry?.destination?.route
+        val currentDestination = navBackStackEntry?.destination
 
         // Android 17+: Toggle handoff per-route based on content sensitivity.
         // Respects the dev option toggle (enableHandoff).
@@ -508,19 +588,422 @@ fun NeuroCometApp(
             }
         }
 
-        val showBottomBar = currentRoute in listOf(
-            Screen.Feed.route,
-            Screen.Explore.route,
-            Screen.Messages.route,
-            Screen.Notifications.route,
-            Screen.Settings.route
-        )
+        val topLevelScreens = remember {
+            listOf(Screen.Feed, Screen.Explore, Screen.Messages, Screen.Notifications, Screen.Settings)
+        }
+        val topLevelRoutes = remember(topLevelScreens) { topLevelScreens.map { it.route }.toSet() }
+        val selectedTopLevelRoute = when {
+            currentRoute == null -> null
+            currentRoute == Screen.Conversation.route || currentRoute.startsWith("conversation/") ||
+                currentRoute == Screen.CallHistory.route ||
+                currentRoute == Screen.PracticeCallSelection.route ||
+                currentRoute == Screen.PracticeCall.route ||
+                currentRoute.startsWith("practice_call/") -> Screen.Messages.route
+
+            currentRoute == Screen.TopicDetail.route || currentRoute.startsWith("topic/") -> Screen.Explore.route
+
+            currentRoute == Screen.ThemeSettings.route ||
+                currentRoute == Screen.AnimationSettings.route ||
+                currentRoute == Screen.IconCustomization.route ||
+                currentRoute == Screen.PrivacySettings.route ||
+                currentRoute == Screen.NotificationSettings.route ||
+                currentRoute == Screen.ContentSettings.route ||
+                currentRoute == Screen.AccessibilitySettingsScreen.route ||
+                currentRoute == Screen.WellbeingSettings.route ||
+                currentRoute == Screen.FontSettings.route ||
+                currentRoute == Screen.ParentalControls.route ||
+                currentRoute == Screen.Subscription.route ||
+                currentRoute == Screen.BackupSettings.route ||
+                currentRoute == Screen.MyProfile.route ||
+                currentRoute == Screen.GamesHub.route ||
+                currentRoute == Screen.FeedbackHub.route ||
+                currentRoute.startsWith("feedback_hub/") ||
+                currentRoute == "feedback_bug_report" ||
+                currentRoute == "feedback_feature_request" ||
+                currentRoute == "feedback_general" ||
+                currentRoute == Screen.GamePlay.route ||
+                currentRoute.startsWith("game/") ||
+                currentRoute == Screen.Profile.route ||
+                currentRoute.startsWith("profile/") -> Screen.Settings.route
+
+            else -> currentRoute
+        }
+        val showPrimaryNavigation = when (canonicalLayout.navigationChrome) {
+            CanonicalNavigationChrome.BOTTOM_BAR -> currentRoute in topLevelRoutes
+            CanonicalNavigationChrome.NAVIGATION_RAIL,
+            CanonicalNavigationChrome.PERMANENT_DRAWER -> true
+        }
+        val adaptiveNavItems = remember(messagesState.conversations) {
+            listOf(
+                AdaptiveNavItem(Screen.Feed.route, Screen.Feed.labelId, Screen.Feed.iconFilled, Screen.Feed.iconOutlined),
+                AdaptiveNavItem(Screen.Explore.route, Screen.Explore.labelId, Screen.Explore.iconFilled, Screen.Explore.iconOutlined),
+                AdaptiveNavItem(
+                    route = Screen.Messages.route,
+                    labelRes = Screen.Messages.labelId,
+                    iconFilled = Screen.Messages.iconFilled,
+                    iconOutlined = Screen.Messages.iconOutlined,
+                    badgeCount = messagesState.conversations.sumOf { it.unreadCount }
+                ),
+                AdaptiveNavItem(Screen.Notifications.route, Screen.Notifications.labelId, Screen.Notifications.iconFilled, Screen.Notifications.iconOutlined),
+                AdaptiveNavItem(Screen.Settings.route, Screen.Settings.labelId, Screen.Settings.iconFilled, Screen.Settings.iconOutlined, section = NavigationSection.SETTINGS)
+            )
+        }
+        val settingsDetailRoutes = remember {
+            setOf(
+                Screen.ThemeSettings.route,
+                Screen.AnimationSettings.route,
+                Screen.IconCustomization.route,
+                Screen.PrivacySettings.route,
+                Screen.NotificationSettings.route,
+                Screen.ContentSettings.route,
+                Screen.AccessibilitySettingsScreen.route,
+                Screen.WellbeingSettings.route,
+                Screen.FontSettings.route,
+                Screen.ParentalControls.route,
+                Screen.BackupSettings.route
+            )
+        }
+        val showMessagesSplitPane = canonicalLayout.supportsMultiPane &&
+            (currentRoute == Screen.Messages.route || currentRoute == Screen.Conversation.route)
+        val showExploreSplitPane = canonicalLayout.supportsMultiPane &&
+            (currentRoute == Screen.Explore.route || currentRoute == Screen.TopicDetail.route)
+        // Keep settings on the exact same navigation flow and row presentation as the
+        // phone layout until a dedicated large-screen settings experience is designed.
+        val showSettingsSplitPane = false
+        val selectedConversationId = navBackStackEntry?.arguments?.getString("conversationId")
+        val selectedTopicId = navBackStackEntry?.arguments?.getString("topicId")
+        val selectedConversation = remember(
+            messagesState.conversations,
+            messagesState.activeConversation,
+            selectedConversationId
+        ) {
+            selectedConversationId?.let { conversationId ->
+                messagesState.conversations.find { it.id == conversationId }
+                    ?: messagesState.activeConversation?.takeIf { it.id == conversationId }
+            }
+        }
+
+        fun openConversationRoute(conversationId: String) {
+            messagesViewModel.openConversation(conversationId)
+            if (selectedConversationId != conversationId || currentRoute != Screen.Conversation.route) {
+                navController.navigate(Screen.Conversation.route(conversationId))
+            }
+        }
+
+        fun openTopicRoute(topicId: String) {
+            if (selectedTopicId != topicId || currentRoute != Screen.TopicDetail.route) {
+                navController.navigate(Screen.TopicDetail.route(topicId))
+            }
+        }
+
+        fun launchAuthEntry() {
+            authViewModel.clearError()
+            authViewModel.signOut()
+        }
+
+        val settingsOverviewContent: @Composable () -> Unit = {
+            val settingsContext = LocalContext.current
+            SettingsScreen(
+                authViewModel = authViewModel,
+                onLogout = {
+                    if (!StaySignedInSettings.isStaySignedIn(settingsContext)) {
+                        StaySignedInSettings.clearAll(settingsContext)
+                    }
+                    authViewModel.signOut()
+                    navController.popBackStack(Screen.Feed.route, true)
+                },
+                onRequireAuth = ::launchAuthEntry,
+                safetyViewModel = safetyViewModel,
+                devOptionsViewModel = devOptionsViewModel,
+                canShowDevOptions = devOptions.devMenuEnabled,
+                onOpenDevOptions = {
+                    navController.navigate(Screen.DevOptions.route)
+                },
+                onOpenParentalControls = {
+                    navController.navigate(Screen.ParentalControls.route)
+                },
+                onOpenThemeSettings = {
+                    navController.navigate(Screen.ThemeSettings.route)
+                },
+                onOpenAnimationSettings = {
+                    navController.navigate(Screen.AnimationSettings.route)
+                },
+                onOpenIconCustomization = {
+                    navController.navigate(Screen.IconCustomization.route)
+                },
+                onOpenPrivacySettings = {
+                    navController.navigate(Screen.PrivacySettings.route)
+                },
+                onOpenNotificationSettings = {
+                    navController.navigate(Screen.NotificationSettings.route)
+                },
+                onOpenContentSettings = {
+                    navController.navigate(Screen.ContentSettings.route)
+                },
+                onOpenAccessibilitySettings = {
+                    navController.navigate(Screen.AccessibilitySettingsScreen.route)
+                },
+                onOpenWellbeingSettings = {
+                    navController.navigate(Screen.WellbeingSettings.route)
+                },
+                onOpenFontSettings = {
+                    navController.navigate(Screen.FontSettings.route)
+                },
+                onOpenSubscription = {
+                    navController.navigate(Screen.Subscription.route)
+                },
+                onOpenMyProfile = {
+                    navController.navigate(Screen.MyProfile.route)
+                },
+                onOpenGames = {
+                    navController.navigate(Screen.GamesHub.route)
+                },
+                onOpenBugReport = {
+                    navController.navigate(Screen.FeedbackHub.route())
+                },
+                onOpenFeatureRequest = {
+                    navController.navigate(Screen.FeedbackHub.route())
+                },
+                onOpenGeneralFeedback = {
+                    navController.navigate(Screen.FeedbackHub.route())
+                },
+                onOpenBackupSettings = {
+                    navController.navigate(Screen.BackupSettings.route)
+                },
+                isPremium = feedState.isPremium,
+                isFakePremiumEnabled = feedState.isFakePremiumEnabled,
+                onFakePremiumToggle = { enabled ->
+                    feedViewModel.toggleFakePremium(enabled)
+                },
+                themeViewModel = themeViewModel,
+                showSearchBar = settingsSearchEnabled
+            )
+        }
+
+        val settingsDetailContent: @Composable (String) -> Unit = { detailRoute ->
+            when (detailRoute) {
+                Screen.Settings.route -> CanonicalEmptyDetailPane(
+                    icon = Icons.Default.Settings,
+                    title = stringResource(R.string.nav_settings),
+                    subtitle = "Choose a settings category to open its full controls here."
+                )
+
+                Screen.ThemeSettings.route -> ThemeSettingsScreen(
+                    themeViewModel = themeViewModel,
+                    isPremium = feedState.isPremium,
+                    isFakePremiumEnabled = feedState.isFakePremiumEnabled,
+                    onBack = { navController.popBackStack() }
+                )
+
+                Screen.AnimationSettings.route -> AnimationSettingsScreen(
+                    onBack = { navController.popBackStack() },
+                    themeViewModel = themeViewModel
+                )
+
+                Screen.IconCustomization.route -> IconCustomizationScreen(
+                    onBack = { navController.popBackStack() }
+                )
+
+                Screen.PrivacySettings.route -> PrivacySettingsScreen(
+                    onBack = { navController.popBackStack() },
+                    authViewModel = authViewModel
+                )
+
+                Screen.NotificationSettings.route -> NotificationSettingsScreen(
+                    onBack = { navController.popBackStack() }
+                )
+
+                Screen.ContentSettings.route -> ContentPreferencesScreen(
+                    onBack = { navController.popBackStack() }
+                )
+
+                Screen.AccessibilitySettingsScreen.route -> AccessibilitySettingsScreen(
+                    onBack = { navController.popBackStack() }
+                )
+
+                Screen.WellbeingSettings.route -> WellbeingSettingsScreen(
+                    onBack = { navController.popBackStack() },
+                    authViewModel = authViewModel
+                )
+
+                Screen.FontSettings.route -> FontSettingsScreen(
+                    themeViewModel = themeViewModel,
+                    onBack = { navController.popBackStack() }
+                )
+
+                Screen.ParentalControls.route -> ParentalControlsScreen(
+                    onBack = { navController.popBackStack() }
+                )
+
+                Screen.BackupSettings.route -> BackupSettingsScreen(
+                    onBack = { navController.popBackStack() }
+                )
+
+                else -> CanonicalEmptyDetailPane(
+                    icon = Icons.Default.SettingsApplications,
+                    title = stringResource(R.string.nav_settings),
+                    subtitle = "This section stays full-screen on the current route."
+                )
+            }
+        }
+
+        val settingsSupportingContent: (@Composable () -> Unit)? = if (canonicalLayout.paneLayout == CanonicalPaneLayout.TRIPLE) {
+            {
+                SettingsSupportPane(
+                    user = authedUser,
+                    isPremium = feedState.isPremium,
+                    themeState = themeState
+                )
+            }
+        } else {
+            null
+        }
+
+        val messagesSplitPaneContent: @Composable (Conversation?) -> Unit = { activeConversation ->
+            CanonicalAdaptivePaneLayout(
+                primary = {
+                    NeuroInboxScreen(
+                        conversations = messagesState.conversations,
+                        safetyState = safetyState,
+                        onOpenConversation = ::openConversationRoute,
+                        onStartNewChat = { userId ->
+                            val conversationId = messagesViewModel.startOrOpenConversation(userId)
+                            openConversationRoute(conversationId)
+                        },
+                        onOpenCallHistory = {
+                            navController.navigate(Screen.CallHistory.route)
+                        },
+                        onOpenPracticeCall = {
+                            navController.navigate(Screen.PracticeCallSelection.route)
+                        }
+                    )
+                },
+                secondary = {
+                    if (activeConversation == null) {
+                        CanonicalEmptyDetailPane(
+                            icon = Icons.Default.MarkunreadMailbox,
+                            title = stringResource(R.string.nav_messages),
+                            subtitle = "Select a conversation to keep your inbox list visible while you reply."
+                        )
+                    } else {
+                        NeuroConversationScreen(
+                            conversation = activeConversation,
+                            onBack = {
+                                navController.popBackStack()
+                                messagesViewModel.dismissConversation()
+                            },
+                            onSend = { recipientId, content ->
+                                messagesViewModel.sendDirectMessage(recipientId, content)
+                            },
+                            onReport = { messageId ->
+                                messagesViewModel.reportMessage(messageId)
+                            },
+                            onRetryMessage = { convId, msgId ->
+                                messagesViewModel.retryDirectMessage(convId, msgId)
+                            },
+                            onReactToMessage = { messageId, emoji ->
+                                messagesViewModel.reactToMessage(activeConversation.id, messageId, emoji)
+                            },
+                            isBlocked = { messagesViewModel.isUserBlocked(it) },
+                            isMuted = { messagesViewModel.isUserMuted(it) },
+                            enableVideoChat = devOptions.enableVideoChat,
+                            typingIndicatorVariant = dmTypingIndicatorVariant,
+                            enableSimulatedReplies = BuildConfig.DEBUG && messagesState.currentUserId == "me",
+                            onSimulatedReply = { conversationId, senderId, content ->
+                                messagesViewModel.receiveMockReply(conversationId, senderId, content)
+                            }
+                        )
+                    }
+                },
+                tertiary = if (canonicalLayout.paneLayout == CanonicalPaneLayout.TRIPLE) {
+                    {
+                        MessagesSupportPane(
+                            conversations = messagesState.conversations,
+                            activeConversation = activeConversation,
+                            onOpenCallHistory = {
+                                navController.navigate(Screen.CallHistory.route)
+                            },
+                            onOpenPracticeCall = {
+                                navController.navigate(Screen.PracticeCallSelection.route)
+                            }
+                        )
+                    }
+                } else {
+                    null
+                }
+            )
+        }
+
+        val exploreSplitPaneContent: @Composable (String?) -> Unit = { topicId ->
+            CanonicalAdaptivePaneLayout(
+                primary = {
+                    ExploreScreen(
+                        posts = feedState.posts,
+                        safetyState = safetyState,
+                        onLikePost = { postId -> feedViewModel.toggleLike(postId) },
+                        onSharePost = { ctx, post -> feedViewModel.sharePost(ctx, post) },
+                        onCommentPost = { post -> feedViewModel.openCommentSheet(post) },
+                        onTopicClick = ::openTopicRoute,
+                        onProfileClick = { userId ->
+                            navController.navigate(Screen.Profile.route(userId))
+                        }
+                    )
+                },
+                secondary = {
+                    if (topicId.isNullOrBlank()) {
+                        CanonicalEmptyDetailPane(
+                            icon = Icons.Default.TravelExplore,
+                            title = stringResource(R.string.nav_explore),
+                            subtitle = "Pick a topic to compare discovery results with its dedicated detail view side by side."
+                        )
+                    } else {
+                        TopicDetailScreen(
+                            topicName = topicId,
+                            onBack = { navController.popBackStack() }
+                        )
+                    }
+                }
+            )
+        }
+
+        fun navigateToTopLevel(route: String) {
+            navController.navigate(route) {
+                popUpTo(navController.graph.findStartDestination().id) { saveState = true }
+                launchSingleTop = true
+                restoreState = true
+            }
+        }
+
+        fun unlockDeveloperMenuFromSettings() {
+            if (DeviceAuthority.isAuthorizedDevice(app)) {
+                val wasDevMenuEnabled = devOptions.devMenuEnabled
+                DevOptionsSettings.setDevMenuEnabled(app, true)
+                devOptionsViewModel.refresh(app)
+                if (!wasDevMenuEnabled) {
+                    android.widget.Toast.makeText(
+                        app,
+                        app.getString(R.string.easter_egg_secret_unlocked),
+                        android.widget.Toast.LENGTH_SHORT
+                    ).show()
+                }
+                navController.navigate(Screen.DevOptions.route)
+            } else {
+                android.widget.Toast.makeText(
+                    app,
+                    app.getString(
+                        R.string.error_feature_unavailable,
+                        app.getString(R.string.settings_developer_options_group)
+                    ),
+                    android.widget.Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
 
         Scaffold(
             snackbarHost = { SnackbarHost(snackbarHostState) },
             contentWindowInsets = WindowInsets(0, 0, 0, 0),
             bottomBar = {
-                if (showBottomBar) {
+                if (showPrimaryNavigation && canonicalLayout.navigationChrome == CanonicalNavigationChrome.BOTTOM_BAR) {
                     Surface(
                         modifier = Modifier.fillMaxWidth(),
                         color = NavigationBarDefaults.containerColor,
@@ -532,45 +1015,13 @@ fun NeuroCometApp(
                                 tonalElevation = 0.dp,
                                 windowInsets = WindowInsets(0, 0, 0, 0)
                             ) {
-                                val screens = listOf(Screen.Feed, Screen.Explore, Screen.Messages, Screen.Notifications, Screen.Settings)
-                                val currentDestination = navBackStackEntry?.destination
-
-                                screens.forEach { screen ->
-                                    val isSelected = currentDestination?.hierarchy?.any { it.route == screen.route } == true
+                                topLevelScreens.forEach { screen ->
+                                    val isSelected = selectedTopLevelRoute == screen.route || currentDestination?.hierarchy?.any { it.route == screen.route } == true
                                     NavigationBarItem(
                                         modifier = if (screen == Screen.Settings) {
                                             Modifier.combinedClickable(
-                                                onClick = {
-                                                    navController.navigate(screen.route) {
-                                                        popUpTo(navController.graph.findStartDestination().id) { saveState = true }
-                                                        launchSingleTop = true
-                                                        restoreState = true
-                                                    }
-                                                },
-                                                onLongClick = {
-                                                    if (DeviceAuthority.isAuthorizedDevice(app)) {
-                                                        val wasDevMenuEnabled = devOptions.devMenuEnabled
-                                                        DevOptionsSettings.setDevMenuEnabled(app, true)
-                                                        devOptionsViewModel.refresh(app)
-                                                        if (!wasDevMenuEnabled) {
-                                                            android.widget.Toast.makeText(
-                                                                app,
-                                                                app.getString(R.string.easter_egg_secret_unlocked),
-                                                                android.widget.Toast.LENGTH_SHORT
-                                                            ).show()
-                                                        }
-                                                        navController.navigate(Screen.DevOptions.route)
-                                                    } else {
-                                                        android.widget.Toast.makeText(
-                                                            app,
-                                                            app.getString(
-                                                                R.string.error_feature_unavailable,
-                                                                app.getString(R.string.settings_developer_options_group)
-                                                            ),
-                                                            android.widget.Toast.LENGTH_SHORT
-                                                        ).show()
-                                                    }
-                                                }
+                                                onClick = { navigateToTopLevel(screen.route) },
+                                                onLongClick = { unlockDeveloperMenuFromSettings() }
                                             )
                                         } else Modifier,
                                         icon = {
@@ -582,11 +1033,7 @@ fun NeuroCometApp(
                                         label = { Text(stringResource(screen.labelId)) },
                                         selected = isSelected,
                                         onClick = {
-                                            navController.navigate(screen.route) {
-                                                popUpTo(navController.graph.findStartDestination().id) { saveState = true }
-                                                launchSingleTop = true
-                                                restoreState = true
-                                            }
+                                            navigateToTopLevel(screen.route)
                                         }
                                     )
                                 }
@@ -601,21 +1048,22 @@ fun NeuroCometApp(
                 }
             }
         ) { innerPadding ->
-            val navHostPadding = if (showBottomBar) {
+            val navHostPadding = if (showPrimaryNavigation && canonicalLayout.navigationChrome == CanonicalNavigationChrome.BOTTOM_BAR) {
                 innerPadding
             } else {
                 PaddingValues(top = innerPadding.calculateTopPadding())
             }
 
             Box(modifier = Modifier.fillMaxSize()) {
-                NavHost(
-                    navController = navController,
-                    startDestination = Screen.Feed.route,
-                    modifier = Modifier
-                        .padding(navHostPadding)
-                        .fillMaxSize()
-                        .background(MaterialTheme.colorScheme.background)
-                ) {
+                val navHostContent: @Composable (Modifier) -> Unit = { hostModifier ->
+                    NavHost(
+                        navController = navController,
+                        startDestination = Screen.Feed.route,
+                        modifier = hostModifier
+                            .padding(navHostPadding)
+                            .fillMaxSize()
+                            .background(MaterialTheme.colorScheme.background)
+                    ) {
                 composable(Screen.Feed.route) {
                     FeedScreen(
                         posts = feedState.posts,
@@ -660,7 +1108,14 @@ fun NeuroCometApp(
                                 onStoryViewed = { viewedStory ->
                                     feedViewModel.markStoryAsViewed(viewedStory.id)
                                 },
-                                onReply = { _, _ -> },
+                                onReply = { _, replyText ->
+                                    // TODO: wire to feedViewModel.sendStoryReply() when messaging backend is ready
+                                    android.widget.Toast.makeText(
+                                        navController.context,
+                                        "Story replies coming soon!",
+                                        android.widget.Toast.LENGTH_SHORT
+                                    ).show()
+                                },
                                 enableReactions = devOptions.enableStoryReactions,
                                 onNextStory = { feedViewModel.advanceToNextStory() }
                             )
@@ -668,55 +1123,57 @@ fun NeuroCometApp(
                     }
                 }
                 composable(Screen.Explore.route) {
-                    ExploreScreen(
-                        posts = feedState.posts,
-                        safetyState = safetyState,
-                        onLikePost = { postId -> feedViewModel.toggleLike(postId) },
-                        onSharePost = { ctx, post -> feedViewModel.sharePost(ctx, post) },
-                        onCommentPost = { post -> feedViewModel.openCommentSheet(post) },
-                        onTopicClick = { topicId ->
-                            navController.navigate(Screen.TopicDetail.route(topicId))
-                        },
-                        onProfileClick = { userId ->
-                            navController.navigate(Screen.Profile.route(userId))
-                        }
-                    )
+                    if (showExploreSplitPane) {
+                        exploreSplitPaneContent(null)
+                    } else {
+                        ExploreScreen(
+                            posts = feedState.posts,
+                            safetyState = safetyState,
+                            onLikePost = { postId -> feedViewModel.toggleLike(postId) },
+                            onSharePost = { ctx, post -> feedViewModel.sharePost(ctx, post) },
+                            onCommentPost = { post -> feedViewModel.openCommentSheet(post) },
+                            onTopicClick = ::openTopicRoute,
+                            onProfileClick = { userId ->
+                                navController.navigate(Screen.Profile.route(userId))
+                            }
+                        )
+                    }
                 }
                 composable(Screen.Messages.route) {
-                    NeuroInboxScreen(
-                        conversations = messagesState.conversations,
-                        safetyState = safetyState,
-                        onOpenConversation = { conversationId ->
-                            messagesViewModel.openConversation(conversationId)
-                            navController.navigate(Screen.Conversation.route(conversationId))
-                        },
-                        onStartNewChat = { userId ->
-                            val conversationId = messagesViewModel.startOrOpenConversation(userId)
-                            navController.navigate(Screen.Conversation.route(conversationId))
-                        },
-                        onOpenCallHistory = {
-                            navController.navigate(Screen.CallHistory.route)
-                        },
-                        onOpenPracticeCall = {
-                            navController.navigate(Screen.PracticeCallSelection.route)
-                        }
-                    )
+                    if (showMessagesSplitPane) {
+                        messagesSplitPaneContent(selectedConversation)
+                    } else {
+                        NeuroInboxScreen(
+                            conversations = messagesState.conversations,
+                            safetyState = safetyState,
+                            onOpenConversation = ::openConversationRoute,
+                            onStartNewChat = { userId ->
+                                val conversationId = messagesViewModel.startOrOpenConversation(userId)
+                                openConversationRoute(conversationId)
+                            },
+                            onOpenCallHistory = {
+                                navController.navigate(Screen.CallHistory.route)
+                            },
+                            onOpenPracticeCall = {
+                                navController.navigate(Screen.PracticeCallSelection.route)
+                            }
+                        )
+                    }
                 }
                 composable(Screen.Conversation.route) { backStackEntry ->
                     val conversationId = backStackEntry.arguments?.getString("conversationId")
                     val conv = messagesState.conversations.find { it.id == conversationId }
                         ?: messagesState.activeConversation
-                    if (conv == null) {
+                    if (showMessagesSplitPane) {
+                        messagesSplitPaneContent(conv)
+                    } else if (conv == null) {
                         NeuroInboxScreen(
                             conversations = messagesState.conversations,
                             safetyState = safetyState,
-                            onOpenConversation = { id ->
-                                messagesViewModel.openConversation(id)
-                                navController.navigate(Screen.Conversation.route(id))
-                            },
+                            onOpenConversation = ::openConversationRoute,
                             onStartNewChat = { userId ->
                                 val cId = messagesViewModel.startOrOpenConversation(userId)
-                                navController.navigate(Screen.Conversation.route(cId))
+                                openConversationRoute(cId)
                             },
                             onBack = { navController.popBackStack() },
                             onOpenCallHistory = {
@@ -792,136 +1249,152 @@ fun NeuroCometApp(
                     )
                 }
                 composable(Screen.Settings.route) {
-                    val settingsContext = LocalContext.current
-                    SettingsScreen(
-                        authViewModel = authViewModel,
-                        onLogout = {
-                            if (!StaySignedInSettings.isStaySignedIn(settingsContext)) {
-                                StaySignedInSettings.clearAll(settingsContext)
-                            }
-                            authViewModel.signOut()
-                            navController.popBackStack(Screen.Feed.route, true)
-                        },
-                        safetyViewModel = safetyViewModel,
-                        devOptionsViewModel = devOptionsViewModel,
-                        canShowDevOptions = devOptions.devMenuEnabled,
-                        onOpenDevOptions = {
-                            navController.navigate(Screen.DevOptions.route)
-                        },
-                        onOpenParentalControls = {
-                            navController.navigate(Screen.ParentalControls.route)
-                        },
-                        onOpenThemeSettings = {
-                            navController.navigate(Screen.ThemeSettings.route)
-                        },
-                        onOpenAnimationSettings = {
-                            navController.navigate(Screen.AnimationSettings.route)
-                        },
-                        onOpenIconCustomization = {
-                            navController.navigate(Screen.IconCustomization.route)
-                        },
-                        onOpenPrivacySettings = {
-                            navController.navigate(Screen.PrivacySettings.route)
-                        },
-                        onOpenNotificationSettings = {
-                            navController.navigate(Screen.NotificationSettings.route)
-                        },
-                        onOpenContentSettings = {
-                            navController.navigate(Screen.ContentSettings.route)
-                        },
-                        onOpenAccessibilitySettings = {
-                            navController.navigate(Screen.AccessibilitySettingsScreen.route)
-                        },
-                        onOpenWellbeingSettings = {
-                            navController.navigate(Screen.WellbeingSettings.route)
-                        },
-                        onOpenFontSettings = {
-                            navController.navigate(Screen.FontSettings.route)
-                        },
-                        onOpenSubscription = {
-                            navController.navigate(Screen.Subscription.route)
-                        },
-                        onOpenMyProfile = {
-                            navController.navigate(Screen.MyProfile.route)
-                        },
-                        onOpenGames = {
-                            navController.navigate(Screen.GamesHub.route)
-                        },
-                        onOpenBugReport = {
-                            navController.navigate(Screen.FeedbackHub.route("bug"))
-                        },
-                        onOpenFeatureRequest = {
-                            navController.navigate(Screen.FeedbackHub.route("feature"))
-                        },
-                        onOpenGeneralFeedback = {
-                            navController.navigate(Screen.FeedbackHub.route("feedback"))
-                        },
-                        onOpenBackupSettings = {
-                            navController.navigate(Screen.BackupSettings.route)
-                        },
-                        isPremium = feedState.isPremium,
-                        isFakePremiumEnabled = feedState.isFakePremiumEnabled,
-                        onFakePremiumToggle = { enabled ->
-                            feedViewModel.toggleFakePremium(enabled)
-                        },
-                        themeViewModel = themeViewModel,
-                        showSearchBar = settingsSearchEnabled
-                    )
+                    if (showSettingsSplitPane) {
+                        CanonicalAdaptivePaneLayout(
+                            primary = settingsOverviewContent,
+                            secondary = { settingsDetailContent(Screen.Settings.route) },
+                            tertiary = settingsSupportingContent
+                        )
+                    } else {
+                        settingsOverviewContent()
+                    }
                 }
                 composable(Screen.BackupSettings.route) {
-                    BackupSettingsScreen(
-                        onBack = { navController.popBackStack() }
-                    )
+                    if (showSettingsSplitPane) {
+                        CanonicalAdaptivePaneLayout(
+                            primary = settingsOverviewContent,
+                            secondary = { settingsDetailContent(Screen.BackupSettings.route) },
+                            tertiary = settingsSupportingContent
+                        )
+                    } else {
+                        BackupSettingsScreen(
+                            onBack = { navController.popBackStack() }
+                        )
+                    }
                 }
                 composable(Screen.ThemeSettings.route) {
-                    ThemeSettingsScreen(
-                        themeViewModel = themeViewModel,
-                        onBack = { navController.popBackStack() }
-                    )
+                    if (showSettingsSplitPane) {
+                        CanonicalAdaptivePaneLayout(
+                            primary = settingsOverviewContent,
+                            secondary = { settingsDetailContent(Screen.ThemeSettings.route) },
+                            tertiary = settingsSupportingContent
+                        )
+                    } else {
+                        ThemeSettingsScreen(
+                            themeViewModel = themeViewModel,
+                            isPremium = feedState.isPremium,
+                            isFakePremiumEnabled = feedState.isFakePremiumEnabled,
+                            onBack = { navController.popBackStack() }
+                        )
+                    }
                 }
                 composable(Screen.AnimationSettings.route) {
-                    AnimationSettingsScreen(
-                        onBack = { navController.popBackStack() },
-                        themeViewModel = themeViewModel
-                    )
+                    if (showSettingsSplitPane) {
+                        CanonicalAdaptivePaneLayout(
+                            primary = settingsOverviewContent,
+                            secondary = { settingsDetailContent(Screen.AnimationSettings.route) },
+                            tertiary = settingsSupportingContent
+                        )
+                    } else {
+                        AnimationSettingsScreen(
+                            onBack = { navController.popBackStack() },
+                            themeViewModel = themeViewModel
+                        )
+                    }
                 }
                 composable(Screen.IconCustomization.route) {
-                    IconCustomizationScreen(
-                        onBack = { navController.popBackStack() }
-                    )
+                    if (showSettingsSplitPane) {
+                        CanonicalAdaptivePaneLayout(
+                            primary = settingsOverviewContent,
+                            secondary = { settingsDetailContent(Screen.IconCustomization.route) },
+                            tertiary = settingsSupportingContent
+                        )
+                    } else {
+                        IconCustomizationScreen(
+                            onBack = { navController.popBackStack() }
+                        )
+                    }
                 }
                 composable(Screen.PrivacySettings.route) {
-                    PrivacySettingsScreen(
-                        onBack = { navController.popBackStack() },
-                        authViewModel = authViewModel
-                    )
+                    if (showSettingsSplitPane) {
+                        CanonicalAdaptivePaneLayout(
+                            primary = settingsOverviewContent,
+                            secondary = { settingsDetailContent(Screen.PrivacySettings.route) },
+                            tertiary = settingsSupportingContent
+                        )
+                    } else {
+                        PrivacySettingsScreen(
+                            onBack = { navController.popBackStack() },
+                            authViewModel = authViewModel
+                        )
+                    }
                 }
                 composable(Screen.NotificationSettings.route) {
-                    NotificationSettingsScreen(
-                        onBack = { navController.popBackStack() }
-                    )
+                    if (showSettingsSplitPane) {
+                        CanonicalAdaptivePaneLayout(
+                            primary = settingsOverviewContent,
+                            secondary = { settingsDetailContent(Screen.NotificationSettings.route) },
+                            tertiary = settingsSupportingContent
+                        )
+                    } else {
+                        NotificationSettingsScreen(
+                            onBack = { navController.popBackStack() }
+                        )
+                    }
                 }
                 composable(Screen.ContentSettings.route) {
-                    ContentPreferencesScreen(
-                        onBack = { navController.popBackStack() }
-                    )
+                    if (showSettingsSplitPane) {
+                        CanonicalAdaptivePaneLayout(
+                            primary = settingsOverviewContent,
+                            secondary = { settingsDetailContent(Screen.ContentSettings.route) },
+                            tertiary = settingsSupportingContent
+                        )
+                    } else {
+                        ContentPreferencesScreen(
+                            onBack = { navController.popBackStack() }
+                        )
+                    }
                 }
                 composable(Screen.AccessibilitySettingsScreen.route) {
-                    AccessibilitySettingsScreen(
-                        onBack = { navController.popBackStack() }
-                    )
+                    if (showSettingsSplitPane) {
+                        CanonicalAdaptivePaneLayout(
+                            primary = settingsOverviewContent,
+                            secondary = { settingsDetailContent(Screen.AccessibilitySettingsScreen.route) },
+                            tertiary = settingsSupportingContent
+                        )
+                    } else {
+                        AccessibilitySettingsScreen(
+                            onBack = { navController.popBackStack() }
+                        )
+                    }
                 }
                 composable(Screen.WellbeingSettings.route) {
-                    WellbeingSettingsScreen(
-                        onBack = { navController.popBackStack() },
-                        authViewModel = authViewModel
-                    )
+                    if (showSettingsSplitPane) {
+                        CanonicalAdaptivePaneLayout(
+                            primary = settingsOverviewContent,
+                            secondary = { settingsDetailContent(Screen.WellbeingSettings.route) },
+                            tertiary = settingsSupportingContent
+                        )
+                    } else {
+                        WellbeingSettingsScreen(
+                            onBack = { navController.popBackStack() },
+                            authViewModel = authViewModel
+                        )
+                    }
                 }
                 composable(Screen.FontSettings.route) {
-                    FontSettingsScreen(
-                        themeViewModel = themeViewModel,
-                        onBack = { navController.popBackStack() }
-                    )
+                    if (showSettingsSplitPane) {
+                        CanonicalAdaptivePaneLayout(
+                            primary = settingsOverviewContent,
+                            secondary = { settingsDetailContent(Screen.FontSettings.route) },
+                            tertiary = settingsSupportingContent
+                        )
+                    } else {
+                        FontSettingsScreen(
+                            themeViewModel = themeViewModel,
+                            onBack = { navController.popBackStack() }
+                        )
+                    }
                 }
                 composable(Screen.DevOptions.route) {
                     DevOptionsScreen(
@@ -940,16 +1413,28 @@ fun NeuroCometApp(
                     )
                 }
                 composable(Screen.ParentalControls.route) {
-                    ParentalControlsScreen(
-                        onBack = { navController.popBackStack() }
-                    )
+                    if (showSettingsSplitPane) {
+                        CanonicalAdaptivePaneLayout(
+                            primary = settingsOverviewContent,
+                            secondary = { settingsDetailContent(Screen.ParentalControls.route) },
+                            tertiary = settingsSupportingContent
+                        )
+                    } else {
+                        ParentalControlsScreen(
+                            onBack = { navController.popBackStack() }
+                        )
+                    }
                 }
                 composable(Screen.TopicDetail.route) { backStackEntry ->
                     val topicId = backStackEntry.arguments?.getString("topicId") ?: ""
-                    TopicDetailScreen(
-                        topicName = topicId,
-                        onBack = { navController.popBackStack() }
-                    )
+                    if (showExploreSplitPane) {
+                        exploreSplitPaneContent(topicId)
+                    } else {
+                        TopicDetailScreen(
+                            topicName = topicId,
+                            onBack = { navController.popBackStack() }
+                        )
+                    }
                 }
                 composable(Screen.Subscription.route) {
                     SubscriptionScreen(
@@ -1054,20 +1539,70 @@ fun NeuroCometApp(
                         onBack = { navController.popBackStack() }
                     )
                 }
-                composable(Screen.FeedbackHub.route) { backStackEntry ->
-                    val action = backStackEntry.arguments?.getString("action") ?: "none"
-                    val initialAction = when (action) {
-                        "bug" -> FeedbackInitialAction.BUG_REPORT
-                        "feature" -> FeedbackInitialAction.FEATURE_REQUEST
-                        "feedback" -> FeedbackInitialAction.GENERAL_FEEDBACK
-                        else -> FeedbackInitialAction.NONE
-                    }
+                composable(Screen.FeedbackHub.route) {
                     FeedbackHubScreen(
                         onBack = { navController.popBackStack() },
-                        initialAction = initialAction
+                        onOpenBugReport = { navController.navigate("feedback_bug_report") },
+                        onOpenFeatureRequest = { navController.navigate("feedback_feature_request") },
+                        onOpenGeneralFeedback = { navController.navigate("feedback_general") }
                     )
                 }
+                composable("feedback_bug_report") {
+                    BugReportScreen(onBack = { navController.popBackStack() })
+                }
+                composable("feedback_feature_request") {
+                    FeatureRequestScreen(onBack = { navController.popBackStack() })
+                }
+                composable("feedback_general") {
+                    GeneralFeedbackScreen(onBack = { navController.popBackStack() })
+                }
             }
+                }
+
+                when {
+                    showPrimaryNavigation && canonicalLayout.navigationChrome == CanonicalNavigationChrome.NAVIGATION_RAIL -> {
+                        Row(modifier = Modifier.fillMaxSize()) {
+                            NeurodivergentNavigationRail(
+                                currentRoute = selectedTopLevelRoute.orEmpty(),
+                                navItems = adaptiveNavItems.filter { it.section == NavigationSection.MAIN },
+                                onNavigate = ::navigateToTopLevel,
+                                userAvatar = authedUser.avatarUrl,
+                                onProfileClick = {
+                                    if (isGuestUser) launchAuthEntry() else navigateToTopLevel(Screen.MyProfile.route)
+                                },
+                                highContrast = themeState.isHighContrast
+                            )
+                            navHostContent(Modifier.weight(1f))
+                        }
+                    }
+
+                    showPrimaryNavigation && canonicalLayout.navigationChrome == CanonicalNavigationChrome.PERMANENT_DRAWER -> {
+                        PermanentNavigationDrawer(
+                            drawerContent = {
+                                NeurodivergentPermanentDrawerContent(
+                                    currentRoute = selectedTopLevelRoute.orEmpty(),
+                                    navItems = adaptiveNavItems,
+                                    onNavigate = ::navigateToTopLevel,
+                                    userAvatar = authedUser.avatarUrl,
+                                    userName = authedUser.name,
+                                    isPremium = feedState.isPremium,
+                                    isGuestUser = isGuestUser,
+                                    onProfileClick = {
+                                        if (isGuestUser) launchAuthEntry() else navigateToTopLevel(Screen.MyProfile.route)
+                                    },
+                                    onSettingsClick = { navigateToTopLevel(Screen.Settings.route) },
+                                    collapsed = isPermanentDrawerCollapsed,
+                                    onToggleCollapsed = { isPermanentDrawerCollapsed = it },
+                                    highContrast = themeState.isHighContrast
+                                )
+                            }
+                        ) {
+                            navHostContent(Modifier.fillMaxSize())
+                        }
+                    }
+
+                    else -> navHostContent(Modifier.fillMaxSize())
+                }
 
             DebugPerformanceOverlay(
                 enabled = PerformanceOverlayState.isEnabled,
@@ -1112,10 +1647,11 @@ fun NeuroCometApp(
             RegulationLiveSessionHost(
                 modifier = Modifier
                     .align(Alignment.TopCenter)
+                    .statusBarsPadding()
                     .padding(
                         start = 16.dp,
                         end = 16.dp,
-                        top = innerPadding.calculateTopPadding() + 12.dp
+                        top = 12.dp
                     )
             )
         }
@@ -1144,5 +1680,229 @@ fun NeuroCometApp(
 
         TutorialTrigger()
         TutorialOverlay()
+    }
+}
+
+@Composable
+private fun CanonicalAdaptivePaneLayout(
+    primary: @Composable () -> Unit,
+    secondary: @Composable () -> Unit,
+    tertiary: (@Composable () -> Unit)? = null,
+    modifier: Modifier = Modifier
+) {
+    val canonicalLayout = LocalCanonicalLayout.current
+    val showTertiary = tertiary != null && canonicalLayout.paneLayout == CanonicalPaneLayout.TRIPLE
+    val primaryWeight = if (showTertiary) 0.92f else 1f
+    val secondaryWeight = if (showTertiary) 1.12f else 1.08f
+    val tertiaryWeight = 0.74f
+
+    Row(
+        modifier = modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+    ) {
+        Box(
+            modifier = Modifier
+                .weight(primaryWeight)
+                .fillMaxHeight()
+        ) {
+            primary()
+        }
+
+        VerticalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.45f))
+
+        Box(
+            modifier = Modifier
+                .weight(secondaryWeight)
+                .fillMaxHeight()
+        ) {
+            secondary()
+        }
+
+        if (showTertiary) {
+            VerticalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.45f))
+            Box(
+                modifier = Modifier
+                    .weight(tertiaryWeight)
+                    .fillMaxHeight()
+            ) {
+                tertiary()
+            }
+        }
+    }
+}
+
+@Composable
+private fun CanonicalEmptyDetailPane(
+    icon: ImageVector,
+    title: String,
+    subtitle: String,
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(24.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        ElevatedCard(
+            modifier = Modifier
+                .fillMaxWidth()
+                .widthIn(max = 420.dp)
+        ) {
+            Column(
+                modifier = Modifier.padding(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(40.dp)
+                )
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Text(
+                    text = subtitle,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun MessagesSupportPane(
+    conversations: List<Conversation>,
+    activeConversation: Conversation?,
+    onOpenCallHistory: () -> Unit,
+    onOpenPracticeCall: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val unreadCount = remember(conversations) { conversations.sumOf { it.unreadCount } }
+    val activeParticipantCount = activeConversation?.participants?.size ?: 0
+
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(20.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        ElevatedCard {
+            Column(
+                modifier = Modifier.padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                Text("Inbox overview", style = MaterialTheme.typography.titleMedium)
+                Text(
+                    text = "$unreadCount unread across ${conversations.size} conversations",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                if (activeConversation != null) {
+                    HorizontalDivider()
+                    Text(
+                        text = "Open thread",
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                    Text(
+                        text = "${activeConversation.messages.size} messages · $activeParticipantCount participants",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+        }
+
+        ElevatedCard {
+            Column(
+                modifier = Modifier.padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                Text("Quick actions", style = MaterialTheme.typography.titleMedium)
+                FilledTonalButton(onClick = onOpenCallHistory, modifier = Modifier.fillMaxWidth()) {
+                    Icon(Icons.Default.Call, contentDescription = null)
+                    Spacer(Modifier.width(8.dp))
+                    Text("Call history")
+                }
+                OutlinedButton(onClick = onOpenPracticeCall, modifier = Modifier.fillMaxWidth()) {
+                    Icon(Icons.Default.Psychology, contentDescription = null)
+                    Spacer(Modifier.width(8.dp))
+                    Text("Practice call")
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun SettingsSupportPane(
+    user: User?,
+    isPremium: Boolean,
+    themeState: ThemeState,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(20.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        ElevatedCard {
+            Column(
+                modifier = Modifier.padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Text("Profile snapshot", style = MaterialTheme.typography.titleMedium)
+                Text(
+                    text = user?.name ?: "Signed in",
+                    style = MaterialTheme.typography.bodyLarge
+                )
+                Text(
+                    text = user?.id ?: "Local session",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                AssistChip(
+                    onClick = {},
+                    enabled = false,
+                    label = { Text(if (isPremium) "Premium active" else "Free plan") }
+                )
+            }
+        }
+
+        ElevatedCard {
+            Column(
+                modifier = Modifier.padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Text("Current theme", style = MaterialTheme.typography.titleMedium)
+                Text(
+                    text = themeState.selectedState.name.replace('_', ' '),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Text(
+                    text = if (themeState.animationSettings.disableAllAnimations) {
+                        "Motion minimized"
+                    } else {
+                        "Motion enabled"
+                    },
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Text(
+                    text = "Build ${BuildConfig.VERSION_NAME}",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
+        }
     }
 }

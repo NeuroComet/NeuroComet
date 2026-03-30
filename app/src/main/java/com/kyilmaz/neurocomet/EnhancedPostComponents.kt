@@ -70,7 +70,7 @@ fun EnhancedPostCard(
     onComment: (String) -> Unit,
     onShare: (Context, Post) -> Unit,
     onSave: () -> Unit = {},
-    onReport: () -> Unit = {},
+    onReport: (String) -> Unit = {},
     onDelete: () -> Unit = {},
     onUserClick: (String) -> Unit = {},
     isSaved: Boolean = false,
@@ -122,7 +122,7 @@ fun EnhancedPostCard(
                 if (!isMockInterfaceEnabled && avatarUrl.isNullOrBlank()) {
                     Icon(
                         Icons.Default.AccountCircle,
-                        contentDescription = "User avatar",
+                        contentDescription = stringResource(R.string.cd_user_avatar),
                         modifier = Modifier
                             .size(44.dp)
                             .clip(CircleShape)
@@ -135,7 +135,7 @@ fun EnhancedPostCard(
                             .data(avatarUrl)
                             .crossfade(true)
                             .build(),
-                        contentDescription = "User avatar",
+                        contentDescription = stringResource(R.string.cd_user_avatar),
                         modifier = Modifier
                             .size(44.dp)
                             .clip(CircleShape)
@@ -158,7 +158,7 @@ fun EnhancedPostCard(
                             Spacer(Modifier.width(4.dp))
                             Icon(
                                 Icons.Filled.Verified,
-                                contentDescription = "Verified",
+                                contentDescription = stringResource(R.string.cd_verified),
                                 modifier = Modifier.size(16.dp),
                                 tint = MaterialTheme.colorScheme.primary
                             )
@@ -174,7 +174,7 @@ fun EnhancedPostCard(
                 // More options menu
                 Box {
                     IconButton(onClick = { showMenu = true }) {
-                        Icon(Icons.Default.MoreVert, contentDescription = "More options")
+                        Icon(Icons.Default.MoreVert, contentDescription = stringResource(R.string.cd_more_options))
                     }
                     DropdownMenu(
                         expanded = showMenu,
@@ -264,7 +264,7 @@ fun EnhancedPostCard(
                         .data(post.imageUrl)
                         .crossfade(true)
                         .build(),
-                    contentDescription = "Post image",
+                    contentDescription = stringResource(R.string.cd_post_image),
                     modifier = Modifier
                         .fillMaxWidth()
                         .heightIn(max = 400.dp)
@@ -420,7 +420,7 @@ fun EnhancedPostCard(
                                 contentDescription = if (commentText.isBlank()) "Send comment disabled" else "Send comment"
                             },
                         ) {
-                            Icon(Icons.AutoMirrored.Filled.Send, contentDescription = "Send comment")
+                            Icon(Icons.AutoMirrored.Filled.Send, contentDescription = stringResource(R.string.cd_send_comment))
                         }
                     }
                 }
@@ -442,16 +442,16 @@ fun EnhancedPostCard(
                             "https://neurocomet.app/post/${post.id}"
                         )
                         clipboardManager.setPrimaryClip(clip)
-                        android.widget.Toast.makeText(context, "Link copied to clipboard!", android.widget.Toast.LENGTH_SHORT).show()
+                        android.widget.Toast.makeText(context, context.getString(R.string.toast_link_copied), android.widget.Toast.LENGTH_SHORT).show()
                     }
                     ShareType.SHARE_EXTERNAL -> {
                         onShare(context, post)
                     }
                     ShareType.SHARE_DM -> {
-                        android.widget.Toast.makeText(context, "Select a conversation to share this post", android.widget.Toast.LENGTH_SHORT).show()
+                        android.widget.Toast.makeText(context, context.getString(R.string.toast_select_conversation), android.widget.Toast.LENGTH_SHORT).show()
                     }
                     ShareType.REPOST -> {
-                        android.widget.Toast.makeText(context, "Post reposted to your feed! 🔄", android.widget.Toast.LENGTH_SHORT).show()
+                        android.widget.Toast.makeText(context, context.getString(R.string.toast_reposted), android.widget.Toast.LENGTH_SHORT).show()
                     }
                 }
                 showShareSheet = false
@@ -464,7 +464,7 @@ fun EnhancedPostCard(
         ReportPostDialog(
             onDismiss = { showReportDialog = false },
             onReport = { reason ->
-                onReport()
+                onReport(reason)
                 showReportDialog = false
             }
         )
@@ -554,7 +554,7 @@ private fun CommentItem(
     ) {
         AsyncImage(
             model = avatarUrl,
-            contentDescription = "Comment author avatar",
+            contentDescription = stringResource(R.string.cd_comment_avatar),
             modifier = Modifier
                 .size(32.dp)
                 .clip(CircleShape),
@@ -574,7 +574,7 @@ private fun CommentItem(
                     Spacer(Modifier.width(4.dp))
                     Icon(
                         Icons.Filled.Verified,
-                        contentDescription = "Verified",
+                        contentDescription = stringResource(R.string.cd_verified),
                         modifier = Modifier.size(12.dp),
                         tint = MaterialTheme.colorScheme.primary
                     )

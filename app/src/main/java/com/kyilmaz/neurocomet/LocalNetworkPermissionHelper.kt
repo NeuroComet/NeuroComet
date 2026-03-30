@@ -1,6 +1,5 @@
 package com.kyilmaz.neurocomet
 
-import android.Manifest
 import android.os.Build
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -55,7 +54,10 @@ fun rememberLocalNetworkPermissionState(
     ) { granted ->
         state.isGranted = granted
         if (granted) onGranted() else {
-            Toast.makeText(context, strPermissionRequired, Toast.LENGTH_SHORT).show()
+            // Only show message if the user denied it on a version where it IS required
+            if (isRequired) {
+                Toast.makeText(context, strPermissionRequired, Toast.LENGTH_SHORT).show()
+            }
             onDenied()
         }
     }
@@ -65,9 +67,8 @@ fun rememberLocalNetworkPermissionState(
             isRequired = isRequired,
             isGrantedInitial = state.isGranted,
             request = {
-                if (Build.VERSION.SDK_INT >= 37) {
-                    @Suppress("NewApi")
-                    launcher.launch(Manifest.permission.ACCESS_LOCAL_NETWORK)
+                if (isRequired) {
+                    launcher.launch("android.permission.ACCESS_LOCAL_NETWORK")
                 }
             }
         )

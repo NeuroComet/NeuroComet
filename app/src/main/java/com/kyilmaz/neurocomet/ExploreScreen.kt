@@ -2394,7 +2394,7 @@ private fun MembersSection(topicName: String) {
                 fontWeight = FontWeight.Bold
             )
             TextButton(onClick = {
-                android.widget.Toast.makeText(context, "Showing all members of $topicName", android.widget.Toast.LENGTH_SHORT).show()
+                android.widget.Toast.makeText(context, context.getString(R.string.toast_showing_members, topicName), android.widget.Toast.LENGTH_SHORT).show()
             }) {
                 Text(stringResource(R.string.explore_see_all))
             }
@@ -3079,30 +3079,30 @@ private fun ExplorePostCard(
                             onDismissRequest = { showPostMenu = false }
                         ) {
                             DropdownMenuItem(
-                                text = { Text("Save Post") },
+                                text = { Text(stringResource(R.string.post_save)) },
                                 onClick = {
                                     showPostMenu = false
-                                    android.widget.Toast.makeText(context, "Post saved!", android.widget.Toast.LENGTH_SHORT).show()
+                                    android.widget.Toast.makeText(context, context.getString(R.string.toast_post_saved), android.widget.Toast.LENGTH_SHORT).show()
                                 },
                                 leadingIcon = { Icon(Icons.Outlined.BookmarkBorder, null) }
                             )
                             DropdownMenuItem(
-                                text = { Text("Share") },
+                                text = { Text(stringResource(R.string.post_share)) },
                                 onClick = {
                                     showPostMenu = false
                                     val shareIntent = android.content.Intent(android.content.Intent.ACTION_SEND).apply {
                                         type = "text/plain"
                                         putExtra(android.content.Intent.EXTRA_TEXT, "Check out this post on NeuroComet: \"${post.content.take(100)}\"")
                                     }
-                                    context.startActivity(android.content.Intent.createChooser(shareIntent, "Share Post"))
+                                    context.startActivity(android.content.Intent.createChooser(shareIntent, context.getString(R.string.post_share)))
                                 },
                                 leadingIcon = { Icon(Icons.Outlined.Share, null) }
                             )
                             DropdownMenuItem(
-                                text = { Text("Report", color = MaterialTheme.colorScheme.error) },
+                                text = { Text(stringResource(R.string.post_report), color = MaterialTheme.colorScheme.error) },
                                 onClick = {
                                     showPostMenu = false
-                                    android.widget.Toast.makeText(context, "Report submitted. Thank you.", android.widget.Toast.LENGTH_SHORT).show()
+                                    android.widget.Toast.makeText(context, context.getString(R.string.toast_report_submitted), android.widget.Toast.LENGTH_SHORT).show()
                                 },
                                 leadingIcon = { Icon(Icons.Outlined.Flag, null, tint = MaterialTheme.colorScheme.error) }
                             )

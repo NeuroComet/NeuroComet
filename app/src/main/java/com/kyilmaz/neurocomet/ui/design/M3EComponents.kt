@@ -7,6 +7,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.animation.slideInVertically
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -22,6 +23,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
@@ -53,6 +55,42 @@ import coil.request.ImageRequest
  * - Smooth animations
  * - Neurodivergent-friendly design
  */
+
+enum class M3ESurfaceVariant {
+    Feed,
+    Navigation,
+    Settings
+}
+
+@Composable
+fun M3ESurface(
+    modifier: Modifier = Modifier,
+    shape: Shape = M3EDesignSystem.Shapes.MediumShape,
+    variant: M3ESurfaceVariant = M3ESurfaceVariant.Settings,
+    shadowElevation: Dp = 16.dp,
+    contentPadding: PaddingValues = PaddingValues(0.dp),
+    content: @Composable BoxScope.() -> Unit
+) {
+    val scheme = MaterialTheme.colorScheme
+    val containerColor = when (variant) {
+        M3ESurfaceVariant.Feed -> scheme.surfaceContainerLow
+        M3ESurfaceVariant.Navigation -> scheme.surfaceContainer
+        M3ESurfaceVariant.Settings -> scheme.surface
+    }
+
+    Surface(
+        modifier = modifier,
+        shape = shape,
+        color = containerColor,
+        shadowElevation = shadowElevation,
+        tonalElevation = shadowElevation
+    ) {
+        Box(
+            modifier = Modifier.padding(contentPadding),
+            content = content
+        )
+    }
+}
 
 // ============================================================================
 // AVATAR COMPONENTS
@@ -252,13 +290,7 @@ fun M3EBubblyCard(
     content: @Composable ColumnScope.() -> Unit
 ) {
     val shape = M3EDesignSystem.Shapes.BubblyCard
-    val backgroundColor = if (useGradient) {
-        Color.Transparent
-    } else {
-        MaterialTheme.colorScheme.surface
-    }
-
-    Card(
+    M3ESurface(
         modifier = modifier
             .fillMaxWidth()
             .then(
@@ -269,19 +301,21 @@ fun M3EBubblyCard(
                 }
             ),
         shape = shape,
-        elevation = CardDefaults.cardElevation(defaultElevation = elevation),
-        colors = CardDefaults.cardColors(containerColor = backgroundColor)
+        variant = M3ESurfaceVariant.Feed,
+        shadowElevation = elevation,
+        contentPadding = PaddingValues(M3EDesignSystem.Spacing.md)
     ) {
         if (useGradient) {
             Column(
                 modifier = Modifier
-                    .background(M3EGradients.cardGradient())
-                    .padding(M3EDesignSystem.Spacing.md),
+                    .fillMaxWidth()
+                    .clip(shape)
+                    .background(M3EGradients.cardGradient()),
                 content = content
             )
         } else {
             Column(
-                modifier = Modifier.padding(M3EDesignSystem.Spacing.md),
+                modifier = Modifier.fillMaxWidth(),
                 content = content
             )
         }
@@ -299,13 +333,19 @@ fun M3ESurfaceCard(
     containerColor: Color = MaterialTheme.colorScheme.surfaceContainer,
     content: @Composable BoxScope.() -> Unit
 ) {
-    Surface(
+    M3ESurface(
         modifier = modifier,
         shape = shape,
-        shadowElevation = elevation,
-        color = containerColor,
-        content = { Box(content = content) }
-    )
+        variant = M3ESurfaceVariant.Settings,
+        shadowElevation = elevation
+    ) {
+        Box(
+            modifier = Modifier
+                .matchParentSize()
+                .background(containerColor.copy(alpha = 0.14f)),
+            content = content
+        )
+    }
 }
 
 // ============================================================================
@@ -409,25 +449,32 @@ fun M3EAnimatedLikeButton(
     modifier: Modifier = Modifier
 ) {
     var animating by remember { mutableStateOf(false) }
+    val physics = LocalM3EPhysics.current
+    val interactionSource = remember { MutableInteractionSource() }
+    val pressScale by rememberM3EPressScale(
+        interactionSource = interactionSource,
+        role = M3EPhysicsRole.STANDARD
+    )
 
     val scale by animateFloatAsState(
-        targetValue = if (animating) 1.3f else 1f,
-        animationSpec = spring(
-            dampingRatio = Spring.DampingRatioMediumBouncy,
-            stiffness = Spring.StiffnessMedium
-        ),
-        finishedListener = { animating = false },
+        targetValue = if (animating) physics.emphasizedScale else 1f,
+        animationSpec = physics.floatSpec(M3EPhysicsRole.EMPHASIZED),
+        finishedListener = { if (animating) animating = false },
         label = "likeScale"
     )
 
     Row(
         modifier = modifier
             .clickable(
-                interactionSource = remember { MutableInteractionSource() },
+                interactionSource = interactionSource,
                 indication = null
             ) {
                 animating = true
                 onClick()
+            }
+            .graphicsLayer {
+                scaleX = pressScale
+                scaleY = pressScale
             },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(4.dp)
@@ -437,7 +484,10 @@ fun M3EAnimatedLikeButton(
             contentDescription = if (isLiked) "Unlike" else "Like",
             modifier = Modifier
                 .size(24.dp)
-                .scale(scale),
+                .graphicsLayer {
+                    scaleX = scale
+                    scaleY = scale
+                },
             tint = if (isLiked) Color(0xFFE91E63) else MaterialTheme.colorScheme.onSurfaceVariant
         )
 
@@ -462,10 +512,24 @@ fun M3EIconTextButton(
     modifier: Modifier = Modifier,
     tint: Color = MaterialTheme.colorScheme.onSurfaceVariant
 ) {
+    val interactionSource = remember { MutableInteractionSource() }
+    val pressScale by rememberM3EPressScale(
+        interactionSource = interactionSource,
+        role = M3EPhysicsRole.STANDARD
+    )
+
     Row(
         modifier = modifier
+            .graphicsLayer {
+                scaleX = pressScale
+                scaleY = pressScale
+            }
             .clip(M3EDesignSystem.Shapes.SmallShape)
-            .clickable(onClick = onClick)
+            .clickable(
+                interactionSource = interactionSource,
+                indication = null,
+                onClick = onClick
+            )
             .padding(M3EDesignSystem.Spacing.xs),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(4.dp)
@@ -498,17 +562,96 @@ fun M3EIconTextButton(
 fun M3ELoadingIndicator(
     modifier: Modifier = Modifier,
     size: Dp = 48.dp,
-    strokeWidth: Dp = 4.dp
+    strokeWidth: Dp = 4.dp,
+    accentColor: Color = MaterialTheme.colorScheme.primary,
+    containerColor: Color = MaterialTheme.colorScheme.surfaceContainerHigh
 ) {
-    val scale by M3EAnimations.breathingScale()
+    val infiniteTransition = rememberInfiniteTransition(label = "m3eLoading")
+    val dotScales = List(3) { index ->
+        infiniteTransition.animateFloat(
+            initialValue = 0.84f,
+            targetValue = 1.1f,
+            animationSpec = infiniteRepeatable(
+                animation = tween(
+                    durationMillis = M3EDesignSystem.AnimationDuration.slower,
+                    delayMillis = index * 120,
+                    easing = FastOutSlowInEasing
+                ),
+                repeatMode = RepeatMode.Reverse
+            ),
+            label = "loadingDotScale$index"
+        )
+    }
+    val dotAlphas = List(3) { index ->
+        infiniteTransition.animateFloat(
+            initialValue = 0.42f,
+            targetValue = 1f,
+            animationSpec = infiniteRepeatable(
+                animation = tween(
+                    durationMillis = M3EDesignSystem.AnimationDuration.slower,
+                    delayMillis = index * 120,
+                    easing = FastOutSlowInEasing
+                ),
+                repeatMode = RepeatMode.Reverse
+            ),
+            label = "loadingDotAlpha$index"
+        )
+    }
 
-    CircularProgressIndicator(
-        modifier = modifier
-            .size(size)
-            .scale(scale),
-        strokeWidth = strokeWidth,
-        color = MaterialTheme.colorScheme.primary
-    )
+    val containerHeight = (size * 0.75f).coerceAtLeast(M3EDesignSystem.ComponentHeight.buttonSmall)
+    val containerWidth = (size * 1.8f).coerceAtLeast(72.dp)
+    val rawDotSize = strokeWidth * 2.5f
+    val dotSize = when {
+        rawDotSize < 8.dp -> 8.dp
+        rawDotSize > 12.dp -> 12.dp
+        else -> rawDotSize
+    }
+    val dotSpacing = (dotSize * 0.6f).coerceAtLeast(M3EDesignSystem.Spacing.xs)
+
+    Surface(
+        modifier = modifier,
+        shape = M3EDesignSystem.Shapes.PillShape,
+        color = containerColor.copy(alpha = 0.94f),
+        tonalElevation = M3EDesignSystem.Elevation.level2,
+        shadowElevation = M3EDesignSystem.Elevation.level1,
+        border = BorderStroke(1.dp, accentColor.copy(alpha = 0.14f))
+    ) {
+        Row(
+            modifier = Modifier
+                .widthIn(min = containerWidth)
+                .height(containerHeight)
+                .padding(
+                    horizontal = M3EDesignSystem.Spacing.md,
+                    vertical = M3EDesignSystem.Spacing.sm
+                ),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            dotScales.indices.forEach { index ->
+                Box(
+                    modifier = Modifier
+                        .size(dotSize)
+                        .graphicsLayer {
+                            scaleX = dotScales[index].value
+                            scaleY = dotScales[index].value
+                        }
+                        .drawBehind {
+                            drawCircle(
+                                brush = Brush.radialGradient(
+                                    colors = listOf(
+                                        accentColor.copy(alpha = dotAlphas[index].value),
+                                        accentColor.copy(alpha = 0.22f * dotAlphas[index].value)
+                                    )
+                                )
+                            )
+                        }
+                )
+                if (index < dotScales.lastIndex) {
+                    Spacer(Modifier.width(dotSpacing))
+                }
+            }
+        }
+    }
 }
 
 /**
@@ -527,16 +670,17 @@ fun M3EShimmer(
         MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f)
     )
 
-    val brush = Brush.linearGradient(
-        colors = shimmerColors,
-        start = Offset(shimmerOffset * 300f, 0f),
-        end = Offset((shimmerOffset + 1) * 300f, 0f)
-    )
-
     Box(
         modifier = modifier
             .clip(shape)
-            .background(brush)
+            .drawBehind {
+                val brush = Brush.linearGradient(
+                    colors = shimmerColors,
+                    start = Offset(shimmerOffset * 300f, 0f),
+                    end = Offset((shimmerOffset + 1) * 300f, 0f)
+                )
+                drawRect(brush = brush)
+            }
     )
 }
 
@@ -750,13 +894,15 @@ fun M3ERainbowInfinitySymbol(
     val rotation by M3EAnimations.rainbowRotation()
     val breatheScale by M3EAnimations.breathingScale()
 
-    val effectiveScale = if (animate) breatheScale else 1f
-    val effectiveRotation = if (animate) rotation else 0f
-
     Box(
         modifier = modifier
             .size(size)
-            .scale(effectiveScale),
+            .graphicsLayer {
+                val effectiveScale = if (animate) breatheScale else 1f
+                scaleX = effectiveScale
+                scaleY = effectiveScale
+                rotationZ = if (animate) rotation else 0f
+            },
         contentAlignment = Alignment.Center
     ) {
         androidx.compose.foundation.Canvas(
@@ -764,50 +910,59 @@ fun M3ERainbowInfinitySymbol(
         ) {
             val strokeWidth = size.toPx() * 0.1f
             val infinityPath = Path().apply {
-                // Left loop
-                val cx1 = size.toPx() * 0.25f
+                val cx = size.toPx() * 0.5f
                 val cy = size.toPx() * 0.5f
-                val r = size.toPx() * 0.2f
-
-                // Right loop
-                val cx2 = size.toPx() * 0.75f
-
-                // Draw figure-8 path
-                moveTo(size.toPx() * 0.5f, cy)
+                val radius = size.toPx() * 0.35f
+                
+                // Draw infinity symbol (figure-8)
+                // We use a broader path to prevent squishing
+                moveTo(cx - radius * 1.5f, cy)
+                // Left loop
                 cubicTo(
-                    cx1 + r, cy - r * 1.5f,
-                    cx1 - r, cy - r * 1.5f,
-                    cx1, cy
+                    cx - radius * 1.5f, cy - radius * 1.5f,
+                    cx - radius * 0.5f, cy - radius * 1.5f,
+                    cx, cy
                 )
                 cubicTo(
-                    cx1 - r, cy + r * 1.5f,
-                    cx1 + r, cy + r * 1.5f,
-                    size.toPx() * 0.5f, cy
+                    cx + radius * 0.5f, cy + radius * 1.5f,
+                    cx + radius * 1.5f, cy + radius * 1.5f,
+                    cx + radius * 1.5f, cy
                 )
                 cubicTo(
-                    cx2 - r, cy - r * 1.5f,
-                    cx2 + r, cy - r * 1.5f,
-                    cx2, cy
+                    cx + radius * 1.5f, cy - radius * 1.5f,
+                    cx + radius * 0.5f, cy - radius * 1.5f,
+                    cx, cy
                 )
                 cubicTo(
-                    cx2 + r, cy + r * 1.5f,
-                    cx2 - r, cy + r * 1.5f,
-                    size.toPx() * 0.5f, cy
+                    cx - radius * 0.5f, cy + radius * 1.5f,
+                    cx - radius * 1.5f, cy + radius * 1.5f,
+                    cx - radius * 1.5f, cy
                 )
+                close()
             }
 
-            rotate(effectiveRotation) {
-                drawPath(
-                    path = infinityPath,
-                    brush = Brush.sweepGradient(M3EColors.rainbowColors),
-                    style = Stroke(
-                        width = strokeWidth,
-                        cap = StrokeCap.Round,
-                        join = StrokeJoin.Round
-                    )
+            // Draw glow first (so it's behind)
+            drawPath(
+                path = infinityPath,
+                brush = Brush.sweepGradient(M3EColors.rainbowColors.map { it.copy(alpha = 0.3f) }),
+                style = Stroke(
+                    width = strokeWidth + 4.dp.toPx(),
+                    cap = StrokeCap.Round,
+                    join = StrokeJoin.Round
                 )
-            }
+            )
+
+            drawPath(
+                path = infinityPath,
+                brush = Brush.sweepGradient(M3EColors.rainbowColors),
+                style = Stroke(
+                    width = strokeWidth,
+                    cap = StrokeCap.Round,
+                    join = StrokeJoin.Round
+                )
+            )
         }
     }
 }
+
 

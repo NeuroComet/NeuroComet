@@ -1,4 +1,4 @@
-package com.kyilmaz.neurocomet
+﻿package com.kyilmaz.neurocomet
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -401,7 +401,7 @@ private fun StoryDialogHeader(
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
-                "✨",
+                "âœ¨",
                 fontSize = 22.sp
             )
             Spacer(Modifier.width(10.dp))
@@ -418,7 +418,7 @@ private fun StoryDialogHeader(
         ) {
             Icon(
                 Icons.Filled.Close,
-                contentDescription = "Close",
+                contentDescription = stringResource(R.string.cd_close),
                 modifier = Modifier.size(22.dp),
                 tint = if (isPosting)
                     MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
@@ -439,9 +439,9 @@ private fun AnimatedContentTypeTabs(
     enabled: Boolean
 ) {
     val tabs = listOf(
-        TabInfo("📷", "Media"),
-        TabInfo("🔗", "Link"),
-        TabInfo("✏️", "Text")
+        TabInfo("ðŸ“·", "Media"),
+        TabInfo("ðŸ”—", "Link"),
+        TabInfo("âœï¸", "Text")
     )
 
     Surface(
@@ -652,19 +652,19 @@ private fun MediaTabContent(
         ) {
             MediaPickerButton(
                 icon = Icons.Filled.Image,
-                label = "Photo",
+                label = stringResource(R.string.create_story_photo),
                 onClick = onPickImage,
                 modifier = Modifier.weight(1f)
             )
             MediaPickerButton(
                 icon = Icons.Filled.Videocam,
-                label = "Video",
+                label = stringResource(R.string.create_story_video),
                 onClick = onPickVideo,
                 modifier = Modifier.weight(1f)
             )
             MediaPickerButton(
                 icon = Icons.Filled.Description,
-                label = "File",
+                label = stringResource(R.string.create_story_file),
                 onClick = onPickDocument,
                 modifier = Modifier.weight(1f)
             )
@@ -696,7 +696,7 @@ private fun MediaTabContent(
                                         // Preserve original quality - no resizing
                                         .size(coil.size.Size.ORIGINAL)
                                         .build(),
-                                    contentDescription = "Selected image",
+                                    contentDescription = stringResource(R.string.cd_selected_image),
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .height(200.dp)
@@ -730,7 +730,7 @@ private fun MediaTabContent(
                                     ) {
                                         Icon(
                                             Icons.Filled.Edit,
-                                            contentDescription = "Edit image",
+                                            contentDescription = stringResource(R.string.cd_edit_image),
                                             tint = Color.White,
                                             modifier = Modifier.size(18.dp)
                                         )
@@ -748,7 +748,7 @@ private fun MediaTabContent(
                                     ) {
                                         Icon(
                                             Icons.Filled.Close,
-                                            contentDescription = "Remove",
+                                            contentDescription = stringResource(R.string.cd_remove),
                                             tint = Color.White,
                                             modifier = Modifier.size(18.dp)
                                         )
@@ -819,7 +819,7 @@ private fun MediaTabContent(
                                 ) {
                                     Icon(
                                         Icons.Filled.Close,
-                                        contentDescription = "Remove",
+                                        contentDescription = stringResource(R.string.cd_remove),
                                         tint = Color.White
                                     )
                                 }
@@ -863,7 +863,7 @@ private fun MediaTabContent(
                                     }
                                 }
                                 IconButton(onClick = onClear) {
-                                    Icon(Icons.Filled.Close, contentDescription = "Remove")
+                                    Icon(Icons.Filled.Close, contentDescription = stringResource(R.string.cd_remove))
                                 }
                             }
                         }
@@ -1001,14 +1001,14 @@ private fun LinkPreviewCard(preview: LinkPreviewData) {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     val typeIcon = when (preview.contentType) {
-                        LinkContentType.VIDEO -> "🎬"
-                        LinkContentType.MUSIC -> "🎵"
-                        LinkContentType.REPOSITORY -> "💻"
-                        LinkContentType.SOCIAL_POST -> "💬"
-                        LinkContentType.PRODUCT -> "🛒"
-                        LinkContentType.ARTICLE -> "📰"
-                        LinkContentType.DOCUMENT -> "📄"
-                        else -> "🔗"
+                        LinkContentType.VIDEO -> "ðŸŽ¬"
+                        LinkContentType.MUSIC -> "ðŸŽµ"
+                        LinkContentType.REPOSITORY -> "ðŸ’»"
+                        LinkContentType.SOCIAL_POST -> "ðŸ’¬"
+                        LinkContentType.PRODUCT -> "ðŸ›’"
+                        LinkContentType.ARTICLE -> "ðŸ“°"
+                        LinkContentType.DOCUMENT -> "ðŸ“„"
+                        else -> "ðŸ”—"
                     }
                     Text(typeIcon, fontSize = 16.sp)
                     Spacer(Modifier.width(8.dp))

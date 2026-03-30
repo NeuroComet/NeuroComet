@@ -4,8 +4,8 @@ class AppConstants {
 
   // App Info
   static const String appName = 'NeuroComet';
-  static const String appVersion = '1.0.0';
-  static const String appBuildNumber = '1';
+  static const String appVersion = '2.0.0-beta03';
+  static const String appBuildNumber = '145';
 
   // API Endpoints
   static const String supabaseCallbackUrl = 'io.neurocomet.app://callback';
@@ -76,6 +76,7 @@ class AppConstants {
   static const String deepLinkProfile = '/profile/';
   static const String deepLinkMessage = '/chat/';
 }
+
 
 /// Category constants for neurodivergent conditions
 class NeurodivergentCategories {

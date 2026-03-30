@@ -1,5 +1,6 @@
 package com.kyilmaz.neurocomet.ui.design
 
+import android.content.ClipData
 import android.content.Context
 import android.content.Intent
 import android.widget.Toast
@@ -32,12 +33,10 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -183,7 +182,9 @@ fun M3EPostCard(
     onHashtagClick: (String) -> Unit = {}
 ) {
     val context = LocalContext.current
-    val clipboardManager = LocalClipboardManager.current
+    val clipboardManager = remember(context) {
+        context.getSystemService(android.content.ClipboardManager::class.java)
+    }
 
     var showMenu by remember { mutableStateOf(false) }
     var isLiked by remember { mutableStateOf(post.isLikedByMe ?: false) }
@@ -204,29 +205,19 @@ fun M3EPostCard(
     val emotionalTone = remember(post.content) { detectM3EEmotionalTone(post.content) }
 
     val cardContent = @Composable {
-        Card(
+        M3ESurface(
             modifier = modifier
                 .fillMaxWidth()
                 .padding(horizontal = M3EDesignSystem.Spacing.sm, vertical = M3EDesignSystem.Spacing.xs)
                 .animateContentSize(),
             shape = M3EDesignSystem.Shapes.BubblyCard,
-            elevation = CardDefaults.cardElevation(
-                defaultElevation = if (isQuietMode) 0.dp else M3EDesignSystem.Elevation.card
-            ),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surface
-            ),
-            border = if (isQuietMode) {
-                androidx.compose.foundation.BorderStroke(
-                    1.dp,
-                    MaterialTheme.colorScheme.outlineVariant
-                )
-            } else null
+            variant = if (isQuietMode) M3ESurfaceVariant.Settings else M3ESurfaceVariant.Feed,
+            shadowElevation = if (isQuietMode) 8.dp else M3EDesignSystem.Elevation.card,
+            contentPadding = PaddingValues(M3EDesignSystem.Spacing.md)
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(M3EDesignSystem.Spacing.md)
             ) {
                 // Header Row
                 PostCardHeader(
@@ -241,7 +232,9 @@ fun M3EPostCard(
                         onSave()
                     },
                     onCopyLink = {
-                        clipboardManager.setText(AnnotatedString("https://neurocomet.app/post/${post.id}"))
+                        clipboardManager?.setPrimaryClip(
+                            ClipData.newPlainText("NeuroComet post link", "https://neurocomet.app/post/${post.id}")
+                        )
                         Toast.makeText(context, "Link copied!", Toast.LENGTH_SHORT).show()
                     },
                     onShare = onShare,
@@ -578,7 +571,7 @@ private fun PostMediaCarousel(
             ) { page ->
                 AsyncImage(
                     model = ImageRequest.Builder(LocalContext.current)
-                        .data(mediaUrls[page])
+                        .data(mediaUrls.getOrNull(page) ?: return@HorizontalPager)
                         .crossfade(true)
                         .build(),
                     contentDescription = "Post image ${page + 1}",
@@ -629,4 +622,5 @@ private fun formatCount(count: Int): String {
         else -> count.toString()
     }
 }
+
 

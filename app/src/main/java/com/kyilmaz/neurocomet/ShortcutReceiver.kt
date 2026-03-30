@@ -18,6 +18,7 @@ class ShortcutReceiver : BroadcastReceiver() {
     companion object {
         private const val TAG = "ShortcutReceiver"
         const val ACTION_SHORTCUT_ADDED = "com.kyilmaz.neurocomet.SHORTCUT_ADDED"
+        private const val LEGACY_SHORTCUT_NAME_EXTRA = "android.intent.extra.shortcut.NAME"
     }
 
     override fun onReceive(context: Context, intent: Intent) {
@@ -68,7 +69,7 @@ class ShortcutReceiver : BroadcastReceiver() {
      */
     private fun handleLegacyShortcut(context: Context, intent: Intent) {
         try {
-            val shortcutName = intent.getStringExtra(Intent.EXTRA_SHORTCUT_NAME)
+            val shortcutName = intent.getStringExtra(LEGACY_SHORTCUT_NAME_EXTRA)
             Log.d(TAG, "Legacy shortcut name: $shortcutName")
 
             // Log which launcher received the legacy broadcast

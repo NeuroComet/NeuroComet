@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:share_plus/share_plus.dart';
 import '../../l10n/app_localizations.dart';
 import '../../core/theme/app_colors.dart';
@@ -20,6 +21,23 @@ class _PrivacySettingsScreenState extends ConsumerState<PrivacySettingsScreen> {
   String _whoCanMessage = 'everyone';
   String _whoCanSeeProfile = 'everyone';
   bool _showInSearch = true;
+  AccountStatus? _accountStatus;
+  bool _loadingAccountState = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadAccountState();
+  }
+
+  Future<void> _loadAccountState() async {
+    final status = await SupabaseService.getCurrentAccountStatus();
+    if (!mounted) return;
+    setState(() {
+      _accountStatus = status;
+      _loadingAccountState = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -167,12 +185,56 @@ class _PrivacySettingsScreenState extends ConsumerState<PrivacySettingsScreen> {
                 ),
                 const Divider(),
                 ListTile(
-                  leading: Icon(Icons.delete_forever, color: AppColors.error),
-                  title: Text('Delete Account', style: TextStyle(color: AppColors.error)),
-                  subtitle: const Text('Permanently delete your account and data'),
+                  leading: const Icon(Icons.self_improvement_outlined),
+                  title: const Text('Detox Mode'),
+                  subtitle: Text(
+                    _accountStatus?.isDetoxActive == true
+                        ? 'Active until ${_accountStatus?.detoxUntil?.toLocal()}'
+                        : 'Take a break without deleting your account',
+                  ),
                   trailing: const Icon(Icons.chevron_right),
-                  onTap: () => _showDeleteAccountDialog(),
+                  onTap: () => context.push('/settings/wellbeing'),
                 ),
+                const Divider(),
+                if (_loadingAccountState)
+                  const ListTile(
+                    leading: SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    ),
+                    title: Text('Checking account status...'),
+                  )
+                else
+                  ListTile(
+                    leading: Icon(
+                      _accountStatus?.hasDeletionScheduled == true
+                          ? Icons.restore_from_trash_outlined
+                          : Icons.delete_forever,
+                      color: _accountStatus?.hasDeletionScheduled == true
+                          ? theme.colorScheme.primary
+                          : AppColors.error,
+                    ),
+                    title: Text(
+                      _accountStatus?.hasDeletionScheduled == true
+                          ? 'Cancel Scheduled Deletion'
+                          : 'Delete Account',
+                      style: TextStyle(
+                        color: _accountStatus?.hasDeletionScheduled == true
+                            ? theme.colorScheme.primary
+                            : AppColors.error,
+                      ),
+                    ),
+                    subtitle: Text(
+                      _accountStatus?.hasDeletionScheduled == true
+                          ? 'Your account is in its 14-day grace period.'
+                          : 'Schedule permanent deletion with a 14-day safety window',
+                    ),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: _accountStatus?.hasDeletionScheduled == true
+                        ? _showCancelDeletionDialog
+                        : _showDeleteAccountDialog,
+                  ),
               ],
             ),
           ),
@@ -272,37 +334,67 @@ class _PrivacySettingsScreenState extends ConsumerState<PrivacySettingsScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Delete Account?'),
+        title: const Text('Schedule account deletion?'),
         content: const Text(
-          'This action cannot be undone. All your data, posts, and connections will be permanently deleted.',
+          'We’ll deactivate your account now and permanently delete it after 14 days unless you sign in again and cancel it. If you only need a break, Detox Mode is a gentler option.',
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: const Text('Keep account'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              context.push('/settings/wellbeing');
+            },
+            child: const Text('Take a detox break'),
           ),
           TextButton(
             onPressed: () async {
               Navigator.pop(context);
-              try {
-                await SupabaseService.signOut();
-                if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Account deletion requested. You have been signed out.')),
-                  );
-                  // Navigate to root/login
-                  Navigator.of(context).popUntil((route) => route.isFirst);
-                }
-              } catch (e) {
-                if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Error: $e')),
-                  );
-                }
+              final result = await SupabaseService.deleteAccount();
+              if (!mounted) return;
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(result['message']?.toString() ?? 'Done')),
+              );
+              await _loadAccountState();
+              if (result['success'] == true) {
+                context.go('/auth');
               }
             },
             style: TextButton.styleFrom(foregroundColor: AppColors.error),
-            child: const Text('Delete'),
+            child: const Text('Schedule deletion'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showCancelDeletionDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Cancel scheduled deletion?'),
+        content: const Text(
+          'Your account is currently marked for deletion. Cancel it to reactivate everything normally.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Keep scheduled'),
+          ),
+          FilledButton(
+            onPressed: () async {
+              Navigator.pop(context);
+              final result = await SupabaseService.cancelAccountDeletion();
+              if (!mounted) return;
+              await _loadAccountState();
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(result['message']?.toString() ?? 'Done')),
+              );
+            },
+            child: const Text('Cancel deletion'),
           ),
         ],
       ),

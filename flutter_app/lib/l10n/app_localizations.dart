@@ -413,6 +413,23 @@ class AppLocalizations {
       'noInternet': 'No internet connection',
       'tryAgain': 'Try Again',
       'dismiss': 'Dismiss',
+      // Subscription & Premium
+      'premiumTitle': 'NeuroComet Premium',
+      'premiumTagline': 'Unlock your full potential',
+      'premiumDescription': 'Get access to exclusive features designed to help you thrive.',
+      'premiumFeatures': 'Premium Features',
+      'subscribeNow': 'Subscribe Now',
+      'restorePurchases': 'Restore Purchases',
+      'goPremium': 'Go Premium',
+      'premiumPricing': '\$4.99/month or \$39.99/year',
+      'subscriptionLegal': 'Payment will be charged to your account. Subscriptions automatically renew unless cancelled at least 24 hours before the end of the current period. You can manage and cancel subscriptions in your account settings.',
+      'chooseYourPlan': 'Choose Your Plan',
+      // Auth dialogs
+      'resetPassword': 'Reset Password',
+      'resetPasswordDescription': 'Enter your email address and we\'ll send you a link to reset your password.',
+      'sendResetLink': 'Send Reset Link',
+      'resetLinkSent': 'Password reset link sent! Check your inbox.',
+      'enterEmail': 'Please enter your email.',
       // Search
       'searchUsers': 'Search users',
       'searchPosts': 'Search posts',

@@ -1540,7 +1540,7 @@ private fun ProfileTabBar(
     selectedTab: ProfileTab,
     onTabSelected: (ProfileTab) -> Unit
 ) {
-    TabRow(
+    PrimaryTabRow(
         selectedTabIndex = ProfileTab.entries.indexOf(selectedTab),
         modifier = Modifier
             .fillMaxWidth()

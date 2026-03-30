@@ -80,7 +80,15 @@ fun GoogleAdsDevTestSection() {
             AdStatusChip("Rewarded", adsState.rewardedLoaded)
         }
         Spacer(Modifier.height(12.dp))
-        DevToggleRowSimple(title = "Simulate Premium", subtitle = "Pretend user has sub", isChecked = adsState.isPremium, onCheckedChange = { GoogleAdsManager.devSetSimulatePremium(it) })
+        DevToggleRowSimple(
+            title = "Simulate Premium",
+            subtitle = "Pretend user has sub",
+            isChecked = adsState.isPremium,
+            onCheckedChange = { 
+                GoogleAdsManager.devSetSimulatePremium(it)
+                if (it) SubscriptionManager.simulateTestSuccess() else SubscriptionManager.resetTestPurchase()
+            }
+        )
         DevToggleRowSimple(title = "Force Show Ads", subtitle = "Ignore premium status", isChecked = adsState.forceShowAds, onCheckedChange = { GoogleAdsManager.devSetForceShowAds(it) })
         Spacer(Modifier.height(12.dp))
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -490,7 +498,7 @@ fun EnhancedLocationSensorsDevSection() {
         Text("Status: ${locationStatus.name}", style = MaterialTheme.typography.labelMedium)
         currentLocation?.let { Text("📍 ${it.latitude}, ${it.longitude}", style = MaterialTheme.typography.bodySmall) }
         if (isMonitoring) {
-            Text("Moving: ${sensorData.isMoving} | Pressure: ${sensorData.pressure}", style = MaterialTheme.typography.labelSmall)
+            Text("Moving: ${sensorData.isMoving} | Pressure: ${sensorData.pressure}", style = MaterialTheme.typography.bodySmall)
         }
         Spacer(Modifier.height(12.dp))
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -520,6 +528,132 @@ fun EnhancedLocationSensorsDevSection() {
             ) { Text("Get GPS") }
         }
         testResult?.let { Text(it, style = MaterialTheme.typography.bodySmall) }
+    }
+}
+
+@Composable
+fun SupabaseDbTestDevSection() {
+    val scope = rememberCoroutineScope()
+    var isRunning by remember { mutableStateOf(false) }
+    var results by remember { mutableStateOf<List<String>?>(null) }
+    val isAvailable = remember { SupabaseTestData.isSupabaseAvailable() }
+
+    // Table row counts
+    val tables = remember { listOf("users", "profiles", "posts", "post_likes", "post_comments", "bookmarks", "blocked_users", "reports", "conversations", "dm_messages", "call_signals", "call_history", "notifications") }
+    var tableCounts by remember { mutableStateOf<Map<String, Int?>>(emptyMap()) }
+
+    DevSectionCard(title = "Supabase DB Testing", icon = Icons.Filled.CloudSync) {
+        if (!isAvailable) {
+            Text("⚠️ Supabase not configured", color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodyMedium)
+            return@DevSectionCard
+        }
+
+        // Run all table tests
+        Button(
+            onClick = {
+                isRunning = true
+                results = null
+                scope.launch {
+                    try {
+                        val res = SupabaseTestData.testAllTables()
+                        res.onSuccess { results = it }
+                        res.onFailure { results = listOf("❌ ${it.message}") }
+                    } catch (e: Throwable) {
+                        results = listOf("❌ Crash: ${e.javaClass.simpleName}: ${e.message}")
+                    } finally {
+                        isRunning = false
+                    }
+                }
+            },
+            enabled = !isRunning,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            if (isRunning) CircularProgressIndicator(Modifier.size(16.dp), strokeWidth = 2.dp)
+            else Icon(Icons.Filled.PlayArrow, null, Modifier.size(18.dp))
+            Spacer(Modifier.width(8.dp))
+            Text("Test All Tables")
+        }
+
+        results?.let { list ->
+            Spacer(Modifier.height(8.dp))
+            Card(
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
+                shape = RoundedCornerShape(8.dp)
+            ) {
+                Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                    list.forEach { line ->
+                        Text(
+                            text = line,
+                            style = MaterialTheme.typography.bodySmall,
+                            fontFamily = FontFamily.Monospace,
+                            color = when {
+                                line.startsWith("✅") -> Color(0xFF2E7D32)
+                                line.startsWith("❌") -> MaterialTheme.colorScheme.error
+                                else -> MaterialTheme.colorScheme.onSurfaceVariant
+                            }
+                        )
+                    }
+                }
+            }
+        }
+
+        Spacer(Modifier.height(12.dp))
+        HorizontalDivider()
+        Spacer(Modifier.height(8.dp))
+
+        // Row counts
+        Text("Table Row Counts", style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold)
+        Spacer(Modifier.height(4.dp))
+
+        var countLoading by remember { mutableStateOf(false) }
+        Button(
+            onClick = {
+                countLoading = true
+                scope.launch {
+                    val counts = mutableMapOf<String, Int?>()
+                    for (table in tables) {
+                        try {
+                            SupabaseTestData.getTableRowCount(table)
+                                .onSuccess { counts[table] = it }
+                                .onFailure { counts[table] = null }
+                        } catch (_: Throwable) {
+                            counts[table] = null
+                        }
+                    }
+                    tableCounts = counts
+                    countLoading = false
+                }
+            },
+            enabled = !countLoading,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            if (countLoading) CircularProgressIndicator(Modifier.size(16.dp), strokeWidth = 2.dp)
+            else Icon(Icons.Filled.Storage, null, Modifier.size(18.dp))
+            Spacer(Modifier.width(8.dp))
+            Text("Fetch Row Counts")
+        }
+
+        if (tableCounts.isNotEmpty()) {
+            Spacer(Modifier.height(8.dp))
+            Card(
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
+                shape = RoundedCornerShape(8.dp)
+            ) {
+                Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                    tableCounts.forEach { (table, count) ->
+                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                            Text(table, style = MaterialTheme.typography.bodySmall, fontFamily = FontFamily.Monospace)
+                            Text(
+                                text = count?.toString() ?: "—",
+                                style = MaterialTheme.typography.bodySmall,
+                                fontWeight = FontWeight.Bold,
+                                color = if (count != null) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
+                            )
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -606,7 +740,7 @@ fun GamesTestingSection(onNavigateToGame: (String) -> Unit) {
 }
 
 @Composable
-fun AuthenticationTestingSection(authViewModel: AuthViewModel?) {
+fun AuthenticationTestingSection(authViewModel: AuthViewModel?, devOptionsViewModel: DevOptionsViewModel? = null) {
     val user by authViewModel?.user?.collectAsState() ?: remember { mutableStateOf(null) }
     val is2FARequired by authViewModel?.is2FARequired?.collectAsState() ?: remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
@@ -841,7 +975,7 @@ fun LanguageTestingSection(themeViewModel: ThemeViewModel?) {
 }
 
 @Composable
-fun BiometricFidoDevSection(authViewModel: AuthViewModel?) {
+fun BiometricFidoDevSection(authViewModel: AuthViewModel?, devOptionsViewModel: DevOptionsViewModel? = null) {
     val context = LocalContext.current
     val hasHardware = context.packageManager.hasSystemFeature(android.content.pm.PackageManager.FEATURE_FINGERPRINT)
     val biometricStatus = authViewModel?.checkBiometricStatus() ?: com.kyilmaz.neurocomet.auth.BiometricStatus.Unsupported
@@ -889,7 +1023,7 @@ fun BiometricFidoDevSection(authViewModel: AuthViewModel?) {
 
         Spacer(Modifier.height(12.dp))
 
-        // --- Biometric ---
+        // --- Biometric Authentication ---
         Text("Biometric Authentication", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
         Spacer(Modifier.height(4.dp))
         DevToggleRowSimple(
@@ -1106,73 +1240,100 @@ fun BiometricFidoDevSection(authViewModel: AuthViewModel?) {
 }
 
 @Composable
-fun StressTestingSection(feedViewModel: FeedViewModel?, context: Context) {
-    val scope = rememberCoroutineScope()
-    var isRunning by remember { mutableStateOf(false) }
-    var results by remember { mutableStateOf<List<StressTestResult>>(emptyList()) }
+fun PaymentsTestingSection() {
+    val context = LocalContext.current
+    val subState by SubscriptionManager.subscriptionState.collectAsState()
 
-    DevSectionCard(title = "System Stress Test", icon = Icons.Filled.Speed) {
-        Button(
-            onClick = {
-                scope.launch {
-                    isRunning = true
-                    results = emptyList()
-
-                    val tests = listOf(
-                        suspend { StressTester.runUIResponsivenessTest() },
-                        suspend { StressTester.runMemoryPressureTest(context) },
-                        suspend { StressTester.runDataLoadingStressTest(feedViewModel) },
-                        suspend { StressTester.runStorageIOTest(context) },
-                        suspend { StressTester.runNotificationChannelTest(context) },
-                        suspend { StressTester.runListScrollStressTest() }
-                    )
-
-                    val currentResults = mutableListOf<StressTestResult>()
-                    tests.forEach { test ->
-                        currentResults.add(test())
-                        results = currentResults.toList()
-                    }
-
-                    isRunning = false
+    var showTestPopup by remember { mutableStateOf(false) }
+    var popupMessage by remember { mutableStateOf("") }
+    
+    if (showTestPopup) {
+        AlertDialog(
+            onDismissRequest = { showTestPopup = false },
+            title = { Text("Simulation Result") },
+            text = { Text(popupMessage) },
+            confirmButton = {
+                TextButton(onClick = { showTestPopup = false }) {
+                    Text("OK")
                 }
-            },
-            enabled = !isRunning,
-            modifier = Modifier.fillMaxWidth()
+            }
+        )
+    }
+
+    DevSectionCard(
+        title = "Payments & Subscriptions",
+        icon = Icons.Filled.Payment
+    ) {
+        val coroutineScope = rememberCoroutineScope()
+        
+        Text(
+            text = "Simulate payment outcomes without reaching the real payment sheet. Useful for verifying UI properly reacts to success, decline, or timeout events.",
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier.padding(bottom = 12.dp)
+        )
+
+        Card(
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)),
+            modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)
         ) {
-            if (isRunning) {
-                CircularProgressIndicator(Modifier.size(16.dp), color = MaterialTheme.colorScheme.onPrimary)
-                Spacer(Modifier.width(12.dp))
-                Text("Testing... (${results.size}/6)")
-            } else {
-                Text("Run Full System Diagnostic")
+            Column(Modifier.padding(12.dp)) {
+                Text("Current State", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
+                Spacer(Modifier.height(4.dp))
+                Text("Is Premium: ${subState.isPremium}", style = MaterialTheme.typography.bodySmall)
+                Text("Is Loading: ${subState.isLoading}", style = MaterialTheme.typography.bodySmall)
+                Text("Error: ${subState.error ?: "None"}", style = MaterialTheme.typography.bodySmall)
             }
         }
 
-        if (results.isNotEmpty()) {
-            Spacer(Modifier.height(12.dp))
-            results.forEach { res ->
-                Column(modifier = Modifier.padding(vertical = 4.dp)) {
-                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                        Text(res.testName, style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.SemiBold)
-                        Text(
-                            if (res.passed) "PASS" else "FAIL",
-                            color = if (res.passed) Color(0xFF4CAF50) else Color.Red,
-                            fontWeight = FontWeight.ExtraBold,
-                            style = MaterialTheme.typography.bodySmall
-                        )
-                    }
-                    Text("${res.details} (${res.duration}ms)", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                    if (res.errorMessage != null) {
-                        Text("Error: ${res.errorMessage}", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.error)
-                    }
-                    HorizontalDivider(modifier = Modifier.padding(top = 4.dp).alpha(0.2f))
-                }
-            }
+        Button(
+            onClick = {
+                SubscriptionManager.simulateTestSuccess()
+                popupMessage = "🎉 Woohoo! Simulation successful. The dopamine hit has been deposited, and your premium powers are now fully unlocked."
+                showTestPopup = true
+            },
+            modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
+        ) {
+            Text("Simulate Successful Payment")
+        }
+
+        Button(
+            onClick = {
+                SubscriptionManager.simulateTestDeclined()
+                popupMessage = "🚫 Payment declined. Simulation complete. Sometimes the executive function to find the right credit card just isn't there today."
+                showTestPopup = true
+            },
+            modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
+        ) {
+            Text("Simulate Declined Payment")
+        }
+
+        Button(
+            onClick = {
+                SubscriptionManager.simulateTestTimedOut()
+                popupMessage = "⏳ Timed-Out! The server got distracted by a shiny side quest and forgot to finish your transaction. Simulation complete."
+                showTestPopup = true
+            },
+            modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiary)
+        ) {
+            Text("Simulate Timed-Out Payment")
+        }
+
+        OutlinedButton(
+            onClick = {
+                SubscriptionManager.resetTestPurchase()
+                popupMessage = "🔄 Reset complete. The simulation chalkboard has been wiped clean. You are back to the free tier."
+                showTestPopup = true
+            },
+            modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)
+        ) {
+            Text("Reset Premium Status")
         }
     }
 }
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun DmDebugDevSection(devOptionsViewModel: DevOptionsViewModel) {
     val context = LocalContext.current
@@ -1360,7 +1521,7 @@ fun ContentSafetyDevSection(devOptionsViewModel: DevOptionsViewModel, safetyView
 // ═══════════════════════════════════════════════════════════════
 
 @Composable
-fun AppInfoDevSection() {
+fun AppInfoDevSection(devOptionsViewModel: DevOptionsViewModel? = null) {
     val context = LocalContext.current
     val packageInfo = remember {
         runCatching {
@@ -2580,4 +2741,299 @@ fun BackupDevTestSection(onNavigateToBackup: () -> Unit) {
         }
     }
 }
+
+
+// ═══════════════════════════════════════════════════════════════
+// FEEDBACK & BETA TESTING
+// ═══════════════════════════════════════════════════════════════
+
+@Composable
+fun FeedbackBetaDevSection(
+    devOptionsViewModel: DevOptionsViewModel,
+    onNavigateBugReport: () -> Unit = {},
+    onNavigateFeatureRequest: () -> Unit = {},
+    onNavigateGeneralFeedback: () -> Unit = {},
+    onNavigateFeedbackHub: () -> Unit = {}
+) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    val options by devOptionsViewModel.options.collectAsState()
+
+    var pendingCount by remember { mutableIntStateOf(0) }
+    LaunchedEffect(Unit) {
+        val prefs = context.getSharedPreferences("neurocomet_feedback", Context.MODE_PRIVATE)
+        pendingCount = prefs.getStringSet("pending_feedback", emptySet())?.size ?: 0
+    }
+
+    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        Text(
+            "Test feedback submission, offline queuing, and rate-limit behaviour for the closed-beta feedback system.",
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text("Bypass Feedback Rate Limit", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.SemiBold)
+                Text("Skip the 5/day submission cap", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            }
+            Switch(
+                checked = options.bypassFeedbackRateLimit,
+                onCheckedChange = { devOptionsViewModel.setBypassFeedbackRateLimit(it) }
+            )
+        }
+
+        HorizontalDivider()
+
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text("Force Submission Failure", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.SemiBold)
+                Text("Always fail Supabase insert → queue offline", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            }
+            Switch(
+                checked = options.forceFeedbackSubmitFailure,
+                onCheckedChange = { devOptionsViewModel.setForceFeedbackSubmitFailure(it) }
+            )
+        }
+
+        HorizontalDivider()
+
+        Card(
+            colors = CardDefaults.cardColors(
+                containerColor = if (pendingCount > 0)
+                    MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.4f)
+                else
+                    MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
+            ),
+            shape = RoundedCornerShape(8.dp)
+        ) {
+            Column(Modifier.padding(12.dp)) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(Icons.Filled.CloudQueue, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(18.dp))
+                    Spacer(Modifier.width(8.dp))
+                    Text(
+                        "$pendingCount item${if (pendingCount != 1) "s" else ""} in offline queue",
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
+                Spacer(Modifier.height(8.dp))
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    OutlinedButton(
+                        onClick = {
+                            scope.launch {
+                                FeedbackManager.flushPendingFeedback(context)
+                                val prefs = context.getSharedPreferences("neurocomet_feedback", Context.MODE_PRIVATE)
+                                pendingCount = prefs.getStringSet("pending_feedback", emptySet())?.size ?: 0
+                                Toast.makeText(context, "Flush complete – $pendingCount remaining", Toast.LENGTH_SHORT).show()
+                            }
+                        },
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Icon(Icons.Filled.CloudSync, null, Modifier.size(16.dp))
+                        Spacer(Modifier.width(4.dp))
+                        Text("Flush Queue", style = MaterialTheme.typography.labelMedium)
+                    }
+                    OutlinedButton(
+                        onClick = {
+                            val prefs = context.getSharedPreferences("neurocomet_feedback", Context.MODE_PRIVATE)
+                            prefs.edit().remove("pending_feedback").apply()
+                            pendingCount = 0
+                            Toast.makeText(context, "Offline queue cleared", Toast.LENGTH_SHORT).show()
+                        },
+                        modifier = Modifier.weight(1f),
+                        colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.error)
+                    ) {
+                        Icon(Icons.Filled.DeleteSweep, null, Modifier.size(16.dp))
+                        Spacer(Modifier.width(4.dp))
+                        Text("Clear Queue", style = MaterialTheme.typography.labelMedium)
+                    }
+                }
+            }
+        }
+
+        val remaining = FeedbackManager.getRemainingSubmissions(context)
+        Text(
+            "Rate limit: $remaining / 5 submissions remaining today${if (options.bypassFeedbackRateLimit) " (bypassed)" else ""}",
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+
+        HorizontalDivider()
+
+        Text("Quick Navigate", style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold)
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            AssistChip(
+                onClick = onNavigateFeedbackHub,
+                label = { Text("Hub", style = MaterialTheme.typography.labelSmall) },
+                leadingIcon = { Icon(Icons.Filled.Feedback, null, Modifier.size(16.dp)) }
+            )
+            AssistChip(
+                onClick = onNavigateBugReport,
+                label = { Text("Bug", style = MaterialTheme.typography.labelSmall) },
+                leadingIcon = { Icon(Icons.Filled.BugReport, null, Modifier.size(16.dp)) }
+            )
+            AssistChip(
+                onClick = onNavigateFeatureRequest,
+                label = { Text("Feature", style = MaterialTheme.typography.labelSmall) },
+                leadingIcon = { Icon(Icons.Filled.Lightbulb, null, Modifier.size(16.dp)) }
+            )
+            AssistChip(
+                onClick = onNavigateGeneralFeedback,
+                label = { Text("General", style = MaterialTheme.typography.labelSmall) },
+                leadingIcon = { Icon(Icons.Filled.Chat, null, Modifier.size(16.dp)) }
+            )
+        }
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// STRESS TESTING
+// ═══════════════════════════════════════════════════════════════
+
+@Composable
+fun StressTestingSection(feedViewModel: FeedViewModel?, context: Context) {
+    val scope = rememberCoroutineScope()
+    var isRunning by remember { mutableStateOf(false) }
+    val results = remember { mutableStateListOf<StressTestResult>() }
+    var currentTestName by remember { mutableStateOf<String?>(null) }
+
+    DevSectionCard(title = "System Stress Testing", icon = Icons.Filled.Speed) {
+        Text(
+            "Execute automated stress tests to verify application stability under various conditions.",
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Spacer(Modifier.height(12.dp))
+
+        Button(
+            onClick = {
+                isRunning = true
+                results.clear()
+                scope.launch {
+                    try {
+                        val tests = listOf<suspend () -> StressTestResult>(
+                            { StressTester.runUIResponsivenessTest() },
+                            { StressTester.runMemoryPressureTest(context) },
+                            { StressTester.runRapidNavigationTest() },
+                            { StressTester.runDataLoadingStressTest(feedViewModel) },
+                            { StressTester.runThemeSwitchingTest() },
+                            { StressTester.runConcurrentOperationsTest() },
+                            { StressTester.runStorageIOTest(context) },
+                            { StressTester.runNetworkSimulationTest() },
+                            { StressTester.runNotificationChannelTest(context) },
+                            { StressTester.runListScrollStressTest() },
+                            { StressTester.runStateManagementTest() },
+                            { StressTester.runJsonParsingTest() },
+                            { StressTester.runStringOperationsTest() },
+                            { StressTester.runDateTimeOperationsTest() },
+                            { StressTester.runCollectionOperationsTest() },
+                            { StressTester.runSecurityOperationsTest() },
+                            { StressTester.runFileSystemTest(context) },
+                            { StressTester.runExceptionHandlingTest() },
+                            { StressTester.runParentalControlsTest(context) },
+                            { StressTester.runTotpLifecycleTest(context) },
+                            { StressTester.runTotpWindowToleranceTest(context) },
+                            { StressTester.runBackupCodesTest(context) },
+                            { StressTester.runEmailVerificationFlowTest(context) },
+                            { StressTester.runFido2CredentialLifecycleTest(context) },
+                            { StressTester.runBiometricStatusTest(context) },
+                            { StressTester.runBiometricToggleTest(context) },
+                            { StressTester.runInputValidationTest() },
+                            { StressTester.runSecurityUtilsRoundTripTest() },
+                            { StressTester.runDeviceAuthorityTest(context) },
+                            { StressTester.runSessionStateTest() },
+                            { StressTester.runAccountLifecycleParsingTest() },
+                            { StressTester.runAuthEnumCoverageTest() },
+                            { StressTester.runConcurrentAuthOpsTest(context) },
+                            { StressTester.runTotpSecretEdgeCasesTest() }
+                        )
+
+                        tests.forEach { test ->
+                            // Use a placeholder or small delay to show progress
+                            delay(50)
+                            val result = test()
+                            results.add(result)
+                            currentTestName = result.testName
+                        }
+                    } finally {
+                        isRunning = false
+                        currentTestName = null
+                    }
+                }
+            },
+            modifier = Modifier.fillMaxWidth(),
+            enabled = !isRunning
+        ) {
+            if (isRunning) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(18.dp),
+                    strokeWidth = 2.dp,
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
+                Spacer(Modifier.width(8.dp))
+                Text("Running: ${currentTestName ?: "..."}")
+            } else {
+                Icon(Icons.Filled.PlayArrow, null, Modifier.size(18.dp))
+                Spacer(Modifier.width(8.dp))
+                Text("Run Comprehensive Suite")
+            }
+        }
+
+        if (results.isNotEmpty()) {
+            Spacer(Modifier.height(16.dp))
+            val passedCount = results.count { it.passed }
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    "Results: $passedCount / ${results.size} Passed",
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = if (passedCount == results.size) Color(0xFF2E7D32) else MaterialTheme.colorScheme.error
+                )
+            }
+            Spacer(Modifier.height(8.dp))
+            Card(
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)),
+                shape = RoundedCornerShape(8.dp)
+            ) {
+                Column(Modifier.padding(8.dp)) {
+                    results.forEach { result ->
+                        Row(
+                            modifier = Modifier.fillMaxWidth().padding(vertical = 2.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
+                                Icon(
+                                    if (result.passed) Icons.Filled.CheckCircle else Icons.Filled.Cancel,
+                                    contentDescription = null,
+                                    tint = if (result.passed) Color(0xFF4CAF50) else MaterialTheme.colorScheme.error,
+                                    modifier = Modifier.size(14.dp)
+                                )
+                                Spacer(Modifier.width(6.dp))
+                                Column {
+                                    Text(result.testName, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.SemiBold)
+                                    Text("${result.duration}ms | ${result.details}", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                }
+                            }
+                        }
+                        if (result.errorMessage != null) {
+                            Text(
+                                "Error: ${result.errorMessage}",
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.error,
+                                modifier = Modifier.padding(start = 20.dp, bottom = 4.dp)
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
 

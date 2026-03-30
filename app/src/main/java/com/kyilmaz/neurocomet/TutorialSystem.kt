@@ -322,7 +322,7 @@ fun TutorialOverlay(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFF0D0D1A))
+                .background(MaterialTheme.colorScheme.background)
                 .pointerInput(currentStepIndex) {
                     detectHorizontalDragGestures(
                         onDragStart = {
@@ -382,7 +382,7 @@ fun TutorialOverlay(
                 Text(
                     text = "Swipe to navigate",
                     style = MaterialTheme.typography.labelSmall,
-                    color = Color.White.copy(alpha = 0.4f),
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.4f),
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
                         .padding(bottom = 32.dp)
@@ -526,7 +526,7 @@ private fun CleanTutorialCard(
             },
         shape = RoundedCornerShape(28.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF1a1a2e)
+            containerColor = MaterialTheme.colorScheme.surface
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 12.dp)
     ) {
@@ -566,7 +566,7 @@ private fun CleanTutorialCard(
                 text = step.title,
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold,
-                color = Color.White,
+                color = MaterialTheme.colorScheme.onSurface,
                 textAlign = TextAlign.Center
             )
 
@@ -576,7 +576,7 @@ private fun CleanTutorialCard(
             Text(
                 text = step.description,
                 style = MaterialTheme.typography.bodyLarge,
-                color = Color.White.copy(alpha = 0.85f),
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.85f),
                 textAlign = TextAlign.Center,
                 lineHeight = MaterialTheme.typography.bodyLarge.lineHeight * 1.2f
             )
@@ -625,7 +625,7 @@ private fun CleanTutorialCard(
                                 when {
                                     isActive -> step.accentColor
                                     isPast -> step.accentColor.copy(alpha = 0.5f)
-                                    else -> Color.White.copy(alpha = 0.2f)
+                                    else -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
                                 }
                             )
                             .clickable(
@@ -643,7 +643,7 @@ private fun CleanTutorialCard(
             Text(
                 text = "Step ${stepIndex + 1} of $totalSteps",
                 style = MaterialTheme.typography.labelSmall,
-                color = Color.White.copy(alpha = 0.5f)
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
             )
 
             Spacer(Modifier.height(28.dp))
@@ -661,7 +661,7 @@ private fun CleanTutorialCard(
                     ) {
                         Text(
                             "Skip",
-                            color = Color.White.copy(alpha = 0.5f),
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
                             style = MaterialTheme.typography.labelLarge
                         )
                     }
@@ -674,12 +674,12 @@ private fun CleanTutorialCard(
                             Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = null,
                             modifier = Modifier.size(18.dp),
-                            tint = Color.White.copy(alpha = 0.7f)
+                            tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                         )
                         Spacer(Modifier.width(4.dp))
                         Text(
                             "Back",
-                            color = Color.White.copy(alpha = 0.7f),
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
                             style = MaterialTheme.typography.labelLarge
                         )
                     }
@@ -1557,7 +1557,7 @@ private fun InteractiveTutorialProgress(
                 ),
                 label = "dotSize"
             )
-            
+
             val animatedColor by animateColorAsState(
                 targetValue = when {
                     isActive -> MaterialTheme.colorScheme.primary

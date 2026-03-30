@@ -177,6 +177,9 @@ object PrivacyManager {
     /**
      * Filters a list of posts based on privacy settings.
      * Removes posts from blocked users, muted users (optional), and hidden posts.
+     *
+     * TODO: Integrate into FeedScreen / FeedViewModel post pipeline once feed
+     *       switches from mock data to real user-generated content.
      */
     fun filterPosts(
         context: Context,

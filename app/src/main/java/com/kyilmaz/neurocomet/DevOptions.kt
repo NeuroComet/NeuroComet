@@ -74,5 +74,9 @@ data class DevOptions(
     val force2FA: Boolean = false,
 
     // ── Performance ─────────────────────────────────────────
-    val showPerformanceOverlay: Boolean = false
+    val showPerformanceOverlay: Boolean = false,
+
+    // ── Feedback & Beta Testing ────────────────────────────
+    val bypassFeedbackRateLimit: Boolean = false,
+    val forceFeedbackSubmitFailure: Boolean = false,
 )

@@ -25,6 +25,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -33,6 +34,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -124,24 +126,24 @@ enum class AppIconStyle(
     val emoji: String,
     val category: IconCategory
 ) {
-    DEFAULT(
-        aliasName = "com.kyilmaz.neurocomet.MainActivityDefaultAlias",
-        titleRes = R.string.icon_style_default,
-        descRes = R.string.icon_style_default_desc,
-        gradientColors = listOf(Color(0xFF667eea), Color(0xFF764ba2)),
-        emoji = "☄️",
-        category = IconCategory.STANDARD
-    ),
     CALM(
-        aliasName = "com.kyilmaz.neurocomet.MainActivityCalmAlias",
+        aliasName = "com.kyilmaz.neurocomet.LauncherCalm",
         titleRes = R.string.icon_style_calm,
         descRes = R.string.icon_style_calm_desc,
         gradientColors = listOf(Color(0xFF2193b0), Color(0xFF6dd5ed)),
         emoji = "🌊",
         category = IconCategory.SENSORY
     ),
+    SENSORY_FRIENDLY(
+        aliasName = "com.kyilmaz.neurocomet.LauncherSensory",
+        titleRes = R.string.icon_style_sensory,
+        descRes = R.string.icon_style_sensory_desc,
+        gradientColors = listOf(Color(0xFF434343), Color(0xFF000000)),
+        emoji = "🧘",
+        category = IconCategory.SENSORY
+    ),
     FOCUS(
-        aliasName = "com.kyilmaz.neurocomet.MainActivityFocusAlias",
+        aliasName = "com.kyilmaz.neurocomet.LauncherFocus",
         titleRes = R.string.icon_style_focus,
         descRes = R.string.icon_style_focus_desc,
         gradientColors = listOf(Color(0xFF0f0c29), Color(0xFF302b63), Color(0xFF24243e)),
@@ -149,28 +151,28 @@ enum class AppIconStyle(
         category = IconCategory.FOCUS
     ),
     ENERGY(
-        aliasName = "com.kyilmaz.neurocomet.MainActivityEnergyAlias",
+        aliasName = "com.kyilmaz.neurocomet.LauncherEnergy",
         titleRes = R.string.icon_style_energy,
         descRes = R.string.icon_style_energy_desc,
         gradientColors = listOf(Color(0xFFf093fb), Color(0xFFf5576c)),
         emoji = "⚡",
         category = IconCategory.MOTIVATION
     ),
-    SENSORY_FRIENDLY(
-        aliasName = "com.kyilmaz.neurocomet.MainActivitySensoryAlias",
-        titleRes = R.string.icon_style_sensory,
-        descRes = R.string.icon_style_sensory_desc,
-        gradientColors = listOf(Color(0xFF434343), Color(0xFF000000)),
-        emoji = "🧘",
-        category = IconCategory.SENSORY
-    ),
     NEURODIVERSITY_PRIDE(
-        aliasName = "com.kyilmaz.neurocomet.MainActivityPrideAlias",
+        aliasName = "com.kyilmaz.neurocomet.LauncherPride",
         titleRes = R.string.icon_style_pride,
         descRes = R.string.icon_style_pride_desc,
         gradientColors = listOf(Color(0xFFff6b6b), Color(0xFFffd93d), Color(0xFF6bcb77)),
         emoji = "🌈",
         category = IconCategory.PRIDE
+    ),
+    DEFAULT(
+        aliasName = "com.kyilmaz.neurocomet.LauncherDefault",
+        titleRes = R.string.icon_style_default,
+        descRes = R.string.icon_style_default_desc,
+        gradientColors = listOf(Color(0xFF667eea), Color(0xFF764ba2)),
+        emoji = "☄️",
+        category = IconCategory.STANDARD
     )
 }
 
@@ -189,52 +191,73 @@ private data class IconDepthProfile(
     val vignetteAlpha: Float
 )
 
+private data class IconPreviewProfile(
+    val scale: Float
+)
+
 private fun AppIconStyle.depthProfile(): IconDepthProfile = when (this) {
-    AppIconStyle.DEFAULT -> IconDepthProfile(0.22f, 0.18f, 0.18f, 0.12f)
-    AppIconStyle.CALM -> IconDepthProfile(0.18f, 0.16f, 0.16f, 0.10f)
-    AppIconStyle.FOCUS -> IconDepthProfile(0.26f, 0.14f, 0.20f, 0.16f)
-    AppIconStyle.ENERGY -> IconDepthProfile(0.20f, 0.20f, 0.18f, 0.12f)
-    AppIconStyle.SENSORY_FRIENDLY -> IconDepthProfile(0.16f, 0.10f, 0.14f, 0.18f)
-    AppIconStyle.NEURODIVERSITY_PRIDE -> IconDepthProfile(0.20f, 0.22f, 0.18f, 0.12f)
+    AppIconStyle.DEFAULT -> IconDepthProfile(0.30f, 0.24f, 0.22f, 0.16f)
+    AppIconStyle.CALM -> IconDepthProfile(0.24f, 0.20f, 0.20f, 0.14f)
+    AppIconStyle.FOCUS -> IconDepthProfile(0.34f, 0.20f, 0.26f, 0.20f)
+    AppIconStyle.ENERGY -> IconDepthProfile(0.28f, 0.28f, 0.22f, 0.16f)
+    AppIconStyle.SENSORY_FRIENDLY -> IconDepthProfile(0.22f, 0.14f, 0.18f, 0.22f)
+    AppIconStyle.NEURODIVERSITY_PRIDE -> IconDepthProfile(0.28f, 0.30f, 0.22f, 0.16f)
+}
+
+private fun AppIconStyle.previewProfile(): IconPreviewProfile = when (this) {
+    AppIconStyle.DEFAULT -> IconPreviewProfile(scale = 1.09f)
+    AppIconStyle.CALM -> IconPreviewProfile(scale = 1.12f)
+    AppIconStyle.FOCUS -> IconPreviewProfile(scale = 1.10f)
+    AppIconStyle.ENERGY -> IconPreviewProfile(scale = 1.10f)
+    AppIconStyle.NEURODIVERSITY_PRIDE -> IconPreviewProfile(scale = 1.09f)
+    AppIconStyle.SENSORY_FRIENDLY -> IconPreviewProfile(scale = 1.13f)
 }
 
 private fun getIconDrawableResources(iconStyle: AppIconStyle): Pair<Int, Int> = when (iconStyle) {
-    AppIconStyle.DEFAULT -> R.drawable.neuro_comet_icon_background to R.drawable.neuro_comet_icon_foreground_vector
-    AppIconStyle.CALM -> R.drawable.icon_calm_background to R.drawable.icon_calm_foreground
-    AppIconStyle.FOCUS -> R.drawable.icon_focus_background to R.drawable.icon_focus_foreground
-    AppIconStyle.ENERGY -> R.drawable.icon_energy_background to R.drawable.icon_energy_foreground
-    AppIconStyle.SENSORY_FRIENDLY -> R.drawable.icon_sensory_background to R.drawable.icon_sensory_foreground
-    AppIconStyle.NEURODIVERSITY_PRIDE -> R.drawable.icon_pride_background to R.drawable.icon_pride_foreground
+    AppIconStyle.DEFAULT -> R.drawable.neuro_comet_icon_background to R.drawable.neuro_comet_icon_foreground_padded
+    AppIconStyle.CALM -> R.drawable.icon_calm_background to R.drawable.calm_waters_1
+    AppIconStyle.FOCUS -> R.drawable.icon_focus_background to R.drawable.icon_focus_foreground_padded
+    AppIconStyle.ENERGY -> R.drawable.icon_energy_background to R.drawable.energy_burst_1
+    AppIconStyle.SENSORY_FRIENDLY -> R.drawable.icon_sensory_background to R.drawable.icon_sensory_foreground_padded
+    AppIconStyle.NEURODIVERSITY_PRIDE -> R.drawable.icon_pride_background to R.drawable.neurodiversity_pride_4
 }
 
-private fun renderDepthEnhancedIconBitmap(
+internal fun getAdaptiveIconDrawable(
+    context: Context,
+    iconStyle: AppIconStyle
+): android.graphics.drawable.Drawable? {
+    return androidx.core.content.ContextCompat.getDrawable(context, getIconResourceId(iconStyle))
+}
+
+internal fun renderDepthEnhancedIconBitmap(
     context: Context,
     iconStyle: AppIconStyle,
-    size: Int
+    size: Int,
+    previewOptimized: Boolean = false
 ): android.graphics.Bitmap? {
     return try {
-        val (backgroundResId, foregroundResId) = getIconDrawableResources(iconStyle)
         val bitmap = android.graphics.Bitmap.createBitmap(size, size, android.graphics.Bitmap.Config.ARGB_8888)
         val canvas = android.graphics.Canvas(bitmap)
         val depth = iconStyle.depthProfile()
+        val previewScale = if (previewOptimized) iconStyle.previewProfile().scale else 1.0f
+
+        val ambientShadowPaint = android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG).apply {
+            color = android.graphics.Color.argb((depth.shadowAlpha * 0.55f * 255).toInt(), 6, 10, 20)
+            maskFilter = android.graphics.BlurMaskFilter(size * 0.09f, android.graphics.BlurMaskFilter.Blur.NORMAL)
+        }
+        canvas.drawOval(
+            android.graphics.RectF(size * 0.12f, size * 0.16f, size * 0.88f, size * 0.94f),
+            ambientShadowPaint
+        )
 
         val shadowPaint = android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG).apply {
             color = android.graphics.Color.argb((depth.shadowAlpha * 255).toInt(), 10, 16, 28)
-            maskFilter = android.graphics.BlurMaskFilter(size * 0.055f, android.graphics.BlurMaskFilter.Blur.NORMAL)
+            maskFilter = android.graphics.BlurMaskFilter(size * 0.06f, android.graphics.BlurMaskFilter.Blur.NORMAL)
         }
         canvas.drawOval(
-            android.graphics.RectF(size * 0.18f, size * 0.2f, size * 0.82f, size * 0.88f),
+            android.graphics.RectF(size * 0.18f, size * 0.24f, size * 0.82f, size * 0.92f),
             shadowPaint
         )
-
-        androidx.core.content.ContextCompat.getDrawable(context, backgroundResId)?.apply {
-            setBounds(0, 0, size, size)
-            draw(canvas)
-        }
-        androidx.core.content.ContextCompat.getDrawable(context, foregroundResId)?.apply {
-            setBounds(0, 0, size, size)
-            draw(canvas)
-        }
 
         val maskPath = android.graphics.Path().apply {
             addCircle(size / 2f, size / 2f, size * 0.47f, android.graphics.Path.Direction.CW)
@@ -242,11 +265,18 @@ private fun renderDepthEnhancedIconBitmap(
         canvas.save()
         canvas.clipPath(maskPath)
 
+        val drawInset = ((size - (size * previewScale)) / 2f).toInt()
+        getAdaptiveIconDrawable(context, iconStyle)?.apply {
+            setBounds(drawInset, drawInset, size - drawInset, size - drawInset)
+            draw(canvas)
+        }
+
+
         val glossPaint = android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG).apply {
             shader = android.graphics.LinearGradient(
-                size * 0.15f,
-                size * 0.08f,
-                size * 0.72f,
+                size * 0.12f,
+                size * 0.06f,
+                size * 0.7f,
                 size * 0.72f,
                 android.graphics.Color.argb((depth.glossAlpha * 255).toInt(), 255, 255, 255),
                 android.graphics.Color.TRANSPARENT,
@@ -255,29 +285,22 @@ private fun renderDepthEnhancedIconBitmap(
         }
         canvas.drawCircle(size / 2f, size / 2f, size * 0.47f, glossPaint)
 
-        val vignettePaint = android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG).apply {
+        val specularPaint = android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG).apply {
             shader = android.graphics.RadialGradient(
-                size / 2f,
-                size / 2f,
-                size * 0.55f,
+                size * 0.32f,
+                size * 0.28f,
+                size * 0.18f,
                 intArrayOf(
-                    android.graphics.Color.TRANSPARENT,
-                    android.graphics.Color.TRANSPARENT,
-                    android.graphics.Color.argb((depth.vignetteAlpha * 255).toInt(), 10, 14, 24)
+                    android.graphics.Color.argb((depth.glossAlpha * 0.9f * 255).toInt(), 255, 255, 255),
+                    android.graphics.Color.TRANSPARENT
                 ),
-                floatArrayOf(0.55f, 0.82f, 1f),
+                floatArrayOf(0f, 1f),
                 android.graphics.Shader.TileMode.CLAMP
             )
         }
-        canvas.drawCircle(size / 2f, size / 2f, size * 0.47f, vignettePaint)
-        canvas.restore()
+        canvas.drawCircle(size * 0.32f, size * 0.28f, size * 0.18f, specularPaint)
 
-        val rimPaint = android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG).apply {
-            style = android.graphics.Paint.Style.STROKE
-            strokeWidth = maxOf(1f, size * 0.012f)
-            color = android.graphics.Color.argb((depth.rimAlpha * 255).toInt(), 255, 255, 255)
-        }
-        canvas.drawCircle(size / 2f, size / 2f, size * 0.46f, rimPaint)
+        canvas.restore()
         bitmap
     } catch (e: Exception) {
         android.util.Log.e("IconCustomization", "Error rendering depth icon for ${iconStyle.name}", e)
@@ -307,33 +330,31 @@ private fun DepthIconPreview(
                 )
         )
 
-        Surface(
-            modifier = Modifier.size(size + 8.dp),
-            shape = RoundedCornerShape(18.dp),
-            color = MaterialTheme.colorScheme.surface.copy(alpha = 0.94f),
-            tonalElevation = if (isSelected) 2.dp else 1.dp,
-            shadowElevation = if (isSelected) 10.dp else 6.dp
+        Box(
+            modifier = Modifier
+                .size(size)
+                .shadow(
+                    elevation = if (isSelected) 10.dp else 6.dp,
+                    shape = CircleShape,
+                    clip = false
+                )
+                .clip(CircleShape),
+            contentAlignment = Alignment.Center
         ) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                if (iconBitmap != null) {
-                    androidx.compose.foundation.Image(
-                        bitmap = iconBitmap.asImageBitmap(),
-                        contentDescription = stringResource(iconStyle.titleRes),
-                        modifier = Modifier.size(size)
-                    )
-                } else {
-                    Box(
-                        modifier = Modifier
-                            .size(size)
-                            .clip(CircleShape)
-                            .background(Brush.linearGradient(iconStyle.gradientColors)),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(iconStyle.emoji, fontSize = if (size >= 56.dp) 28.sp else 24.sp)
-                    }
+            if (iconBitmap != null) {
+                androidx.compose.foundation.Image(
+                    bitmap = iconBitmap.asImageBitmap(),
+                    contentDescription = stringResource(iconStyle.titleRes),
+                    modifier = Modifier.fillMaxSize()
+                )
+            } else {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Brush.linearGradient(iconStyle.gradientColors)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(iconStyle.emoji, fontSize = if (size >= 56.dp) 28.sp else 24.sp)
                 }
             }
         }
@@ -354,7 +375,7 @@ fun IconCustomizationScreen(
     var showApplyDialog by remember { mutableStateOf(false) }
 
     val dialogIconBitmap = remember(selectedIcon) {
-        renderDepthEnhancedIconBitmap(context, selectedIcon, 220)
+        renderDepthEnhancedIconBitmap(context, selectedIcon, 220, previewOptimized = true)
     }
 
     Scaffold(
@@ -656,7 +677,9 @@ private fun IconOptionCard(
 ) {
     val context = LocalContext.current
 
-    val iconBitmap = remember(iconStyle) { renderDepthEnhancedIconBitmap(context, iconStyle, 168) }
+    val iconBitmap = remember(iconStyle) {
+        renderDepthEnhancedIconBitmap(context, iconStyle, 168, previewOptimized = true)
+    }
 
     val scale by animateFloatAsState(
         targetValue = if (isSelected) 1.02f else 1f,
@@ -801,14 +824,43 @@ fun applyAppIcon(context: Context, iconStyle: AppIconStyle) {
 /**
  * Map of AppIconStyle to their corresponding activity-alias class names
  */
-private val iconAliasMap = mapOf(
-    AppIconStyle.DEFAULT to "com.kyilmaz.neurocomet.MainActivityDefault",
-    AppIconStyle.CALM to "com.kyilmaz.neurocomet.MainActivityCalm",
-    AppIconStyle.FOCUS to "com.kyilmaz.neurocomet.MainActivityFocus",
-    AppIconStyle.ENERGY to "com.kyilmaz.neurocomet.MainActivityEnergy",
-    AppIconStyle.SENSORY_FRIENDLY to "com.kyilmaz.neurocomet.MainActivitySensory",
-    AppIconStyle.NEURODIVERSITY_PRIDE to "com.kyilmaz.neurocomet.MainActivityPride"
+    // Map of AppIconStyle to their corresponding activity-alias class names
+    // Note: The manifest must contain these aliases.
+    private val iconAliasMap = mapOf(
+        AppIconStyle.DEFAULT to "com.kyilmaz.neurocomet.LauncherDefault",
+        AppIconStyle.CALM to "com.kyilmaz.neurocomet.LauncherCalm",
+        AppIconStyle.FOCUS to "com.kyilmaz.neurocomet.LauncherFocus",
+        AppIconStyle.ENERGY to "com.kyilmaz.neurocomet.LauncherEnergy",
+        AppIconStyle.SENSORY_FRIENDLY to "com.kyilmaz.neurocomet.LauncherSensory",
+        AppIconStyle.NEURODIVERSITY_PRIDE to "com.kyilmaz.neurocomet.LauncherPride"
+    )
+
+private val stableEntryActivities = listOf(
+    "com.kyilmaz.neurocomet.MainActivityDefault",
+    "com.kyilmaz.neurocomet.MainActivityDefaultAlias",
+    "com.kyilmaz.neurocomet.MainActivityDefaultLauncherAlias",
+    "com.kyilmaz.neurocomet.MainActivityDefaultIconAlias",
+    "com.kyilmaz.neurocomet.MainActivityDefaultVisualAlias",
+    "com.kyilmaz.neurocomet.MainActivityCalm",
+    "com.kyilmaz.neurocomet.MainActivityFocus",
+    "com.kyilmaz.neurocomet.MainActivityEnergy",
+    "com.kyilmaz.neurocomet.MainActivitySensory",
+    "com.kyilmaz.neurocomet.MainActivityPride"
 )
+
+private fun ensureStableEntryActivitiesEnabled(context: Context) {
+    val packageManager = context.packageManager
+    stableEntryActivities.forEach { className ->
+        val componentName = android.content.ComponentName(context, className)
+        if (packageManager.getComponentEnabledSetting(componentName) != android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_ENABLED) {
+            packageManager.setComponentEnabledSetting(
+                componentName,
+                android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+                android.content.pm.PackageManager.DONT_KILL_APP
+            )
+        }
+    }
+}
 
 /**
  * Change the app icon by enabling/disabling activity-alias components.
@@ -821,29 +873,32 @@ fun changeAppIcon(context: Context, iconStyle: AppIconStyle) {
     android.util.Log.d(TAG, "Changing app icon to: ${iconStyle.name}")
 
     try {
+        ensureStableEntryActivitiesEnabled(context)
+
         // Get the target alias for the selected style
         val targetAlias = iconAliasMap[iconStyle] ?: iconAliasMap[AppIconStyle.DEFAULT]!!
 
-        // Disable all aliases first, then enable the target one
-        iconAliasMap.forEach { (style, aliasName) ->
-            val componentName = android.content.ComponentName(context, aliasName)
-            val newState = if (aliasName == targetAlias) {
-                android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_ENABLED
-            } else {
-                android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_DISABLED
-            }
+        // 1. Enable the target alias FIRST to ensure a launcher component is always present
+        packageManager.setComponentEnabledSetting(
+            android.content.ComponentName(context, targetAlias),
+            android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+            android.content.pm.PackageManager.DONT_KILL_APP
+        )
 
-            val currentState = packageManager.getComponentEnabledSetting(componentName)
-
-            // Only change if different from current state
-            if (currentState != newState) {
-                android.util.Log.d(TAG, "Setting $aliasName to ${if (newState == android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_ENABLED) "ENABLED" else "DISABLED"}")
-
-                packageManager.setComponentEnabledSetting(
-                    componentName,
-                    newState,
-                    android.content.pm.PackageManager.DONT_KILL_APP
-                )
+        // 2. Disable all other aliases
+        iconAliasMap.forEach { (_, aliasName) ->
+            if (aliasName != targetAlias) {
+                val componentName = android.content.ComponentName(context, aliasName)
+                
+                // Only change if currently enabled
+                if (packageManager.getComponentEnabledSetting(componentName) != android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_DISABLED) {
+                    android.util.Log.d(TAG, "Disabling: $aliasName")
+                    packageManager.setComponentEnabledSetting(
+                        componentName,
+                        android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+                        android.content.pm.PackageManager.DONT_KILL_APP
+                    )
+                }
             }
         }
 
@@ -855,7 +910,7 @@ fun changeAppIcon(context: Context, iconStyle: AppIconStyle) {
 
         Toast.makeText(
             context,
-            "Icon changed! $tip",
+            context.getString(R.string.icon_change_success, tip),
             Toast.LENGTH_LONG
         ).show()
 
@@ -945,7 +1000,7 @@ fun createPinnedShortcut(context: Context, iconStyle: AppIconStyle) {
                 // Show clear instructions
                 Toast.makeText(
                     context,
-                    "⬇️ TAP 'ADD' AT THE BOTTOM OF YOUR SCREEN! ⬇️",
+                    context.getString(R.string.shortcut_instruction_pin),
                     Toast.LENGTH_LONG
                 ).show()
 
@@ -953,7 +1008,7 @@ fun createPinnedShortcut(context: Context, iconStyle: AppIconStyle) {
                 android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
                     Toast.makeText(
                         context,
-                        "Or long-press the app icon to see shortcuts",
+                        context.getString(R.string.shortcut_instruction_long_press),
                         Toast.LENGTH_LONG
                     ).show()
                 }, 3500)
@@ -977,7 +1032,7 @@ fun createPinnedShortcut(context: Context, iconStyle: AppIconStyle) {
     } catch (e: Exception) {
         android.util.Log.e(TAG, "Failed to create pinned shortcut", e)
         e.printStackTrace()
-        Toast.makeText(context, "Failed to create shortcut: ${e.message}", Toast.LENGTH_LONG).show()
+        Toast.makeText(context, context.getString(R.string.shortcut_failed_generic, e.message), Toast.LENGTH_LONG).show()
     }
 }
 
@@ -992,6 +1047,9 @@ private fun tryLauncherSpecificShortcut(
     iconBitmap: android.graphics.Bitmap
 ): Boolean {
     val TAG = "IconCustomization"
+    val legacyShortcutIntentExtra = "android.intent.extra.shortcut.INTENT"
+    val legacyShortcutNameExtra = "android.intent.extra.shortcut.NAME"
+    val legacyShortcutIconExtra = "android.intent.extra.shortcut.ICON"
 
     android.util.Log.d(TAG, "Trying launcher-specific shortcut for: ${launcherInfo.launcherType.displayName}")
 
@@ -1001,14 +1059,14 @@ private fun tryLauncherSpecificShortcut(
     if (customAction != null) {
         try {
             val intent = Intent(customAction).apply {
-                putExtra(Intent.EXTRA_SHORTCUT_INTENT, launchIntent)
-                putExtra(Intent.EXTRA_SHORTCUT_NAME, context.getString(R.string.app_name))
-                putExtra(Intent.EXTRA_SHORTCUT_ICON, iconBitmap)
+                putExtra(legacyShortcutIntentExtra, launchIntent)
+                putExtra(legacyShortcutNameExtra, context.getString(R.string.app_name))
+                putExtra(legacyShortcutIconExtra, iconBitmap)
                 putExtra("duplicate", false)
             }
             context.sendBroadcast(intent)
             android.util.Log.d(TAG, "Sent custom launcher broadcast: $customAction")
-            Toast.makeText(context, "Shortcut added! ${launcherInfo.getShortcutTip()}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, context.getString(R.string.shortcut_added, launcherInfo.getShortcutTip()), Toast.LENGTH_SHORT).show()
             return true
         } catch (e: Exception) {
             android.util.Log.e(TAG, "Custom launcher broadcast failed", e)
@@ -1019,14 +1077,14 @@ private fun tryLauncherSpecificShortcut(
     if (launcherInfo.supportsLegacyBroadcast) {
         try {
             val intent = Intent("com.android.launcher.action.INSTALL_SHORTCUT").apply {
-                putExtra(Intent.EXTRA_SHORTCUT_INTENT, launchIntent)
-                putExtra(Intent.EXTRA_SHORTCUT_NAME, context.getString(R.string.app_name))
-                putExtra(Intent.EXTRA_SHORTCUT_ICON, iconBitmap)
+                putExtra(legacyShortcutIntentExtra, launchIntent)
+                putExtra(legacyShortcutNameExtra, context.getString(R.string.app_name))
+                putExtra(legacyShortcutIconExtra, iconBitmap)
                 putExtra("duplicate", false)
             }
             context.sendBroadcast(intent)
             android.util.Log.d(TAG, "Sent legacy launcher broadcast for: ${launcherInfo.launcherType.displayName}")
-            Toast.makeText(context, "Shortcut added! ${launcherInfo.getShortcutTip()}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, context.getString(R.string.shortcut_added, launcherInfo.getShortcutTip()), Toast.LENGTH_SHORT).show()
             return true
         } catch (e: Exception) {
             android.util.Log.e(TAG, "Legacy launcher broadcast failed", e)
@@ -1041,10 +1099,13 @@ private fun tryLauncherSpecificShortcut(
  * Legacy shortcut creation for older launchers.
  * Creates a new intent to avoid issues with modified intents.
  */
-@Suppress("DEPRECATION")
 private fun tryLegacyShortcut(context: Context, iconStyle: AppIconStyle, launchIntent: Intent, iconBitmap: android.graphics.Bitmap) {
     val TAG = "IconCustomization"
     try {
+        val legacyShortcutIntentExtra = "android.intent.extra.shortcut.INTENT"
+        val legacyShortcutNameExtra = "android.intent.extra.shortcut.NAME"
+        val legacyShortcutIconExtra = "android.intent.extra.shortcut.ICON"
+
         // Create a fresh intent for the shortcut target
         val shortcutTargetIntent = Intent(Intent.ACTION_MAIN).apply {
             addCategory(Intent.CATEGORY_LAUNCHER)
@@ -1053,23 +1114,23 @@ private fun tryLegacyShortcut(context: Context, iconStyle: AppIconStyle, launchI
         }
 
         val shortcutIntent = Intent("com.android.launcher.action.INSTALL_SHORTCUT").apply {
-            putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutTargetIntent)
-            putExtra(Intent.EXTRA_SHORTCUT_NAME, context.getString(R.string.app_name))
-            putExtra(Intent.EXTRA_SHORTCUT_ICON, iconBitmap)
+            putExtra(legacyShortcutIntentExtra, shortcutTargetIntent)
+            putExtra(legacyShortcutNameExtra, context.getString(R.string.app_name))
+            putExtra(legacyShortcutIconExtra, iconBitmap)
             putExtra("duplicate", false)
         }
         context.sendBroadcast(shortcutIntent)
         android.util.Log.d(TAG, "Legacy shortcut broadcast sent")
         Toast.makeText(
             context,
-            "Shortcut created! Check your home screen.",
+            context.getString(R.string.shortcut_created),
             Toast.LENGTH_LONG
         ).show()
     } catch (e: Exception) {
         android.util.Log.e(TAG, "Legacy shortcut also failed", e)
         Toast.makeText(
             context,
-            "Could not add shortcut. Try long-pressing the app icon to see shortcuts.",
+            context.getString(R.string.shortcut_failed),
             Toast.LENGTH_LONG
         ).show()
     }
@@ -1080,7 +1141,7 @@ private fun tryLegacyShortcut(context: Context, iconStyle: AppIconStyle, launchI
  * This renders the adaptive icon to a bitmap for proper shortcut support.
  */
 private fun createCompositeIcon(context: Context, iconStyle: AppIconStyle): android.graphics.drawable.Icon {
-    val bitmap = renderDepthEnhancedIconBitmap(context, iconStyle, 432)
+    val bitmap = renderDepthEnhancedIconBitmap(context, iconStyle, 432, previewOptimized = true)
         ?: android.graphics.Bitmap.createBitmap(432, 432, android.graphics.Bitmap.Config.ARGB_8888)
     return android.graphics.drawable.Icon.createWithBitmap(bitmap)
 }
@@ -1090,7 +1151,7 @@ private fun createCompositeIcon(context: Context, iconStyle: AppIconStyle): andr
  * Returns a Bitmap that can be used with various shortcut APIs.
  */
 private fun createCompositeIconBitmap(context: Context, iconStyle: AppIconStyle): android.graphics.Bitmap {
-    return renderDepthEnhancedIconBitmap(context, iconStyle, 192)
+    return renderDepthEnhancedIconBitmap(context, iconStyle, 192, previewOptimized = true)
         ?: android.graphics.Bitmap.createBitmap(192, 192, android.graphics.Bitmap.Config.ARGB_8888)
 }
 
@@ -1207,7 +1268,9 @@ private fun IconOptionCardCompact(
 ) {
     val context = LocalContext.current
 
-    val iconBitmap = remember(iconStyle) { renderDepthEnhancedIconBitmap(context, iconStyle, 160) }
+    val iconBitmap = remember(iconStyle) {
+        renderDepthEnhancedIconBitmap(context, iconStyle, 160, previewOptimized = true)
+    }
 
     Card(
         modifier = Modifier
@@ -1276,5 +1339,46 @@ private fun android.graphics.drawable.Drawable.toBitmap(width: Int, height: Int)
     this.setBounds(0, 0, width, height)
     this.draw(canvas)
     return bitmap
+}
+
+private val newIconPreviewStyles = listOf(
+    AppIconStyle.CALM,
+    AppIconStyle.SENSORY_FRIENDLY,
+    AppIconStyle.FOCUS,
+    AppIconStyle.ENERGY,
+    AppIconStyle.NEURODIVERSITY_PRIDE,
+)
+
+@Preview(name = "New icon cards", showBackground = true, backgroundColor = 0xFFF6F2FF)
+@Composable
+private fun NewIconCardsPreview() {
+    MaterialTheme {
+        Surface {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                newIconPreviewStyles.forEachIndexed { index, iconStyle ->
+                    IconOptionCard(
+                        iconStyle = iconStyle,
+                        isSelected = index == 0,
+                        onClick = {}
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Preview(name = "Icon customization screen", showBackground = true, widthDp = 412, heightDp = 1280)
+@Composable
+private fun IconCustomizationScreenPreview() {
+    MaterialTheme {
+        Surface {
+            IconCustomizationScreen(onBack = {})
+        }
+    }
 }
 

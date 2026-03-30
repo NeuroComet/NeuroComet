@@ -5,6 +5,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/backup_metadata.dart';
 import 'supabase_service.dart';
 import 'local_backup_service.dart';
+import '../core/constants/app_constants.dart';
 
 /// Progress state for backup operations
 class BackupProgress {
@@ -101,7 +102,7 @@ class BackupService {
         'backup_id': backupId,
         'user_id': userId,
         'created_at': DateTime.now().toIso8601String(),
-        'app_version': '1.0.0',
+        'app_version': AppConstants.appVersion,
       };
 
       final client = SupabaseService.client;
@@ -319,7 +320,7 @@ class BackupService {
       final metadata = BackupMetadata(
         backupId: backupId,
         createdAt: DateTime.now(),
-        appVersion: '1.0.0',
+        appVersion: AppConstants.appVersion,
         sizeBytes: sizeBytes,
         isEncrypted: false,
         storageLocation: storageLocation,

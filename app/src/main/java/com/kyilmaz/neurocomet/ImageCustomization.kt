@@ -1274,7 +1274,7 @@ private fun AvatarMakerSheet(
                 }
 
                 // Tab selector
-                ScrollableTabRow(
+                PrimaryScrollableTabRow(
                     selectedTabIndex = AvatarTab.entries.indexOf(selectedTab),
                     edgePadding = 16.dp,
                     containerColor = MaterialTheme.colorScheme.surfaceContainerLow,

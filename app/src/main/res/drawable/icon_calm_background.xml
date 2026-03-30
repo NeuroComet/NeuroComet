@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Calm Waters - Soothing ocean blue gradient with depth treatment -->
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape android:shape="rectangle">
             <gradient
                 android:type="linear"
                 android:angle="135"
-                android:startColor="#2193b0"
-                android:centerColor="#4AB7CF"
-                android:endColor="#6dd5ed" />
+                android:startColor="#2193B0"
+                android:centerColor="#43B7D1"
+                android:endColor="#6DD5ED" />
         </shape>
     </item>
 
@@ -16,11 +15,11 @@
         <shape android:shape="rectangle">
             <gradient
                 android:type="radial"
-                android:centerX="0.28"
-                android:centerY="0.20"
+                android:centerX="0.30"
+                android:centerY="0.18"
                 android:gradientRadius="90dp"
                 android:startColor="#38FFFFFF"
-                android:centerColor="#12FFFFFF"
+                android:centerColor="#12E8FAFF"
                 android:endColor="#00FFFFFF" />
         </shape>
     </item>
@@ -31,17 +30,9 @@
                 android:type="radial"
                 android:centerX="0.78"
                 android:centerY="0.84"
-                android:gradientRadius="120dp"
-                android:startColor="#1E063A46"
-                android:endColor="#00063A46" />
-        </shape>
-    </item>
-
-    <item android:left="1dp" android:top="1dp" android:right="1dp" android:bottom="1dp">
-        <shape android:shape="rectangle">
-            <stroke
-                android:width="1dp"
-                android:color="#1FFFFFFF" />
+                android:gradientRadius="124dp"
+                android:startColor="#22112838"
+                android:endColor="#00112838" />
         </shape>
     </item>
 </layer-list>

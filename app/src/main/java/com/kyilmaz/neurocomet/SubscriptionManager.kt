@@ -40,11 +40,12 @@ object SubscriptionManager {
     private const val BILLING_UNAVAILABLE_MESSAGE = "Purchases are temporarily unavailable. Please try again later."
 
     // =========================================================================
-    // TEST MODE — enabled automatically in debug builds.
-    // Simulates the full purchase flow without a real RevenueCat account so the
-    // UI, navigation, and ad-removal logic can be exercised end-to-end.
+    // TEST MODE — enables simulation in debug builds.
+    // If a valid RevenueCat key is present, testMode is dynamically disabled
+    // in MainActivity during initialization to allow real sandbox testing.
     // =========================================================================
-    private val testMode: Boolean = BuildConfig.DEBUG
+    var testMode: Boolean = BuildConfig.DEBUG
+        internal set
 
     /** Coroutine scope used by test-mode helpers to simulate async delays. */
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
@@ -480,6 +481,62 @@ object SubscriptionManager {
         isTestPremium = false
         _subscriptionState.value = SubscriptionState()
         Log.d(TAG, "🧪 TEST MODE: Premium status reset to FREE")
+    }
+
+    // ── Test-only helpers for triggering each transaction card state ──
+
+    /**
+     * Simulate a successful purchase (test mode only).
+     * Sets [isTestPremium] = true immediately, then updates state after delay.
+     */
+    fun simulateTestSuccess() {
+        if (!testMode) return
+        isTestPremium = true
+        _subscriptionState.value = _subscriptionState.value.copy(
+            isLoading = false,
+            isPremium = true,
+            purchaseSuccess = true,
+            purchaseType = "monthly"
+        )
+        Log.d(TAG, "🧪 TEST: Simulated SUCCESS (immediate premium applied)")
+        // Manually trigger GoogleAdsManager state update since this is an immediate state change
+        try {
+            com.kyilmaz.neurocomet.ads.GoogleAdsManager.devUpdateAdsState()
+        } catch (_: Exception) {
+            Log.w(TAG, "Could not trigger GoogleAdsManager update after simulated purchase.")
+        }
+    }
+
+    /**
+     * Simulate a declined purchase (test mode only).
+     * Sets [error] after a short delay so the screen shows a DECLINED card.
+     */
+    fun simulateTestDeclined() {
+        if (!testMode) return
+        _subscriptionState.value = _subscriptionState.value.copy(isLoading = true, error = null)
+        scope.launch {
+            delay(600)
+            _subscriptionState.value = _subscriptionState.value.copy(
+                isLoading = false,
+                error = "Payment declined by card issuer."
+            )
+            Log.d(TAG, "🧪 TEST: Simulated DECLINED")
+        }
+    }
+
+    /**
+     * Simulate a timed-out purchase (test mode only).
+     * Starts loading but never resolves — the screen's own 30-second
+     * timeout timer will fire and show the TIMED_OUT card.
+     */
+    fun simulateTestTimedOut() {
+        if (!testMode) return
+        _subscriptionState.value = _subscriptionState.value.copy(isLoading = true, error = null)
+        scope.launch {
+            delay(600)
+            // Intentionally leave loading — the timeout on the screen handles it.
+            Log.d(TAG, "🧪 TEST: Simulated TIMED_OUT (no response)")
+        }
     }
 
     /**

@@ -12,7 +12,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Article
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -25,9 +27,11 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.kyilmaz.neurocomet.ui.design.M3ETopAppBar
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // BACKUP SETTINGS SCREEN
@@ -47,6 +51,7 @@ fun BackupSettingsScreen(
     }
 
     val state by backupViewModel.state.collectAsState()
+    val contentMaxWidth = canonicalSettingsPaneMaxWidth()
     val snackbarHostState = remember { SnackbarHostState() }
 
     // Show error/success messages
@@ -108,32 +113,39 @@ fun BackupSettingsScreen(
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
-            TopAppBar(
-                title = { Text("Backup & Storage") },
+            M3ETopAppBar(
+                title = { Text(stringResource(R.string.backup_title)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.cd_back))
                     }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background,
-                    titleContentColor = MaterialTheme.colorScheme.onBackground
-                )
+                }
             )
         }
     ) { padding ->
-        if (state.isLoading) {
-            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator()
-            }
-        } else {
-            LazyColumn(
-                modifier = Modifier
-                    .padding(padding)
-                    .fillMaxSize(),
-                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding),
+            contentAlignment = Alignment.TopCenter
+        ) {
+            if (state.isLoading) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .widthIn(max = contentMaxWidth),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
+            } else {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .widthIn(max = contentMaxWidth),
+                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
                 // ═══════════════════════════════════════
                 // LAST BACKUP STATUS CARD
                 // ═══════════════════════════════════════
@@ -145,7 +157,7 @@ fun BackupSettingsScreen(
                 // BACK UP NOW
                 // ═══════════════════════════════════════
                 item {
-                    BackupSectionHeader("Back Up", Icons.Default.CloudUpload)
+                    BackupSectionHeader(stringResource(R.string.backup_section_back_up), Icons.Default.CloudUpload)
                 }
                 item {
                     BackupDestinationsCard(
@@ -163,7 +175,7 @@ fun BackupSettingsScreen(
                 // IMPORT / RESTORE FROM FILE
                 // ═══════════════════════════════════════
                 item {
-                    BackupSectionHeader("Import", Icons.Default.FileDownload)
+                    BackupSectionHeader(stringResource(R.string.backup_section_import), Icons.Default.FileDownload)
                 }
                 item {
                     ImportCard(
@@ -181,7 +193,7 @@ fun BackupSettingsScreen(
                 // AUTO-BACKUP
                 // ═══════════════════════════════════════
                 item {
-                    BackupSectionHeader("Auto-Backup", Icons.Default.Schedule)
+                    BackupSectionHeader(stringResource(R.string.backup_section_auto), Icons.Default.Schedule)
                 }
                 item {
                     AutoBackupCard(
@@ -197,7 +209,7 @@ fun BackupSettingsScreen(
                 // WHAT TO BACK UP
                 // ═══════════════════════════════════════
                 item {
-                    BackupSectionHeader("What to Back Up", Icons.Default.Checklist)
+                    BackupSectionHeader(stringResource(R.string.backup_section_what_to_back_up), Icons.Default.Checklist)
                 }
                 item {
                     BackupScopeCard(
@@ -212,7 +224,7 @@ fun BackupSettingsScreen(
                 // SECURITY
                 // ═══════════════════════════════════════
                 item {
-                    BackupSectionHeader("Security", Icons.Default.Lock)
+                    BackupSectionHeader(stringResource(R.string.backup_section_security), Icons.Default.Lock)
                 }
                 item {
                     EncryptionCard(
@@ -231,7 +243,7 @@ fun BackupSettingsScreen(
                 // RESTORE
                 // ═══════════════════════════════════════
                 item {
-                    BackupSectionHeader("Restore", Icons.Default.Restore)
+                    BackupSectionHeader(stringResource(R.string.backup_section_restore), Icons.Default.Restore)
                 }
 
                 if (state.isRestoring) {
@@ -263,7 +275,7 @@ fun BackupSettingsScreen(
                 // ═══════════════════════════════════════
                 if (state.localBackups.isNotEmpty()) {
                     item {
-                        BackupSectionHeader("Storage Management", Icons.Default.Storage)
+                        BackupSectionHeader(stringResource(R.string.backup_section_storage_mgmt), Icons.Default.Storage)
                     }
                     item {
                         ElevatedCard(
@@ -271,9 +283,15 @@ fun BackupSettingsScreen(
                             shape = RoundedCornerShape(16.dp)
                         ) {
                             ListItem(
-                                headlineContent = { Text("Delete All Local Backups") },
+                                headlineContent = { Text(stringResource(R.string.backup_delete_all_local)) },
                                 supportingContent = {
-                                    Text("${state.localBackups.size} backup${if (state.localBackups.size == 1) "" else "s"} stored")
+                                    Text(
+                                        context.resources.getQuantityString(
+                                            R.plurals.backup_count_stored,
+                                            state.localBackups.size,
+                                            state.localBackups.size
+                                        )
+                                    )
                                 },
                                 leadingContent = {
                                     Icon(
@@ -289,6 +307,7 @@ fun BackupSettingsScreen(
                 }
 
                 item { Spacer(Modifier.height(80.dp)) }
+                }
             }
         }
     }
@@ -301,20 +320,18 @@ fun BackupSettingsScreen(
         AlertDialog(
             onDismissRequest = { showRestoreConfirm = null },
             icon = { Icon(Icons.Default.Restore, contentDescription = null) },
-            title = { Text("Restore Backup") },
+            title = { Text(stringResource(R.string.backup_restore_title)) },
             text = {
-                Text("This will restore your data from the selected backup. " +
-                     "Current data that conflicts with the backup will be overwritten.\n\n" +
-                     "Are you sure you want to continue?")
+                Text(stringResource(R.string.backup_restore_desc))
             },
             confirmButton = {
                 TextButton(onClick = {
                     showRestoreConfirm = null
                     backupViewModel.restoreBackup(backupId)
-                }) { Text("Restore") }
+                }) { Text(stringResource(R.string.backup_restore_button)) }
             },
             dismissButton = {
-                TextButton(onClick = { showRestoreConfirm = null }) { Text("Cancel") }
+                TextButton(onClick = { showRestoreConfirm = null }) { Text(stringResource(R.string.action_cancel)) }
             }
         )
     }
@@ -322,8 +339,8 @@ fun BackupSettingsScreen(
     showDeleteConfirm?.let { backupId ->
         AlertDialog(
             onDismissRequest = { showDeleteConfirm = null },
-            title = { Text("Delete Backup") },
-            text = { Text("This backup will be permanently deleted. This action cannot be undone.") },
+            title = { Text(stringResource(R.string.backup_delete_title)) },
+            text = { Text(stringResource(R.string.backup_delete_desc)) },
             confirmButton = {
                 TextButton(
                     onClick = {
@@ -333,10 +350,10 @@ fun BackupSettingsScreen(
                     colors = ButtonDefaults.textButtonColors(
                         contentColor = MaterialTheme.colorScheme.error
                     )
-                ) { Text("Delete") }
+                ) { Text(stringResource(R.string.action_delete)) }
             },
             dismissButton = {
-                TextButton(onClick = { showDeleteConfirm = null }) { Text("Cancel") }
+                TextButton(onClick = { showDeleteConfirm = null }) { Text(stringResource(R.string.action_cancel)) }
             }
         )
     }
@@ -344,8 +361,8 @@ fun BackupSettingsScreen(
     if (showDeleteAllConfirm) {
         AlertDialog(
             onDismissRequest = { showDeleteAllConfirm = false },
-            title = { Text("Delete All Backups") },
-            text = { Text("All local backups will be permanently deleted. This action cannot be undone.") },
+            title = { Text(stringResource(R.string.backup_delete_all_title)) },
+            text = { Text(stringResource(R.string.backup_delete_all_desc)) },
             confirmButton = {
                 TextButton(
                     onClick = {
@@ -355,10 +372,10 @@ fun BackupSettingsScreen(
                     colors = ButtonDefaults.textButtonColors(
                         contentColor = MaterialTheme.colorScheme.error
                     )
-                ) { Text("Delete All") }
+                ) { Text(stringResource(R.string.backup_delete_all_button)) }
             },
             dismissButton = {
-                TextButton(onClick = { showDeleteAllConfirm = false }) { Text("Cancel") }
+                TextButton(onClick = { showDeleteAllConfirm = false }) { Text(stringResource(R.string.action_cancel)) }
             }
         )
     }
@@ -367,13 +384,10 @@ fun BackupSettingsScreen(
         AlertDialog(
             onDismissRequest = { showEncryptionInfo = false },
             icon = { Icon(Icons.Default.Lock, contentDescription = null) },
-            title = { Text("Encrypt Backups") },
+            title = { Text(stringResource(R.string.backup_encrypt_title)) },
             text = {
                 Column {
-                    Text(
-                        "Encrypted backups protect your data with a passphrase. " +
-                        "If you forget your passphrase, you will not be able to restore your backup."
-                    )
+                    Text(stringResource(R.string.backup_encrypt_desc))
                     Spacer(Modifier.height(12.dp))
                     ElevatedCard(
                         colors = CardDefaults.elevatedCardColors(
@@ -392,7 +406,7 @@ fun BackupSettingsScreen(
                             )
                             Spacer(Modifier.width(8.dp))
                             Text(
-                                "Passphrase cannot be recovered if lost!",
+                                stringResource(R.string.backup_encrypt_warning),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.error,
                                 fontWeight = FontWeight.SemiBold
@@ -405,10 +419,10 @@ fun BackupSettingsScreen(
                 TextButton(onClick = {
                     showEncryptionInfo = false
                     backupViewModel.updateSettings { it.copy(encryptBackups = true) }
-                }) { Text("Enable") }
+                }) { Text(stringResource(R.string.backup_encrypt_enable)) }
             },
             dismissButton = {
-                TextButton(onClick = { showEncryptionInfo = false }) { Text("Cancel") }
+                TextButton(onClick = { showEncryptionInfo = false }) { Text(stringResource(R.string.action_cancel)) }
             }
         )
     }
@@ -416,20 +430,20 @@ fun BackupSettingsScreen(
     if (showFrequencyPicker) {
         val options = BackupFrequency.entries
         val labels = mapOf(
-            BackupFrequency.OFF to "Off",
-            BackupFrequency.DAILY to "Daily",
-            BackupFrequency.WEEKLY to "Weekly",
-            BackupFrequency.MONTHLY to "Monthly"
+            BackupFrequency.OFF to stringResource(R.string.backup_freq_off),
+            BackupFrequency.DAILY to stringResource(R.string.backup_freq_daily),
+            BackupFrequency.WEEKLY to stringResource(R.string.backup_freq_weekly),
+            BackupFrequency.MONTHLY to stringResource(R.string.backup_freq_monthly)
         )
         val descriptions = mapOf(
-            BackupFrequency.OFF to "Manual backups only",
-            BackupFrequency.DAILY to "Every 24 hours",
-            BackupFrequency.WEEKLY to "Once a week",
-            BackupFrequency.MONTHLY to "Once a month"
+            BackupFrequency.OFF to stringResource(R.string.backup_freq_off_desc),
+            BackupFrequency.DAILY to stringResource(R.string.backup_freq_daily_desc),
+            BackupFrequency.WEEKLY to stringResource(R.string.backup_freq_weekly_desc),
+            BackupFrequency.MONTHLY to stringResource(R.string.backup_freq_monthly_desc)
         )
         AlertDialog(
             onDismissRequest = { showFrequencyPicker = false },
-            title = { Text("Backup Frequency", style = MaterialTheme.typography.titleSmall) },
+            title = { Text(stringResource(R.string.backup_freq_title), style = MaterialTheme.typography.titleSmall) },
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(0.dp)) {
                     options.forEach { freq ->
@@ -528,7 +542,7 @@ private fun LastBackupCard(settings: BackupSettings) {
                 )
                 Spacer(Modifier.width(12.dp))
                 Text(
-                    if (hasBackup) "Last Backup" else "No Backups Yet",
+                    if (hasBackup) stringResource(R.string.backup_last_backup) else stringResource(R.string.backup_no_backups_yet),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     color = if (hasBackup)
@@ -559,7 +573,7 @@ private fun LastBackupCard(settings: BackupSettings) {
                         else -> "${"%.1f".format(bytes / (1024.0 * 1024))} MB"
                     }
                     Text(
-                        "Size: $sizeStr",
+                        stringResource(R.string.backup_size_label, sizeStr),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
                     )
@@ -567,7 +581,7 @@ private fun LastBackupCard(settings: BackupSettings) {
             } else {
                 Spacer(Modifier.height(8.dp))
                 Text(
-                    "Back up your data to keep it safe. You can restore it on this or another device.",
+                    stringResource(R.string.backup_no_backups_desc),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -594,8 +608,8 @@ private fun BackupDestinationsCard(
             Column {
                 // ── Back up to this device ──
                 ListItem(
-                    headlineContent = { Text("Back Up to Device") },
-                    supportingContent = { Text("Save locally on this phone") },
+                    headlineContent = { Text(stringResource(R.string.backup_to_device)) },
+                    supportingContent = { Text(stringResource(R.string.backup_save_locally)) },
                     leadingContent = {
                         Icon(Icons.Default.PhoneAndroid, contentDescription = null, tint = MaterialTheme.colorScheme.tertiary)
                     },
@@ -609,8 +623,8 @@ private fun BackupDestinationsCard(
 
                 // ── Export to Google Drive / file ──
                 ListItem(
-                    headlineContent = { Text("Export to Google Drive or File") },
-                    supportingContent = { Text("Save to Google Drive, Downloads, USB, or any cloud storage") },
+                    headlineContent = { Text(stringResource(R.string.backup_export_gdrive)) },
+                    supportingContent = { Text(stringResource(R.string.backup_export_gdrive_desc)) },
                     leadingContent = {
                         Icon(Icons.Default.CloudUpload, contentDescription = null, tint = Color(0xFF4285F4))
                     },
@@ -633,7 +647,7 @@ private fun BackupDestinationsCard(
                     )
                     Spacer(Modifier.width(6.dp))
                     Text(
-                        "The file picker lets you choose Google Drive, Downloads, or any installed cloud app.",
+                        stringResource(R.string.backup_file_picker_hint),
                         style = MaterialTheme.typography.bodySmall.copy(fontSize = 11.sp),
                         color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
                     )
@@ -660,13 +674,13 @@ private fun ImportCard(
             ) {
                 CircularProgressIndicator(modifier = Modifier.size(40.dp), strokeWidth = 3.dp)
                 Spacer(Modifier.height(12.dp))
-                Text("Importing...", style = MaterialTheme.typography.bodyMedium)
+                Text(stringResource(R.string.backup_importing), style = MaterialTheme.typography.bodyMedium)
             }
         } else {
             Column {
                 ListItem(
-                    headlineContent = { Text("Import from File") },
-                    supportingContent = { Text("Import a .ncb backup from Google Drive, Downloads, or another location") },
+                    headlineContent = { Text(stringResource(R.string.backup_import_from_file)) },
+                    supportingContent = { Text(stringResource(R.string.backup_import_from_file_desc)) },
                     leadingContent = {
                         Icon(Icons.Default.FileOpen, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
                     },
@@ -679,8 +693,8 @@ private fun ImportCard(
                 HorizontalDivider(modifier = Modifier.padding(start = 56.dp, end = 16.dp))
 
                 ListItem(
-                    headlineContent = { Text("Import & Restore") },
-                    supportingContent = { Text("Import a backup file and immediately restore all data") },
+                    headlineContent = { Text(stringResource(R.string.backup_import_restore)) },
+                    supportingContent = { Text(stringResource(R.string.backup_import_restore_desc)) },
                     leadingContent = {
                         Icon(Icons.Default.RestorePage, contentDescription = null, tint = Color(0xFFFF6E40))
                     },
@@ -708,8 +722,8 @@ private fun BackupNowCard(
             ProgressCard(progress = progress)
         } else {
             ListItem(
-                headlineContent = { Text("Back Up to Device") },
-                supportingContent = { Text("Save a backup to this device") },
+                headlineContent = { Text(stringResource(R.string.backup_to_device)) },
+                supportingContent = { Text(stringResource(R.string.backup_save_to_device)) },
                 leadingContent = {
                     Icon(
                         Icons.Default.PhoneAndroid,
@@ -762,10 +776,10 @@ private fun AutoBackupCard(
     onWifiOnlyChanged: (Boolean) -> Unit
 ) {
     val freqLabels = mapOf(
-        BackupFrequency.OFF to "Off",
-        BackupFrequency.DAILY to "Daily",
-        BackupFrequency.WEEKLY to "Weekly",
-        BackupFrequency.MONTHLY to "Monthly"
+        BackupFrequency.OFF to stringResource(R.string.backup_freq_off),
+        BackupFrequency.DAILY to stringResource(R.string.backup_freq_daily),
+        BackupFrequency.WEEKLY to stringResource(R.string.backup_freq_weekly),
+        BackupFrequency.MONTHLY to stringResource(R.string.backup_freq_monthly)
     )
 
     ElevatedCard(
@@ -773,8 +787,8 @@ private fun AutoBackupCard(
         shape = RoundedCornerShape(16.dp)
     ) {
         ListItem(
-            headlineContent = { Text("Backup Frequency") },
-            supportingContent = { Text(freqLabels[settings.autoBackupFrequency] ?: "Off") },
+            headlineContent = { Text(stringResource(R.string.backup_freq_title)) },
+            supportingContent = { Text(freqLabels[settings.autoBackupFrequency] ?: stringResource(R.string.backup_freq_off)) },
             leadingContent = {
                 Icon(Icons.Default.Autorenew, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
             },
@@ -785,8 +799,8 @@ private fun AutoBackupCard(
         )
         HorizontalDivider(modifier = Modifier.padding(start = 56.dp, end = 16.dp))
         ListItem(
-            headlineContent = { Text("Wi-Fi Only") },
-            supportingContent = { Text("Only back up when connected to Wi-Fi") },
+            headlineContent = { Text(stringResource(R.string.backup_wifi_only)) },
+            supportingContent = { Text(stringResource(R.string.backup_wifi_only_desc)) },
             leadingContent = {
                 Icon(Icons.Default.Wifi, contentDescription = null, tint = MaterialTheme.colorScheme.tertiary)
             },
@@ -809,31 +823,31 @@ private fun BackupScopeCard(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp)
     ) {
-        ScopeToggle("Profile", "Display name, bio, avatar", Icons.Default.Person, MaterialTheme.colorScheme.primary, scope.includeProfile) {
+        ScopeToggle(stringResource(R.string.backup_scope_profile), stringResource(R.string.backup_scope_profile_desc), Icons.Default.Person, MaterialTheme.colorScheme.primary, scope.includeProfile) {
             onScopeChanged(scope.copy(includeProfile = it))
         }
         ScopeDivider()
-        ScopeToggle("Messages", "Conversations and direct messages", Icons.Default.Chat, Color(0xFF42A5F5), scope.includeMessages) {
+        ScopeToggle(stringResource(R.string.backup_scope_messages), stringResource(R.string.backup_scope_messages_desc), Icons.AutoMirrored.Filled.Chat, Color(0xFF42A5F5), scope.includeMessages) {
             onScopeChanged(scope.copy(includeMessages = it))
         }
         ScopeDivider()
-        ScopeToggle("Posts & Comments", "Your posts, comments, and likes", Icons.Default.Article, Color(0xFFFF6E40), scope.includePosts) {
+        ScopeToggle(stringResource(R.string.backup_scope_posts), stringResource(R.string.backup_scope_posts_desc), Icons.AutoMirrored.Filled.Article, Color(0xFFFF6E40), scope.includePosts) {
             onScopeChanged(scope.copy(includePosts = it))
         }
         ScopeDivider()
-        ScopeToggle("Bookmarks", "Saved posts", Icons.Default.Bookmark, Color(0xFFFFD700), scope.includeBookmarks) {
+        ScopeToggle(stringResource(R.string.backup_scope_bookmarks), stringResource(R.string.backup_scope_bookmarks_desc), Icons.Default.Bookmark, Color(0xFFFFD700), scope.includeBookmarks) {
             onScopeChanged(scope.copy(includeBookmarks = it))
         }
         ScopeDivider()
-        ScopeToggle("Follows", "Following and followers list", Icons.Default.People, MaterialTheme.colorScheme.tertiary, scope.includeFollows) {
+        ScopeToggle(stringResource(R.string.backup_scope_follows), stringResource(R.string.backup_scope_follows_desc), Icons.Default.People, MaterialTheme.colorScheme.tertiary, scope.includeFollows) {
             onScopeChanged(scope.copy(includeFollows = it))
         }
         ScopeDivider()
-        ScopeToggle("App Settings", "Theme, accessibility, preferences", Icons.Default.Settings, Color(0xFF78909C), scope.includeSettings) {
+        ScopeToggle(stringResource(R.string.backup_scope_settings), stringResource(R.string.backup_scope_settings_desc), Icons.Default.Settings, Color(0xFF78909C), scope.includeSettings) {
             onScopeChanged(scope.copy(includeSettings = it))
         }
         ScopeDivider()
-        ScopeToggle("Notifications", "Notification history", Icons.Default.Notifications, Color(0xFFFF9800), scope.includeNotifications) {
+        ScopeToggle(stringResource(R.string.backup_scope_notifications), stringResource(R.string.backup_scope_notifications_desc), Icons.Default.Notifications, Color(0xFFFF9800), scope.includeNotifications) {
             onScopeChanged(scope.copy(includeNotifications = it))
         }
     }
@@ -873,11 +887,11 @@ private fun EncryptionCard(
         shape = RoundedCornerShape(16.dp)
     ) {
         ListItem(
-            headlineContent = { Text("End-to-End Encryption") },
+            headlineContent = { Text(stringResource(R.string.backup_e2e_title)) },
             supportingContent = {
                 Text(
-                    if (isEncrypted) "Backups are encrypted with your passphrase"
-                    else "Protect backups with a passphrase"
+                    if (isEncrypted) stringResource(R.string.backup_e2e_on_desc)
+                    else stringResource(R.string.backup_e2e_off_desc)
                 )
             },
             leadingContent = {
@@ -905,7 +919,7 @@ private fun EncryptionCard(
                 )
                 Spacer(Modifier.width(6.dp))
                 Text(
-                    "If you forget your passphrase, you won't be able to restore encrypted backups.",
+                    stringResource(R.string.backup_e2e_warning),
                     style = MaterialTheme.typography.bodySmall.copy(fontSize = 11.sp),
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -934,12 +948,12 @@ private fun EmptyBackupsCard() {
             )
             Spacer(Modifier.height(12.dp))
             Text(
-                "No backups found",
+                stringResource(R.string.backup_no_backups),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Text(
-                "Create a backup to see it here",
+                stringResource(R.string.backup_create_to_see),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
             )
@@ -973,9 +987,9 @@ private fun BackupListItem(
                     Text(metadata.formattedSize)
                     Spacer(Modifier.width(6.dp))
                     val locationLabel = when (metadata.storageLocation) {
-                        "exported" -> "Exported"
-                        "imported" -> "Imported"
-                        else -> "Local"
+                        "exported" -> stringResource(R.string.backup_location_exported)
+                        "imported" -> stringResource(R.string.backup_location_imported)
+                        else -> stringResource(R.string.backup_location_local)
                     }
                     val locationIcon = when (metadata.storageLocation) {
                         "exported" -> Icons.Default.Upload
@@ -989,7 +1003,7 @@ private fun BackupListItem(
                         Spacer(Modifier.width(8.dp))
                         Icon(Icons.Default.Lock, contentDescription = null, modifier = Modifier.size(12.dp), tint = MaterialTheme.colorScheme.primary)
                         Spacer(Modifier.width(2.dp))
-                        Text("Encrypted", style = MaterialTheme.typography.bodySmall.copy(fontSize = 10.sp), color = MaterialTheme.colorScheme.primary)
+                        Text(stringResource(R.string.backup_encrypted_label), style = MaterialTheme.typography.bodySmall.copy(fontSize = 10.sp), color = MaterialTheme.colorScheme.primary)
                     }
                 }
             },
@@ -1007,29 +1021,29 @@ private fun BackupListItem(
             trailingContent = {
                 Box {
                     IconButton(onClick = { showMenu = true }) {
-                        Icon(Icons.Default.MoreVert, contentDescription = "Options")
+                        Icon(Icons.Default.MoreVert, contentDescription = stringResource(R.string.cd_options))
                     }
                     DropdownMenu(
                         expanded = showMenu,
                         onDismissRequest = { showMenu = false }
                     ) {
                         DropdownMenuItem(
-                            text = { Text("Restore") },
+                            text = { Text(stringResource(R.string.backup_restore_button)) },
                             onClick = { showMenu = false; onRestore() },
                             leadingIcon = { Icon(Icons.Default.Restore, contentDescription = null) }
                         )
                         DropdownMenuItem(
-                            text = { Text("Export to File") },
+                            text = { Text(stringResource(R.string.backup_export_to_file)) },
                             onClick = { showMenu = false; onExport() },
                             leadingIcon = { Icon(Icons.Default.SaveAlt, contentDescription = null) }
                         )
                         DropdownMenuItem(
-                            text = { Text("Share") },
+                            text = { Text(stringResource(R.string.cd_share)) },
                             onClick = { showMenu = false; onShare() },
                             leadingIcon = { Icon(Icons.Default.Share, contentDescription = null) }
                         )
                         DropdownMenuItem(
-                            text = { Text("Delete", color = MaterialTheme.colorScheme.error) },
+                            text = { Text(stringResource(R.string.action_delete), color = MaterialTheme.colorScheme.error) },
                             onClick = { showMenu = false; onDelete() },
                             leadingIcon = { Icon(Icons.Default.Delete, contentDescription = null, tint = MaterialTheme.colorScheme.error) }
                         )

@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="32sp"
-        android:text="⏱️" />
+        android:text="@string/widget_focus_default_emoji" />
 
     <!-- Minutes display -->
     <TextView
@@ -23,7 +23,7 @@
         android:textSize="48sp"
         android:textStyle="bold"
         android:textColor="@color/widget_text_primary"
-        android:text="25" />
+        android:text="@string/widget_focus_default_minutes" />
 
     <!-- Label -->
     <TextView
@@ -32,7 +32,7 @@
         android:layout_height="wrap_content"
         android:textSize="14sp"
         android:textColor="@color/widget_text_secondary"
-        android:text="minutes" />
+        android:text="@string/widget_focus_minutes_label" />
 
     <!-- Control buttons -->
     <LinearLayout
@@ -53,7 +53,7 @@
             android:textStyle="bold"
             android:textColor="@color/widget_button_text"
             android:background="@drawable/widget_button_background"
-            android:text="▶️ Start"
+            android:text="@string/widget_focus_start"
             android:clickable="true"
             android:focusable="true" />
 
@@ -65,7 +65,7 @@
             android:layout_marginStart="8dp"
             android:gravity="center"
             android:textSize="18sp"
-            android:text="🔄"
+            android:text="@string/widget_focus_reset_emoji"
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:clickable="true"
             android:focusable="true" />

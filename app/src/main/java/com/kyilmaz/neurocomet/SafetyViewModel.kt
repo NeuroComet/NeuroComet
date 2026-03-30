@@ -1,6 +1,7 @@
 package com.kyilmaz.neurocomet
 
 import android.app.Application
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -38,6 +39,42 @@ data class SafetyState(
 ) {
     val isKidsMode: Boolean get() = audience == Audience.UNDER_13
 }
+
+// --- Audience Persistence ---
+
+/**
+ * Persists the verified audience to SharedPreferences so the age gate
+ * survives app restarts.  A missing value means the user has never
+ * completed age verification.
+ */
+object AudiencePrefs {
+    private const val PREFS = "audience_prefs"
+    private const val KEY_AUDIENCE = "verified_audience"
+
+    fun save(context: Context, audience: Audience) {
+        context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+            .edit()
+            .putString(KEY_AUDIENCE, audience.name)
+            .apply()
+    }
+
+    fun load(context: Context): Audience? {
+        val raw = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+            .getString(KEY_AUDIENCE, null) ?: return null
+        return runCatching { Audience.valueOf(raw) }.getOrNull()
+    }
+
+    fun clear(context: Context) {
+        context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+            .edit()
+            .remove(KEY_AUDIENCE)
+            .apply()
+    }
+
+    /** Returns true when the user has never completed age verification. */
+    fun needsVerification(context: Context): Boolean = load(context) == null
+}
+
 // --- ViewModel Implementation ---
 
 class SafetyViewModel : ViewModel() {
@@ -48,11 +85,14 @@ class SafetyViewModel : ViewModel() {
         viewModelScope.launch {
             val devOptions = DevOptionsSettings.get(application)
             val parentalState = ParentalControlsSettings.getState(application)
+            val persistedAudience = AudiencePrefs.load(application)
 
-            // Override audience/filter level if Dev Options are set
             _state.update { currentState ->
                 currentState.copy(
-                    audience = devOptions.forceAudience ?: currentState.audience,
+                    // Priority: dev override > persisted audience > current in-memory value
+                    audience = devOptions.forceAudience
+                        ?: persistedAudience
+                        ?: currentState.audience,
                     kidsFilterLevel = devOptions.forceKidsFilterLevel ?: currentState.kidsFilterLevel,
                     isParentalPinSet = devOptions.forcePinSet || parentalState.isPinSet
                 )
@@ -62,15 +102,26 @@ class SafetyViewModel : ViewModel() {
 
     // Mutator function used by SettingsScreen
     fun setAudience(audience: Audience, application: Application) {
-        // Only allow changes if not forced by dev options, or if setting back to ADULT
+        AudiencePrefs.save(application, audience)
         _state.update { it.copy(
-            audience = audience, 
-            kidsFilterLevel = if (audience == Audience.UNDER_13) KidsFilterLevel.STRICT else KidsFilterLevel.MODERATE) 
+            audience = audience,
+            kidsFilterLevel = if (audience == Audience.UNDER_13) KidsFilterLevel.STRICT else KidsFilterLevel.MODERATE)
         }
     }
 
-    // Allow setting audience directly without Application for age verification flow.
-    fun setAudienceDirect(audience: Audience) {
+    /**
+     * Set audience directly — used during sign-up / sign-in age verification.
+     * Persists the choice so it survives app restarts.
+     */
+    fun setAudienceDirect(audience: Audience, context: Context) {
+        AudiencePrefs.save(context, audience)
+        _state.update { it.copy(audience = audience, kidsFilterLevel = if (audience == Audience.UNDER_13) KidsFilterLevel.STRICT else KidsFilterLevel.MODERATE) }
+    }
+
+    /**
+     * Internal setter that skips persistence — only used by dev-options force overrides.
+     */
+    internal fun setAudienceTransient(audience: Audience) {
         _state.update { it.copy(audience = audience, kidsFilterLevel = if (audience == Audience.UNDER_13) KidsFilterLevel.STRICT else KidsFilterLevel.MODERATE) }
     }
 }

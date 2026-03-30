@@ -2,18 +2,27 @@ package com.kyilmaz.neurocomet
 
 import android.app.Application
 import android.content.Intent
+import android.widget.Toast
 import androidx.core.net.toUri
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Logout
@@ -23,6 +32,8 @@ import androidx.compose.material.icons.filled.AppShortcut
 import androidx.compose.material.icons.filled.Bedtime
 import androidx.compose.material.icons.filled.BugReport
 import androidx.compose.material.icons.filled.Build
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.CloudUpload
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.Description
@@ -40,30 +51,45 @@ import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Tonality
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.ListItem
-import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.material3.OutlinedTextField
+import androidx.compose.foundation.text.KeyboardOptions
+import com.kyilmaz.neurocomet.ui.design.M3EDesignSystem
+import com.kyilmaz.neurocomet.ui.design.M3ETopAppBar
+
+// ═══════════════════════════════════════════════════════════════
+// VERSION DISPLAY HELPER
+// ═══════════════════════════════════════════════════════════════
 
 private fun displayVersionLabel(versionName: String): String {
     val betaMatch = Regex("^(.*)-beta0*(\\d+)$").matchEntire(versionName)
@@ -81,12 +107,17 @@ private fun displayVersionLabel(versionName: String): String {
     return versionName
 }
 
+// ═══════════════════════════════════════════════════════════════
+// MAIN SETTINGS SCREEN
+// ═══════════════════════════════════════════════════════════════
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Suppress("UNUSED_PARAMETER")
 @Composable
 fun SettingsScreen(
     authViewModel: AuthViewModel,
     onLogout: () -> Unit,
+    onRequireAuth: () -> Unit = {},
     safetyViewModel: SafetyViewModel,
     devOptionsViewModel: DevOptionsViewModel,
     canShowDevOptions: Boolean,
@@ -114,15 +145,91 @@ fun SettingsScreen(
     themeViewModel: ThemeViewModel,
     showSearchBar: Boolean = false
 ) {
+    val isUserPremium = isPremium || isFakePremiumEnabled
+    val contentMaxWidth = canonicalSettingsPaneMaxWidth()
     val context = LocalContext.current
     val app = context.applicationContext as Application
     val authUser by authViewModel.user.collectAsState()
+    val isGuestAccount = authUser?.id == "guest_user" || authUser == null
     val safetyState by safetyViewModel.state.collectAsState()
     val themeState by themeViewModel.themeState.collectAsState()
     val displayVersion = remember { displayVersionLabel(BuildConfig.VERSION_NAME) }
     var showLogoutConfirm by remember { mutableStateOf(false) }
     var searchQuery by remember(showSearchBar) { mutableStateOf("") }
+    var versionTapCount by remember { mutableStateOf(0) }
+    var lastVersionTapTime by remember { mutableStateOf(0L) }
+    val devOptions by devOptionsViewModel.options.collectAsState()
 
+    var showPinPromptForKidsToggle by remember { mutableStateOf(false) }
+    var pinEntry by remember { mutableStateOf("") }
+    var pinError by remember { mutableStateOf<String?>(null) }
+
+    // ── PIN prompt dialog ──
+    if (showPinPromptForKidsToggle) {
+        AlertDialog(
+            onDismissRequest = {
+                showPinPromptForKidsToggle = false
+                pinEntry = ""
+                pinError = null
+            },
+            title = { Text(stringResource(R.string.settings_pin_required_title)) },
+            text = {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text(stringResource(R.string.settings_pin_required_desc))
+                    OutlinedTextField(
+                        value = pinEntry,
+                        onValueChange = { pinEntry = it; pinError = null },
+                        label = { Text(stringResource(R.string.parental_pin_label)) },
+                        singleLine = true,
+                        visualTransformation = PasswordVisualTransformation(),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword)
+                    )
+                    pinError?.let {
+                        Text(it, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
+                    }
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    when (val result = ParentalControlsSettings.verifyPin(context, pinEntry)) {
+                        is ParentalControlsSettings.PinVerifyResult.Success -> {
+                            safetyViewModel.setAudience(Audience.ADULT, app)
+                            showPinPromptForKidsToggle = false
+                            pinEntry = ""
+                            pinError = null
+                        }
+                        is ParentalControlsSettings.PinVerifyResult.Incorrect -> {
+                            pinError = context.getString(
+                                R.string.settings_pin_incorrect_attempts,
+                                result.attemptsRemaining
+                            )
+                            pinEntry = ""
+                        }
+                        is ParentalControlsSettings.PinVerifyResult.LockedOut -> {
+                            val mins = (result.remainingMs / 60_000).coerceAtLeast(1)
+                            pinError = context.getString(R.string.settings_pin_locked_minutes, mins)
+                            pinEntry = ""
+                        }
+                        is ParentalControlsSettings.PinVerifyResult.NoPinSet -> {
+                            safetyViewModel.setAudience(Audience.ADULT, app)
+                            showPinPromptForKidsToggle = false
+                            pinEntry = ""
+                            pinError = null
+                        }
+                    }
+                }) { Text(stringResource(R.string.settings_pin_verify)) }
+            },
+            dismissButton = {
+                TextButton(onClick = {
+                    showPinPromptForKidsToggle = false
+                    pinEntry = ""
+                    pinError = null
+                }) { Text(stringResource(R.string.action_cancel)) }
+            }
+        )
+    }
+
+    // ── Logout confirmation dialog ──
     if (showLogoutConfirm) {
         AlertDialog(
             onDismissRequest = { showLogoutConfirm = false },
@@ -144,495 +251,934 @@ fun SettingsScreen(
         )
     }
 
+    // ── Search helper ──
     fun matchesSearch(title: String, subtitle: String = ""): Boolean {
         if (!showSearchBar || searchQuery.isBlank()) return true
         return title.contains(searchQuery, ignoreCase = true) ||
             subtitle.contains(searchQuery, ignoreCase = true)
     }
 
-    val accountSectionVisible = matchesSearch(stringResource(R.string.settings_my_profile), authUser?.name ?: stringResource(R.string.settings_not_authenticated)) ||
-        matchesSearch(stringResource(R.string.settings_logout), authUser?.id ?: "")
-    val premiumSectionVisible = matchesSearch(
-        if (isPremium) stringResource(R.string.settings_premium_active) else stringResource(R.string.settings_go_premium),
-        if (isPremium) stringResource(R.string.settings_premium_thanks) else stringResource(R.string.settings_premium_price)
-    )
-    val appearanceSectionVisible =
-        matchesSearch(stringResource(R.string.settings_theme), stringResource(R.string.settings_theme_desc)) ||
-        matchesSearch(stringResource(R.string.settings_animation), stringResource(R.string.settings_animation_desc)) ||
-        matchesSearch(stringResource(R.string.settings_app_icon), stringResource(R.string.settings_app_icon_desc)) ||
-        matchesSearch(stringResource(R.string.settings_dark_mode), stringResource(R.string.settings_dark_mode_desc)) ||
-        matchesSearch(stringResource(R.string.settings_high_contrast), stringResource(R.string.settings_high_contrast_desc))
-    val privacySectionVisible =
-        matchesSearch(stringResource(R.string.settings_privacy), stringResource(R.string.settings_privacy_desc)) ||
-        matchesSearch(stringResource(R.string.settings_parental), stringResource(R.string.settings_parental_desc)) ||
-        matchesSearch(stringResource(R.string.settings_kid_mode), stringResource(R.string.settings_kid_mode_desc))
-    val backupSectionVisible = DeviceAuthority.isAuthorizedDevice(context) &&
-        matchesSearch("Backup & Storage", "Back up and restore your data — dev testing only")
-    val notificationsSectionVisible = matchesSearch(stringResource(R.string.settings_notif_prefs), stringResource(R.string.settings_notif_desc))
-    val contentSectionVisible = matchesSearch(stringResource(R.string.settings_content_filters), stringResource(R.string.settings_content_filters_desc))
-    val accessibilitySectionVisible =
-        matchesSearch(stringResource(R.string.settings_text_display), stringResource(R.string.settings_text_display_desc)) ||
-        matchesSearch(stringResource(R.string.settings_reduce_motion), stringResource(R.string.settings_reduce_motion_desc)) ||
-        matchesSearch(stringResource(R.string.settings_break_reminders), stringResource(R.string.settings_break_reminders_desc))
-    val gamesSectionVisible = matchesSearch(stringResource(R.string.games_play_now), stringResource(R.string.games_play_now_desc))
-    val feedbackSectionVisible =
-        matchesSearch(stringResource(R.string.feedback_report_bug_title), stringResource(R.string.feedback_report_bug_desc)) ||
-        matchesSearch(stringResource(R.string.feedback_request_feature_title), stringResource(R.string.feedback_request_feature_desc)) ||
-        matchesSearch(stringResource(R.string.feedback_send_title), stringResource(R.string.feedback_send_desc))
-    val legalSectionVisible =
-        matchesSearch(stringResource(R.string.settings_privacy_policy), stringResource(R.string.settings_privacy_policy_desc)) ||
-        matchesSearch(stringResource(R.string.settings_terms), stringResource(R.string.settings_terms_desc)) ||
-        matchesSearch(stringResource(R.string.app_name), stringResource(R.string.settings_version, displayVersion))
-    val developerSectionVisible = canShowDevOptions && (
-        matchesSearch(stringResource(R.string.settings_developer_options_group), stringResource(R.string.settings_dev_options_desc)) ||
-            matchesSearch(
-                stringResource(R.string.settings_fake_premium),
-                if (isFakePremiumEnabled) stringResource(R.string.settings_fake_premium_enabled) else stringResource(R.string.settings_fake_premium_disabled)
-            )
-        )
-    val hasAnyResults = accountSectionVisible || premiumSectionVisible || appearanceSectionVisible ||
-        privacySectionVisible || backupSectionVisible || notificationsSectionVisible || contentSectionVisible ||
-        accessibilitySectionVisible || gamesSectionVisible || feedbackSectionVisible || legalSectionVisible ||
-        developerSectionVisible
-
     Scaffold(
-        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.nav_settings)) },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background,
-                    titleContentColor = MaterialTheme.colorScheme.onBackground
-                )
+            M3ETopAppBar(
+                title = {
+                    Text(
+                        text = stringResource(R.string.nav_settings),
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
             )
         }
     ) { padding ->
-        Column(
+        Box(
             modifier = Modifier
                 .padding(padding)
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(4.dp)
+                .fillMaxSize(),
+            contentAlignment = Alignment.TopCenter
         ) {
-            if (showSearchBar) {
-                OutlinedTextField(
-                    value = searchQuery,
-                    onValueChange = { searchQuery = it },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 8.dp),
-                    placeholder = { Text("Search settings") },
-                    singleLine = true
-                )
-            }
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .widthIn(max = contentMaxWidth),
+                contentPadding = PaddingValues(
+                    start = M3EDesignSystem.Spacing.screenHorizontal,
+                    end = M3EDesignSystem.Spacing.screenHorizontal,
+                    top = M3EDesignSystem.Spacing.sm,
+                    bottom = 16.dp
+                ),
+                verticalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                // ── Search bar (optional) ──
+                if (showSearchBar) {
+                    item(key = "search_bar") {
+                        SettingsSearchBar(
+                            query = searchQuery,
+                            onQueryChange = { searchQuery = it }
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                    }
+                }
 
-            if (accountSectionVisible) {
-                SettingsSectionTitle(stringResource(R.string.settings_section_account))
-                if (matchesSearch(stringResource(R.string.settings_my_profile), authUser?.name ?: stringResource(R.string.settings_not_authenticated))) {
-                    SettingsRow(
-                        title = stringResource(R.string.settings_my_profile),
-                        subtitle = authUser?.name ?: stringResource(R.string.settings_not_authenticated),
-                        onClick = onOpenMyProfile,
-                        icon = Icons.Default.Person
-                    )
+                // ── Account section ──
+                val accountPrimaryTitle = if (isGuestAccount) context.getString(R.string.auth_sign_in) else context.getString(R.string.settings_my_profile)
+                val accountPrimarySubtitle = if (isGuestAccount) {
+                    context.getString(R.string.settings_sign_in_desc)
+                } else {
+                    authUser?.name ?: context.getString(R.string.settings_not_authenticated)
                 }
-                if (matchesSearch(stringResource(R.string.settings_logout), authUser?.id ?: "")) {
-                    SettingsRow(
-                        title = stringResource(R.string.settings_logout),
-                        subtitle = authUser?.id ?: "",
-                        onClick = { showLogoutConfirm = true },
-                        icon = Icons.AutoMirrored.Filled.Logout
-                    )
+                if (matchesSearch(accountPrimaryTitle, accountPrimarySubtitle) ||
+                    (!isGuestAccount && matchesSearch(context.getString(R.string.settings_logout)))
+                ) {
+                    item(key = "section_account") {
+                        SettingsSectionHeader(title = stringResource(R.string.settings_section_account))
+                    }
+                    if (matchesSearch(accountPrimaryTitle, accountPrimarySubtitle)) {
+                        item(key = "account_primary") {
+                            SettingsNavRow(
+                                icon = if (isGuestAccount) Icons.Default.Lock else Icons.Default.Person,
+                                title = accountPrimaryTitle,
+                                subtitle = accountPrimarySubtitle,
+                                onClick = if (isGuestAccount) onRequireAuth else onOpenMyProfile
+                            )
+                        }
+                    }
+                    if (!isGuestAccount && matchesSearch(context.getString(R.string.settings_logout), authUser?.id ?: "")) {
+                        item(key = "account_logout") {
+                            SettingsNavRow(
+                                icon = Icons.AutoMirrored.Filled.Logout,
+                                title = stringResource(R.string.settings_logout),
+                                subtitle = authUser?.id ?: "",
+                                onClick = { showLogoutConfirm = true }
+                            )
+                        }
+                    }
+                    item(key = "div_account") { SettingsDivider() }
                 }
-                HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
-            }
 
-            if (premiumSectionVisible) {
-                SettingsSectionTitle(stringResource(R.string.settings_section_premium))
-                SettingsRow(
-                    title = if (isPremium) stringResource(R.string.settings_premium_active) else stringResource(R.string.settings_go_premium),
-                    subtitle = if (isPremium) stringResource(R.string.settings_premium_thanks) else stringResource(R.string.settings_premium_price),
-                    onClick = if (isPremium) { {} } else onOpenSubscription,
-                    enabled = !isPremium,
-                    icon = Icons.Default.Star
-                )
-                HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
-            }
+                // ── Premium section ──
+                val premiumTitle = if (isUserPremium) context.getString(R.string.settings_premium_active) else context.getString(R.string.settings_go_premium)
+                val premiumSubtitle = if (isUserPremium) context.getString(R.string.settings_premium_thanks) else context.getString(R.string.settings_premium_price)
+                if (matchesSearch(premiumTitle, premiumSubtitle)) {
+                    item(key = "section_premium") {
+                        SettingsSectionHeader(title = stringResource(R.string.settings_section_premium))
+                    }
+                    item(key = "premium_row") {
+                        SettingsNavRow(
+                            icon = Icons.Default.Star,
+                            title = premiumTitle,
+                            subtitle = premiumSubtitle,
+                            onClick = if (isUserPremium) { {} } else onOpenSubscription,
+                            enabled = !isUserPremium
+                        )
+                    }
+                    item(key = "div_premium") { SettingsDivider() }
+                }
 
-            if (appearanceSectionVisible) {
-                SettingsSectionTitle(stringResource(R.string.settings_section_appearance))
-                if (matchesSearch(stringResource(R.string.settings_theme), stringResource(R.string.settings_theme_desc))) {
-                    SettingsRow(
-                        title = stringResource(R.string.settings_theme),
-                        subtitle = stringResource(R.string.settings_theme_desc),
-                        onClick = onOpenThemeSettings,
-                        icon = Icons.Default.Palette
-                    )
-                }
-                if (matchesSearch(stringResource(R.string.settings_animation), stringResource(R.string.settings_animation_desc))) {
-                    SettingsRow(
-                        title = stringResource(R.string.settings_animation),
-                        subtitle = stringResource(R.string.settings_animation_desc),
-                        onClick = onOpenAnimationSettings,
-                        icon = Icons.Default.Animation
-                    )
-                }
-                if (matchesSearch(stringResource(R.string.settings_app_icon), stringResource(R.string.settings_app_icon_desc))) {
-                    SettingsRow(
-                        title = stringResource(R.string.settings_app_icon),
-                        subtitle = stringResource(R.string.settings_app_icon_desc),
-                        onClick = onOpenIconCustomization,
-                        icon = Icons.Default.AppShortcut
-                    )
-                }
-                if (matchesSearch(stringResource(R.string.settings_dark_mode), stringResource(R.string.settings_dark_mode_desc))) {
-                    SettingsToggleRow(
-                        title = stringResource(R.string.settings_dark_mode),
-                        subtitle = stringResource(R.string.settings_dark_mode_desc),
-                        checked = themeState.isDarkMode,
-                        onCheckedChange = themeViewModel::setDarkMode,
-                        icon = Icons.Default.DarkMode
-                    )
-                }
-                if (matchesSearch(stringResource(R.string.settings_high_contrast), stringResource(R.string.settings_high_contrast_desc))) {
-                    SettingsToggleRow(
-                        title = stringResource(R.string.settings_high_contrast),
-                        subtitle = stringResource(R.string.settings_high_contrast_desc),
-                        checked = themeState.isHighContrast,
-                        onCheckedChange = themeViewModel::setIsHighContrast,
-                        icon = Icons.Default.Tonality
-                    )
-                }
-                HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
-            }
+                // ── Appearance section ──
+                val themeTitle = context.getString(R.string.settings_theme)
+                val themeDesc = context.getString(R.string.settings_theme_desc)
+                val animTitle = context.getString(R.string.settings_animation)
+                val animDesc = context.getString(R.string.settings_animation_desc)
+                val iconTitle = context.getString(R.string.settings_app_icon)
+                val iconDesc = context.getString(R.string.settings_app_icon_desc)
+                val darkTitle = context.getString(R.string.settings_dark_mode)
+                val darkDesc = context.getString(R.string.settings_dark_mode_desc)
+                val hcTitle = context.getString(R.string.settings_high_contrast)
+                val hcDesc = context.getString(R.string.settings_high_contrast_desc)
+                val appearanceVisible = matchesSearch(themeTitle, themeDesc) ||
+                    matchesSearch(animTitle, animDesc) || matchesSearch(iconTitle, iconDesc) ||
+                    matchesSearch(darkTitle, darkDesc) || matchesSearch(hcTitle, hcDesc)
 
-            if (privacySectionVisible) {
-                SettingsSectionTitle(stringResource(R.string.settings_section_privacy))
-                if (matchesSearch(stringResource(R.string.settings_privacy), stringResource(R.string.settings_privacy_desc))) {
-                    SettingsRow(
-                        title = stringResource(R.string.settings_privacy),
-                        subtitle = stringResource(R.string.settings_privacy_desc),
-                        onClick = onOpenPrivacySettings,
-                        icon = Icons.Default.Lock
-                    )
+                if (appearanceVisible) {
+                    item(key = "section_appearance") {
+                        SettingsSectionHeader(title = stringResource(R.string.settings_section_appearance))
+                    }
+                    if (matchesSearch(themeTitle, themeDesc)) {
+                        item(key = "appearance_theme") {
+                            SettingsNavRow(
+                                icon = Icons.Default.Palette,
+                                title = themeTitle,
+                                subtitle = if (isUserPremium) themeDesc else "Premium Feature. Tap to unlock Themes.",
+                                onClick = if (isUserPremium) onOpenThemeSettings else onOpenSubscription,
+                                trailingContent = {
+                                    if (!isUserPremium) {
+                                        Icon(Icons.Default.Lock, contentDescription = "Locked", modifier = Modifier.size(16.dp), tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f))
+                                    }
+                                }
+                            )
+                        }
+                    }
+                    if (matchesSearch(animTitle, animDesc)) {
+                        item(key = "appearance_anim") {
+                            SettingsNavRow(
+                                icon = Icons.Default.Animation,
+                                title = animTitle,
+                                subtitle = animDesc,
+                                onClick = onOpenAnimationSettings
+                            )
+                        }
+                    }
+                    if (matchesSearch(iconTitle, iconDesc)) {
+                        item(key = "appearance_icon") {
+                            SettingsNavRow(
+                                icon = Icons.Default.AppShortcut,
+                                title = iconTitle,
+                                subtitle = iconDesc,
+                                onClick = onOpenIconCustomization
+                            )
+                        }
+                    }
+                    if (matchesSearch(darkTitle, darkDesc)) {
+                        item(key = "appearance_dark") {
+                            SettingsSwitchRow(
+                                icon = Icons.Default.DarkMode,
+                                title = darkTitle,
+                                subtitle = darkDesc,
+                                checked = themeState.isDarkMode,
+                                onCheckedChange = themeViewModel::setDarkMode
+                            )
+                        }
+                    }
+                    if (matchesSearch(hcTitle, hcDesc)) {
+                        item(key = "appearance_hc") {
+                            SettingsSwitchRow(
+                                icon = Icons.Default.Tonality,
+                                title = hcTitle,
+                                subtitle = hcDesc,
+                                checked = themeState.isHighContrast,
+                                onCheckedChange = themeViewModel::setIsHighContrast
+                            )
+                        }
+                    }
+                    item(key = "div_appearance") { SettingsDivider() }
                 }
-                if (matchesSearch(stringResource(R.string.settings_parental), stringResource(R.string.settings_parental_desc))) {
-                    SettingsRow(
-                        title = stringResource(R.string.settings_parental),
-                        subtitle = stringResource(R.string.settings_parental_desc),
-                        onClick = onOpenParentalControls,
-                        icon = Icons.Default.Shield
-                    )
+
+                // ── Privacy section ──
+                val privTitle = context.getString(R.string.settings_privacy)
+                val privDesc = context.getString(R.string.settings_privacy_desc)
+                val parentTitle = context.getString(R.string.settings_parental)
+                val parentDesc = context.getString(R.string.settings_parental_desc)
+                val kidTitle = context.getString(R.string.settings_kid_mode)
+                val kidDesc = context.getString(R.string.settings_kid_mode_desc)
+                val privacyVisible = matchesSearch(privTitle, privDesc) ||
+                    matchesSearch(parentTitle, parentDesc) || matchesSearch(kidTitle, kidDesc)
+
+                if (privacyVisible) {
+                    item(key = "section_privacy") {
+                        SettingsSectionHeader(title = stringResource(R.string.settings_section_privacy))
+                    }
+                    if (matchesSearch(privTitle, privDesc)) {
+                        item(key = "privacy_main") {
+                            SettingsNavRow(
+                                icon = Icons.Default.Lock,
+                                title = privTitle,
+                                subtitle = privDesc,
+                                onClick = onOpenPrivacySettings
+                            )
+                        }
+                    }
+                    if (matchesSearch(parentTitle, parentDesc)) {
+                        item(key = "privacy_parental") {
+                            SettingsNavRow(
+                                icon = Icons.Default.Shield,
+                                title = parentTitle,
+                                subtitle = parentDesc,
+                                onClick = onOpenParentalControls
+                            )
+                        }
+                    }
+                    if (matchesSearch(kidTitle, kidDesc)) {
+                        item(key = "privacy_kid") {
+                            SettingsSwitchRow(
+                                icon = Icons.Default.Visibility,
+                                title = kidTitle,
+                                subtitle = kidDesc,
+                                checked = safetyState.isKidsMode,
+                                onCheckedChange = { enabled ->
+                                    if (enabled) {
+                                        safetyViewModel.setAudience(Audience.UNDER_13, app)
+                                    } else {
+                                        if (ParentalControlsSettings.isPinSet(context)) {
+                                            showPinPromptForKidsToggle = true
+                                        } else {
+                                            safetyViewModel.setAudience(Audience.ADULT, app)
+                                        }
+                                    }
+                                }
+                            )
+                        }
+                    }
+                    item(key = "div_privacy") { SettingsDivider() }
                 }
-                if (matchesSearch(stringResource(R.string.settings_kid_mode), stringResource(R.string.settings_kid_mode_desc))) {
-                    SettingsToggleRow(
-                        title = stringResource(R.string.settings_kid_mode),
-                        subtitle = stringResource(R.string.settings_kid_mode_desc),
-                        checked = safetyState.isKidsMode,
-                        onCheckedChange = { enabled ->
-                            safetyViewModel.setAudience(if (enabled) Audience.UNDER_13 else Audience.ADULT, app)
-                        },
-                        icon = Icons.Default.Visibility
-                    )
+
+                // ── Backup section (dev-only) ──
+                val backupTitle = context.getString(R.string.backup_title)
+                val backupDesc = context.getString(R.string.settings_backup_testing_only)
+                if (DeviceAuthority.isAuthorizedDevice(context) && matchesSearch(backupTitle, backupDesc)) {
+                    item(key = "section_backup") {
+                        SettingsSectionHeader(title = backupTitle)
+                    }
+                    item(key = "backup_row") {
+                        SettingsNavRow(
+                            icon = Icons.Default.CloudUpload,
+                            title = backupTitle,
+                            subtitle = backupDesc,
+                            onClick = onOpenBackupSettings
+                        )
+                    }
+                    item(key = "div_backup") { SettingsDivider() }
+                }
+
+                // ── Notifications section ──
+                val notifTitle = context.getString(R.string.settings_notif_prefs)
+                val notifDesc = context.getString(R.string.settings_notif_desc)
+                if (matchesSearch(notifTitle, notifDesc)) {
+                    item(key = "section_notif") {
+                        SettingsSectionHeader(title = stringResource(R.string.settings_section_notifications))
+                    }
+                    item(key = "notif_row") {
+                        SettingsNavRow(
+                            icon = Icons.Default.Notifications,
+                            title = notifTitle,
+                            subtitle = notifDesc,
+                            onClick = onOpenNotificationSettings
+                        )
+                    }
+                    item(key = "div_notif") { SettingsDivider() }
+                }
+
+                // ── Content Filters section ──
+                val contentTitle = context.getString(R.string.settings_content_filters)
+                val contentDesc = context.getString(R.string.settings_content_filters_desc)
+                if (matchesSearch(contentTitle, contentDesc)) {
+                    item(key = "section_content") {
+                        SettingsSectionHeader(title = contentTitle)
+                    }
+                    item(key = "content_row") {
+                        SettingsNavRow(
+                            icon = Icons.Default.FilterList,
+                            title = contentTitle,
+                            subtitle = contentDesc,
+                            onClick = onOpenContentSettings
+                        )
+                    }
+                    item(key = "div_content") { SettingsDivider() }
+                }
+
+                // ── Accessibility section ──
+                val fontTitle = context.getString(R.string.settings_text_display)
+                val fontDesc = context.getString(R.string.settings_text_display_desc)
+                val motionTitle = context.getString(R.string.settings_reduce_motion)
+                val motionDesc = context.getString(R.string.settings_reduce_motion_desc)
+                val breakTitle = context.getString(R.string.settings_break_reminders)
+                val breakDesc = context.getString(R.string.settings_break_reminders_desc)
+                val a11yVisible = matchesSearch(fontTitle, fontDesc) ||
+                    matchesSearch(motionTitle, motionDesc) || matchesSearch(breakTitle, breakDesc)
+
+                if (a11yVisible) {
+                    item(key = "section_a11y") {
+                        SettingsSectionHeader(title = stringResource(R.string.settings_section_accessibility))
+                    }
+                    if (matchesSearch(fontTitle, fontDesc)) {
+                        item(key = "a11y_font") {
+                            SettingsNavRow(
+                                icon = Icons.Default.FormatSize,
+                                title = fontTitle,
+                                subtitle = fontDesc,
+                                onClick = onOpenFontSettings
+                            )
+                        }
+                    }
+                    if (matchesSearch(motionTitle, motionDesc)) {
+                        item(key = "a11y_motion") {
+                            SettingsNavRow(
+                                icon = Icons.Default.Accessibility,
+                                title = motionTitle,
+                                subtitle = motionDesc,
+                                onClick = onOpenAccessibilitySettings
+                            )
+                        }
+                    }
+                    if (matchesSearch(breakTitle, breakDesc)) {
+                        item(key = "a11y_break") {
+                            SettingsNavRow(
+                                icon = Icons.Default.Bedtime,
+                                title = breakTitle,
+                                subtitle = breakDesc,
+                                onClick = onOpenWellbeingSettings
+                            )
+                        }
+                    }
+                    item(key = "div_a11y") { SettingsDivider() }
+                }
+
+                // ── Games section ──
+                val gamesTitle = context.getString(R.string.games_play_now)
+                val gamesDesc = context.getString(R.string.games_play_now_desc)
+                if (matchesSearch(gamesTitle, gamesDesc)) {
+                    item(key = "section_games") {
+                        SettingsSectionHeader(title = stringResource(R.string.games_hub_title))
+                    }
+                    item(key = "games_row") {
+                        SettingsNavRow(
+                            icon = Icons.Default.Games,
+                            title = gamesTitle,
+                            subtitle = gamesDesc,
+                            onClick = onOpenGames
+                        )
+                    }
+                    item(key = "div_games") { SettingsDivider() }
+                }
+
+                // ── Feedback section ──
+                val feedbackHubTitle = context.getString(R.string.feedback_hub_title)
+                val feedbackHubDesc = "Report bugs, request features & share feedback"
+                val feedbackVisible = matchesSearch(feedbackHubTitle, feedbackHubDesc)
+
+                if (feedbackVisible) {
+                    item(key = "section_feedback") {
+                        SettingsSectionHeader(title = stringResource(R.string.feedback_hub_title))
+                    }
+                    item(key = "feedback_hub") {
+                        SettingsNavRow(
+                            icon = Icons.Default.Feedback,
+                            title = feedbackHubTitle,
+                            subtitle = feedbackHubDesc,
+                            onClick = onOpenBugReport  // All three callbacks now go to the hub
+                        )
+                    }
+                    item(key = "div_feedback") { SettingsDivider() }
+                }
+
+                // ── Legal section ──
+                val appName = context.getString(R.string.app_name)
+                val versionSubtitle = context.getString(R.string.settings_version, displayVersion)
+                val policyTitle = context.getString(R.string.settings_privacy_policy)
+                val policyDesc = context.getString(R.string.settings_privacy_policy_desc)
+                val termsTitle = context.getString(R.string.settings_terms)
+                val termsDesc = context.getString(R.string.settings_terms_desc)
+                val legalVisible = matchesSearch(policyTitle, policyDesc) ||
+                    matchesSearch(termsTitle, termsDesc) || matchesSearch(appName, versionSubtitle)
+
+                if (legalVisible) {
+                    item(key = "section_legal") {
+                        SettingsSectionHeader(title = stringResource(R.string.settings_section_legal))
+                    }
+                    if (matchesSearch(appName, versionSubtitle)) {
+                        item(key = "legal_version") {
+                            SettingsNavRow(
+                                icon = Icons.Default.Build,
+                                title = appName,
+                                subtitle = versionSubtitle,
+                                onClick = {
+                                    val currentTime = System.currentTimeMillis()
+                                    if (currentTime - lastVersionTapTime > 1500) {
+                                        versionTapCount = 1
+                                    } else {
+                                        versionTapCount++
+                                    }
+                                    lastVersionTapTime = currentTime
+
+                                    if (versionTapCount >= 7) {
+                                        versionTapCount = 0
+                                        devOptionsViewModel.setDevMenuEnabled(true)
+                                        Toast.makeText(
+                                            context,
+                                            context.getString(R.string.settings_developer_mode_activated),
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
+                                },
+                                showChevron = false
+                            )
+                        }
+                    }
+                    if (matchesSearch(policyTitle, policyDesc)) {
+                        item(key = "legal_privacy") {
+                            SettingsNavRow(
+                                icon = Icons.Default.Lock,
+                                title = policyTitle,
+                                subtitle = policyDesc,
+                                onClick = {
+                                    val intent = Intent(Intent.ACTION_VIEW, "https://neurocomet.github.io/NeuroComet/privacy.html".toUri())
+                                    context.startActivity(intent)
+                                }
+                            )
+                        }
+                    }
+                    if (matchesSearch(termsTitle, termsDesc)) {
+                        item(key = "legal_terms") {
+                            SettingsNavRow(
+                                icon = Icons.Default.Description,
+                                title = termsTitle,
+                                subtitle = termsDesc,
+                                onClick = {
+                                    val intent = Intent(Intent.ACTION_VIEW, "https://neurocomet.github.io/NeuroComet/terms.html".toUri())
+                                    context.startActivity(intent)
+                                }
+                            )
+                        }
+                    }
+                    item(key = "div_legal") { SettingsDivider() }
+                }
+
+                // ── Developer section ──
+                val devGroupTitle = context.getString(R.string.settings_developer_options_group)
+                val devGroupDesc = context.getString(R.string.settings_dev_options_desc)
+                val fakePremTitle = context.getString(R.string.settings_fake_premium)
+                val fakePremSubtitle = if (isFakePremiumEnabled) context.getString(R.string.settings_fake_premium_enabled) else context.getString(R.string.settings_fake_premium_disabled)
+                val devVisible = devOptions.devMenuEnabled && (matchesSearch(devGroupTitle, devGroupDesc) || matchesSearch(fakePremTitle, fakePremSubtitle))
+
+                if (devVisible) {
+                    item(key = "section_dev") {
+                        SettingsSectionHeader(title = stringResource(R.string.settings_section_developer))
+                    }
+                    if (matchesSearch(devGroupTitle, devGroupDesc)) {
+                        item(key = "dev_options") {
+                            SettingsNavRow(
+                                icon = Icons.Default.Build,
+                                title = devGroupTitle,
+                                subtitle = devGroupDesc,
+                                onClick = onOpenDevOptions
+                            )
+                        }
+                    }
+                    if (matchesSearch(fakePremTitle, fakePremSubtitle)) {
+                        item(key = "dev_fake_premium") {
+                            SettingsSwitchRow(
+                                icon = Icons.Default.Star,
+                                title = fakePremTitle,
+                                subtitle = fakePremSubtitle,
+                                checked = isFakePremiumEnabled,
+                                onCheckedChange = onFakePremiumToggle
+                            )
+                        }
+                    }
+                }
+
+                // ── No results ──
+                if (showSearchBar && searchQuery.isNotBlank()) {
+                    val noResults = !matchesSearch(accountPrimaryTitle) && !matchesSearch(premiumTitle) &&
+                        !appearanceVisible && !privacyVisible && !matchesSearch(notifTitle) &&
+                        !matchesSearch(contentTitle) && !a11yVisible && !matchesSearch(gamesTitle) &&
+                        !feedbackVisible && !legalVisible && !devVisible
+                    if (noResults) {
+                        item(key = "no_results") {
+                            Text(
+                                text = stringResource(R.string.settings_no_matching_results),
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                modifier = Modifier.padding(horizontal = 16.dp, vertical = 24.dp)
+                            )
+                        }
+                    }
                 }
             }
-
-            if (backupSectionVisible) {
-                HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
-                SettingsSectionTitle("Backup & Storage (Dev)")
-                SettingsRow(
-                    title = "Backup & Storage",
-                    subtitle = "Back up and restore your data — dev testing only",
-                    onClick = onOpenBackupSettings,
-                    icon = Icons.Default.CloudUpload
-                )
-            }
-
-            if (notificationsSectionVisible) {
-                HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
-                SettingsSectionTitle(stringResource(R.string.settings_section_notifications))
-                SettingsRow(
-                    title = stringResource(R.string.settings_notif_prefs),
-                    subtitle = stringResource(R.string.settings_notif_desc),
-                    onClick = onOpenNotificationSettings,
-                    icon = Icons.Default.Notifications
-                )
-            }
-
-            if (contentSectionVisible) {
-                HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
-                SettingsSectionTitle(stringResource(R.string.settings_content_filters))
-                SettingsRow(
-                    title = stringResource(R.string.settings_content_filters),
-                    subtitle = stringResource(R.string.settings_content_filters_desc),
-                    onClick = onOpenContentSettings,
-                    icon = Icons.Default.FilterList
-                )
-            }
-
-            if (accessibilitySectionVisible) {
-                HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
-                SettingsSectionTitle(stringResource(R.string.settings_section_accessibility))
-                if (matchesSearch(stringResource(R.string.settings_text_display), stringResource(R.string.settings_text_display_desc))) {
-                    SettingsRow(
-                        title = stringResource(R.string.settings_text_display),
-                        subtitle = stringResource(R.string.settings_text_display_desc),
-                        onClick = onOpenFontSettings,
-                        icon = Icons.Default.FormatSize
-                    )
-                }
-                if (matchesSearch(stringResource(R.string.settings_reduce_motion), stringResource(R.string.settings_reduce_motion_desc))) {
-                    SettingsRow(
-                        title = stringResource(R.string.settings_reduce_motion),
-                        subtitle = stringResource(R.string.settings_reduce_motion_desc),
-                        onClick = onOpenAccessibilitySettings,
-                        icon = Icons.Default.Accessibility
-                    )
-                }
-                if (matchesSearch(stringResource(R.string.settings_break_reminders), stringResource(R.string.settings_break_reminders_desc))) {
-                    SettingsRow(
-                        title = stringResource(R.string.settings_break_reminders),
-                        subtitle = stringResource(R.string.settings_break_reminders_desc),
-                        onClick = onOpenWellbeingSettings,
-                        icon = Icons.Default.Bedtime
-                    )
-                }
-            }
-
-            if (gamesSectionVisible) {
-                HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
-                SettingsSectionTitle(stringResource(R.string.games_hub_title))
-                SettingsRow(
-                    title = stringResource(R.string.games_play_now),
-                    subtitle = stringResource(R.string.games_play_now_desc),
-                    onClick = onOpenGames,
-                    icon = Icons.Default.Games
-                )
-            }
-
-            if (feedbackSectionVisible) {
-                HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
-                SettingsSectionTitle(stringResource(R.string.feedback_hub_title))
-                if (matchesSearch(stringResource(R.string.feedback_report_bug_title), stringResource(R.string.feedback_report_bug_desc))) {
-                    SettingsRow(
-                        title = stringResource(R.string.feedback_report_bug_title),
-                        subtitle = stringResource(R.string.feedback_report_bug_desc),
-                        onClick = onOpenBugReport,
-                        icon = Icons.Default.BugReport
-                    )
-                }
-                if (matchesSearch(stringResource(R.string.feedback_request_feature_title), stringResource(R.string.feedback_request_feature_desc))) {
-                    SettingsRow(
-                        title = stringResource(R.string.feedback_request_feature_title),
-                        subtitle = stringResource(R.string.feedback_request_feature_desc),
-                        onClick = onOpenFeatureRequest,
-                        icon = Icons.Default.Lightbulb
-                    )
-                }
-                if (matchesSearch(stringResource(R.string.feedback_send_title), stringResource(R.string.feedback_send_desc))) {
-                    SettingsRow(
-                        title = stringResource(R.string.feedback_send_title),
-                        subtitle = stringResource(R.string.feedback_send_desc),
-                        onClick = onOpenGeneralFeedback,
-                        icon = Icons.Default.Feedback
-                    )
-                }
-            }
-
-            if (legalSectionVisible) {
-                HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
-                SettingsSectionTitle(stringResource(R.string.settings_section_legal))
-                if (matchesSearch(stringResource(R.string.app_name), stringResource(R.string.settings_version, displayVersion))) {
-                    SettingsStaticRow(
-                        title = stringResource(R.string.app_name),
-                        subtitle = stringResource(R.string.settings_version, displayVersion),
-                        icon = Icons.Default.Build
-                    )
-                }
-                if (matchesSearch(stringResource(R.string.settings_privacy_policy), stringResource(R.string.settings_privacy_policy_desc))) {
-                    SettingsRow(
-                        title = stringResource(R.string.settings_privacy_policy),
-                        subtitle = stringResource(R.string.settings_privacy_policy_desc),
-                        onClick = {
-                            val intent = Intent(Intent.ACTION_VIEW, "https://neurocomet.github.io/NeuroComet/privacy.html".toUri())
-                            context.startActivity(intent)
-                        },
-                        icon = Icons.Default.Lock
-                    )
-                }
-                if (matchesSearch(stringResource(R.string.settings_terms), stringResource(R.string.settings_terms_desc))) {
-                    SettingsRow(
-                        title = stringResource(R.string.settings_terms),
-                        subtitle = stringResource(R.string.settings_terms_desc),
-                        onClick = {
-                            val intent = Intent(Intent.ACTION_VIEW, "https://neurocomet.github.io/NeuroComet/terms.html".toUri())
-                            context.startActivity(intent)
-                        },
-                        icon = Icons.Default.Description
-                    )
-                }
-            }
-
-            if (developerSectionVisible) {
-                HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
-                SettingsSectionTitle(stringResource(R.string.settings_section_developer))
-                if (matchesSearch(stringResource(R.string.settings_developer_options_group), stringResource(R.string.settings_dev_options_desc))) {
-                    SettingsRow(
-                        title = stringResource(R.string.settings_developer_options_group),
-                        subtitle = stringResource(R.string.settings_dev_options_desc),
-                        onClick = onOpenDevOptions,
-                        icon = Icons.Default.Build
-                    )
-                }
-                if (matchesSearch(stringResource(R.string.settings_fake_premium), if (isFakePremiumEnabled) stringResource(R.string.settings_fake_premium_enabled) else stringResource(R.string.settings_fake_premium_disabled))) {
-                    SettingsToggleRow(
-                        title = stringResource(R.string.settings_fake_premium),
-                        subtitle = if (isFakePremiumEnabled)
-                            stringResource(R.string.settings_fake_premium_enabled)
-                        else
-                            stringResource(R.string.settings_fake_premium_disabled),
-                        checked = isFakePremiumEnabled,
-                        onCheckedChange = onFakePremiumToggle,
-                        icon = Icons.Default.Star
-                    )
-                }
-            }
-
-            if (showSearchBar && searchQuery.isNotBlank() && !hasAnyResults) {
-                Text(
-                    text = "No matching settings found",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
-                )
-            }
-
-            Spacer(modifier = Modifier.height(24.dp))
         }
     }
 }
+
+// ═══════════════════════════════════════════════════════════════
+// THEME SETTINGS SCREEN
+// ═══════════════════════════════════════════════════════════════
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ThemeSettingsScreen(
     themeViewModel: ThemeViewModel,
+    isPremium: Boolean = false,
+    isFakePremiumEnabled: Boolean = false,
     onBack: () -> Unit
 ) {
+    val isUserPremium = isPremium || isFakePremiumEnabled
     val themeState by themeViewModel.themeState.collectAsState()
+    val contentMaxWidth = canonicalSettingsPaneMaxWidth()
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.theme_settings_title)) },
+            M3ETopAppBar(
+                title = {
+                    Text(
+                        stringResource(R.string.theme_settings_title),
+                        fontWeight = FontWeight.Bold
+                    )
+                },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
                     }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background,
-                    titleContentColor = MaterialTheme.colorScheme.onBackground
-                )
+                }
             )
         }
     ) { padding ->
-        Column(
+        Box(
             modifier = Modifier
                 .padding(padding)
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+                .fillMaxSize(),
+            contentAlignment = Alignment.TopCenter
         ) {
-            SettingsSectionTitle(stringResource(R.string.theme_quick_settings))
-            SettingsToggleRow(
-                title = stringResource(R.string.theme_dynamic_colors),
-                subtitle = stringResource(R.string.theme_dynamic_colors_desc),
-                checked = themeState.useDynamicColor,
-                onCheckedChange = themeViewModel::setUseDynamicColor,
-                icon = Icons.Default.Palette
-            )
-            SettingsToggleRow(
-                title = stringResource(R.string.settings_dark_mode),
-                subtitle = stringResource(R.string.settings_dark_mode_desc),
-                checked = themeState.isDarkMode,
-                onCheckedChange = themeViewModel::setDarkMode,
-                icon = Icons.Default.DarkMode
-            )
-            SettingsToggleRow(
-                title = stringResource(R.string.settings_high_contrast),
-                subtitle = stringResource(R.string.settings_high_contrast_desc),
-                checked = themeState.isHighContrast,
-                onCheckedChange = themeViewModel::setIsHighContrast,
-                icon = Icons.Default.Tonality
-            )
-            Spacer(modifier = Modifier.height(16.dp))
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .widthIn(max = contentMaxWidth),
+                contentPadding = PaddingValues(
+                    horizontal = M3EDesignSystem.Spacing.screenHorizontal,
+                    vertical = M3EDesignSystem.Spacing.sm
+                ),
+                verticalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                item {
+                    SettingsSectionHeader(title = stringResource(R.string.theme_quick_settings))
+                }
+                item {
+                    SettingsSwitchRow(
+                        icon = Icons.Default.Palette,
+                        title = stringResource(R.string.theme_dynamic_colors),
+                        subtitle = stringResource(R.string.theme_dynamic_colors_desc),
+                        checked = themeState.useDynamicColor,
+                        onCheckedChange = themeViewModel::setUseDynamicColor
+                    )
+                }
+                item {
+                    SettingsSwitchRow(
+                        icon = Icons.Default.DarkMode,
+                        title = stringResource(R.string.settings_dark_mode),
+                        subtitle = stringResource(R.string.settings_dark_mode_desc),
+                        checked = themeState.isDarkMode,
+                        onCheckedChange = themeViewModel::setDarkMode
+                    )
+                }
+                item {
+                    SettingsSwitchRow(
+                        icon = Icons.Default.Tonality,
+                        title = stringResource(R.string.settings_high_contrast),
+                        subtitle = stringResource(R.string.settings_high_contrast_desc),
+                        checked = themeState.isHighContrast,
+                        onCheckedChange = themeViewModel::setIsHighContrast
+                    )
+                }
+
+                item {
+                    SettingsSectionHeader(title = "Neuro-Adaptive Themes")
+                }
+
+                // List of themes, some are premium
+                NeuroState.entries.forEach { neuroState ->
+                    val isPremiumTheme = when (neuroState) {
+                        NeuroState.DEFAULT, NeuroState.HYPERFOCUS, NeuroState.CALM, NeuroState.OVERLOAD -> false
+                        else -> true
+                    }
+
+                    item(key = "theme_${neuroState.name}") {
+                        SettingsNavRow(
+                            title = stringResource(neuroState.displayNameResId),
+                            subtitle = if (isPremiumTheme && !isUserPremium) "Premium Theme" else stringResource(neuroState.descriptionResId),
+                            icon = Icons.Default.Palette,
+                            onClick = {
+                                if (!isPremiumTheme || isUserPremium) {
+                                    themeViewModel.setSelectedState(neuroState)
+                                }
+                            },
+                            showChevron = false,
+                            trailingContent = {
+                                if (themeState.selectedState == neuroState) {
+                                    Icon(Icons.Default.Check, contentDescription = "Selected", tint = MaterialTheme.colorScheme.primary)
+                                } else if (isPremiumTheme && !isUserPremium) {
+                                    Icon(Icons.Default.Lock, contentDescription = "Locked", modifier = Modifier.size(16.dp), tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f))
+                                }
+                            }
+                        )
+                    }
+                }
+
+                item { Spacer(modifier = Modifier.height(32.dp)) }
+            }
         }
     }
 }
 
+// ═══════════════════════════════════════════════════════════════
+// REUSABLE SETTINGS COMPONENTS  (fully self-contained — no M3ESurfaceCard)
+// ═══════════════════════════════════════════════════════════════
+
+/**
+ * Section header with bold primary-colored title.
+ */
 @Composable
-private fun SettingsSectionTitle(title: String) {
+private fun SettingsSectionHeader(title: String) {
     Text(
         text = title,
         style = MaterialTheme.typography.titleSmall,
+        fontWeight = FontWeight.Bold,
         color = MaterialTheme.colorScheme.primary,
-        modifier = Modifier.padding(horizontal = 16.dp, vertical = 6.dp)
+        modifier = Modifier.padding(horizontal = 4.dp, vertical = 10.dp)
     )
 }
 
+/**
+ * Search bar card for filtering settings.
+ */
 @Composable
-private fun SettingsStaticRow(
-    title: String,
-    subtitle: String,
-    icon: androidx.compose.ui.graphics.vector.ImageVector? = null
+private fun SettingsSearchBar(
+    query: String,
+    onQueryChange: (String) -> Unit
 ) {
-    ListItem(
-        headlineContent = { Text(title) },
-        supportingContent = { if (subtitle.isNotBlank()) Text(subtitle) },
-        leadingContent = { icon?.let { Icon(it, contentDescription = null) } },
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 4.dp),
-        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surface)
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(24.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
+    ) {
+        OutlinedTextField(
+            value = query,
+            onValueChange = onQueryChange,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 6.dp, vertical = 2.dp),
+            placeholder = { Text(stringResource(R.string.settings_search_placeholder)) },
+            singleLine = true,
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
+                disabledContainerColor = Color.Transparent,
+                focusedBorderColor = Color.Transparent,
+                unfocusedBorderColor = Color.Transparent,
+                disabledBorderColor = Color.Transparent
+            )
+        )
+    }
+}
+
+/**
+ * A thin divider between settings sections.
+ */
+@Composable
+private fun SettingsDivider() {
+    HorizontalDivider(
+        modifier = Modifier.padding(vertical = 8.dp),
+        color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f)
     )
 }
 
+/**
+ * Tinted icon circle — guaranteed to render the glyph visibly.
+ */
 @Composable
-private fun SettingsRow(
+private fun SettingsIconGlyph(
+    icon: ImageVector,
+    tint: Color = MaterialTheme.colorScheme.primary,
+    enabled: Boolean = true
+) {
+    val resolvedTint = if (enabled) tint else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.45f)
+    val resolvedBg = if (enabled) tint.copy(alpha = 0.12f) else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.08f)
+
+    Box(
+        modifier = Modifier
+            .size(40.dp)
+            .clip(RoundedCornerShape(12.dp))
+            .background(resolvedBg),
+        contentAlignment = Alignment.Center
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = null,
+            modifier = Modifier.size(22.dp),
+            tint = resolvedTint
+        )
+    }
+}
+
+/**
+ * A clickable settings row with a leading icon glyph, title, subtitle, and optional chevron.
+ * Does NOT use M3ESurfaceCard — renders directly and reliably.
+ */
+@Composable
+private fun SettingsNavRow(
+    icon: ImageVector,
     title: String,
     subtitle: String,
     onClick: () -> Unit,
-    icon: androidx.compose.ui.graphics.vector.ImageVector? = null,
-    enabled: Boolean = true
+    enabled: Boolean = true,
+    showChevron: Boolean = true,
+    trailingContent: (@Composable () -> Unit)? = null
 ) {
-    ListItem(
-        headlineContent = { Text(title) },
-        supportingContent = { if (subtitle.isNotBlank()) Text(subtitle) },
-        leadingContent = { icon?.let { Icon(it, contentDescription = null) } },
+    val contentAlpha = if (enabled) 1f else 0.55f
+
+    Card(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(enabled = enabled, onClick = onClick)
-            .padding(horizontal = 4.dp),
-        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surface)
+            .padding(vertical = 2.dp),
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+        ),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = if (enabled) 1.dp else 0.dp
+        )
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable(enabled = enabled, onClick = onClick)
+                .padding(horizontal = 16.dp, vertical = 14.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            SettingsIconGlyph(icon = icon, enabled = enabled)
+
+            Spacer(modifier = Modifier.width(14.dp))
+
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(2.dp)
+            ) {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = FontWeight.Medium,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = contentAlpha),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                if (subtitle.isNotBlank()) {
+                    Text(
+                        text = subtitle,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = contentAlpha),
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+            }
+
+            if (trailingContent != null) {
+                Spacer(modifier = Modifier.width(8.dp))
+                trailingContent()
+            } else if (showChevron) {
+                Spacer(modifier = Modifier.width(8.dp))
+                Icon(
+                    imageVector = Icons.Default.ChevronRight,
+                    contentDescription = null,
+                    modifier = Modifier.size(20.dp),
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                )
+            }
+        }
+    }
+}
+
+/**
+ * A settings row with a toggle switch.
+ * Does NOT use M3ESurfaceCard — renders directly and reliably.
+ */
+@Composable
+private fun SettingsSwitchRow(
+    icon: ImageVector,
+    title: String,
+    subtitle: String,
+    checked: Boolean,
+    onCheckedChange: (Boolean) -> Unit
+) {
+    val iconTint by animateColorAsState(
+        targetValue = if (checked) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
+        animationSpec = tween(durationMillis = 250),
+        label = "iconTint"
+    )
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 2.dp),
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { onCheckedChange(!checked) }
+                .padding(horizontal = 16.dp, vertical = 14.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            SettingsIconGlyph(icon = icon, tint = iconTint)
+
+            Spacer(modifier = Modifier.width(14.dp))
+
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(2.dp)
+            ) {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = FontWeight.Medium,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                if (subtitle.isNotBlank()) {
+                    Text(
+                        text = subtitle,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.width(8.dp))
+
+            Switch(
+                checked = checked,
+                onCheckedChange = onCheckedChange,
+                colors = SwitchDefaults.colors(
+                    checkedThumbColor = MaterialTheme.colorScheme.primary,
+                    checkedTrackColor = MaterialTheme.colorScheme.primaryContainer
+                )
+            )
+        }
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// BACKWARD-COMPAT ALIASES  (keep so other files still compile)
+// ═══════════════════════════════════════════════════════════════
+
+@Composable
+internal fun SettingsRow(
+    title: String,
+    subtitle: String,
+    onClick: () -> Unit,
+    icon: ImageVector? = null,
+    enabled: Boolean = true
+) {
+    SettingsNavRow(
+        icon = icon ?: Icons.Default.ChevronRight,
+        title = title,
+        subtitle = subtitle,
+        onClick = onClick,
+        enabled = enabled
     )
 }
 
 @Composable
-private fun SettingsToggleRow(
+internal fun SettingsToggleRow(
     title: String,
     subtitle: String,
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit,
-    icon: androidx.compose.ui.graphics.vector.ImageVector? = null
+    icon: ImageVector? = null
 ) {
-    ListItem(
-        headlineContent = { Text(title) },
-        supportingContent = { if (subtitle.isNotBlank()) Text(subtitle) },
-        leadingContent = { icon?.let { Icon(it, contentDescription = null) } },
-        trailingContent = {
-            Switch(checked = checked, onCheckedChange = onCheckedChange)
-        },
-        modifier = Modifier.fillMaxWidth(),
-        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surface)
+    SettingsSwitchRow(
+        icon = icon ?: Icons.Default.ChevronRight,
+        title = title,
+        subtitle = subtitle,
+        checked = checked,
+        onCheckedChange = onCheckedChange
+    )
+}
+
+@Composable
+internal fun SettingsSectionTitle(title: String) {
+    SettingsSectionHeader(title = title)
+}
+
+@Composable
+internal fun SettingsStaticRow(
+    title: String,
+    subtitle: String,
+    icon: ImageVector? = null
+) {
+    SettingsNavRow(
+        icon = icon ?: Icons.Default.ChevronRight,
+        title = title,
+        subtitle = subtitle,
+        onClick = {},
+        showChevron = false
     )
 }

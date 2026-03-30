@@ -263,14 +263,14 @@ private fun PullRefreshIndicator(
     if (state != PullRefreshState.IDLE || pullDistance > 0) {
         Box(
             modifier = modifier
-                .offset(y = with(LocalDensity.current) { indicatorOffset.coerceAtLeast(0f).toDp() })
-                .padding(top = 16.dp)
-                .size(48.dp)
                 .graphicsLayer {
+                    translationY = indicatorOffset.coerceAtLeast(0f)
                     scaleX = scale
                     scaleY = scale
                     rotationZ = if (state == PullRefreshState.REFRESHING) rotation else progress * 180f
                 }
+                .padding(top = 16.dp)
+                .size(48.dp)
                 .clip(CircleShape)
                 .background(
                     if (highContrast) Color.White
@@ -322,7 +322,9 @@ private fun PullRefreshIndicator(
     if (state != PullRefreshState.IDLE) {
         Box(
             modifier = Modifier
-                .offset(y = with(LocalDensity.current) { (indicatorOffset + 56f).coerceAtLeast(16f).toDp() })
+                .graphicsLayer {
+                    translationY = (indicatorOffset + 56f).coerceAtLeast(16f)
+                }
                 .padding(top = 8.dp),
             contentAlignment = Alignment.TopCenter
         ) {

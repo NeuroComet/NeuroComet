@@ -56,30 +56,32 @@ fun BannerAd(
     val context = LocalContext.current
     val adsState by GoogleAdsManager.adsState.collectAsState()
 
-    // Don't show anything if ads are disabled
-    if (!GoogleAdsManager.shouldShowAds()) {
-        return
-    }
+    // Key observation: We MUST react to adsState changes here.
+    // If we return early based on shouldShowAds(), the composable might not re-trigger
+    // if the underlying state change doesn't cause a recomposition of the parent.
+    val showAds = GoogleAdsManager.shouldShowAds()
 
     var isLoading by remember { mutableStateOf(true) }
     var hasError by remember { mutableStateOf(false) }
     var adView by remember { mutableStateOf<com.google.android.gms.ads.AdView?>(null) }
 
     // Create and load ad on first composition
-    LaunchedEffect(adKey) {
-        isLoading = true
-        hasError = false
+    LaunchedEffect(adKey, showAds) {
+        if (showAds) {
+            isLoading = true
+            hasError = false
+        }
     }
 
-    DisposableEffect(adKey) {
+    DisposableEffect(adKey, showAds) {
         onDispose {
             adView?.destroy()
             adView = null
         }
     }
 
-    // Don't render anything if there's an error
-    if (hasError) {
+    // Don't show anything if ads are disabled
+    if (!showAds || hasError) {
         return
     }
 

@@ -76,9 +76,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
-import android.content.res.Configuration
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import java.time.Duration
@@ -109,12 +107,11 @@ private enum class ScreenSize {
 
 @Composable
 private fun rememberScreenSize(): ScreenSize {
-    val configuration = LocalConfiguration.current
-    val screenWidthDp = configuration.screenWidthDp
-    return when {
-        screenWidthDp < 600 -> ScreenSize.COMPACT
-        screenWidthDp < 840 -> ScreenSize.MEDIUM
-        else -> ScreenSize.EXPANDED
+    return when (LocalCanonicalLayout.current.widthClass) {
+        CanonicalWidthClass.COMPACT -> ScreenSize.COMPACT
+        CanonicalWidthClass.MEDIUM -> ScreenSize.MEDIUM
+        CanonicalWidthClass.EXPANDED,
+        CanonicalWidthClass.LARGE -> ScreenSize.EXPANDED
     }
 }
 
@@ -125,8 +122,8 @@ private fun rememberScreenSize(): ScreenSize {
 @Composable
 private fun rememberMessagesDesign(): MessagesDesignTokens {
     val screenSize = rememberScreenSize()
-    val configuration = LocalConfiguration.current
-    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+    val canonicalLayout = LocalCanonicalLayout.current
+    val isLandscape = canonicalLayout.isLandscape
 
     return remember(screenSize, isLandscape) {
         MessagesDesignTokens(

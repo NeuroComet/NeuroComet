@@ -1,7 +1,9 @@
 package com.kyilmaz.neurocomet.calling
 
 import android.content.Context
+import android.media.AudioDeviceInfo
 import android.media.AudioManager
+import android.os.Build
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
@@ -979,10 +981,29 @@ class WebRTCCallManager private constructor() {
         isSpeakerOn = !isSpeakerOn
 
         val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
-        audioManager.isSpeakerphoneOn = isSpeakerOn
+        isSpeakerOn = setSpeakerphoneEnabled(audioManager, isSpeakerOn)
 
         Log.d(TAG, "Speaker ${if (isSpeakerOn) "on" else "off"}")
         return isSpeakerOn
+    }
+
+    private fun setSpeakerphoneEnabled(audioManager: AudioManager, enabled: Boolean): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (enabled) {
+                val speakerDevice = audioManager.availableCommunicationDevices
+                    .firstOrNull { it.type == AudioDeviceInfo.TYPE_BUILTIN_SPEAKER }
+                speakerDevice?.let(audioManager::setCommunicationDevice) ?: false
+            } else {
+                audioManager.clearCommunicationDevice()
+                false
+            }
+        } else {
+            @Suppress("DEPRECATION")
+            run {
+                audioManager.isSpeakerphoneOn = enabled
+            }
+            enabled
+        }
     }
 
     /**

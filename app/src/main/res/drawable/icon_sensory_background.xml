@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Sensory Friendly - Muted gray/charcoal gradient for reduced stimulation -->
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape android:shape="rectangle">
             <gradient
                 android:type="linear"
                 android:angle="135"
-                android:startColor="#434343"
-                android:centerColor="#2A2A2A"
-                android:endColor="#000000" />
+                android:startColor="#FF5A5A5A"
+                android:centerColor="@color/icon_sensory_background_color"
+                android:endColor="#FF303030" />
         </shape>
     </item>
 
@@ -17,11 +16,11 @@
             <gradient
                 android:type="radial"
                 android:centerX="0.30"
-                android:centerY="0.22"
-                android:gradientRadius="88dp"
-                android:startColor="#20FFFFFF"
-                android:centerColor="#08FFFFFF"
-                android:endColor="#00FFFFFF" />
+                android:centerY="0.18"
+                android:gradientRadius="90dp"
+                android:startColor="#22FFFFFF"
+                android:centerColor="#0AF7F7F7"
+                android:endColor="#00000000" />
         </shape>
     </item>
 
@@ -29,19 +28,11 @@
         <shape android:shape="rectangle">
             <gradient
                 android:type="radial"
-                android:centerX="0.78"
-                android:centerY="0.86"
+                android:centerX="0.80"
+                android:centerY="0.84"
                 android:gradientRadius="124dp"
-                android:startColor="#36000000"
-                android:endColor="#00000000" />
-        </shape>
-    </item>
-
-    <item android:left="1dp" android:top="1dp" android:right="1dp" android:bottom="1dp">
-        <shape android:shape="rectangle">
-            <stroke
-                android:width="1dp"
-                android:color="#16FFFFFF" />
+                android:startColor="#28101010"
+                android:endColor="#00101010" />
         </shape>
     </item>
 </layer-list>

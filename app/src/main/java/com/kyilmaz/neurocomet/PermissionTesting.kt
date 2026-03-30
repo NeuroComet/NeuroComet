@@ -193,7 +193,7 @@ val APP_PERMISSIONS = listOf(
     // Network
     @Suppress("NewApi")
     PermissionInfo(
-        Manifest.permission.ACCESS_LOCAL_NETWORK,
+        "android.permission.ACCESS_LOCAL_NETWORK",
         "Local Network",
         "Access local network for calls, device discovery, and WebRTC ICE gathering (API 37+)",
         Icons.Filled.Wifi,

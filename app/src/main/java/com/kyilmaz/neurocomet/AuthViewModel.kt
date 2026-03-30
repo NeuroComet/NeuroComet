@@ -12,11 +12,37 @@ import com.kyilmaz.neurocomet.auth.Fido2Credential
 import com.kyilmaz.neurocomet.auth.TotpSecret
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.auth.providers.builtin.Email
+import io.github.jan.supabase.postgrest.from
+import io.github.jan.supabase.postgrest.query.Columns
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.serialization.Serializable
+import java.time.Instant
+
+@Serializable
+data class AccountLifecycleStatus(
+    val id: String = "",
+    val is_active: Boolean = true,
+    val deletion_scheduled_at: String? = null,
+    val detox_started_at: String? = null,
+    val detox_until: String? = null,
+) {
+    val hasDeletionScheduled: Boolean
+        get() = !deletion_scheduled_at.isNullOrBlank()
+
+    val isDetoxActive: Boolean
+        get() = detox_until?.let {
+            runCatching { Instant.parse(it).isAfter(Instant.now()) }.getOrDefault(false)
+        } ?: false
+}
+
+sealed interface PendingAccountAction {
+    data class ScheduledDeletion(val scheduledAt: String?) : PendingAccountAction
+    data class DetoxActive(val until: String?) : PendingAccountAction
+}
 
 /**
  * AuthViewModel - Manages authentication state and integrates with AuthenticationManager
@@ -25,6 +51,7 @@ class AuthViewModel : ViewModel() {
 
     private val TAG = "AuthViewModel"
     private var authManager: AuthenticationManager? = null
+    private var applicationContext: Context? = null
 
     private fun buildMockUser(name: String): User = User(
         id = "mock_user_id",
@@ -40,6 +67,12 @@ class AuthViewModel : ViewModel() {
     private val _error = MutableStateFlow<String?>(null)
     val error = _error.asStateFlow()
 
+    private val _accountStatus = MutableStateFlow<AccountLifecycleStatus?>(null)
+    val accountStatus: StateFlow<AccountLifecycleStatus?> = _accountStatus.asStateFlow()
+
+    private val _pendingAccountAction = MutableStateFlow<PendingAccountAction?>(null)
+    val pendingAccountAction: StateFlow<PendingAccountAction?> = _pendingAccountAction.asStateFlow()
+
     // 2FA Logic
     private val _is2FAEnabled = MutableStateFlow(false)
     val is2FAEnabled = _is2FAEnabled.asStateFlow()
@@ -47,8 +80,6 @@ class AuthViewModel : ViewModel() {
     private val _is2FARequired = MutableStateFlow(false)
     val is2FARequired = _is2FARequired.asStateFlow()
 
-    private val _ageVerifiedAudience = MutableStateFlow<Audience?>(null)
-    val ageVerifiedAudience = _ageVerifiedAudience.asStateFlow()
 
     // Authentication method states
     private val _biometricEnabled = MutableStateFlow(false)
@@ -73,8 +104,208 @@ class AuthViewModel : ViewModel() {
      * Initialize the AuthenticationManager with context
      */
     fun initialize(context: Context) {
+        applicationContext = context.applicationContext
         authManager = AuthenticationManager.getInstance(context)
         refreshAuthState()
+        viewModelScope.launch {
+            restoreUserFromCurrentSession()
+        }
+    }
+
+    private fun userFromCurrentSession(fallbackName: String? = null): User? {
+        val session = AppSupabaseClient.client?.auth?.currentSessionOrNull() ?: return null
+        val userId = session.user?.id ?: return null
+        val meta = session.user?.userMetadata
+        val displayName = meta?.get("display_name")?.toString()?.removeSurrounding("\"")
+            ?: fallbackName
+            ?: session.user?.email?.substringBefore("@")
+            ?: "NeuroComet user"
+        val avatar = meta?.get("avatar_url")?.toString()?.removeSurrounding("\"") ?: ""
+        return User(
+            id = userId,
+            name = displayName,
+            avatarUrl = avatar,
+            isVerified = session.user?.emailConfirmedAt != null,
+            personality = "NeuroComet user"
+        )
+    }
+
+    private suspend fun restoreUserFromCurrentSession() {
+        val restoredUser = userFromCurrentSession() ?: return
+        _user.value = restoredUser
+        refreshCurrentAccountStatus(restoredUser.id)
+    }
+
+    private fun publishPendingAccountAction(status: AccountLifecycleStatus?) {
+        _pendingAccountAction.value = when {
+            status?.hasDeletionScheduled == true -> PendingAccountAction.ScheduledDeletion(status.deletion_scheduled_at)
+            status?.isDetoxActive == true -> PendingAccountAction.DetoxActive(status.detox_until)
+            else -> null
+        }
+    }
+
+    suspend fun refreshCurrentAccountStatus(userId: String? = null): AccountLifecycleStatus? {
+        val resolvedUserId = userId ?: _user.value?.id ?: return null
+        val client = AppSupabaseClient.client ?: return null
+        return try {
+            var status = client.from("users")
+                .select(columns = Columns.list("id", "is_active", "deletion_scheduled_at", "detox_started_at", "detox_until")) {
+                    filter { eq("id", resolvedUserId) }
+                    limit(1)
+                }
+                .decodeList<AccountLifecycleStatus>()
+                .firstOrNull()
+
+            if (status?.detox_until != null && !status.isDetoxActive) {
+                client.from("users").update({
+                    set("detox_started_at", null as String?)
+                    set("detox_until", null as String?)
+                    set("updated_at", Instant.now().toString())
+                }) {
+                    filter { eq("id", resolvedUserId) }
+                }
+                applicationContext?.also { ctx ->
+                    SocialSettingsManager.restoreDetoxDefaults(context = ctx)
+                }
+                status = status.copy(detox_started_at = null, detox_until = null)
+            }
+
+            _accountStatus.value = status
+            publishPendingAccountAction(status)
+            status
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to refresh account status", e)
+            null
+        }
+    }
+
+    fun scheduleAccountDeletion(onResult: (Boolean, String) -> Unit = { _, _ -> }) {
+        viewModelScope.launch {
+            val client = AppSupabaseClient.client
+            val userId = _user.value?.id
+            if (client == null || userId == null) {
+                onResult(false, "No user logged in")
+                return@launch
+            }
+
+            try {
+                client.from("users").update({
+                    set("deletion_scheduled_at", Instant.now().plusSeconds(14 * 24 * 60 * 60L).toString())
+                    set("detox_started_at", null as String?)
+                    set("detox_until", null as String?)
+                    set("is_active", false)
+                    set("updated_at", Instant.now().toString())
+                }) {
+                    filter { eq("id", userId) }
+                }
+                applicationContext?.also { ctx ->
+                    SocialSettingsManager.restoreDetoxDefaults(context = ctx)
+                }
+                refreshCurrentAccountStatus(userId)
+                signOut()
+                onResult(true, "Account scheduled for deletion in 14 days. Sign in again to cancel.")
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to schedule account deletion", e)
+                onResult(false, e.message ?: "Failed to schedule account deletion")
+            }
+        }
+    }
+
+    fun cancelScheduledDeletion(onResult: (Boolean, String) -> Unit = { _, _ -> }) {
+        viewModelScope.launch {
+            val client = AppSupabaseClient.client
+            val userId = _user.value?.id
+            if (client == null || userId == null) {
+                onResult(false, "No user logged in")
+                return@launch
+            }
+
+            try {
+                client.from("users").update({
+                    set("deletion_scheduled_at", null as String?)
+                    set("is_active", true)
+                    set("updated_at", Instant.now().toString())
+                }) {
+                    filter { eq("id", userId) }
+                }
+                refreshCurrentAccountStatus(userId)
+                onResult(true, "Account deletion cancelled.")
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to cancel account deletion", e)
+                onResult(false, e.message ?: "Failed to cancel account deletion")
+            }
+        }
+    }
+
+    fun startDetoxMode(days: Int, onResult: (Boolean, String) -> Unit = { _, _ -> }) {
+        viewModelScope.launch {
+            val client = AppSupabaseClient.client
+            val userId = _user.value?.id
+            if (client == null || userId == null) {
+                onResult(false, "No user logged in")
+                return@launch
+            }
+
+            try {
+                val now = Instant.now()
+                val until = now.plusSeconds(days.coerceAtLeast(1).toLong() * 24 * 60 * 60)
+                client.from("users").update({
+                    set("detox_started_at", now.toString())
+                    set("detox_until", until.toString())
+                    set("updated_at", now.toString())
+                }) {
+                    filter { eq("id", userId) }
+                }
+                applicationContext?.also { ctx ->
+                    SocialSettingsManager.applyDetoxDefaults(context = ctx)
+                }
+                refreshCurrentAccountStatus(userId)
+                signOut()
+                onResult(true, "Detox mode started until $until.")
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to start detox mode", e)
+                onResult(false, e.message ?: "Failed to start detox mode")
+            }
+        }
+    }
+
+    fun endDetoxMode(onResult: (Boolean, String) -> Unit = { _, _ -> }) {
+        viewModelScope.launch {
+            val client = AppSupabaseClient.client
+            val userId = _user.value?.id
+            if (client == null || userId == null) {
+                onResult(false, "No user logged in")
+                return@launch
+            }
+
+            try {
+                client.from("users").update({
+                    set("detox_started_at", null as String?)
+                    set("detox_until", null as String?)
+                    set("updated_at", Instant.now().toString())
+                }) {
+                    filter { eq("id", userId) }
+                }
+                applicationContext?.also { ctx ->
+                    SocialSettingsManager.restoreDetoxDefaults(context = ctx)
+                }
+                refreshCurrentAccountStatus(userId)
+                onResult(true, "Detox mode ended. Welcome back.")
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to end detox mode", e)
+                onResult(false, e.message ?: "Failed to end detox mode")
+            }
+        }
+    }
+
+    fun keepScheduledDeletion() {
+        _error.value = "Your account is still scheduled for deletion. Sign in again to cancel it."
+        signOut()
+    }
+
+    fun continueDetoxBreak() {
+        _error.value = "Detox mode is still active. Sign in again when you're ready to come back."
+        signOut()
     }
 
     /**
@@ -335,18 +566,10 @@ class AuthViewModel : ViewModel() {
                         this.email = trimmedEmail
                         this.password = trimmedPassword
                     }
-                    val session = client.auth.currentSessionOrNull()
-                    val userId = session?.user?.id
-                    if (userId != null) {
-                        val meta = session.user?.userMetadata
-                        _user.value = User(
-                            id = userId,
-                            name = meta?.get("display_name")?.toString()?.removeSurrounding("\"")
-                                ?: trimmedEmail.substringBefore("@"),
-                            avatarUrl = meta?.get("avatar_url")?.toString()?.removeSurrounding("\"") ?: "",
-                            isVerified = true,
-                            personality = "NeuroComet user"
-                        )
+                    val restoredUser = userFromCurrentSession(trimmedEmail.substringBefore("@"))
+                    if (restoredUser != null) {
+                        _user.value = restoredUser
+                        refreshCurrentAccountStatus(restoredUser.id)
                     } else {
                         _error.value = "Sign in failed. Please check your credentials."
                     }
@@ -409,12 +632,6 @@ class AuthViewModel : ViewModel() {
         _is2FAEnabled.value = anyEnabled
     }
 
-    /**
-     * Set the audience for age verification
-     */
-    fun setAgeVerifiedAudience(audience: Audience) {
-        _ageVerifiedAudience.value = audience
-    }
 
     /**
      * Sign up with email and password
@@ -456,16 +673,10 @@ class AuthViewModel : ViewModel() {
                             put("username", kotlinx.serialization.json.JsonPrimitive("user_${System.currentTimeMillis() % 100000}"))
                         }
                     }
-                    val session = client.auth.currentSessionOrNull()
-                    val userId = session?.user?.id
-                    if (userId != null) {
-                        _user.value = User(
-                            id = userId,
-                            name = displayName,
-                            avatarUrl = "",
-                            isVerified = false,
-                            personality = "NeuroComet user"
-                        )
+                    val restoredUser = userFromCurrentSession(displayName)
+                    if (restoredUser != null) {
+                        _user.value = restoredUser
+                        refreshCurrentAccountStatus(restoredUser.id)
                     } else {
                         // Supabase may require email confirmation
                         _error.value = "Check your email to confirm your account, then sign in."
@@ -479,7 +690,6 @@ class AuthViewModel : ViewModel() {
                     delay(1000)
                     _user.value = buildMockUser(trimmedEmail.substringBefore("@"))
                 }
-                audience?.let { _ageVerifiedAudience.value = it }
             } catch (e: Exception) {
                 _error.value = e.message ?: "Sign up failed"
             }
@@ -497,7 +707,11 @@ class AuthViewModel : ViewModel() {
                 Log.w(TAG, "Error during sign out (non-fatal)", e)
             }
         }
+        // Clear persisted audience so next sign-in triggers age verification
+        applicationContext?.let { AudiencePrefs.clear(it) }
         _user.value = null
+        _accountStatus.value = null
+        _pendingAccountAction.value = null
         _is2FARequired.value = false
     }
 

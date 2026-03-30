@@ -6,6 +6,8 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.Login
+import androidx.compose.material.icons.automirrored.outlined.Message
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
@@ -367,11 +369,11 @@ private fun isEmojiCodePoint(codePoint: Int): Boolean {
 enum class StringCheckerCategory(val title: String, val icon: @Composable () -> Unit, val stringCategory: StringCategory?) {
     ALL("All Strings", { Icon(Icons.Outlined.Translate, contentDescription = null) }, null),
     NAVIGATION("Navigation", { Icon(Icons.Outlined.Navigation, contentDescription = null) }, StringCategory.NAVIGATION),
-    AUTH("Authentication", { Icon(Icons.Outlined.Login, contentDescription = null) }, StringCategory.AUTH),
+    AUTH("Authentication", { Icon(Icons.AutoMirrored.Outlined.Login, contentDescription = null) }, StringCategory.AUTH),
     SETTINGS("Settings", { Icon(Icons.Outlined.Settings, contentDescription = null) }, StringCategory.SETTINGS),
     EXPLORE("Explore", { Icon(Icons.Outlined.Explore, contentDescription = null) }, StringCategory.EXPLORE),
     GAMES("Games", { Icon(Icons.Outlined.SportsEsports, contentDescription = null) }, StringCategory.GAMES),
-    MESSAGES("Messages", { Icon(Icons.Outlined.Message, contentDescription = null) }, StringCategory.MESSAGES),
+    MESSAGES("Messages", { Icon(Icons.AutoMirrored.Outlined.Message, contentDescription = null) }, StringCategory.MESSAGES),
     NEURO_STATES("Neuro States", { Icon(Icons.Outlined.Psychology, contentDescription = null) }, StringCategory.NEURO_STATE),
     BADGES("Badges", { Icon(Icons.Outlined.MilitaryTech, contentDescription = null) }, StringCategory.BADGE),
     PARENTAL("Parental", { Icon(Icons.Outlined.FamilyRestroom, contentDescription = null) }, StringCategory.PARENTAL),

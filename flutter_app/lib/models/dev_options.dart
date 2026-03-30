@@ -113,6 +113,10 @@ class DevOptions {
   // ── A/B Testing ─────────────────────────────────────────
   final ABTestVariant abTestVariant;
 
+  // ── Feedback & Beta Testing ─────────────────────────────
+  final bool bypassFeedbackRateLimit;
+  final bool forceFeedbackSubmitFailure;
+
   const DevOptions({
     // General
     this.showDebugOverlay = false,
@@ -169,6 +173,8 @@ class DevOptions {
     this.stressTestLocalStorage = false,
     this.mockCustomAvatar,
     this.abTestVariant = ABTestVariant.control,
+    this.bypassFeedbackRateLimit = false,
+    this.forceFeedbackSubmitFailure = false,
   });
 
   /// Returns the number of options that differ from defaults.
@@ -202,6 +208,8 @@ class DevOptions {
     if (simulateOffline != d.simulateOffline) count++;
     if (networkLatencyMs != d.networkLatencyMs) count++;
     if (abTestVariant != d.abTestVariant) count++;
+    if (bypassFeedbackRateLimit != d.bypassFeedbackRateLimit) count++;
+    if (forceFeedbackSubmitFailure != d.forceFeedbackSubmitFailure) count++;
     return count;
   }
 
@@ -251,6 +259,8 @@ class DevOptions {
     bool? stressTestLocalStorage,
     CustomAvatar? mockCustomAvatar,
     ABTestVariant? abTestVariant,
+    bool? bypassFeedbackRateLimit,
+    bool? forceFeedbackSubmitFailure,
   }) {
     return DevOptions(
       showDebugOverlay: showDebugOverlay ?? this.showDebugOverlay,
@@ -297,6 +307,8 @@ class DevOptions {
       stressTestLocalStorage: stressTestLocalStorage ?? this.stressTestLocalStorage,
       mockCustomAvatar: mockCustomAvatar ?? this.mockCustomAvatar,
       abTestVariant: abTestVariant ?? this.abTestVariant,
+      bypassFeedbackRateLimit: bypassFeedbackRateLimit ?? this.bypassFeedbackRateLimit,
+      forceFeedbackSubmitFailure: forceFeedbackSubmitFailure ?? this.forceFeedbackSubmitFailure,
     );
   }
 
@@ -332,6 +344,8 @@ class DevOptions {
     'mockPostCount': mockPostCount,
     'showSponsoredPosts': showSponsoredPosts,
     'abTestVariant': abTestVariant.index,
+    'bypassFeedbackRateLimit': bypassFeedbackRateLimit,
+    'forceFeedbackSubmitFailure': forceFeedbackSubmitFailure,
   };
 
   /// Deserialize from a SharedPreferences map
@@ -367,6 +381,8 @@ class DevOptions {
       mockPostCount: map['mockPostCount'] as int? ?? 10,
       showSponsoredPosts: map['showSponsoredPosts'] as bool? ?? true,
       abTestVariant: ABTestVariant.values.elementAtOrNull(map['abTestVariant'] as int? ?? 0) ?? ABTestVariant.control,
+      bypassFeedbackRateLimit: map['bypassFeedbackRateLimit'] as bool? ?? false,
+      forceFeedbackSubmitFailure: map['forceFeedbackSubmitFailure'] as bool? ?? false,
     );
   }
 }

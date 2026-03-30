@@ -80,7 +80,8 @@ object GoogleAdsManager {
         val useTestAds: Boolean = BuildConfig.DEBUG,
         val forceShowAds: Boolean = false,
         val simulateAdFailure: Boolean = false,
-        val kidsMode: Boolean = false
+        val kidsMode: Boolean = false,
+        val updateTrigger: Int = 0 // Dummy value to force StateFlow emission
     )
 
     /**
@@ -145,16 +146,18 @@ object GoogleAdsManager {
         SubscriptionManager.checkPremiumStatus { isPremium ->
             val verified = if (isPremium) SubscriptionManager.verifyPremiumStatus() else false
 
+            Log.d(TAG, "checkPremiumStatusAndUpdateAds: isPremium=$isPremium, verified=$verified")
+
             _adsState.value = _adsState.value.copy(
-                isPremium = isPremium && verified,
-                adsEnabled = !(isPremium && verified)
+                isPremium = isPremium && (verified || BuildConfig.DEBUG),
+                adsEnabled = !(isPremium && (verified || BuildConfig.DEBUG))
             )
 
-            if (isPremium && verified) {
-                Log.d(TAG, "Premium user detected - ads completely disabled")
+            if (_adsState.value.isPremium) {
+                Log.d(TAG, "Premium status applied - ads completely disabled")
                 clearAllAds()
             } else {
-                Log.d(TAG, "Non-premium user - preloading ads")
+                Log.d(TAG, "Non-premium status - preloading ads")
                 preloadAds(context)
             }
         }
@@ -166,6 +169,24 @@ object GoogleAdsManager {
     fun shouldShowAds(): Boolean {
         val state = _adsState.value
 
+        // Premium users never see ads - CHECK THIS FIRST AND AGGRESSIVELY
+        if (state.isPremium) {
+            // For dev simulated premium, we trust the state.isPremium flag in debug
+            if (BuildConfig.DEBUG) {
+                Log.d(TAG, "shouldShowAds: false (!!! PREMIUM DETECTED IN DEBUG !!!)")
+                return false
+            }
+
+            // Secure verification for release
+            val verified = SubscriptionManager.verifyPremiumStatus()
+            if (verified) {
+                Log.d(TAG, "shouldShowAds: false (verified premium user)")
+                return false
+            } else {
+                Log.d(TAG, "shouldShowAds: true (premium flag set but verification failed)")
+            }
+        }
+
         // Kids mode: no ads
         if (state.kidsMode) {
             Log.d(TAG, "shouldShowAds: false (kids mode)")
@@ -174,27 +195,19 @@ object GoogleAdsManager {
 
         // Dev override
         if (state.forceShowAds) {
-            Log.d(TAG, "shouldShowAds: true (force show)")
+            Log.d(TAG, "shouldShowAds: true (force show override)")
             return true
-        }
-
-        // Premium users never see ads
-        if (state.isPremium) {
-            val verified = SubscriptionManager.verifyPremiumStatus()
-            if (verified) {
-                Log.d(TAG, "shouldShowAds: false (premium user)")
-                return false
-            }
         }
 
         // If ads are explicitly disabled, don't show
         if (!state.adsEnabled) {
-            Log.d(TAG, "shouldShowAds: false (ads disabled)")
+            Log.d(TAG, "shouldShowAds: false (ads explicitly disabled)")
             return false
         }
 
-        Log.d(TAG, "shouldShowAds: true (initialized=${state.isInitialized})")
-        return true
+        val result = state.isInitialized
+        Log.d(TAG, "shouldShowAds: $result (initialized=${state.isInitialized}, premium=${state.isPremium}, enabled=${state.adsEnabled})")
+        return result
     }
 
     /**
@@ -593,6 +606,13 @@ object GoogleAdsManager {
             adsEnabled = !premium
         )
         if (premium) clearAllAds()
+        Log.d(TAG, "[DEV] Simulate premium: $premium. Ads enabled now: ${!premium}")
+        // Force an immediate state update across all listeners by updating an unused field
+        devUpdateAdsState()
+    }
+
+    fun devUpdateAdsState() {
+        _adsState.value = _adsState.value.copy(updateTrigger = _adsState.value.updateTrigger + 1)
     }
 
     fun devResetSessionCounters() {

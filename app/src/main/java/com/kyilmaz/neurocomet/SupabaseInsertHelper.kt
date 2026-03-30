@@ -2,7 +2,9 @@
 
 package com.kyilmaz.neurocomet
 
+import android.util.Log
 import io.github.jan.supabase.SupabaseClient
+import io.github.jan.supabase.auth.auth
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.request.delete
@@ -32,6 +34,8 @@ import kotlinx.serialization.json.JsonObject
  * encoding/decoding JSON manually and completely bypassing all reified typeOf() paths.
  */
 
+private const val TAG = "SupabaseREST"
+
 /** Shared JSON parser (lenient to handle Supabase responses). */
 private val supabaseJson = Json { ignoreUnknownKeys = true; isLenient = true }
 
@@ -40,12 +44,34 @@ private val rawHttpClient by lazy { HttpClient(OkHttp) }
 
 /** Cached raw Supabase URL (decrypted from BuildConfig). */
 private val rawSupabaseUrl: String by lazy {
-    SecurityUtils.decrypt(BuildConfig.SUPABASE_URL).removeSuffix("/")
+    SecurityUtils.decrypt(BuildConfig.SUPABASE_URL)
+        .removeSuffix("/")
+        .removeSuffix("/rest/v1")   // guard against double-path
+        .removeSuffix("/")
 }
 
 /** Cached raw Supabase anon key (decrypted from BuildConfig). */
 private val rawSupabaseKey: String by lazy {
     SecurityUtils.decrypt(BuildConfig.SUPABASE_KEY)
+}
+
+/**
+ * Returns the current authenticated user's JWT access token if available,
+ * otherwise falls back to the anon key.
+ *
+ * RLS policies that check `auth.uid()` require a real user JWT — sending
+ * only the anon key causes those policies to evaluate uid as NULL and
+ * reject (or silently skip) the operation, leading to 500 / empty-result
+ * errors.
+ */
+private fun currentBearerToken(): String {
+    return try {
+        AppSupabaseClient.client?.auth?.currentSessionOrNull()?.accessToken
+            ?.takeIf { it.isNotBlank() }
+            ?: rawSupabaseKey
+    } catch (_: Exception) {
+        rawSupabaseKey
+    }
 }
 
 // =============================================================================
@@ -56,15 +82,20 @@ private val rawSupabaseKey: String by lazy {
  * Insert a single [JsonObject] row into a Supabase table.
  */
 suspend fun SupabaseClient.safeInsert(table: String, value: JsonObject) {
-    val response = rawHttpClient.post("$rawSupabaseUrl/rest/v1/$table") {
+    val url = "$rawSupabaseUrl/rest/v1/$table"
+    val token = currentBearerToken()
+    Log.d(TAG, "INSERT → $table")
+    val response = rawHttpClient.post(url) {
         contentType(ContentType.Application.Json)
         header("apikey", rawSupabaseKey)
-        header("Authorization", "Bearer $rawSupabaseKey")
+        header("Authorization", "Bearer $token")
         header("Prefer", "return=minimal")
         setBody(value.toString())
     }
     if (response.status.value !in 200..299) {
-        throw Exception("Insert failed (${response.status}): ${response.bodyAsText()}")
+        val body = response.bodyAsText()
+        Log.e(TAG, "INSERT $table failed (${response.status}): $body")
+        throw Exception("Insert failed (${response.status}): $body")
     }
 }
 
@@ -73,15 +104,20 @@ suspend fun SupabaseClient.safeInsert(table: String, value: JsonObject) {
  */
 suspend fun SupabaseClient.safeInsertList(table: String, values: List<JsonObject>) {
     val body = JsonArray(values)
-    val response = rawHttpClient.post("$rawSupabaseUrl/rest/v1/$table") {
+    val url = "$rawSupabaseUrl/rest/v1/$table"
+    val token = currentBearerToken()
+    Log.d(TAG, "BULK INSERT → $table (${values.size} rows)")
+    val response = rawHttpClient.post(url) {
         contentType(ContentType.Application.Json)
         header("apikey", rawSupabaseKey)
-        header("Authorization", "Bearer $rawSupabaseKey")
+        header("Authorization", "Bearer $token")
         header("Prefer", "return=minimal")
         setBody(body.toString())
     }
     if (response.status.value !in 200..299) {
-        throw Exception("Bulk insert failed (${response.status}): ${response.bodyAsText()}")
+        val respBody = response.bodyAsText()
+        Log.e(TAG, "BULK INSERT $table failed (${response.status}): $respBody")
+        throw Exception("Bulk insert failed (${response.status}): $respBody")
     }
 }
 
@@ -105,13 +141,17 @@ suspend fun safeSelect(
         append("$rawSupabaseUrl/rest/v1/$table?select=$columns")
         if (filters.isNotEmpty()) append("&$filters")
     }
+    val token = currentBearerToken()
+    Log.d(TAG, "SELECT → $table (columns=$columns)")
     val response = rawHttpClient.get(url) {
         header("apikey", rawSupabaseKey)
-        header("Authorization", "Bearer $rawSupabaseKey")
+        header("Authorization", "Bearer $token")
         header("Accept", "application/json")
     }
     if (response.status.value !in 200..299) {
-        throw Exception("Select failed (${response.status}): ${response.bodyAsText()}")
+        val body = response.bodyAsText()
+        Log.e(TAG, "SELECT $table failed (${response.status}): $body")
+        throw Exception("Select failed (${response.status}): $body")
     }
     val text = response.bodyAsText()
     return supabaseJson.decodeFromString<JsonArray>(text)
@@ -134,15 +174,19 @@ suspend fun safeUpdate(
     filters: String
 ) {
     val url = "$rawSupabaseUrl/rest/v1/$table?$filters"
+    val token = currentBearerToken()
+    Log.d(TAG, "UPDATE → $table ($filters)")
     val response = rawHttpClient.patch(url) {
         contentType(ContentType.Application.Json)
         header("apikey", rawSupabaseKey)
-        header("Authorization", "Bearer $rawSupabaseKey")
+        header("Authorization", "Bearer $token")
         header("Prefer", "return=minimal")
         setBody(body.toString())
     }
     if (response.status.value !in 200..299) {
-        throw Exception("Update failed (${response.status}): ${response.bodyAsText()}")
+        val respBody = response.bodyAsText()
+        Log.e(TAG, "UPDATE $table failed (${response.status}): $respBody")
+        throw Exception("Update failed (${response.status}): $respBody")
     }
 }
 
@@ -161,11 +205,15 @@ suspend fun safeDelete(
     filters: String
 ) {
     val url = "$rawSupabaseUrl/rest/v1/$table?$filters"
+    val token = currentBearerToken()
+    Log.d(TAG, "DELETE → $table ($filters)")
     val response = rawHttpClient.delete(url) {
         header("apikey", rawSupabaseKey)
-        header("Authorization", "Bearer $rawSupabaseKey")
+        header("Authorization", "Bearer $token")
     }
     if (response.status.value !in 200..299) {
-        throw Exception("Delete failed (${response.status}): ${response.bodyAsText()}")
+        val body = response.bodyAsText()
+        Log.e(TAG, "DELETE $table failed (${response.status}): $body")
+        throw Exception("Delete failed (${response.status}): $body")
     }
 }

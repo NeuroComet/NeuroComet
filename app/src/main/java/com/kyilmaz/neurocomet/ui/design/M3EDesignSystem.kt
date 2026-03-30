@@ -651,6 +651,10 @@ object M3EAnimations {
         targetScale: Float = 1.008f,
         durationMillis: Int = M3EDesignSystem.AnimationDuration.breathe
     ): State<Float> {
+        val physics = LocalM3EPhysics.current
+        if (physics.reducedMotion) {
+            return rememberUpdatedState(initialScale)
+        }
         val infiniteTransition = rememberInfiniteTransition(label = "breathing")
         return infiniteTransition.animateFloat(
             initialValue = initialScale,
@@ -672,6 +676,10 @@ object M3EAnimations {
         targetAlpha: Float = 0.6f,
         durationMillis: Int = M3EDesignSystem.AnimationDuration.logoGlow
     ): State<Float> {
+        val physics = LocalM3EPhysics.current
+        if (physics.reducedMotion) {
+            return rememberUpdatedState(initialAlpha)
+        }
         val infiniteTransition = rememberInfiniteTransition(label = "glow")
         return infiniteTransition.animateFloat(
             initialValue = initialAlpha,
@@ -691,6 +699,10 @@ object M3EAnimations {
     fun rainbowRotation(
         durationMillis: Int = M3EDesignSystem.AnimationDuration.rainbowCycle
     ): State<Float> {
+        val physics = LocalM3EPhysics.current
+        if (physics.reducedMotion) {
+            return rememberUpdatedState(0f)
+        }
         val infiniteTransition = rememberInfiniteTransition(label = "rainbow")
         return infiniteTransition.animateFloat(
             initialValue = 0f,
@@ -710,6 +722,10 @@ object M3EAnimations {
     fun shimmerOffset(
         durationMillis: Int = M3EDesignSystem.AnimationDuration.shimmer
     ): State<Float> {
+        val physics = LocalM3EPhysics.current
+        if (physics.reducedMotion) {
+            return rememberUpdatedState(0f)
+        }
         val infiniteTransition = rememberInfiniteTransition(label = "shimmer")
         return infiniteTransition.animateFloat(
             initialValue = -1f,

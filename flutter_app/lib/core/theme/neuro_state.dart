@@ -46,6 +46,7 @@ class NeuroStateMetadata {
 }
 
 extension NeuroStateX on NeuroState {
+
   String get name {
     switch (this) {
       case NeuroState.defaultState: return 'Default';

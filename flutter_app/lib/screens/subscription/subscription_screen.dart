@@ -1,8 +1,12 @@
+import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../core/theme/app_colors.dart';
+import '../../services/subscription_service.dart';
+import '../../widgets/common/transaction_status_card.dart';
+import '../../l10n/app_localizations.dart';
 
 /// Subscription screen for premium features
 class SubscriptionScreen extends ConsumerStatefulWidget {
@@ -15,6 +19,13 @@ class SubscriptionScreen extends ConsumerStatefulWidget {
 class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
   int _selectedPlanIndex = 1; // Default to annual
   bool _isLoading = false;
+
+  // ── Transaction status card state ──
+  TransactionResult? _transactionResult;
+  bool _purchaseInFlight = false;
+  Timer? _timeoutTimer;
+
+  final _subscriptionService = SubscriptionService.instance;
 
   final List<Map<String, dynamic>> _plans = [
     {
@@ -83,46 +94,120 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
     },
   ];
 
+  @override
+  void initState() {
+    super.initState();
+    // Fetch offerings when screen opens
+    _subscriptionService.fetchOfferings();
+    _subscriptionService.checkPremiumStatus();
+    // Listen for external state changes (success / error from service)
+    _subscriptionService.stateNotifier.addListener(_onSubscriptionStateChanged);
+  }
+
+  @override
+  void dispose() {
+    _timeoutTimer?.cancel();
+    _subscriptionService.stateNotifier.removeListener(_onSubscriptionStateChanged);
+    super.dispose();
+  }
+
+  void _onSubscriptionStateChanged() {
+    final state = _subscriptionService.state;
+    if (!mounted) return;
+
+    // Handle purchase success
+    if (state.purchaseSuccess && _purchaseInFlight) {
+      _timeoutTimer?.cancel();
+      setState(() {
+        _purchaseInFlight = false;
+        _isLoading = false;
+        _transactionResult = TransactionResult.success;
+      });
+      _subscriptionService.clearPurchaseSuccess();
+      return;
+    }
+
+    // Handle error → declined card
+    if (state.error != null && _purchaseInFlight) {
+      _timeoutTimer?.cancel();
+      setState(() {
+        _purchaseInFlight = false;
+        _isLoading = false;
+        _transactionResult = TransactionResult.declined;
+      });
+      return;
+    }
+
+    // Sync loading flag
+    if (state.isLoading != _isLoading) {
+      setState(() => _isLoading = state.isLoading);
+    }
+  }
+
+  void _startTimeoutTimer() {
+    _timeoutTimer?.cancel();
+    _timeoutTimer = Timer(const Duration(seconds: 30), () {
+      if (_purchaseInFlight && mounted) {
+        setState(() {
+          _purchaseInFlight = false;
+          _isLoading = false;
+          _transactionResult = TransactionResult.timedOut;
+        });
+      }
+    });
+  }
+
   Future<void> _subscribe() async {
-    setState(() => _isLoading = true);
+    setState(() {
+      _isLoading = true;
+      _transactionResult = null; // reset previous result
+      _purchaseInFlight = true;
+    });
+    _startTimeoutTimer();
+
+    final planId = _plans[_selectedPlanIndex]['id'] as String;
 
     try {
-      // Process subscription: stores premium status locally.
-      // When Play Store / App Store billing is configured, replace with
-      // actual IAP flow using in_app_purchase package.
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setBool('is_premium', true);
-      await prefs.setString('subscription_date', DateTime.now().toIso8601String());
-
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Thank you for subscribing! 🎉'),
-            behavior: SnackBarBehavior.floating,
-          ),
+      if (planId == 'monthly') {
+        await _subscriptionService.purchaseMonthly(
+          onSuccess: () {},
+          onError: (_) {},
         );
-        Navigator.pop(context);
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Purchase failed: $e'),
-            behavior: SnackBarBehavior.floating,
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
+      } else if (planId == 'lifetime') {
+        await _subscriptionService.purchaseLifetime(
+          onSuccess: () {},
+          onError: (_) {},
+        );
+      } else {
+        // Annual plan — treat as monthly for now (IAP will differentiate)
+        await _subscriptionService.purchaseMonthly(
+          onSuccess: () {},
+          onError: (_) {},
         );
       }
-    } finally {
-      if (mounted) {
-        setState(() => _isLoading = false);
-      }
+    } catch (_) {
+      // Error is handled via listener
     }
+  }
+
+  void _retryPurchase() {
+    setState(() {
+      _transactionResult = null;
+    });
+    _subscribe();
+  }
+
+  /// Show a test transaction status card for debugging.
+  void _showTestTransactionResult(TransactionResult result) {
+    setState(() {
+      _transactionResult = result;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = context.l10n;
 
     return Scaffold(
       body: CustomScrollView(
@@ -135,7 +220,7 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
             surfaceTintColor: Colors.transparent,
             scrolledUnderElevation: 0,
             flexibleSpace: FlexibleSpaceBar(
-              title: const Text('NeuroComet Premium'),
+              title: Text(l10n.get('premiumTitle')),
               background: Container(
                 decoration: const BoxDecoration(
                   gradient: LinearGradient(
@@ -167,14 +252,14 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
                 children: [
                   // Tagline
                   Text(
-                    'Unlock your full potential',
+                    l10n.get('premiumTagline'),
                     style: theme.textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Get access to exclusive features designed to help you thrive.',
+                    l10n.get('premiumDescription'),
                     style: theme.textTheme.bodyMedium?.copyWith(
                       color: theme.colorScheme.onSurfaceVariant,
                     ),
@@ -183,7 +268,7 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
 
                   // Features
                   Text(
-                    'Premium Features',
+                    l10n.get('premiumFeatures'),
                     style: theme.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
@@ -198,7 +283,7 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
 
                   // Plans
                   Text(
-                    'Choose Your Plan',
+                    l10n.get('chooseYourPlan'),
                     style: theme.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
@@ -217,6 +302,21 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
                       },
                     );
                   }),
+                  const SizedBox(height: 16),
+
+                  // ── Transaction status banking card ──
+                  if (_transactionResult != null)
+                    TransactionStatusCard(
+                      result: _transactionResult!,
+                      onDismiss: () {
+                        setState(() => _transactionResult = null);
+                        _subscriptionService.clearError();
+                      },
+                      onRetry: _transactionResult != TransactionResult.success
+                          ? _retryPurchase
+                          : null,
+                    ),
+
                   const SizedBox(height: 24),
 
                   // Subscribe button
@@ -237,17 +337,40 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
                                 color: Colors.white,
                               ),
                             )
-                          : const Text(
-                              'Subscribe Now',
+                          : Text(
+                              l10n.get('subscribeNow'),
                               style: TextStyle(fontSize: 16),
                             ),
                     ),
                   ),
                   const SizedBox(height: 12),
 
+                  // Restore purchases
+                  Center(
+                    child: TextButton(
+                      onPressed: () {
+                        _subscriptionService.restorePurchases(
+                          onSuccess: (isPremium) {
+                            if (isPremium && mounted) {
+                              setState(() {
+                                _transactionResult = TransactionResult.success;
+                              });
+                            }
+                          },
+                          onError: (_) {},
+                        );
+                      },
+                      child: Text(
+                        l10n.get('restorePurchases'),
+                        style: TextStyle(color: theme.colorScheme.primary),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+
                   // Legal text
                   Text(
-                    'Payment will be charged to your account. Subscriptions automatically renew unless cancelled at least 24 hours before the end of the current period. You can manage and cancel subscriptions in your account settings.',
+                    l10n.get('subscriptionLegal'),
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: theme.colorScheme.outline,
                     ),
@@ -261,16 +384,87 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
                     children: [
                       TextButton(
                         onPressed: () => launchUrl(Uri.parse('https://neurocomet.app/terms')),
-                        child: const Text('Terms of Service'),
+                        child: Text(l10n.termsOfService),
                       ),
                       const Text('•'),
                       TextButton(
                         onPressed: () => launchUrl(Uri.parse('https://neurocomet.app/privacy')),
-                        child: const Text('Privacy Policy'),
+                        child: Text(l10n.privacyPolicy),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 32),
+                  const SizedBox(height: 24),
+
+                  // ── Debug-only: Payment test dialogs ──
+                  if (kDebugMode) ...[
+                    const Divider(),
+                    const SizedBox(height: 12),
+                    Text(
+                      '🧪 Payment Test Dialogs',
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: theme.colorScheme.tertiary,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Tap a button to preview each transaction status card.',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _TestDialogButton(
+                            label: '✅ Success',
+                            color: const Color(0xFF2E7D32),
+                            onTap: () => _showTestTransactionResult(
+                                TransactionResult.success),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: _TestDialogButton(
+                            label: '❌ Declined',
+                            color: theme.colorScheme.error,
+                            onTap: () => _showTestTransactionResult(
+                                TransactionResult.declined),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: _TestDialogButton(
+                            label: '⏱ Timed Out',
+                            color: const Color(0xFFE65100),
+                            onTap: () => _showTestTransactionResult(
+                                TransactionResult.timedOut),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    SizedBox(
+                      width: double.infinity,
+                      child: OutlinedButton.icon(
+                        onPressed: () {
+                          setState(() => _transactionResult = null);
+                          _subscriptionService.resetTestPurchase();
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Transaction state cleared'),
+                              behavior: SnackBarBehavior.floating,
+                            ),
+                          );
+                        },
+                        icon: const Icon(Icons.refresh, size: 18),
+                        label: const Text('Reset State'),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                  ],
+                  const SizedBox(height: 16),
                 ],
               ),
             ),
@@ -471,7 +665,7 @@ class _PlanCard extends StatelessWidget {
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: theme.colorScheme.onSurfaceVariant,
                     ),
-                  ),
+                   ),
               ],
             ),
           ],
@@ -481,3 +675,35 @@ class _PlanCard extends StatelessWidget {
   }
 }
 
+/// Debug-only button used in the payment test panel.
+class _TestDialogButton extends StatelessWidget {
+  final String label;
+  final Color color;
+  final VoidCallback onTap;
+
+  const _TestDialogButton({
+    required this.label,
+    required this.color,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return OutlinedButton(
+      onPressed: onTap,
+      style: OutlinedButton.styleFrom(
+        side: BorderSide(color: color),
+        foregroundColor: color,
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+      ),
+      child: Text(
+        label,
+        style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+        textAlign: TextAlign.center,
+      ),
+    );
+  }
+}

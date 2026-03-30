@@ -3,8 +3,10 @@ package com.kyilmaz.neurocomet
 import android.content.Context
 import androidx.core.content.edit
 import com.kyilmaz.neurocomet.ui.theme.ColorSchemeSource
+import com.kyilmaz.neurocomet.ui.theme.ThemeMode
 
 private const val PREFS = "theme_settings"
+private const val KEY_THEME_MODE = "theme_mode"
 private const val KEY_DARK = "dark"
 private const val KEY_HIGH_CONTRAST = "high_contrast"
 private const val KEY_TEXT_SCALE = "text_scale"
@@ -76,6 +78,7 @@ object ThemeSettings {
         )
 
         return ThemeState(
+            themeMode = runCatching { ThemeMode.valueOf(prefs.getString(KEY_THEME_MODE, ThemeMode.SYSTEM.name) ?: ThemeMode.SYSTEM.name) }.getOrNull() ?: ThemeMode.SYSTEM,
             isDarkMode = prefs.getBoolean(KEY_DARK, false),
             isHighContrast = prefs.getBoolean(KEY_HIGH_CONTRAST, false),
             textScaleFactor = try { prefs.getFloat(KEY_TEXT_SCALE, 1.0f) } catch (_: ClassCastException) { 1.0f },
@@ -93,6 +96,7 @@ object ThemeSettings {
     fun save(context: Context, state: ThemeState) {
         val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
         prefs.edit {
+            putString(KEY_THEME_MODE, state.themeMode.name)
             putBoolean(KEY_DARK, state.isDarkMode)
             putBoolean(KEY_HIGH_CONTRAST, state.isHighContrast)
             putFloat(KEY_TEXT_SCALE, state.textScaleFactor)

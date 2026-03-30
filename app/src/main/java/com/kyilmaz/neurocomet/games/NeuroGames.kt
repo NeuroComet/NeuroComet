@@ -1,6 +1,7 @@
-package com.kyilmaz.neurocomet.games
+﻿package com.kyilmaz.neurocomet.games
 
 import android.content.Context
+import androidx.annotation.StringRes
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
@@ -28,6 +29,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
@@ -43,7 +45,6 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kyilmaz.neurocomet.PerformanceOptimizations
@@ -53,7 +54,6 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlin.math.abs
 import kotlin.math.pow
-import kotlin.math.abs
 import kotlin.random.Random
 
 /**
@@ -131,14 +131,14 @@ object GameUnlockManager {
  */
 data class GameTutorial(
     val gameId: String,
-    val title: String,
+    @StringRes val titleRes: Int,
     val steps: List<GameTutorialStep>
 )
 
 data class GameTutorialStep(
     val emoji: String,
-    val title: String,
-    val description: String
+    @StringRes val titleRes: Int,
+    @StringRes val descriptionRes: Int
 )
 
 /**
@@ -170,160 +170,160 @@ object GameTutorialManager {
 private val gameTutorials = mapOf(
     "bubble_pop" to GameTutorial(
         gameId = "bubble_pop",
-        title = "Bubble Pop",
+        titleRes = R.string.game_bubble_pop,
         steps = listOf(
-            GameTutorialStep("🫧", "Pop the Bubbles!", "Tap on the colorful bubbles to pop them. Each pop gives satisfying haptic feedback!"),
-            GameTutorialStep("✨", "No Pressure", "There's no time limit or score to beat. Just pop bubbles at your own pace."),
-            GameTutorialStep("🔄", "Endless Fun", "New bubbles appear automatically. Pop as many or as few as you like!")
+            GameTutorialStep("🫧", R.string.tutorial_bubble_pop_step1_title, R.string.tutorial_bubble_pop_step1_desc),
+            GameTutorialStep("✨", R.string.tutorial_bubble_pop_step2_title, R.string.tutorial_bubble_pop_step2_desc),
+            GameTutorialStep("🔄", R.string.tutorial_bubble_pop_step3_title, R.string.tutorial_bubble_pop_step3_desc)
         )
     ),
     "fidget_spinner" to GameTutorial(
         gameId = "fidget_spinner",
-        title = "Fidget Spinner",
+        titleRes = R.string.game_fidget_spinner,
         steps = listOf(
-            GameTutorialStep("🌀", "Spin It!", "Place your finger on the spinner and swipe in a circular motion to spin."),
-            GameTutorialStep("💨", "Build Momentum", "The faster you swipe, the faster it spins! Release to watch it keep spinning."),
-            GameTutorialStep("🎯", "Feel the Spin", "You'll feel gentle haptic feedback as it spins. Very satisfying!")
+            GameTutorialStep("🌀", R.string.tutorial_fidget_step1_title, R.string.tutorial_fidget_step1_desc),
+            GameTutorialStep("💨", R.string.tutorial_fidget_step2_title, R.string.tutorial_fidget_step2_desc),
+            GameTutorialStep("🎯", R.string.tutorial_fidget_step3_title, R.string.tutorial_fidget_step3_desc)
         )
     ),
     "color_flow" to GameTutorial(
         gameId = "color_flow",
-        title = "Color Flow",
+        titleRes = R.string.game_color_flow,
         steps = listOf(
-            GameTutorialStep("🎨", "Watch the Colors", "Relaxing color gradients flow and mix on your screen."),
-            GameTutorialStep("👆", "Tap to Change", "Tap anywhere to shuffle to a new color combination."),
-            GameTutorialStep("😌", "Just Relax", "No goals here - just enjoy the soothing visual experience.")
+            GameTutorialStep("🎨", R.string.tutorial_color_flow_step1_title, R.string.tutorial_color_flow_step1_desc),
+            GameTutorialStep("👆", R.string.tutorial_color_flow_step2_title, R.string.tutorial_color_flow_step2_desc),
+            GameTutorialStep("😌", R.string.tutorial_color_flow_step3_title, R.string.tutorial_color_flow_step3_desc)
         )
     ),
     "pattern_tap" to GameTutorial(
         gameId = "pattern_tap",
-        title = "Pattern Tap",
+        titleRes = R.string.game_pattern_tap,
         steps = listOf(
-            GameTutorialStep("👀", "Watch Carefully", "A pattern will light up on the grid. Pay attention to the sequence!"),
-            GameTutorialStep("👆", "Repeat the Pattern", "After the pattern shows, tap the tiles in the same order."),
-            GameTutorialStep("📈", "Level Up", "Each correct sequence adds one more tile. How far can you go?"),
-            GameTutorialStep("💚", "No Stress", "Made a mistake? Just tap 'Try Again' - practice makes progress!")
+            GameTutorialStep("👀", R.string.tutorial_pattern_step1_title, R.string.tutorial_pattern_step1_desc),
+            GameTutorialStep("👆", R.string.tutorial_pattern_step2_title, R.string.tutorial_pattern_step2_desc),
+            GameTutorialStep("📈", R.string.tutorial_pattern_step3_title, R.string.tutorial_pattern_step3_desc),
+            GameTutorialStep("💚", R.string.tutorial_pattern_step4_title, R.string.tutorial_pattern_step4_desc)
         )
     ),
     "infinity_draw" to GameTutorial(
         gameId = "infinity_draw",
-        title = "Infinity Draw",
+        titleRes = R.string.game_infinity_draw,
         steps = listOf(
-            GameTutorialStep("✏️", "Draw Freely", "Drag your finger across the screen to create beautiful lines."),
-            GameTutorialStep("🎨", "Pick Colors", "Tap the color circles at the top to change your drawing color."),
-            GameTutorialStep("♾️", "Endless Canvas", "Your drawings stay on screen. Create patterns, shapes, anything!"),
-            GameTutorialStep("🔄", "Start Fresh", "Tap the refresh button to clear and start a new drawing.")
+            GameTutorialStep("✏️", R.string.tutorial_infinity_step1_title, R.string.tutorial_infinity_step1_desc),
+            GameTutorialStep("🎨", R.string.tutorial_infinity_step2_title, R.string.tutorial_infinity_step2_desc),
+            GameTutorialStep("♾️", R.string.tutorial_infinity_step3_title, R.string.tutorial_infinity_step3_desc),
+            GameTutorialStep("🔄", R.string.tutorial_infinity_step4_title, R.string.tutorial_infinity_step4_desc)
         )
     ),
     "sensory_rain" to GameTutorial(
         gameId = "sensory_rain",
-        title = "Sensory Rain",
+        titleRes = R.string.game_sensory_rain,
         steps = listOf(
-            GameTutorialStep("🌧️", "Watch the Rain", "Calming rain drops fall down the screen."),
-            GameTutorialStep("🎚️", "Adjust Intensity", "Use the slider to control how much rain falls."),
-            GameTutorialStep("💧", "Create Ripples", "Tap anywhere on the screen to create water ripples."),
-            GameTutorialStep("🎧", "Best with Sound", "For the full experience, try with headphones and rain sounds!")
+            GameTutorialStep("🌧️", R.string.tutorial_rain_step1_title, R.string.tutorial_rain_step1_desc),
+            GameTutorialStep("🎚️", R.string.tutorial_rain_step2_title, R.string.tutorial_rain_step2_desc),
+            GameTutorialStep("💧", R.string.tutorial_rain_step3_title, R.string.tutorial_rain_step3_desc),
+            GameTutorialStep("🎧", R.string.tutorial_rain_step4_title, R.string.tutorial_rain_step4_desc)
         )
     ),
     "breathing_bubbles" to GameTutorial(
         gameId = "breathing_bubbles",
-        title = "Breathing Bubbles",
+        titleRes = R.string.game_breathing_bubbles,
         steps = listOf(
-            GameTutorialStep("🫁", "Guided Breathing", "The bubble guides you through a calming breathing exercise."),
-            GameTutorialStep("⬆️", "Breathe In", "As the bubble grows, breathe in slowly through your nose."),
-            GameTutorialStep("⏸️", "Hold", "When it says 'Hold', pause your breath gently."),
-            GameTutorialStep("⬇️", "Breathe Out", "As the bubble shrinks, exhale slowly through your mouth."),
-            GameTutorialStep("🔁", "Repeat", "Each cycle is counted. Great for anxiety relief!")
+            GameTutorialStep("🫁", R.string.tutorial_breathing_step1_title, R.string.tutorial_breathing_step1_desc),
+            GameTutorialStep("⬆️", R.string.tutorial_breathing_step2_title, R.string.tutorial_breathing_step2_desc),
+            GameTutorialStep("⏸️", R.string.tutorial_breathing_step3_title, R.string.tutorial_breathing_step3_desc),
+            GameTutorialStep("⬇️", R.string.tutorial_breathing_step4_title, R.string.tutorial_breathing_step4_desc),
+            GameTutorialStep("🔁", R.string.tutorial_breathing_step5_title, R.string.tutorial_breathing_step5_desc)
         )
     ),
     "texture_tiles" to GameTutorial(
         gameId = "texture_tiles",
-        title = "Texture Tiles",
+        titleRes = R.string.game_texture_tiles,
         steps = listOf(
-            GameTutorialStep("👆", "Tap to Feel", "Each tile gives different haptic feedback when tapped."),
-            GameTutorialStep("🪨", "Different Textures", "Stone, fluffy, electric, wave - each has a unique feel!"),
-            GameTutorialStep("⭐", "Find Favorites", "Discover which textures feel most satisfying to you."),
-            GameTutorialStep("🔄", "Stim Away", "Tap as much as you want - it's all about the sensory experience!")
+            GameTutorialStep("👆", R.string.tutorial_texture_step1_title, R.string.tutorial_texture_step1_desc),
+            GameTutorialStep("🪨", R.string.tutorial_texture_step2_title, R.string.tutorial_texture_step2_desc),
+            GameTutorialStep("⭐", R.string.tutorial_texture_step3_title, R.string.tutorial_texture_step3_desc),
+            GameTutorialStep("🔄", R.string.tutorial_texture_step4_title, R.string.tutorial_texture_step4_desc)
         )
     ),
     "sound_garden" to GameTutorial(
         gameId = "sound_garden",
-        title = "Sound Garden",
+        titleRes = R.string.game_sound_garden,
         steps = listOf(
-            GameTutorialStep("🎵", "Select a Note", "Choose a musical note from the palette at the top."),
-            GameTutorialStep("🌱", "Plant Notes", "Tap anywhere in the garden to plant your selected note."),
-            GameTutorialStep("▶️", "Play Your Garden", "Press the play button to hear your notes play from left to right."),
-            GameTutorialStep("🎼", "Create Melodies", "Arrange notes to create your own peaceful melodies!")
+            GameTutorialStep("🎵", R.string.tutorial_sound_step1_title, R.string.tutorial_sound_step1_desc),
+            GameTutorialStep("🌱", R.string.tutorial_sound_step2_title, R.string.tutorial_sound_step2_desc),
+            GameTutorialStep("▶️", R.string.tutorial_sound_step3_title, R.string.tutorial_sound_step3_desc),
+            GameTutorialStep("🎼", R.string.tutorial_sound_step4_title, R.string.tutorial_sound_step4_desc)
         )
     ),
     "stim_sequencer" to GameTutorial(
         gameId = "stim_sequencer",
-        title = "Stim Sequencer",
+        titleRes = R.string.game_stim_sequencer,
         steps = listOf(
-            GameTutorialStep("🎹", "Tap the Pads", "Tap any pad to toggle it on or off."),
-            GameTutorialStep("▶️", "Press Play", "Hit the play button to hear your rhythm loop."),
-            GameTutorialStep("🎚️", "Adjust Speed", "Use the BPM slider to change how fast the beat plays."),
-            GameTutorialStep("🔁", "Loop Forever", "Your pattern loops continuously - feel the rhythm!")
+            GameTutorialStep("🎹", R.string.tutorial_stim_step1_title, R.string.tutorial_stim_step1_desc),
+            GameTutorialStep("▶️", R.string.tutorial_stim_step2_title, R.string.tutorial_stim_step2_desc),
+            GameTutorialStep("🎚️", R.string.tutorial_stim_step3_title, R.string.tutorial_stim_step3_desc),
+            GameTutorialStep("🔁", R.string.tutorial_stim_step4_title, R.string.tutorial_stim_step4_desc)
         )
     ),
     "emotion_garden" to GameTutorial(
         gameId = "emotion_garden",
-        title = "Emotion Garden",
+        titleRes = R.string.game_emotion_garden,
         steps = listOf(
-            GameTutorialStep("😊", "Pick an Emotion", "Select how you're feeling from the emotion chips."),
-            GameTutorialStep("🌸", "Plant Your Feeling", "Tap in the garden to plant a flower representing that emotion."),
-            GameTutorialStep("🌱", "Watch It Grow", "Your emotion flowers grow and bloom over time."),
-            GameTutorialStep("🌈", "Express Yourself", "Create a garden that reflects your emotional journey!")
+            GameTutorialStep("😊", R.string.tutorial_emotion_step1_title, R.string.tutorial_emotion_step1_desc),
+            GameTutorialStep("🌸", R.string.tutorial_emotion_step2_title, R.string.tutorial_emotion_step2_desc),
+            GameTutorialStep("🌱", R.string.tutorial_emotion_step3_title, R.string.tutorial_emotion_step3_desc),
+            GameTutorialStep("🌈", R.string.tutorial_emotion_step4_title, R.string.tutorial_emotion_step4_desc)
         )
     ),
     "safe_space" to GameTutorial(
         gameId = "safe_space",
-        title = "Safe Space Builder",
+        titleRes = R.string.game_safe_space,
         steps = listOf(
-            GameTutorialStep("🏠", "Your Room", "Design a virtual safe space that feels calming to you."),
-            GameTutorialStep("🛋️", "Choose Items", "Select cozy items like couches, candles, plants, and more."),
-            GameTutorialStep("👆", "Place Items", "Tap anywhere in the room to place your selected item."),
-            GameTutorialStep("✨", "Make It Yours", "Create your perfect cozy corner for when you need comfort!")
+            GameTutorialStep("🏠", R.string.tutorial_safe_step1_title, R.string.tutorial_safe_step1_desc),
+            GameTutorialStep("🛋️", R.string.tutorial_safe_step2_title, R.string.tutorial_safe_step2_desc),
+            GameTutorialStep("👆", R.string.tutorial_safe_step3_title, R.string.tutorial_safe_step3_desc),
+            GameTutorialStep("✨", R.string.tutorial_safe_step4_title, R.string.tutorial_safe_step4_desc)
         )
     ),
     "worry_jar" to GameTutorial(
         gameId = "worry_jar",
-        title = "Worry Jar",
+        titleRes = R.string.game_worry_jar,
         steps = listOf(
-            GameTutorialStep("📝", "Write Your Worry", "Type something that's bothering you in the text field."),
-            GameTutorialStep("🫙", "Release It", "Press the button to release your worry into the jar."),
-            GameTutorialStep("💨", "Watch It Float Away", "Your worry floats up and fades away - let it go!"),
-            GameTutorialStep("💚", "Therapeutic Release", "This is a safe way to acknowledge and release anxious thoughts.")
+            GameTutorialStep("📝", R.string.tutorial_worry_step1_title, R.string.tutorial_worry_step1_desc),
+            GameTutorialStep("🫙", R.string.tutorial_worry_step2_title, R.string.tutorial_worry_step2_desc),
+            GameTutorialStep("💨", R.string.tutorial_worry_step3_title, R.string.tutorial_worry_step3_desc),
+            GameTutorialStep("💚", R.string.tutorial_worry_step4_title, R.string.tutorial_worry_step4_desc)
         )
     ),
     "constellation_connect" to GameTutorial(
         gameId = "constellation_connect",
-        title = "Constellation Connect",
+        titleRes = R.string.game_constellation_connect,
         steps = listOf(
-            GameTutorialStep("⭐", "Tap a Star", "Tap on any star to select it."),
-            GameTutorialStep("✨", "Connect Stars", "Tap another star to draw a line between them."),
-            GameTutorialStep("🌌", "Create Patterns", "Connect stars to create your own constellations!"),
-            GameTutorialStep("🔄", "New Stars", "Press refresh to get a new random arrangement of stars.")
+            GameTutorialStep("⭐", R.string.tutorial_constellation_step1_title, R.string.tutorial_constellation_step1_desc),
+            GameTutorialStep("✨", R.string.tutorial_constellation_step2_title, R.string.tutorial_constellation_step2_desc),
+            GameTutorialStep("🌌", R.string.tutorial_constellation_step3_title, R.string.tutorial_constellation_step3_desc),
+            GameTutorialStep("🔄", R.string.tutorial_constellation_step4_title, R.string.tutorial_constellation_step4_desc)
         )
     ),
     "zen_sand" to GameTutorial(
         gameId = "zen_sand",
-        title = "Zen Sand Garden",
+        titleRes = R.string.game_zen_sand,
         steps = listOf(
-            GameTutorialStep("🏝️", "Your Sand Garden", "A calming Japanese-style sand garden for meditation."),
-            GameTutorialStep("👆", "Draw Patterns", "Drag your finger to rake patterns in the sand."),
-            GameTutorialStep("☯️", "Find Peace", "Create spirals, waves, or any pattern that feels soothing."),
-            GameTutorialStep("🔄", "Start Fresh", "Press refresh to smooth out the sand and begin again.")
+            GameTutorialStep("🏝️", R.string.tutorial_zen_step1_title, R.string.tutorial_zen_step1_desc),
+            GameTutorialStep("👆", R.string.tutorial_zen_step2_title, R.string.tutorial_zen_step2_desc),
+            GameTutorialStep("☯️", R.string.tutorial_zen_step3_title, R.string.tutorial_zen_step3_desc),
+            GameTutorialStep("🔄", R.string.tutorial_zen_step4_title, R.string.tutorial_zen_step4_desc)
         )
     ),
     "mood_mixer" to GameTutorial(
         gameId = "mood_mixer",
-        title = "Mood Mixer",
+        titleRes = R.string.game_mood_mixer,
         steps = listOf(
-            GameTutorialStep("🎨", "Pick Two Moods", "Select a first mood and a second mood from the color palettes."),
-            GameTutorialStep("🎚️", "Blend Them", "Use the slider to blend between the two mood colors."),
-            GameTutorialStep("💭", "See Your Mood", "The big circle shows your blended mood color."),
-            GameTutorialStep("🌈", "Explore Feelings", "Experiment with different combinations - how do they make you feel?")
+            GameTutorialStep("🎨", R.string.tutorial_mood_step1_title, R.string.tutorial_mood_step1_desc),
+            GameTutorialStep("🎚️", R.string.tutorial_mood_step2_title, R.string.tutorial_mood_step2_desc),
+            GameTutorialStep("💭", R.string.tutorial_mood_step3_title, R.string.tutorial_mood_step3_desc),
+            GameTutorialStep("🌈", R.string.tutorial_mood_step4_title, R.string.tutorial_mood_step4_desc)
         )
     )
 )
@@ -376,13 +376,13 @@ fun GameTutorialDialog(
             ) {
                 // Header with game title
                 Text(
-                    text = "How to Play",
+                    text = stringResource(R.string.game_tutorial_how_to_play),
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.primary
                 )
 
                 Text(
-                    text = tutorial.title,
+                    text = stringResource(tutorial.titleRes),
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold
                 )
@@ -393,14 +393,17 @@ fun GameTutorialDialog(
                 Text(
                     text = step.emoji,
                     fontSize = 64.sp,
-                    modifier = Modifier.scale(emojiScale)
+                    modifier = Modifier.graphicsLayer {
+                        scaleX = emojiScale
+                        scaleY = emojiScale
+                    }
                 )
 
                 Spacer(Modifier.height(16.dp))
 
                 // Step title
                 Text(
-                    text = step.title,
+                    text = stringResource(step.titleRes),
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.SemiBold,
                     textAlign = TextAlign.Center
@@ -410,7 +413,7 @@ fun GameTutorialDialog(
 
                 // Step description
                 Text(
-                    text = step.description,
+                    text = stringResource(step.descriptionRes),
                     style = MaterialTheme.typography.bodyMedium,
                     textAlign = TextAlign.Center,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -456,7 +459,7 @@ fun GameTutorialDialog(
                             }
                         }
                     ) {
-                        Text(if (currentStep > 0) "Back" else "Skip")
+                        Text(if (currentStep > 0) stringResource(R.string.game_tutorial_back) else stringResource(R.string.game_tutorial_skip))
                     }
 
                     // Next/Got it button
@@ -469,7 +472,7 @@ fun GameTutorialDialog(
                             }
                         }
                     ) {
-                        Text(if (isLastStep) "Got it!" else "Next")
+                        Text(if (isLastStep) stringResource(R.string.game_tutorial_got_it) else stringResource(R.string.game_tutorial_next))
                         if (!isLastStep) {
                             Spacer(Modifier.width(4.dp))
                             Icon(
@@ -689,19 +692,19 @@ fun GamesHubScreen(
         AlertDialog(
             onDismissRequest = { showResetTutorialsDialog = false },
             icon = { Icon(Icons.Outlined.Info, contentDescription = null) },
-            title = { Text("Reset Game Tutorials?") },
-            text = { Text("This will show the how-to-play tutorials again the next time you open each game.") },
+            title = { Text(stringResource(R.string.games_reset_tutorials_title)) },
+            text = { Text(stringResource(R.string.games_reset_tutorials_desc)) },
             confirmButton = {
                 Button(onClick = {
                     GameTutorialManager.resetAllTutorials(context)
                     showResetTutorialsDialog = false
                 }) {
-                    Text("Reset Tutorials")
+                    Text(stringResource(R.string.games_reset_tutorials_button))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showResetTutorialsDialog = false }) {
-                    Text("Cancel")
+                    Text(stringResource(R.string.action_cancel))
                 }
             }
         )
@@ -726,14 +729,14 @@ fun GamesHubScreen(
                 },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.cd_back))
                     }
                 },
                 actions = {
                     IconButton(onClick = { showResetTutorialsDialog = true }) {
                         Icon(
                             Icons.Outlined.Info,
-                            contentDescription = "Reset Tutorials",
+                            contentDescription = stringResource(R.string.game_cd_reset_tutorials),
                             tint = MaterialTheme.colorScheme.onSurface
                         )
                     }
@@ -821,7 +824,7 @@ fun GamesHubScreen(
                     }
                     Spacer(Modifier.height(4.dp))
                     Text(
-                        "These games are being crafted with care! ✨",
+                        stringResource(R.string.games_in_dev_subtitle),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -1116,7 +1119,7 @@ private fun ComingSoonGameCard(game: NeuroGame) {
             // Coming soon icon
             Icon(
                 Icons.Outlined.Upcoming,
-                contentDescription = "Coming Soon",
+                contentDescription = stringResource(R.string.game_coming_soon),
                 tint = Color.White.copy(alpha = 0.5f),
                 modifier = Modifier.size(24.dp)
             )
@@ -1140,8 +1143,8 @@ fun BubblePopGame(onBack: () -> Unit) {
     var totalPopped by remember { mutableIntStateOf(0) }
 
     // Auto-regenerate bubbles
-    LaunchedEffect(poppedCount) {
-        if (poppedCount >= 8) {
+    if (poppedCount >= 8) {
+        LaunchedEffect(Unit) {
             delay(500)
             bubbles = generateBubbles(12)
             poppedCount = 0
@@ -1154,7 +1157,7 @@ fun BubblePopGame(onBack: () -> Unit) {
                 title = { Text(stringResource(R.string.game_bubble_pop)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.cd_back))
                     }
                 },
                 actions = {
@@ -1262,7 +1265,10 @@ private fun BubbleItem(
     Box(
         modifier = Modifier
             .size(bubble.size.dp)
-            .scale(scale)
+            .graphicsLayer {
+                scaleX = scale
+                scaleY = scale
+            }
             .clip(CircleShape)
             .background(
                 Brush.radialGradient(
@@ -1308,6 +1314,7 @@ fun FidgetSpinnerGame(onBack: () -> Unit) {
     var rotation by remember { mutableFloatStateOf(0f) }
     var velocity by remember { mutableFloatStateOf(0f) }
     var totalSpins by remember { mutableFloatStateOf(0f) }
+    var totalSpinsInt by remember { mutableIntStateOf(0) }
     var lastAngle by remember { mutableFloatStateOf(0f) }
     var isDragging by remember { mutableStateOf(false) }
     var spinnerCenter by remember { mutableStateOf(androidx.compose.ui.geometry.Offset.Zero) }
@@ -1330,13 +1337,19 @@ fun FidgetSpinnerGame(onBack: () -> Unit) {
                 if (!isDragging && abs(velocity) > 0.05f) {
                     rotation += velocity * deltaTime
                     totalSpins += abs(velocity * deltaTime) / 360f
+                    if (totalSpins.toInt() > totalSpinsInt) {
+                        totalSpinsInt = totalSpins.toInt()
+                    }
                     // Frame-rate independent friction
                     val frictionPerFrame = 0.992f.pow(deltaTime)
                     velocity *= frictionPerFrame
 
                     // Haptic feedback at certain speeds for tactile response
-                    if (abs(velocity) > 5f && (rotation.toInt() % 30 == 0)) {
-                        haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                    if (abs(velocity) > 5f && totalSpinsInt > 0 && totalSpinsInt % 30 == 0) {
+                        // Ensure we only trigger it once per 30 spins
+                        if ((totalSpins - totalSpinsInt) < (abs(velocity) * deltaTime / 360f)) {
+                            haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                        }
                     }
                 } else if (!isDragging) {
                     velocity = 0f
@@ -1351,12 +1364,12 @@ fun FidgetSpinnerGame(onBack: () -> Unit) {
                 title = { Text(stringResource(R.string.game_fidget_spinner)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.cd_back))
                     }
                 },
                 actions = {
                     Text(
-                        "🌀 ${totalSpins.toInt()} spins",
+                        "🌀 $totalSpinsInt spins",
                         style = MaterialTheme.typography.titleMedium,
                         modifier = Modifier.padding(end = 16.dp)
                     )
@@ -1383,7 +1396,6 @@ fun FidgetSpinnerGame(onBack: () -> Unit) {
             Box(
                 modifier = Modifier
                     .size(250.dp)
-                    .rotate(rotation)
                     .onGloballyPositioned { coordinates ->
                         val size = coordinates.size
                         val position = coordinates.positionInParent()
@@ -1443,7 +1455,8 @@ fun FidgetSpinnerGame(onBack: () -> Unit) {
                                 isDragging = false
                             }
                         )
-                    },
+                    }
+                    .graphicsLayer { rotationZ = rotation },
                 contentAlignment = Alignment.Center
             ) {
                 // Spinner arms
@@ -1531,7 +1544,7 @@ fun ColorFlowGame(onBack: () -> Unit) {
                 title = { Text(stringResource(R.string.game_color_flow)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.cd_back))
                     }
                 }
             )
@@ -1541,12 +1554,14 @@ fun ColorFlowGame(onBack: () -> Unit) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .background(
-                    Brush.verticalGradient(
-                        colors = currentColors,
-                        startY = animatedProgress * 1000f
+                .drawBehind {
+                    drawRect(
+                        brush = Brush.verticalGradient(
+                            colors = currentColors,
+                            startY = animatedProgress * 1000f
+                        )
                     )
-                )
+                }
                 .clickable { shuffleColors() },
             contentAlignment = Alignment.Center
         ) {
@@ -1614,7 +1629,7 @@ private fun ComingSoonGame(onBack: () -> Unit) {
                 title = { Text(stringResource(R.string.games_coming_soon)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.cd_back))
                     }
                 }
             )
@@ -1685,14 +1700,14 @@ fun StimSequencerGame(onBack: () -> Unit) {
                 title = { Text(stringResource(R.string.game_stim_sequencer)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.cd_back))
                     }
                 },
                 actions = {
                     IconButton(onClick = { isPlaying = !isPlaying }) {
                         Icon(
                             if (isPlaying) Icons.Filled.Pause else Icons.Filled.PlayArrow,
-                            contentDescription = if (isPlaying) "Pause" else "Play"
+                            contentDescription = if (isPlaying) stringResource(R.string.game_cd_pause) else stringResource(R.string.game_cd_play)
                         )
                     }
                 }
@@ -1716,7 +1731,7 @@ fun StimSequencerGame(onBack: () -> Unit) {
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("BPM: ${bpm.toInt()}", color = Color.White, fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.game_stim_bpm_label, bpm.toInt()), color = Color.White, fontWeight = FontWeight.Bold)
                 Slider(
                     value = bpm,
                     onValueChange = { bpm = it },
@@ -1774,7 +1789,7 @@ fun StimSequencerGame(onBack: () -> Unit) {
             ) {
                 Icon(Icons.Filled.Clear, null)
                 Spacer(Modifier.width(8.dp))
-                Text("Clear All")
+                Text(stringResource(R.string.games_clear_all))
             }
 
             Spacer(Modifier.height(8.dp))
@@ -1808,25 +1823,32 @@ fun EmotionGardenGame(onBack: () -> Unit) {
     val haptic = LocalHapticFeedback.current
     val density = androidx.compose.ui.platform.LocalDensity.current
     var flowers by remember { mutableStateOf(listOf<EmotionFlower>()) }
-    var selectedEmotion by remember { mutableStateOf<Pair<String, String>?>(null) }
+    var selectedEmotion by remember { mutableStateOf<Triple<String, String, Int>?>(null) }
     var nextId by remember { mutableIntStateOf(0) }
 
-    val emotions = listOf(
-        "Happy" to "😊", "Calm" to "😌", "Excited" to "🤩",
-        "Loved" to "🥰", "Grateful" to "🙏", "Peaceful" to "☮️",
-        "Hopeful" to "🌈", "Proud" to "💪", "Curious" to "🤔"
+    // key, emoji, nameRes
+    val emotions: List<Triple<String, String, Int>> = listOf(
+        Triple("happy", "😊", R.string.game_emotion_happy),
+        Triple("calm", "😌", R.string.game_emotion_calm),
+        Triple("excited", "🤩", R.string.game_emotion_excited),
+        Triple("loved", "🥰", R.string.game_emotion_loved),
+        Triple("grateful", "🙏", R.string.game_emotion_grateful),
+        Triple("peaceful", "☮️", R.string.game_emotion_peaceful),
+        Triple("hopeful", "🌈", R.string.game_emotion_hopeful),
+        Triple("proud", "💪", R.string.game_emotion_proud),
+        Triple("curious", "🤔", R.string.game_emotion_curious)
     )
 
     val emotionColors = mapOf(
-        "Happy" to Color(0xFFFFD700),
-        "Calm" to Color(0xFF87CEEB),
-        "Excited" to Color(0xFFFF6B6B),
-        "Loved" to Color(0xFFFF69B4),
-        "Grateful" to Color(0xFF90EE90),
-        "Peaceful" to Color(0xFFE6E6FA),
-        "Hopeful" to Color(0xFFFFB347),
-        "Proud" to Color(0xFFDDA0DD),
-        "Curious" to Color(0xFF98D8C8)
+        "happy" to Color(0xFFFFD700),
+        "calm" to Color(0xFF87CEEB),
+        "excited" to Color(0xFFFF6B6B),
+        "loved" to Color(0xFFFF69B4),
+        "grateful" to Color(0xFF90EE90),
+        "peaceful" to Color(0xFFE6E6FA),
+        "hopeful" to Color(0xFFFFB347),
+        "proud" to Color(0xFFDDA0DD),
+        "curious" to Color(0xFF98D8C8)
     )
 
     // Grow flowers animation with proper cancellation
@@ -1845,12 +1867,12 @@ fun EmotionGardenGame(onBack: () -> Unit) {
                 title = { Text(stringResource(R.string.game_emotion_garden)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.cd_back))
                     }
                 },
                 actions = {
                     IconButton(onClick = { flowers = emptyList() }) {
-                        Icon(Icons.Filled.Refresh, contentDescription = "Clear")
+                        Icon(Icons.Filled.Refresh, contentDescription = stringResource(R.string.game_cd_clear))
                     }
                 }
             )
@@ -1869,11 +1891,12 @@ fun EmotionGardenGame(onBack: () -> Unit) {
                     .padding(8.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                emotions.forEach { (name, emoji) ->
+                emotions.forEach { (key, emoji, nameRes) ->
+                    val name = stringResource(nameRes)
                     FilterChip(
-                        selected = selectedEmotion?.first == name,
+                        selected = selectedEmotion?.first == key,
                         onClick = {
-                            selectedEmotion = name to emoji
+                            selectedEmotion = Triple(key, emoji, nameRes)
                             haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                         },
                         label = { Text("$emoji $name") }
@@ -1893,13 +1916,13 @@ fun EmotionGardenGame(onBack: () -> Unit) {
                     )
                     .pointerInput(selectedEmotion) {
                         detectTapGestures { offset ->
-                            selectedEmotion?.let { (emotion, emoji) ->
+                            selectedEmotion?.let { (key, emoji, _) ->
                                 haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                                 flowers = flowers + EmotionFlower(
                                     id = nextId++,
-                                    emotion = emotion,
+                                    emotion = key,
                                     emoji = emoji,
-                                    color = emotionColors[emotion] ?: Color.White,
+                                    color = emotionColors[key] ?: Color.White,
                                     x = offset.x,
                                     y = offset.y
                                 )
@@ -1921,7 +1944,10 @@ fun EmotionGardenGame(onBack: () -> Unit) {
                                 x = with(density) { (flower.x - 24).toDp() },
                                 y = with(density) { (flower.y - 24).toDp() }
                             )
-                            .scale(scale)
+                            .graphicsLayer {
+                                scaleX = scale
+                                scaleY = scale
+                            }
                     ) {
                         Text(
                             text = flower.emoji,
@@ -1946,7 +1972,7 @@ fun EmotionGardenGame(onBack: () -> Unit) {
 
             // Flower count
             Text(
-                "🌸 ${flowers.size} flowers planted",
+                stringResource(R.string.game_emotion_flower_count, flowers.size),
                 modifier = Modifier.padding(16.dp),
                 style = MaterialTheme.typography.bodyMedium
             )
@@ -1975,19 +2001,19 @@ fun SafeSpaceBuilderGame(onBack: () -> Unit) {
     var nextId by remember { mutableIntStateOf(0) }
     var selectedItem by remember { mutableStateOf<String?>(null) }
 
-    val availableItems = listOf(
-        "🛋️" to "Cozy Couch",
-        "🕯️" to "Candle",
-        "🪴" to "Plant",
-        "📚" to "Books",
-        "🧸" to "Plushie",
-        "🎵" to "Music",
-        "☕" to "Hot Drink",
-        "🌙" to "Moon Light",
-        "🔮" to "Crystal",
-        "🧘" to "Meditation",
-        "🎨" to "Art",
-        "🌸" to "Flowers"
+    val availableItems: List<Pair<String, Int>> = listOf(
+        "🛋️" to R.string.game_safe_cozy_couch,
+        "🕯️" to R.string.game_safe_candle,
+        "🪴" to R.string.game_safe_plant,
+        "📚" to R.string.game_safe_books,
+        "🧸" to R.string.game_safe_plushie,
+        "🎵" to R.string.game_safe_music,
+        "☕" to R.string.game_safe_hot_drink,
+        "🌙" to R.string.game_safe_moon_light,
+        "🔮" to R.string.game_safe_crystal,
+        "🧘" to R.string.game_safe_meditation,
+        "🎨" to R.string.game_safe_art,
+        "🌸" to R.string.game_safe_flowers
     )
 
     Scaffold(
@@ -1996,12 +2022,12 @@ fun SafeSpaceBuilderGame(onBack: () -> Unit) {
                 title = { Text(stringResource(R.string.game_safe_space)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.cd_back))
                     }
                 },
                 actions = {
                     IconButton(onClick = { roomItems = emptyList() }) {
-                        Icon(Icons.Filled.Refresh, contentDescription = "Clear")
+                        Icon(Icons.Filled.Refresh, contentDescription = stringResource(R.string.game_cd_clear))
                     }
                 }
             )
@@ -2021,7 +2047,8 @@ fun SafeSpaceBuilderGame(onBack: () -> Unit) {
                     .padding(8.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                availableItems.forEach { (emoji, name) ->
+                availableItems.forEach { (emoji, nameRes) ->
+                    val name = stringResource(nameRes)
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         modifier = Modifier
@@ -2057,12 +2084,11 @@ fun SafeSpaceBuilderGame(onBack: () -> Unit) {
                     .pointerInput(selectedItem) {
                         detectTapGestures { offset ->
                             selectedItem?.let { emoji ->
-                                val name = availableItems.find { it.first == emoji }?.second ?: ""
                                 haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                                 roomItems = roomItems + RoomItem(
                                     id = nextId++,
                                     emoji = emoji,
-                                    name = name,
+                                    name = emoji,
                                     x = offset.x,
                                     y = offset.y
                                 )
@@ -2130,17 +2156,19 @@ fun WorryJarGame(onBack: () -> Unit) {
     var releasedCount by remember { mutableIntStateOf(0) }
 
     // Float worries upward
-    LaunchedEffect(worries) {
-        while (worries.isNotEmpty()) {
+    LaunchedEffect(Unit) {
+        while (isActive) {
             delay(50)
-            worries = worries.mapNotNull { worry ->
-                val newY = worry.yOffset - 2f
-                val newAlpha = worry.alpha - 0.005f
-                if (newAlpha <= 0) {
-                    releasedCount++
-                    null
-                } else {
-                    worry.copy(yOffset = newY, alpha = newAlpha)
+            if (worries.isNotEmpty()) {
+                worries = worries.mapNotNull { worry ->
+                    val newY = worry.yOffset - 2f
+                    val newAlpha = worry.alpha - 0.005f
+                    if (newAlpha <= 0) {
+                        releasedCount++
+                        null
+                    } else {
+                        worry.copy(yOffset = newY, alpha = newAlpha)
+                    }
                 }
             }
         }
@@ -2152,12 +2180,12 @@ fun WorryJarGame(onBack: () -> Unit) {
                 title = { Text(stringResource(R.string.game_worry_jar)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.cd_back))
                     }
                 },
                 actions = {
                     Text(
-                        "✨ $releasedCount released",
+                        stringResource(R.string.game_worry_released_count, releasedCount),
                         modifier = Modifier.padding(end = 16.dp)
                     )
                 }
@@ -2197,8 +2225,10 @@ fun WorryJarGame(onBack: () -> Unit) {
                         Text(
                             text = worry.text.take(20) + if (worry.text.length > 20) "..." else "",
                             modifier = Modifier
-                                .offset(y = worry.yOffset.dp)
-                                .graphicsLayer { alpha = worry.alpha },
+                                .graphicsLayer {
+                                    translationY = worry.yOffset.dp.toPx()
+                                    alpha = worry.alpha
+                                },
                             color = Color.White,
                             style = MaterialTheme.typography.bodySmall
                         )
@@ -2211,7 +2241,7 @@ fun WorryJarGame(onBack: () -> Unit) {
                             Text("🫙", fontSize = 64.sp)
                             Spacer(Modifier.height(8.dp))
                             Text(
-                                "Empty jar",
+                                stringResource(R.string.game_worry_empty_jar),
                                 color = Color.White.copy(alpha = 0.7f)
                             )
                         }
@@ -2240,7 +2270,7 @@ fun WorryJarGame(onBack: () -> Unit) {
                     OutlinedTextField(
                         value = worryText,
                         onValueChange = { worryText = it },
-                        placeholder = { Text("What's worrying you?") },
+                        placeholder = { Text(stringResource(R.string.games_worry_placeholder)) },
                         modifier = Modifier.fillMaxWidth(),
                         maxLines = 2
                     )
@@ -2263,7 +2293,7 @@ fun WorryJarGame(onBack: () -> Unit) {
                     ) {
                         Icon(Icons.Filled.Air, null)
                         Spacer(Modifier.width(8.dp))
-                        Text("Release Worry")
+                        Text(stringResource(R.string.games_release_worry))
                     }
                 }
             }
@@ -2318,17 +2348,17 @@ fun ConstellationConnectGame(onBack: () -> Unit) {
                 title = { Text(stringResource(R.string.game_constellation_connect)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.cd_back))
                     }
                 },
                 actions = {
                     Text(
-                        "⭐ ${connections.size} lines",
+                        stringResource(R.string.game_constellation_lines_count, connections.size),
                         modifier = Modifier.padding(end = 16.dp),
                         color = Color.White
                     )
                     IconButton(onClick = { regenerateStars() }) {
-                        Icon(Icons.Filled.Refresh, contentDescription = "New Stars", tint = Color.White)
+                        Icon(Icons.Filled.Refresh, contentDescription = stringResource(R.string.game_cd_new_stars), tint = Color.White)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -2382,10 +2412,13 @@ fun ConstellationConnectGame(onBack: () -> Unit) {
                 Box(
                     modifier = Modifier
                         .offset(
-                            x = with(density) { (star.x - 16).toDp() },
-                            y = with(density) { (star.y - 16).toDp() }
+                            x = with(density) { star.x.toDp() } - 16.dp,
+                            y = with(density) { star.y.toDp() } - 16.dp
                         )
-                        .scale(starScale)
+                        .graphicsLayer {
+                            scaleX = starScale
+                            scaleY = starScale
+                        }
                         .size(32.dp)
                         .clip(CircleShape)
                         .background(
@@ -2456,6 +2489,7 @@ fun ZenSandGardenGame(onBack: () -> Unit) {
     val haptic = LocalHapticFeedback.current
     var lines by remember { mutableStateOf(listOf<SandLine>()) }
     var currentLine by remember { mutableStateOf(listOf<Pair<Float, Float>>()) }
+    val isDrawing by remember { derivedStateOf { currentLine.isNotEmpty() } }
 
     Scaffold(
         topBar = {
@@ -2463,12 +2497,12 @@ fun ZenSandGardenGame(onBack: () -> Unit) {
                 title = { Text(stringResource(R.string.game_zen_sand)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.cd_back))
                     }
                 },
                 actions = {
                     IconButton(onClick = { lines = emptyList() }) {
-                        Icon(Icons.Filled.Refresh, contentDescription = "Clear")
+                        Icon(Icons.Filled.Refresh, contentDescription = stringResource(R.string.game_cd_clear))
                     }
                 }
             )
@@ -2524,7 +2558,7 @@ fun ZenSandGardenGame(onBack: () -> Unit) {
             Text("🪨", modifier = Modifier.offset(x = 100.dp, y = 600.dp), fontSize = 28.sp)
 
             // Hint
-            if (lines.isEmpty() && currentLine.isEmpty()) {
+            if (lines.isEmpty() && !isDrawing) {
                 Column(
                     modifier = Modifier
                         .align(Alignment.Center)
@@ -2594,12 +2628,12 @@ fun PatternTapGame(onBack: () -> Unit) {
     }
 
     fun onTileTap(index: Int) {
-        if (gameState != "input") return
+        if (gameState != "input" || playerInput.size >= pattern.size) return
 
         haptic.performHapticFeedback(HapticFeedbackType.LongPress)
         val newInput = playerInput + index
 
-        if (newInput[newInput.lastIndex] != pattern[newInput.lastIndex]) {
+        if (newInput.lastIndex < pattern.size && newInput[newInput.lastIndex] != pattern[newInput.lastIndex]) {
             gameState = "fail"
             return
         }
@@ -2622,12 +2656,12 @@ fun PatternTapGame(onBack: () -> Unit) {
                 title = { Text(stringResource(R.string.game_pattern_tap)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.cd_back))
                     }
                 },
                 actions = {
                     Text(
-                        "🎯 Level $score",
+                        stringResource(R.string.game_pattern_level_count, score),
                         style = MaterialTheme.typography.titleMedium,
                         modifier = Modifier.padding(end = 16.dp)
                     )
@@ -2651,11 +2685,11 @@ fun PatternTapGame(onBack: () -> Unit) {
             // Status text
             Text(
                 when (gameState) {
-                    "waiting" -> "Tap Start to begin!"
-                    "showing" -> "Watch the pattern..."
-                    "input" -> "Your turn! (${playerInput.size}/${pattern.size})"
-                    "success" -> "✨ Great! Next level..."
-                    "fail" -> "Oops! Try again"
+                    "waiting" -> stringResource(R.string.game_pattern_state_waiting)
+                    "showing" -> stringResource(R.string.game_pattern_state_showing)
+                    "input" -> stringResource(R.string.game_pattern_state_input, playerInput.size, pattern.size)
+                    "success" -> stringResource(R.string.game_pattern_state_success)
+                    "fail" -> stringResource(R.string.game_pattern_state_fail)
                     else -> ""
                 },
                 color = Color.White,
@@ -2683,7 +2717,10 @@ fun PatternTapGame(onBack: () -> Unit) {
                     Box(
                         modifier = Modifier
                             .aspectRatio(1f)
-                            .scale(tileScale)
+                            .graphicsLayer {
+                                scaleX = tileScale
+                                scaleY = tileScale
+                            }
                             .clip(RoundedCornerShape(16.dp))
                             .background(
                                 if (isHighlighted) gridColors[index]
@@ -2712,7 +2749,7 @@ fun PatternTapGame(onBack: () -> Unit) {
                     colors = ButtonDefaults.buttonColors(containerColor = Color.White)
                 ) {
                     Text(
-                        if (gameState == "fail") "Try Again" else "Start",
+                        if (gameState == "fail") stringResource(R.string.game_pattern_try_again_button) else stringResource(R.string.game_pattern_start_button),
                         color = Color(0xFF8E2DE2),
                         fontWeight = FontWeight.Bold
                     )
@@ -2741,6 +2778,7 @@ fun InfinityDrawGame(onBack: () -> Unit) {
     val haptic = LocalHapticFeedback.current
     var lines by remember { mutableStateOf(listOf<List<Pair<Float, Float>>>()) }
     var currentLine by remember { mutableStateOf(listOf<Pair<Float, Float>>()) }
+    val isDrawing by remember { derivedStateOf { currentLine.isNotEmpty() } }
     var currentColor by remember { mutableStateOf(Color(0xFFFF416C)) }
 
     val colors = listOf(
@@ -2755,12 +2793,12 @@ fun InfinityDrawGame(onBack: () -> Unit) {
                 title = { Text(stringResource(R.string.game_infinity_draw)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.cd_back))
                     }
                 },
                 actions = {
                     IconButton(onClick = { lines = emptyList() }) {
-                        Icon(Icons.Filled.Refresh, contentDescription = "Clear")
+                        Icon(Icons.Filled.Refresh, contentDescription = stringResource(R.string.game_cd_clear))
                     }
                 }
             )
@@ -2858,7 +2896,7 @@ fun InfinityDrawGame(onBack: () -> Unit) {
                 }
 
                 // Hint
-                if (lines.isEmpty() && currentLine.isEmpty()) {
+                if (lines.isEmpty() && !isDrawing) {
                     Column(
                         modifier = Modifier
                             .align(Alignment.Center)
@@ -2941,7 +2979,7 @@ fun SensoryRainGame(onBack: () -> Unit) {
                 title = { Text(stringResource(R.string.game_sensory_rain)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.cd_back))
                     }
                 }
             )
@@ -3106,12 +3144,12 @@ fun BreathingBubblesGame(onBack: () -> Unit) {
                 title = { Text(stringResource(R.string.game_breathing_bubbles)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.cd_back))
                     }
                 },
                 actions = {
                     Text(
-                        "🫧 $cycleCount breaths",
+                        stringResource(R.string.game_breathing_count, cycleCount),
                         modifier = Modifier.padding(end = 16.dp)
                     )
                 }
@@ -3136,7 +3174,10 @@ fun BreathingBubblesGame(onBack: () -> Unit) {
                 Box(
                     modifier = Modifier
                         .size(200.dp)
-                        .scale(bubbleScale)
+                        .graphicsLayer {
+                            scaleX = bubbleScale
+                            scaleY = bubbleScale
+                        }
                         .clip(CircleShape)
                         .background(
                             Brush.radialGradient(
@@ -3153,9 +3194,9 @@ fun BreathingBubblesGame(onBack: () -> Unit) {
                     Text(
                         when {
                             !isBreathing -> "🫧"
-                            breathPhase == "inhale" -> "Breathe In"
-                            breathPhase == "hold" -> "Hold"
-                            else -> "Breathe Out"
+                            breathPhase == "inhale" -> stringResource(R.string.game_breathing_inhale)
+                            breathPhase == "hold" -> stringResource(R.string.game_breathing_hold)
+                            else -> stringResource(R.string.game_breathing_exhale)
                         },
                         color = if (isBreathing) Color(0xFF1a1a4e) else Color.Transparent,
                         fontWeight = FontWeight.Bold,
@@ -3185,7 +3226,7 @@ fun BreathingBubblesGame(onBack: () -> Unit) {
                     )
                     Spacer(Modifier.width(8.dp))
                     Text(
-                        if (isBreathing) "Pause" else "Start Breathing",
+                        if (isBreathing) stringResource(R.string.game_breathing_pause) else stringResource(R.string.game_breathing_start),
                         color = Color(0xFF2F80ED),
                         fontWeight = FontWeight.Bold
                     )
@@ -3212,7 +3253,7 @@ fun BreathingBubblesGame(onBack: () -> Unit) {
 data class TextureTile(
     val id: Int,
     val emoji: String,
-    val name: String,
+    @StringRes val nameRes: Int,
     val color: Color,
     val hapticPattern: Int // 1-5 intensity
 )
@@ -3226,15 +3267,15 @@ fun TextureTilesGame(onBack: () -> Unit) {
     var tapCount by remember { mutableIntStateOf(0) }
 
     val tiles = listOf(
-        TextureTile(0, "🪨", "Stone", Color(0xFF6B7280), 3),
-        TextureTile(1, "🧸", "Fluffy", Color(0xFFFBBF24), 1),
-        TextureTile(2, "🧊", "Ice", Color(0xFF60A5FA), 4),
-        TextureTile(3, "🌿", "Leaf", Color(0xFF34D399), 2),
-        TextureTile(4, "⚡", "Electric", Color(0xFFF472B6), 5),
-        TextureTile(5, "🌊", "Wave", Color(0xFF3B82F6), 2),
-        TextureTile(6, "🔥", "Warm", Color(0xFFEF4444), 3),
-        TextureTile(7, "❄️", "Cold", Color(0xFF93C5FD), 4),
-        TextureTile(8, "🍃", "Breeze", Color(0xFF86EFAC), 1)
+        TextureTile(0, "🪨", R.string.game_texture_stone, Color(0xFF6B7280), 3),
+        TextureTile(1, "🧸", R.string.game_texture_fluffy, Color(0xFFFBBF24), 1),
+        TextureTile(2, "🧊", R.string.game_texture_ice, Color(0xFF60A5FA), 4),
+        TextureTile(3, "🌿", R.string.game_texture_leaf, Color(0xFF34D399), 2),
+        TextureTile(4, "⚡", R.string.game_texture_electric, Color(0xFFF472B6), 5),
+        TextureTile(5, "🌊", R.string.game_texture_wave, Color(0xFF3B82F6), 2),
+        TextureTile(6, "🔥", R.string.game_texture_warm, Color(0xFFEF4444), 3),
+        TextureTile(7, "❄️", R.string.game_texture_cold, Color(0xFF93C5FD), 4),
+        TextureTile(8, "🍃", R.string.game_texture_breeze, Color(0xFF86EFAC), 1)
     )
 
     Scaffold(
@@ -3243,12 +3284,12 @@ fun TextureTilesGame(onBack: () -> Unit) {
                 title = { Text(stringResource(R.string.game_texture_tiles)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.cd_back))
                     }
                 },
                 actions = {
                     Text(
-                        "👆 $tapCount taps",
+                        stringResource(R.string.game_texture_taps_count, tapCount),
                         modifier = Modifier.padding(end = 16.dp)
                     )
                 }
@@ -3283,7 +3324,7 @@ fun TextureTilesGame(onBack: () -> Unit) {
                     )
                     selectedTile?.let { tile ->
                         Text(
-                            tile.name,
+                            stringResource(tile.nameRes),
                             color = Color.White,
                             fontWeight = FontWeight.Bold
                         )
@@ -3312,7 +3353,10 @@ fun TextureTilesGame(onBack: () -> Unit) {
                     Box(
                         modifier = Modifier
                             .aspectRatio(1f)
-                            .scale(tileScale)
+                            .graphicsLayer {
+                                scaleX = tileScale
+                                scaleY = tileScale
+                            }
                             .clip(RoundedCornerShape(16.dp))
                             .background(tile.color.copy(alpha = if (isSelected) 1f else 0.7f))
                             .border(
@@ -3338,7 +3382,7 @@ fun TextureTilesGame(onBack: () -> Unit) {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             Text(tile.emoji, fontSize = 32.sp)
                             Text(
-                                tile.name,
+                                stringResource(tile.nameRes),
                                 color = Color.White,
                                 style = MaterialTheme.typography.labelSmall
                             )
@@ -3384,15 +3428,15 @@ fun SoundGardenGame(onBack: () -> Unit) {
     var playIndex by remember { mutableIntStateOf(-1) }
     val scope = rememberCoroutineScope()
 
-    val noteTypes = listOf(
-        "🎵" to "Note",
-        "🎶" to "Melody",
-        "🔔" to "Bell",
-        "🎹" to "Piano",
-        "🥁" to "Drum",
-        "🎺" to "Horn",
-        "🎸" to "Guitar",
-        "🪇" to "Chime"
+    val noteTypes: List<Pair<String, Int>> = listOf(
+        "🎵" to R.string.game_sound_note,
+        "🎶" to R.string.game_sound_melody,
+        "🔔" to R.string.game_sound_bell,
+        "🎹" to R.string.game_sound_piano,
+        "🥁" to R.string.game_sound_drum,
+        "🎺" to R.string.game_sound_horn,
+        "🎸" to R.string.game_sound_guitar,
+        "🪇" to R.string.game_sound_chime
     )
 
     val noteColors = listOf(
@@ -3421,15 +3465,15 @@ fun SoundGardenGame(onBack: () -> Unit) {
                 title = { Text(stringResource(R.string.game_sound_garden)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.cd_back))
                     }
                 },
                 actions = {
                     IconButton(onClick = { playGarden() }, enabled = !isPlaying && notes.isNotEmpty()) {
-                        Icon(Icons.Filled.PlayArrow, contentDescription = "Play")
+                        Icon(Icons.Filled.PlayArrow, contentDescription = stringResource(R.string.game_cd_play))
                     }
                     IconButton(onClick = { notes = emptyList() }) {
-                        Icon(Icons.Filled.Refresh, contentDescription = "Clear")
+                        Icon(Icons.Filled.Refresh, contentDescription = stringResource(R.string.game_cd_clear))
                     }
                 }
             )
@@ -3449,7 +3493,8 @@ fun SoundGardenGame(onBack: () -> Unit) {
                     .padding(8.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                noteTypes.forEach { (emoji, name) ->
+                noteTypes.forEach { (emoji, nameRes) ->
+                    val name = stringResource(nameRes)
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         modifier = Modifier
@@ -3513,7 +3558,10 @@ fun SoundGardenGame(onBack: () -> Unit) {
                                 x = with(density) { (note.x - 24).toDp() },
                                 y = with(density) { (note.y - 24).toDp() }
                             )
-                            .scale(noteScale)
+                            .graphicsLayer {
+                                scaleX = noteScale
+                                scaleY = noteScale
+                            }
                     ) {
                         Text(
                             text = note.emoji,
@@ -3544,7 +3592,7 @@ fun SoundGardenGame(onBack: () -> Unit) {
 
             // Note count
             Text(
-                "🎵 ${notes.size} notes planted",
+                stringResource(R.string.game_sound_notes_count, notes.size),
                 modifier = Modifier.padding(16.dp),
                 style = MaterialTheme.typography.bodyMedium
             )
@@ -3564,15 +3612,14 @@ fun MoodMixerGame(onBack: () -> Unit) {
     var color2 by remember { mutableStateOf(Color(0xFF4ECDC4)) }
     var mixRatio by remember { mutableFloatStateOf(0.5f) }
 
-    val moodColors = listOf(
-        Color(0xFFFF6B6B) to "Energetic",
-        Color(0xFF4ECDC4) to "Calm",
-        Color(0xFFFFE66D) to "Happy",
-        Color(0xFF95E1D3) to "Peaceful",
-        Color(0xFFAA96DA) to "Dreamy",
-        Color(0xFFF38181) to "Passionate",
-        Color(0xFF6B5B95) to "Thoughtful",
-        Color(0xFF88D8B0) to "Refreshed"
+    val moodColors: List<Triple<Color, Int, String>> = listOf(
+        Triple(Color(0xFF4ECDC4), R.string.game_mood_calm, "calm"),
+        Triple(Color(0xFFFFE66D), R.string.game_mood_happy, "happy"),
+        Triple(Color(0xFF95E1D3), R.string.game_mood_peaceful, "peaceful"),
+        Triple(Color(0xFFAA96DA), R.string.game_mood_dreamy, "dreamy"),
+        Triple(Color(0xFFF38181), R.string.game_mood_passionate, "passionate"),
+        Triple(Color(0xFF6B5B95), R.string.game_mood_thoughtful, "thoughtful"),
+        Triple(Color(0xFF88D8B0), R.string.game_mood_refreshed, "refreshed")
     )
 
     val mixedColor = remember(color1, color2, mixRatio) {
@@ -3589,7 +3636,7 @@ fun MoodMixerGame(onBack: () -> Unit) {
                 title = { Text(stringResource(R.string.game_mood_mixer)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.cd_back))
                     }
                 }
             )
@@ -3617,7 +3664,7 @@ fun MoodMixerGame(onBack: () -> Unit) {
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    "Your Mood",
+                    stringResource(R.string.game_mood_your_mood),
                     color = Color.White,
                     fontWeight = FontWeight.Bold
                 )
@@ -3627,7 +3674,7 @@ fun MoodMixerGame(onBack: () -> Unit) {
 
             // Mix slider
             Text(
-                "Blend the moods",
+                stringResource(R.string.game_mood_blend),
                 style = MaterialTheme.typography.titleMedium,
                 color = Color.White
             )
@@ -3644,13 +3691,13 @@ fun MoodMixerGame(onBack: () -> Unit) {
             Spacer(Modifier.height(24.dp))
 
             // Color 1 selector
-            Text("First Mood:", color = Color.White, fontWeight = FontWeight.Bold)
+            Text(stringResource(R.string.game_mood_first), color = Color.White, fontWeight = FontWeight.Bold)
             Spacer(Modifier.height(8.dp))
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = Modifier.horizontalScroll(rememberScrollState())
             ) {
-                moodColors.forEach { (color, name) ->
+                moodColors.forEach { (color, nameRes, _) ->
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         modifier = Modifier
@@ -3669,7 +3716,7 @@ fun MoodMixerGame(onBack: () -> Unit) {
                                 .background(color)
                                 .border(2.dp, Color.White, CircleShape)
                         )
-                        Text(name, color = Color.White, style = MaterialTheme.typography.labelSmall)
+                        Text(stringResource(nameRes), color = Color.White, style = MaterialTheme.typography.labelSmall)
                     }
                 }
             }
@@ -3677,13 +3724,13 @@ fun MoodMixerGame(onBack: () -> Unit) {
             Spacer(Modifier.height(16.dp))
 
             // Color 2 selector
-            Text("Second Mood:", color = Color.White, fontWeight = FontWeight.Bold)
+            Text(stringResource(R.string.game_mood_second), color = Color.White, fontWeight = FontWeight.Bold)
             Spacer(Modifier.height(8.dp))
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = Modifier.horizontalScroll(rememberScrollState())
             ) {
-                moodColors.forEach { (color, name) ->
+                moodColors.forEach { (color, nameRes, _) ->
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         modifier = Modifier
@@ -3702,7 +3749,7 @@ fun MoodMixerGame(onBack: () -> Unit) {
                                 .background(color)
                                 .border(2.dp, Color.White, CircleShape)
                         )
-                        Text(name, color = Color.White, style = MaterialTheme.typography.labelSmall)
+                        Text(stringResource(nameRes), color = Color.White, style = MaterialTheme.typography.labelSmall)
                     }
                 }
             }

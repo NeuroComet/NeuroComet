@@ -18,6 +18,7 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,6 +33,14 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay as kdelay
+import kotlinx.coroutines.launch
+
+/**
+ * Possible outcomes shown on the transaction banking-card.
+ */
+private enum class TransactionResult { SUCCESS, DECLINED, TIMED_OUT }
 
 /**
  * Premium subscription screen for NeuroComet.
@@ -53,6 +62,27 @@ fun SubscriptionScreen(
     var showSuccessDialog by remember { mutableStateOf(false) }
     var showErrorSnackbar by remember { mutableStateOf(false) }
 
+    // ── Transaction status card state ──
+    var transactionResult by remember { mutableStateOf<TransactionResult?>(null) }
+    var purchaseInFlight by remember { mutableStateOf(false) }
+    val timeoutScope = rememberCoroutineScope()
+    var timeoutJob by remember { mutableStateOf<Job?>(null) }
+
+    // Start a 30-second timeout whenever a purchase goes in-flight
+    LaunchedEffect(purchaseInFlight) {
+        if (purchaseInFlight) {
+            timeoutJob?.cancel()
+            timeoutJob = timeoutScope.launch {
+                kdelay(30_000L)
+                // If still loading after 30 s, show timed-out card
+                if (purchaseInFlight) {
+                    purchaseInFlight = false
+                    transactionResult = TransactionResult.TIMED_OUT
+                }
+            }
+        }
+    }
+
     // Fetch offerings when screen opens
     LaunchedEffect(Unit) {
         SubscriptionManager.fetchOfferings()
@@ -62,14 +92,20 @@ fun SubscriptionScreen(
     // Handle purchase success
     LaunchedEffect(subscriptionState.purchaseSuccess) {
         if (subscriptionState.purchaseSuccess) {
+            purchaseInFlight = false
+            timeoutJob?.cancel()
+            transactionResult = TransactionResult.SUCCESS
             showSuccessDialog = true
             SubscriptionManager.clearPurchaseSuccess()
         }
     }
 
-    // Handle errors
+    // Handle errors → show declined card
     LaunchedEffect(subscriptionState.error) {
-        if (subscriptionState.error != null) {
+        if (subscriptionState.error != null && purchaseInFlight) {
+            purchaseInFlight = false
+            timeoutJob?.cancel()
+            transactionResult = TransactionResult.DECLINED
             showErrorSnackbar = true
         }
     }
@@ -83,10 +119,10 @@ fun SubscriptionScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Go Premium", fontWeight = FontWeight.Bold) },
+                title = { Text(stringResource(R.string.sub_go_premium), fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.cd_back))
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -143,7 +179,7 @@ fun SubscriptionScreen(
                 Spacer(Modifier.height(24.dp))
 
                 Text(
-                    "NeuroComet Premium",
+                    stringResource(R.string.sub_premium_title),
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onBackground
@@ -152,7 +188,7 @@ fun SubscriptionScreen(
                 Spacer(Modifier.height(8.dp))
 
                 Text(
-                    "Enjoy an ad-free, distraction-free experience",
+                    stringResource(R.string.sub_premium_tagline),
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center
@@ -167,7 +203,7 @@ fun SubscriptionScreen(
 
                 // Subscription options
                 Text(
-                    "Choose Your Plan",
+                    stringResource(R.string.sub_choose_plan),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.onBackground
@@ -178,10 +214,10 @@ fun SubscriptionScreen(
                 // Monthly plan
                 SubscriptionPlanCard(
                     plan = SubscriptionPlan.MONTHLY,
-                    title = "Monthly",
+                    title = stringResource(R.string.sub_plan_monthly),
                     price = subscriptionState.monthlyPackage?.product?.price?.formatted ?: "$2.00",
-                    period = "/month",
-                    description = "Billed monthly, cancel anytime",
+                    period = stringResource(R.string.sub_period_month),
+                    description = stringResource(R.string.sub_monthly_desc),
                     isSelected = selectedPlan == SubscriptionPlan.MONTHLY,
                     onSelect = { selectedPlan = SubscriptionPlan.MONTHLY }
                 )
@@ -191,14 +227,14 @@ fun SubscriptionScreen(
                 // Lifetime plan
                 SubscriptionPlanCard(
                     plan = SubscriptionPlan.LIFETIME,
-                    title = "Lifetime",
+                    title = stringResource(R.string.sub_plan_lifetime),
                     price = subscriptionState.lifetimePackage?.product?.price?.formatted ?: "$60.00",
-                    period = " one-time",
-                    description = "Pay once, premium forever!",
-                    badge = "BEST VALUE",
+                    period = stringResource(R.string.sub_period_one_time),
+                    description = stringResource(R.string.sub_lifetime_desc),
+                    badge = stringResource(R.string.sub_best_value),
                     isSelected = selectedPlan == SubscriptionPlan.LIFETIME,
                     onSelect = { selectedPlan = SubscriptionPlan.LIFETIME },
-                    savings = "Save 60%+ vs monthly"
+                    savings = stringResource(R.string.sub_savings)
                 )
 
                 Spacer(Modifier.height(32.dp))
@@ -207,6 +243,8 @@ fun SubscriptionScreen(
                 Button(
                     onClick = {
                         if (activity == null) return@Button
+                        transactionResult = null  // reset any previous result
+                        purchaseInFlight = true
 
                         when (selectedPlan) {
                             SubscriptionPlan.MONTHLY -> {
@@ -243,8 +281,8 @@ fun SubscriptionScreen(
                     } else {
                         Text(
                             when (selectedPlan) {
-                                SubscriptionPlan.MONTHLY -> "Subscribe Monthly"
-                                SubscriptionPlan.LIFETIME -> "Get Lifetime Access"
+                                SubscriptionPlan.MONTHLY -> stringResource(R.string.sub_subscribe_monthly)
+                                SubscriptionPlan.LIFETIME -> stringResource(R.string.sub_get_lifetime)
                             },
                             color = Color.Black,
                             fontWeight = FontWeight.Bold,
@@ -269,7 +307,7 @@ fun SubscriptionScreen(
                     }
                 ) {
                     Text(
-                        "Restore Purchases",
+                        stringResource(R.string.sub_restore_purchases),
                         color = MaterialTheme.colorScheme.primary
                     )
                 }
@@ -282,7 +320,7 @@ fun SubscriptionScreen(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(
-                        "Terms of Service",
+                        stringResource(R.string.sub_terms),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.primary,
                         textDecoration = TextDecoration.Underline,
@@ -294,7 +332,7 @@ fun SubscriptionScreen(
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Text(
-                        "Privacy Policy",
+                        stringResource(R.string.sub_privacy),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.primary,
                         textDecoration = TextDecoration.Underline,
@@ -306,13 +344,112 @@ fun SubscriptionScreen(
 
                 // Subscription info
                 Text(
-                    "Subscriptions auto-renew unless cancelled at least 24 hours before the end of the current period. " +
-                    "Manage subscriptions in your Google Play account settings.",
+                    stringResource(R.string.sub_legal_notice),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
                     textAlign = TextAlign.Center,
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
+
+                Spacer(Modifier.height(24.dp))
+
+                // ── Debug-only: Payment test dialogs ──
+                if (BuildConfig.DEBUG) {
+                    HorizontalDivider()
+                    Spacer(Modifier.height(12.dp))
+
+                    Text(
+                        stringResource(R.string.txn_test_title),
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.tertiary
+                    )
+                    Spacer(Modifier.height(4.dp))
+                    Text(
+                        stringResource(R.string.txn_test_subtitle),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Spacer(Modifier.height(12.dp))
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        OutlinedButton(
+                            onClick = { transactionResult = TransactionResult.SUCCESS },
+                            modifier = Modifier.weight(1f),
+                            colors = ButtonDefaults.outlinedButtonColors(
+                                contentColor = Color(0xFF2E7D32)
+                            ),
+                            border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFF2E7D32)),
+                            shape = RoundedCornerShape(12.dp),
+                            contentPadding = PaddingValues(vertical = 12.dp, horizontal = 4.dp)
+                        ) {
+                            Text(
+                                stringResource(R.string.txn_test_success),
+                                fontSize = 13.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                maxLines = 1
+                            )
+                        }
+                        OutlinedButton(
+                            onClick = { transactionResult = TransactionResult.DECLINED },
+                            modifier = Modifier.weight(1f),
+                            colors = ButtonDefaults.outlinedButtonColors(
+                                contentColor = MaterialTheme.colorScheme.error
+                            ),
+                            border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.error),
+                            shape = RoundedCornerShape(12.dp),
+                            contentPadding = PaddingValues(vertical = 12.dp, horizontal = 4.dp)
+                        ) {
+                            Text(
+                                stringResource(R.string.txn_test_declined),
+                                fontSize = 13.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                maxLines = 1
+                            )
+                        }
+                        OutlinedButton(
+                            onClick = { transactionResult = TransactionResult.TIMED_OUT },
+                            modifier = Modifier.weight(1f),
+                            colors = ButtonDefaults.outlinedButtonColors(
+                                contentColor = Color(0xFFE65100)
+                            ),
+                            border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFFE65100)),
+                            shape = RoundedCornerShape(12.dp),
+                            contentPadding = PaddingValues(vertical = 12.dp, horizontal = 4.dp)
+                        ) {
+                            Text(
+                                stringResource(R.string.txn_test_timed_out),
+                                fontSize = 13.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                maxLines = 1
+                            )
+                        }
+                    }
+
+                    Spacer(Modifier.height(8.dp))
+
+                    OutlinedButton(
+                        onClick = {
+                            transactionResult = null
+                            SubscriptionManager.resetTestPurchase()
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(12.dp)
+                    ) {
+                        Icon(
+                            Icons.Filled.Refresh,
+                            contentDescription = null,
+                            modifier = Modifier.size(18.dp)
+                        )
+                        Spacer(Modifier.width(6.dp))
+                        Text(stringResource(R.string.txn_test_reset))
+                    }
+
+                    Spacer(Modifier.height(16.dp))
+                }
 
                 Spacer(Modifier.height(32.dp))
             }
@@ -355,7 +492,7 @@ fun SubscriptionScreen(
             title = {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
-                        "🎉 Congratulations! 🎉",
+                        "🎉 Woohoo! Payment successful.",
                         style = MaterialTheme.typography.headlineSmall,
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Center
@@ -381,12 +518,7 @@ fun SubscriptionScreen(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(
-                        when (purchaseType) {
-                            "lifetime" -> "Thank you for your incredible support! You now have lifetime access to all premium features. No more ads, ever! 🚀"
-                            "monthly" -> "Thank you for subscribing! Enjoy your ad-free experience and all premium features. Your support means everything to us! 💜"
-                            "restored" -> "Your premium subscription has been restored! Welcome back to the ad-free experience. 🌟"
-                            else -> "Thank you for supporting NeuroComet! Enjoy your ad-free experience."
-                        },
+                        "The dopamine hit has been deposited, and your premium powers are now fully unlocked.",
                         textAlign = TextAlign.Center,
                         style = MaterialTheme.typography.bodyMedium
                     )
@@ -404,17 +536,17 @@ fun SubscriptionScreen(
                             .padding(12.dp)
                     ) {
                         Text(
-                            "Your Premium Benefits:",
+                            stringResource(R.string.sub_your_benefits),
                             style = MaterialTheme.typography.labelMedium,
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.primary
                         )
                         Spacer(Modifier.height(8.dp))
                         listOf(
-                            "✅ Completely ad-free experience",
-                            "✅ Priority content delivery",
-                            "✅ Exclusive premium themes",
-                            "✅ Supporting neurodiversity"
+                            stringResource(R.string.sub_benefit_ad_free),
+                            stringResource(R.string.sub_benefit_priority),
+                            stringResource(R.string.sub_benefit_themes),
+                            stringResource(R.string.sub_benefit_support)
                         ).forEach { benefit ->
                             Text(
                                 benefit,
@@ -437,10 +569,47 @@ fun SubscriptionScreen(
                     )
                 ) {
                     Text(
-                        "Let's Go! 🚀",
+                        stringResource(R.string.sub_lets_go),
                         color = Color.Black,
                         fontWeight = FontWeight.Bold
                     )
+                }
+            }
+        )
+    }
+
+    // ── Payment error/timeout popups ──
+    if (transactionResult != null && transactionResult != TransactionResult.SUCCESS) {
+        val (popupTitle, popupMessage) = when (transactionResult) {
+            TransactionResult.DECLINED -> "🚫 Payment declined." to "Sometimes the executive function to find the right credit card just isn't there today."
+            TransactionResult.TIMED_OUT -> "⏳ Timed-Out!" to "The server got distracted by a shiny side quest and forgot to finish your transaction. Let's try again!"
+            else -> "" to ""
+        }
+
+        AlertDialog(
+            onDismissRequest = { transactionResult = null },
+            title = { Text(popupTitle) },
+            text = { Text(popupMessage) },
+            confirmButton = {
+                TextButton(onClick = { transactionResult = null }) {
+                    Text("OK")
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        transactionResult = null
+                        if (activity != null) {
+                            purchaseInFlight = true
+                            if (selectedPlan == SubscriptionPlan.MONTHLY) {
+                                SubscriptionManager.purchaseMonthly(activity, { purchaseInFlight = false }, { purchaseInFlight = false })
+                            } else {
+                                SubscriptionManager.purchaseLifetime(activity, { purchaseInFlight = false }, { purchaseInFlight = false })
+                            }
+                        }
+                    }
+                ) {
+                    Text("Retry")
                 }
             }
         )
@@ -459,10 +628,10 @@ fun SubscriptionScreen(
 @Composable
 private fun PremiumBenefitsList() {
     val benefits = listOf(
-        BenefitItem(Icons.Filled.Block, "No Ads", "Completely ad-free experience"),
-        BenefitItem(Icons.Filled.Speed, "Faster Loading", "Priority content delivery"),
-        BenefitItem(Icons.Filled.Palette, "Exclusive Themes", "Special premium themes"),
-        BenefitItem(Icons.Filled.Favorite, "Support Development", "Help us build more features")
+        BenefitItem(Icons.Filled.Block, stringResource(R.string.sub_benefit_no_ads), stringResource(R.string.sub_benefit_no_ads_desc)),
+        BenefitItem(Icons.Filled.Speed, stringResource(R.string.sub_benefit_faster), stringResource(R.string.sub_benefit_faster_desc)),
+        BenefitItem(Icons.Filled.Palette, stringResource(R.string.sub_benefit_exclusive_themes), stringResource(R.string.sub_benefit_exclusive_themes_desc)),
+        BenefitItem(Icons.Filled.Favorite, stringResource(R.string.sub_benefit_dev_support), stringResource(R.string.sub_benefit_dev_support_desc))
     )
 
     Column(
@@ -641,10 +810,10 @@ private fun PremiumActiveScreen(onBack: () -> Unit) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Premium Active", fontWeight = FontWeight.Bold) },
+                title = { Text(stringResource(R.string.sub_premium_active), fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.cd_back))
                     }
                 }
             )
@@ -683,7 +852,7 @@ private fun PremiumActiveScreen(onBack: () -> Unit) {
             Spacer(Modifier.height(32.dp))
 
             Text(
-                "You're Premium! ⭐",
+                stringResource(R.string.sub_youre_premium),
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold
             )
@@ -691,7 +860,7 @@ private fun PremiumActiveScreen(onBack: () -> Unit) {
             Spacer(Modifier.height(12.dp))
 
             Text(
-                "Thank you for supporting NeuroComet!\nEnjoy your ad-free experience.",
+                stringResource(R.string.sub_thanks_support),
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center
@@ -700,7 +869,7 @@ private fun PremiumActiveScreen(onBack: () -> Unit) {
             Spacer(Modifier.height(32.dp))
 
             OutlinedButton(onClick = onBack) {
-                Text("Back to App")
+                Text(stringResource(R.string.sub_back_to_app))
             }
         }
     }
@@ -716,4 +885,6 @@ enum class SubscriptionPlan {
     MONTHLY,
     LIFETIME
 }
+
+// Old TransactionStatusCard removed
 

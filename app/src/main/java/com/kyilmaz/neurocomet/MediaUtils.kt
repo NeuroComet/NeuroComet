@@ -330,6 +330,7 @@ object AttachmentHelper {
     /**
      * Build the [Intent] for the API 37 system contacts picker.
      * Only call this when [supportsContactsPicker] returns true.
+     * Uses reflection to avoid compile-time dependency on preview SDK.
      */
     @Suppress("NewApi")
     fun buildContactsPickerIntent(allowMultiple: Boolean = false): Intent {
@@ -337,11 +338,11 @@ object AttachmentHelper {
             ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE,
             ContactsContract.CommonDataKinds.Email.CONTENT_ITEM_TYPE
         )
-        return Intent(android.provider.ContactsPickerSessionContract.ACTION_PICK_CONTACTS).apply {
-            putStringArrayListExtra(
-                android.provider.ContactsPickerSessionContract.EXTRA_PICK_CONTACTS_REQUESTED_DATA_FIELDS,
-                dataFields
-            )
+        val contractClass = Class.forName("android.provider.ContactsPickerSessionContract")
+        val actionPickContacts = contractClass.getField("ACTION_PICK_CONTACTS").get(null) as String
+        val extraDataFields = contractClass.getField("EXTRA_PICK_CONTACTS_REQUESTED_DATA_FIELDS").get(null) as String
+        return Intent(actionPickContacts).apply {
+            putStringArrayListExtra(extraDataFields, dataFields)
             putExtra(Intent.EXTRA_ALLOW_MULTIPLE, allowMultiple)
         }
     }
@@ -398,7 +399,7 @@ object AttachmentHelper {
         return if (Build.VERSION.SDK_INT >= 37) {
             ContextCompat.checkSelfPermission(
                 context,
-                Manifest.permission.ACCESS_LOCAL_NETWORK
+                "android.permission.ACCESS_LOCAL_NETWORK"
             ) == PackageManager.PERMISSION_GRANTED
         } else {
             true

@@ -15,6 +15,8 @@
 local.properties
 secrets.properties
 app/google-services.json
+*.jks
+*.keystore
 
 # Local scratch artifacts from editor-assisted recovery work
 /SplashScreen_HEAD.kt

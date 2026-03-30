@@ -89,6 +89,10 @@ class DevOptionsViewModel : ViewModel() {
     // ─── Performance ────────────────────────────────────────
     fun setShowPerformanceOverlay(v: Boolean) { DevOptionsSettings.setShowPerformanceOverlay(context(), v); refresh() }
 
+    // ─── Feedback & Beta ─────────────────────────────────────
+    fun setBypassFeedbackRateLimit(v: Boolean) { DevOptionsSettings.setBypassFeedbackRateLimit(context(), v); refresh() }
+    fun setForceFeedbackSubmitFailure(v: Boolean) { DevOptionsSettings.setForceFeedbackSubmitFailure(context(), v); refresh() }
+
     // ─── Reset ──────────────────────────────────────────────
     fun resetMockData(feedViewModel: FeedViewModel) {
         feedViewModel.resetMockData()

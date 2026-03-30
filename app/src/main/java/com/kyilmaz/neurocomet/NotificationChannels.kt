@@ -92,27 +92,27 @@ object NotificationChannels {
         Log.d(TAG, "Creating notification channels...")
 
         // Create channel groups first
-        createChannelGroups(notificationManager)
+        createChannelGroups(context, notificationManager)
 
         // Create all channels
-        createMessagesChannels(notificationManager)
-        createSocialChannels(notificationManager)
-        createCommunityChannels(notificationManager)
-        createAccountChannels(notificationManager)
-        createAppChannels(notificationManager)
-        createWellnessChannels(notificationManager)
+        createMessagesChannels(context, notificationManager)
+        createSocialChannels(context, notificationManager)
+        createCommunityChannels(context, notificationManager)
+        createAccountChannels(context, notificationManager)
+        createAppChannels(context, notificationManager)
+        createWellnessChannels(context, notificationManager)
 
         Log.d(TAG, "Notification channels created successfully. Total channels: ${notificationManager.notificationChannels.size}")
     }
 
-    private fun createChannelGroups(notificationManager: NotificationManager) {
+    private fun createChannelGroups(context: Context, notificationManager: NotificationManager) {
         val groups = listOf(
-            NotificationChannelGroup(GROUP_MESSAGES, "Messages"),
-            NotificationChannelGroup(GROUP_SOCIAL, "Social"),
-            NotificationChannelGroup(GROUP_COMMUNITY, "Community"),
-            NotificationChannelGroup(GROUP_ACCOUNT, "Account & Security"),
-            NotificationChannelGroup(GROUP_APP, "App Updates"),
-            NotificationChannelGroup(GROUP_WELLNESS, "Wellness")
+            NotificationChannelGroup(GROUP_MESSAGES, context.getString(R.string.notif_group_messages)),
+            NotificationChannelGroup(GROUP_SOCIAL, context.getString(R.string.notif_group_social)),
+            NotificationChannelGroup(GROUP_COMMUNITY, context.getString(R.string.notif_group_community)),
+            NotificationChannelGroup(GROUP_ACCOUNT, context.getString(R.string.notif_group_account)),
+            NotificationChannelGroup(GROUP_APP, context.getString(R.string.notif_group_app)),
+            NotificationChannelGroup(GROUP_WELLNESS, context.getString(R.string.notif_group_wellness))
         )
 
         groups.forEach { notificationManager.createNotificationChannelGroup(it) }
@@ -123,15 +123,15 @@ object NotificationChannels {
     // MESSAGES CHANNELS
     // ============================================================================
 
-    private fun createMessagesChannels(notificationManager: NotificationManager) {
+    private fun createMessagesChannels(context: Context, notificationManager: NotificationManager) {
 
         val channels = listOf(
             NotificationChannel(
                 CHANNEL_DIRECT_MESSAGES,
-                "Direct Messages",
+                context.getString(R.string.notif_channel_direct_messages),
                 NotificationManager.IMPORTANCE_HIGH
             ).apply {
-                description = "Notifications for new direct messages"
+                description = context.getString(R.string.notif_channel_direct_messages_desc)
                 group = GROUP_MESSAGES
                 enableVibration(true)
                 vibrationPattern = longArrayOf(0, 100, 50, 100) // Gentle pattern
@@ -140,10 +140,10 @@ object NotificationChannels {
 
             NotificationChannel(
                 CHANNEL_GROUP_MESSAGES,
-                "Group Messages",
+                context.getString(R.string.notif_channel_group_messages),
                 NotificationManager.IMPORTANCE_DEFAULT
             ).apply {
-                description = "Notifications for group chat messages"
+                description = context.getString(R.string.notif_channel_group_messages_desc)
                 group = GROUP_MESSAGES
                 enableVibration(true)
                 setShowBadge(true)
@@ -151,10 +151,10 @@ object NotificationChannels {
 
             NotificationChannel(
                 CHANNEL_MESSAGE_REQUESTS,
-                "Message Requests",
+                context.getString(R.string.notif_channel_message_requests),
                 NotificationManager.IMPORTANCE_LOW
             ).apply {
-                description = "Notifications for new message requests from people you don't follow"
+                description = context.getString(R.string.notif_channel_message_requests_desc)
                 group = GROUP_MESSAGES
                 setShowBadge(true)
             }
@@ -167,15 +167,15 @@ object NotificationChannels {
     // SOCIAL CHANNELS
     // ============================================================================
 
-    private fun createSocialChannels(notificationManager: NotificationManager) {
+    private fun createSocialChannels(context: Context, notificationManager: NotificationManager) {
 
         val channels = listOf(
             NotificationChannel(
                 CHANNEL_LIKES,
-                "Likes",
+                context.getString(R.string.notif_channel_likes),
                 NotificationManager.IMPORTANCE_LOW
             ).apply {
-                description = "Notifications when someone likes your posts"
+                description = context.getString(R.string.notif_channel_likes_desc)
                 group = GROUP_SOCIAL
                 enableVibration(false) // Non-intrusive
                 setShowBadge(true)
@@ -183,10 +183,10 @@ object NotificationChannels {
 
             NotificationChannel(
                 CHANNEL_COMMENTS,
-                "Comments",
+                context.getString(R.string.notif_channel_comments),
                 NotificationManager.IMPORTANCE_DEFAULT
             ).apply {
-                description = "Notifications for comments on your posts"
+                description = context.getString(R.string.notif_channel_comments_desc)
                 group = GROUP_SOCIAL
                 enableVibration(true)
                 vibrationPattern = longArrayOf(0, 100)
@@ -195,10 +195,10 @@ object NotificationChannels {
 
             NotificationChannel(
                 CHANNEL_MENTIONS,
-                "Mentions",
+                context.getString(R.string.notif_channel_mentions),
                 NotificationManager.IMPORTANCE_HIGH
             ).apply {
-                description = "Notifications when someone mentions you"
+                description = context.getString(R.string.notif_channel_mentions_desc)
                 group = GROUP_SOCIAL
                 enableVibration(true)
                 setShowBadge(true)
@@ -206,10 +206,10 @@ object NotificationChannels {
 
             NotificationChannel(
                 CHANNEL_FOLLOWS,
-                "New Followers",
+                context.getString(R.string.notif_channel_follows),
                 NotificationManager.IMPORTANCE_LOW
             ).apply {
-                description = "Notifications for new followers"
+                description = context.getString(R.string.notif_channel_follows_desc)
                 group = GROUP_SOCIAL
                 enableVibration(false)
                 setShowBadge(true)
@@ -217,10 +217,10 @@ object NotificationChannels {
 
             NotificationChannel(
                 CHANNEL_FRIEND_ACTIVITY,
-                "Friend Activity",
+                context.getString(R.string.notif_channel_friend_activity),
                 NotificationManager.IMPORTANCE_LOW
             ).apply {
-                description = "Updates about what your friends are doing"
+                description = context.getString(R.string.notif_channel_friend_activity_desc)
                 group = GROUP_SOCIAL
                 enableVibration(false)
                 setShowBadge(false)
@@ -234,25 +234,25 @@ object NotificationChannels {
     // COMMUNITY CHANNELS
     // ============================================================================
 
-    private fun createCommunityChannels(notificationManager: NotificationManager) {
+    private fun createCommunityChannels(context: Context, notificationManager: NotificationManager) {
 
         val channels = listOf(
             NotificationChannel(
                 CHANNEL_COMMUNITY_UPDATES,
-                "Community Updates",
+                context.getString(R.string.notif_channel_community_updates),
                 NotificationManager.IMPORTANCE_DEFAULT
             ).apply {
-                description = "Updates from communities you've joined"
+                description = context.getString(R.string.notif_channel_community_updates_desc)
                 group = GROUP_COMMUNITY
                 setShowBadge(true)
             },
 
             NotificationChannel(
                 CHANNEL_EVENT_REMINDERS,
-                "Event Reminders",
+                context.getString(R.string.notif_channel_event_reminders),
                 NotificationManager.IMPORTANCE_HIGH
             ).apply {
-                description = "Reminders for upcoming events you've RSVP'd to"
+                description = context.getString(R.string.notif_channel_event_reminders_desc)
                 group = GROUP_COMMUNITY
                 enableVibration(true)
                 setShowBadge(true)
@@ -260,10 +260,10 @@ object NotificationChannels {
 
             NotificationChannel(
                 CHANNEL_LIVE_EVENTS,
-                "Live Events",
+                context.getString(R.string.notif_channel_live_events),
                 NotificationManager.IMPORTANCE_HIGH
             ).apply {
-                description = "Notifications when live events start"
+                description = context.getString(R.string.notif_channel_live_events_desc)
                 group = GROUP_COMMUNITY
                 enableVibration(true)
                 setShowBadge(true)
@@ -277,15 +277,15 @@ object NotificationChannels {
     // ACCOUNT & SECURITY CHANNELS
     // ============================================================================
 
-    private fun createAccountChannels(notificationManager: NotificationManager) {
+    private fun createAccountChannels(context: Context, notificationManager: NotificationManager) {
 
         val channels = listOf(
             NotificationChannel(
                 CHANNEL_ACCOUNT_SECURITY,
-                "Account Security",
+                context.getString(R.string.notif_channel_account_security),
                 NotificationManager.IMPORTANCE_HIGH
             ).apply {
-                description = "Important security alerts for your account"
+                description = context.getString(R.string.notif_channel_account_security_desc)
                 group = GROUP_ACCOUNT
                 enableVibration(true)
                 setShowBadge(true)
@@ -295,10 +295,10 @@ object NotificationChannels {
 
             NotificationChannel(
                 CHANNEL_PARENTAL_ALERTS,
-                "Parental Control Alerts",
+                context.getString(R.string.notif_channel_parental_alerts),
                 NotificationManager.IMPORTANCE_HIGH
             ).apply {
-                description = "Alerts for parents monitoring child accounts"
+                description = context.getString(R.string.notif_channel_parental_alerts_desc)
                 group = GROUP_ACCOUNT
                 enableVibration(true)
                 setShowBadge(true)
@@ -306,10 +306,10 @@ object NotificationChannels {
 
             NotificationChannel(
                 CHANNEL_LOGIN_ALERTS,
-                "Login Alerts",
+                context.getString(R.string.notif_channel_login_alerts),
                 NotificationManager.IMPORTANCE_HIGH
             ).apply {
-                description = "Notifications about new logins to your account"
+                description = context.getString(R.string.notif_channel_login_alerts_desc)
                 group = GROUP_ACCOUNT
                 enableVibration(true)
                 setShowBadge(true)
@@ -324,15 +324,15 @@ object NotificationChannels {
     // APP CHANNELS
     // ============================================================================
 
-    private fun createAppChannels(notificationManager: NotificationManager) {
+    private fun createAppChannels(context: Context, notificationManager: NotificationManager) {
 
         val channels = listOf(
             NotificationChannel(
                 CHANNEL_APP_UPDATES,
-                "App Updates",
+                context.getString(R.string.notif_channel_app_updates),
                 NotificationManager.IMPORTANCE_LOW
             ).apply {
-                description = "Notifications about app updates"
+                description = context.getString(R.string.notif_channel_app_updates_desc)
                 group = GROUP_APP
                 enableVibration(false)
                 setShowBadge(false)
@@ -340,10 +340,10 @@ object NotificationChannels {
 
             NotificationChannel(
                 CHANNEL_FEATURE_ANNOUNCEMENTS,
-                "Feature Announcements",
+                context.getString(R.string.notif_channel_feature_announcements),
                 NotificationManager.IMPORTANCE_LOW
             ).apply {
-                description = "Announcements about new features"
+                description = context.getString(R.string.notif_channel_feature_announcements_desc)
                 group = GROUP_APP
                 enableVibration(false)
                 setShowBadge(true)
@@ -351,10 +351,10 @@ object NotificationChannels {
 
             NotificationChannel(
                 CHANNEL_TIPS_AND_TRICKS,
-                "Tips & Tricks",
+                context.getString(R.string.notif_channel_tips_and_tricks),
                 NotificationManager.IMPORTANCE_MIN
             ).apply {
-                description = "Helpful tips for using NeuroComet"
+                description = context.getString(R.string.notif_channel_tips_and_tricks_desc)
                 group = GROUP_APP
                 enableVibration(false)
                 setShowBadge(false)
@@ -368,15 +368,15 @@ object NotificationChannels {
     // WELLNESS CHANNELS (Neurodivergent-Friendly)
     // ============================================================================
 
-    private fun createWellnessChannels(notificationManager: NotificationManager) {
+    private fun createWellnessChannels(context: Context, notificationManager: NotificationManager) {
 
         val channels = listOf(
             NotificationChannel(
                 CHANNEL_WELLNESS_REMINDERS,
-                "Wellness Reminders",
+                context.getString(R.string.notif_channel_wellness_reminders),
                 NotificationManager.IMPORTANCE_DEFAULT
             ).apply {
-                description = "Gentle reminders for self-care and wellness"
+                description = context.getString(R.string.notif_channel_wellness_reminders_desc)
                 group = GROUP_WELLNESS
                 enableVibration(true)
                 vibrationPattern = longArrayOf(0, 50) // Very gentle
@@ -385,10 +385,10 @@ object NotificationChannels {
 
             NotificationChannel(
                 CHANNEL_BREAK_REMINDERS,
-                "Break Reminders",
+                context.getString(R.string.notif_channel_break_reminders),
                 NotificationManager.IMPORTANCE_LOW
             ).apply {
-                description = "Reminders to take breaks from the app"
+                description = context.getString(R.string.notif_channel_break_reminders_desc)
                 group = GROUP_WELLNESS
                 enableVibration(false) // Non-intrusive
                 setShowBadge(false)
@@ -396,10 +396,10 @@ object NotificationChannels {
 
             NotificationChannel(
                 CHANNEL_CALM_MODE,
-                "Calm Mode",
+                context.getString(R.string.notif_channel_calm_mode),
                 NotificationManager.IMPORTANCE_MIN
             ).apply {
-                description = "Ultra-quiet notifications for calm mode"
+                description = context.getString(R.string.notif_channel_calm_mode_desc)
                 group = GROUP_WELLNESS
                 enableVibration(false)
                 enableLights(false)
@@ -556,7 +556,7 @@ object NotificationHelper {
         content: String
     ): NotificationCompat.Builder {
         return NotificationCompat.Builder(context, channelId)
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setSmallIcon(R.drawable.neuro_comet_icon_monochrome)
             .setContentTitle(title)
             .setContentText(content)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
@@ -574,7 +574,7 @@ object NotificationHelper {
         senderAvatarUrl: String? = null
     ): NotificationCompat.Builder {
         return NotificationCompat.Builder(context, NotificationChannels.CHANNEL_DIRECT_MESSAGES)
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setSmallIcon(R.drawable.neuro_comet_icon_monochrome)
             .setContentTitle(senderName)
             .setContentText(message)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
@@ -594,7 +594,7 @@ object NotificationHelper {
     ): NotificationCompat.Builder {
         val channelId = NotificationChannels.getChannelForNotificationType(type)
         return NotificationCompat.Builder(context, channelId)
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setSmallIcon(R.drawable.neuro_comet_icon_monochrome)
             .setContentTitle(title)
             .setContentText(content)
             .setPriority(
@@ -617,7 +617,7 @@ object NotificationHelper {
         content: String
     ): NotificationCompat.Builder {
         return NotificationCompat.Builder(context, NotificationChannels.CHANNEL_ACCOUNT_SECURITY)
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setSmallIcon(R.drawable.neuro_comet_icon_monochrome)
             .setContentTitle(title)
             .setContentText(content)
             .setPriority(NotificationCompat.PRIORITY_MAX)
@@ -640,7 +640,7 @@ object NotificationHelper {
         customBigContentView: RemoteViews? = null
     ): NotificationCompat.Builder {
         val builder = NotificationCompat.Builder(context, channelId)
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setSmallIcon(R.drawable.neuro_comet_icon_monochrome)
             .setContentTitle(title)
             .setContentText(content)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
@@ -682,7 +682,7 @@ object NotificationHelper {
         senderAvatarUrl: String? = null
     ): NotificationCompat.Builder {
         return NotificationCompat.Builder(context, NotificationChannels.CHANNEL_DIRECT_MESSAGES)
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setSmallIcon(R.drawable.neuro_comet_icon_monochrome)
             .setContentTitle(senderName)
             .setContentText(message)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
@@ -712,7 +712,7 @@ object NotificationHelper {
         conversationTitle?.let { messagingStyle.setConversationTitle(it) }
 
         return NotificationCompat.Builder(context, NotificationChannels.CHANNEL_DIRECT_MESSAGES)
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setSmallIcon(R.drawable.neuro_comet_icon_monochrome)
             .setContentTitle(senderName)
             .setContentText(message)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
@@ -747,7 +747,7 @@ object NotificationHelper {
         }
 
         return NotificationCompat.Builder(context, channelId)
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setSmallIcon(R.drawable.neuro_comet_icon_monochrome)
             .setContentTitle(title)
             .setContentText(content)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
@@ -768,7 +768,7 @@ object NotificationHelper {
         content: String
     ): NotificationCompat.Builder {
         return NotificationCompat.Builder(context, channelId)
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setSmallIcon(R.drawable.neuro_comet_icon_monochrome)
             .setContentTitle(title)
             .setContentText(content)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
@@ -1016,7 +1016,7 @@ object NotificationTester {
         }
 
         val notification = NotificationCompat.Builder(context, config.channelId)
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setSmallIcon(R.drawable.neuro_comet_icon_monochrome)
             .setContentTitle(config.title)
             .setContentText(config.content)
             .setPriority(config.priority)

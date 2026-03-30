@@ -44,13 +44,22 @@ object HandoffManager {
     /**
      * Enable or disable handoff for the given [activity].
      * Safe to call on any API level — silently no-ops below API 37.
+     * Uses reflection to avoid compile-time dependency on preview SDK.
      */
     @Suppress("NewApi")
     fun setHandoffEnabled(activity: Activity, enabled: Boolean) {
         if (Build.VERSION.SDK_INT >= 37) {
             try {
-                val params = android.app.HandoffActivityParams.Builder().build()
-                activity.setHandoffEnabled(enabled, params)
+                val paramsClass = Class.forName("android.app.HandoffActivityParams")
+                val builderClass = Class.forName("android.app.HandoffActivityParams\$Builder")
+                val builder = builderClass.getConstructor().newInstance()
+                val params = builderClass.getMethod("build").invoke(builder)
+                val method = Activity::class.java.getMethod(
+                    "setHandoffEnabled",
+                    Boolean::class.javaPrimitiveType,
+                    paramsClass
+                )
+                method.invoke(activity, enabled, params)
                 Log.d(TAG, "Handoff ${if (enabled) "enabled" else "disabled"}")
             } catch (e: Exception) {
                 Log.w(TAG, "Failed to set handoff enabled=$enabled", e)

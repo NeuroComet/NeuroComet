@@ -43,7 +43,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/ic_launcher_foreground"
+                    android:background="@drawable/neuro_comet_icon_monochrome"
                     android:alpha="0.3" />
 
                 <ImageView
@@ -51,7 +51,7 @@
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/ic_launcher_foreground"
+                    android:src="@drawable/neuro_comet_icon_monochrome"
                     android:contentDescription="@string/notification_icon_description"
                     android:scaleType="centerCrop" />
 

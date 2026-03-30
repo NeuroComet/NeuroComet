@@ -48,14 +48,14 @@ kotlin {
 
 android {
     namespace = "com.kyilmaz.neurocomet"
-    compileSdkPreview = "CinnamonBun"
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.kyilmaz.neurocomet"
         minSdk = 26
         targetSdk = 36
-        versionCode = 144
-        versionName = "2.0.0-beta02"
+        versionCode = 148
+        versionName = "2.0.0-beta06"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -92,8 +92,21 @@ android {
         manifestPlaceholders["admobAppId"] = admobAppId
     }
 
+    signingConfigs {
+        create("release") {
+            val storeFilePath = combinedProperties.getProperty("RELEASE_STORE_FILE") ?: ""
+            if (storeFilePath.isNotBlank()) {
+                storeFile = file(storeFilePath)
+                storePassword = combinedProperties.getProperty("RELEASE_STORE_PASSWORD") ?: ""
+                keyAlias = combinedProperties.getProperty("RELEASE_KEY_ALIAS") ?: ""
+                keyPassword = combinedProperties.getProperty("RELEASE_KEY_PASSWORD") ?: ""
+            }
+        }
+    }
+
     buildTypes {
         release {
+            signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(
@@ -107,7 +120,7 @@ android {
             isCrunchPngs = true
         }
         debug {
-            applicationIdSuffix = ".debug"
+            // applicationIdSuffix = ".debug"
             versionNameSuffix = "-debug"
             isDebuggable = true
             isMinifyEnabled = false
@@ -118,7 +131,9 @@ android {
 
     splits {
         abi {
-            isEnable = true
+            // AAB handles ABI splitting natively — only enable for APK builds
+            val isBundle = gradle.startParameter.taskNames.any { it.contains("bundle", ignoreCase = true) }
+            isEnable = !isBundle
             reset()
             include("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
             isUniversalApk = true
@@ -156,6 +171,18 @@ android {
         buildConfig = true
     }
 
+    testOptions {
+        unitTests.isReturnDefaultValues = true
+    }
+
+    configurations.configureEach {
+        resolutionStrategy {
+            // androidx.test.ext:junit 1.3.0 needs concurrent-futures 1.2.0
+            // but the Compose BOM pins it at 1.1.0 – pick the newer version.
+            force("androidx.concurrent:concurrent-futures:1.2.0")
+        }
+    }
+
     lint {
         baseline = file("lint-baseline.xml")
         abortOnError = false
@@ -163,9 +190,6 @@ android {
 }
 
 composeCompiler {
-    featureFlags = setOf(
-        org.jetbrains.kotlin.compose.compiler.gradle.ComposeFeatureFlag.OptimizeNonSkippingGroups
-    )
     stabilityConfigurationFiles.add(rootProject.layout.projectDirectory.file("compose_stability.conf"))
 }
 
@@ -223,13 +247,15 @@ dependencies {
     implementation(libs.supabase.postgrest)
     implementation(libs.supabase.auth)
     implementation(libs.supabase.realtime)
-    implementation(libs.ktor.client.android)
+
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.okhttp)
     implementation(libs.ktor.client.content.negotiation)
     implementation(libs.ktor.serialization.kotlinx.json)
-    implementation(libs.kotlinx.serialization.json)
-    implementation(libs.kotlin.reflect) // Required by Supabase SDK v3 typeOf() at runtime
+    implementation(libs.ktor.client.logging)
+    implementation(libs.ktor.client.auth)
+    implementation(libs.ktor.client.websockets)
+    implementation(libs.kotlinx.serialization.json) // Required by Supabase SDK v3 typeOf() at runtime
 
     implementation(libs.revenuecat.purchases)
 

@@ -14,7 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="32sp"
-        android:text="🔋" />
+        android:text="@string/widget_energy_default_emoji" />
 
     <!-- Energy level display -->
     <TextView
@@ -24,7 +24,7 @@
         android:textSize="24sp"
         android:textStyle="bold"
         android:textColor="@color/widget_text_primary"
-        android:text="50%" />
+        android:text="@string/widget_energy_default_percent" />
 
     <!-- Progress bar -->
     <ProgressBar
@@ -47,7 +47,7 @@
         android:layout_marginTop="4dp"
         android:textSize="12sp"
         android:textColor="@color/widget_text_secondary"
-        android:text="Energy Level" />
+        android:text="@string/widget_energy_level" />
 
     <!-- Control buttons -->
     <LinearLayout
@@ -63,7 +63,7 @@
             android:layout_height="40dp"
             android:gravity="center"
             android:textSize="20sp"
-            android:text="➖"
+            android:text="@string/widget_energy_control_down"
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:clickable="true"
             android:focusable="true" />
@@ -74,7 +74,7 @@
             android:layout_height="40dp"
             android:gravity="center"
             android:textSize="20sp"
-            android:text="➕"
+            android:text="@string/widget_energy_control_up"
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:clickable="true"
             android:focusable="true" />

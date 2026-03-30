@@ -3,6 +3,8 @@ package com.kyilmaz.neurocomet.calling
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
+import androidx.compose.ui.res.stringResource
+import com.kyilmaz.neurocomet.R
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -123,7 +125,7 @@ fun CallPreparationScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Prepare for Call") },
+                title = { Text(stringResource(R.string.call_prepare_title)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")

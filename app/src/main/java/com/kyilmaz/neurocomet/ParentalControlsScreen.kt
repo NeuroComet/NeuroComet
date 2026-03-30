@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -75,6 +76,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.kyilmaz.neurocomet.ui.design.M3ETopAppBar
 import kotlinx.coroutines.delay
 
 /**
@@ -93,6 +95,7 @@ fun ParentalControlsScreen(
     onBack: () -> Unit
 ) {
     val context = LocalContext.current
+    val contentMaxWidth = canonicalSettingsPaneMaxWidth()
     var parentalState by remember { mutableStateOf(ParentalControlsSettings.getState(context)) }
     var showPinSetup by remember { mutableStateOf(false) }
     var showPinVerify by remember { mutableStateOf(false) }
@@ -114,7 +117,7 @@ fun ParentalControlsScreen(
     Scaffold(
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
         topBar = {
-            TopAppBar(
+            M3ETopAppBar(
                 title = {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(
@@ -130,44 +133,47 @@ fun ParentalControlsScreen(
                     IconButton(onClick = onBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background
-                )
+                }
             )
         }
     ) { padding ->
-        Column(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding)
-                .verticalScroll(rememberScrollState())
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+                .padding(padding),
+            contentAlignment = Alignment.TopCenter
         ) {
-            // Status Card
-            StatusCard(parentalState)
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .widthIn(max = contentMaxWidth)
+                    .verticalScroll(rememberScrollState())
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                // Status Card
+                StatusCard(parentalState)
 
-            if (!parentalState.isPinSet) {
-                // No PIN set - show setup prompt
-                SetupPromptCard(onSetupClick = { showPinSetup = true })
-            } else if (!isAuthenticated) {
-                // PIN set but not authenticated - show verify prompt
-                VerifyPromptCard(
-                    isLockedOut = parentalState.isLockedOut,
-                    lockoutRemainingMs = parentalState.lockoutRemainingMs,
-                    onVerifyClick = { showPinVerify = true }
-                )
-            } else {
-                // Authenticated - show all controls
+                if (!parentalState.isPinSet) {
+                    // No PIN set - show setup prompt
+                    SetupPromptCard(onSetupClick = { showPinSetup = true })
+                } else if (!isAuthenticated) {
+                    // PIN set but not authenticated - show verify prompt
+                    VerifyPromptCard(
+                        isLockedOut = parentalState.isLockedOut,
+                        lockoutRemainingMs = parentalState.lockoutRemainingMs,
+                        onVerifyClick = { showPinVerify = true }
+                    )
+                } else {
+                    // Authenticated - show all controls
 
-                // Enable/Disable Toggle
-                ControlCard(
-                    title = "Parental Controls",
-                    icon = Icons.Default.Shield,
-                    description = "Enable or disable all parental restrictions"
-                ) {
-                    Switch(
+                    // Enable/Disable Toggle
+                    ControlCard(
+                        title = "Parental Controls",
+                        icon = Icons.Default.Shield,
+                        description = "Enable or disable all parental restrictions"
+                    ) {
+                        Switch(
                         checked = parentalState.isEnabled,
                         onCheckedChange = {
                             ParentalControlsSettings.setEnabled(context, it)
@@ -273,6 +279,7 @@ fun ParentalControlsScreen(
                         Spacer(Modifier.width(8.dp))
                         Text("Remove")
                     }
+                }
                 }
             }
         }
@@ -670,7 +677,7 @@ private fun TimePickerDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Select Time") },
+        title = { Text(stringResource(R.string.parental_select_time)) },
         text = {
             Row(
                 horizontalArrangement = Arrangement.Center,
@@ -852,7 +859,7 @@ private fun PinSetupDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Create Parental PIN") },
+        title = { Text(stringResource(R.string.parental_create_pin_title)) },
         text = {
             Column {
                 Text(
@@ -933,7 +940,7 @@ private fun PinVerifyDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Enter Parental PIN") },
+        title = { Text(stringResource(R.string.parental_enter_pin_title)) },
         text = {
             Column {
                 OutlinedTextField(
@@ -1009,7 +1016,7 @@ private fun ChangePinDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Change PIN") },
+        title = { Text(stringResource(R.string.parental_change_pin_title)) },
         text = {
             Column {
                 OutlinedTextField(

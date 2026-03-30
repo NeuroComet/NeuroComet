@@ -1,11 +1,11 @@
 package com.kyilmaz.neurocomet
 
 import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.res.stringResource
 import androidx.core.content.edit
-import kotlinx.coroutines.launch
+import com.kyilmaz.neurocomet.ui.design.M3ETopAppBar
 
 /**
  * Social media settings that fit the neurodivergent-friendly vibe of NeuroComet.
@@ -213,6 +213,13 @@ object SocialSettingsManager {
     private const val KEY_BEDTIME_START = "bedtime_start"
     private const val KEY_BEDTIME_END = "bedtime_end"
     private const val KEY_POSITIVITY_BOOST = "positivity_boost"
+    private const val KEY_DETOX_BACKUP_APPLIED = "detox_backup_applied"
+    private const val KEY_DETOX_BACKUP_PUSH = "detox_backup_push"
+    private const val KEY_DETOX_BACKUP_QUIET_HOURS = "detox_backup_quiet_hours"
+    private const val KEY_DETOX_BACKUP_SOUND = "detox_backup_sound"
+    private const val KEY_DETOX_BACKUP_VIBRATION = "detox_backup_vibration"
+    private const val KEY_DETOX_BACKUP_BREAK_REMINDERS = "detox_backup_break_reminders"
+    private const val KEY_DETOX_BACKUP_CALM_MODE = "detox_backup_calm_mode"
 
     fun getPrivacySettings(context: Context): PrivacySettings {
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
@@ -369,11 +376,118 @@ object SocialSettingsManager {
             putBoolean(KEY_POSITIVITY_BOOST, settings.positivityBoostEnabled)
         }
     }
+
+    fun applyDetoxDefaults(context: Context) {
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val notificationSettings = getNotificationSettings(context)
+        val wellbeingSettings = getWellbeingSettings(context)
+
+        prefs.edit {
+            if (!prefs.getBoolean(KEY_DETOX_BACKUP_APPLIED, false)) {
+                putBoolean(KEY_DETOX_BACKUP_PUSH, notificationSettings.pushEnabled)
+                putBoolean(KEY_DETOX_BACKUP_QUIET_HOURS, notificationSettings.quietHoursEnabled)
+                putBoolean(KEY_DETOX_BACKUP_SOUND, notificationSettings.soundEnabled)
+                putBoolean(KEY_DETOX_BACKUP_VIBRATION, notificationSettings.vibrationEnabled)
+                putBoolean(KEY_DETOX_BACKUP_BREAK_REMINDERS, wellbeingSettings.breakRemindersEnabled)
+                putBoolean(KEY_DETOX_BACKUP_CALM_MODE, wellbeingSettings.calmModeAutoEnable)
+                putBoolean(KEY_DETOX_BACKUP_APPLIED, true)
+            }
+        }
+
+        saveNotificationSettings(
+            context,
+            notificationSettings.copy(
+                pushEnabled = false,
+                quietHoursEnabled = true,
+                soundEnabled = false,
+                vibrationEnabled = false
+            )
+        )
+        saveWellbeingSettings(
+            context,
+            wellbeingSettings.copy(
+                breakRemindersEnabled = true,
+                calmModeAutoEnable = true
+            )
+        )
+    }
+
+    fun restoreDetoxDefaults(context: Context) {
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        if (!prefs.getBoolean(KEY_DETOX_BACKUP_APPLIED, false)) return
+
+        val notificationSettings = getNotificationSettings(context)
+        val wellbeingSettings = getWellbeingSettings(context)
+
+        saveNotificationSettings(
+            context,
+            notificationSettings.copy(
+                pushEnabled = prefs.getBoolean(KEY_DETOX_BACKUP_PUSH, true),
+                quietHoursEnabled = prefs.getBoolean(KEY_DETOX_BACKUP_QUIET_HOURS, false),
+                soundEnabled = prefs.getBoolean(KEY_DETOX_BACKUP_SOUND, true),
+                vibrationEnabled = prefs.getBoolean(KEY_DETOX_BACKUP_VIBRATION, true)
+            )
+        )
+        saveWellbeingSettings(
+            context,
+            wellbeingSettings.copy(
+                breakRemindersEnabled = prefs.getBoolean(KEY_DETOX_BACKUP_BREAK_REMINDERS, false),
+                calmModeAutoEnable = prefs.getBoolean(KEY_DETOX_BACKUP_CALM_MODE, false)
+            )
+        )
+
+        prefs.edit {
+            remove(KEY_DETOX_BACKUP_PUSH)
+            remove(KEY_DETOX_BACKUP_QUIET_HOURS)
+            remove(KEY_DETOX_BACKUP_SOUND)
+            remove(KEY_DETOX_BACKUP_VIBRATION)
+            remove(KEY_DETOX_BACKUP_BREAK_REMINDERS)
+            remove(KEY_DETOX_BACKUP_CALM_MODE)
+            remove(KEY_DETOX_BACKUP_APPLIED)
+        }
+    }
 }
 
 // ============================================================================
 // SETTINGS SCREENS
 // ============================================================================
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun SocialSettingsScaffold(
+    title: String,
+    onBack: () -> Unit,
+    content: @Composable (Modifier) -> Unit
+) {
+    val contentMaxWidth = settingsPaneContentMaxWidth()
+
+    Scaffold(
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
+        topBar = {
+            M3ETopAppBar(
+                title = { Text(title, fontWeight = FontWeight.Bold) },
+                navigationIcon = {
+                    IconButton(onClick = onBack) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.cd_back))
+                    }
+                }
+            )
+        }
+    ) { padding ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding),
+            contentAlignment = Alignment.TopCenter
+        ) {
+            content(
+                Modifier
+                    .fillMaxSize()
+                    .widthIn(max = contentMaxWidth)
+            )
+        }
+    }
+}
 
 /**
  * Privacy & Security Settings Screen
@@ -381,45 +495,92 @@ object SocialSettingsManager {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PrivacySettingsScreen(
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    authViewModel: AuthViewModel
 ) {
     val context = LocalContext.current
     var settings by remember { mutableStateOf(SocialSettingsManager.getPrivacySettings(context)) }
+    val accountStatus by authViewModel.accountStatus.collectAsState()
     var showDMDialog by remember { mutableStateOf(false) }
     var showTagDialog by remember { mutableStateOf(false) }
+    var showDeleteDialog by remember { mutableStateOf(false) }
+    var showCancelDeletionDialog by remember { mutableStateOf(false) }
 
-    Scaffold(
-        contentWindowInsets = WindowInsets(0, 0, 0, 0),
-        topBar = {
-            TopAppBar(
-                title = { Text("Privacy & Security", fontWeight = FontWeight.Bold) },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back")
+    LaunchedEffect(Unit) {
+        authViewModel.refreshCurrentAccountStatus()
+    }
+
+    if (showDeleteDialog) {
+        AlertDialog(
+            onDismissRequest = { showDeleteDialog = false },
+            title = { Text(stringResource(R.string.social_schedule_deletion_title)) },
+            text = {
+                Text(stringResource(R.string.social_schedule_deletion_desc))
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    showDeleteDialog = false
+                    authViewModel.scheduleAccountDeletion { success, message ->
+                        Toast.makeText(context, message, Toast.LENGTH_LONG).show()
                     }
+                }) {
+                    Text(stringResource(R.string.social_schedule_deletion_confirm))
                 }
-            )
-        }
-    ) { padding ->
+            },
+            dismissButton = {
+                TextButton(onClick = { showDeleteDialog = false }) {
+                    Text(stringResource(R.string.social_keep_account))
+                }
+            }
+        )
+    }
+
+    if (showCancelDeletionDialog) {
+        AlertDialog(
+            onDismissRequest = { showCancelDeletionDialog = false },
+            title = { Text(stringResource(R.string.social_cancel_deletion_title)) },
+            text = {
+                Text(stringResource(R.string.social_cancel_deletion_desc))
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    showCancelDeletionDialog = false
+                    authViewModel.cancelScheduledDeletion { _, message ->
+                        Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+                    }
+                }) {
+                    Text(stringResource(R.string.account_cancel_deletion))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showCancelDeletionDialog = false }) {
+                    Text(stringResource(R.string.account_keep_scheduled))
+                }
+            }
+        )
+    }
+
+    SocialSettingsScaffold(
+        title = stringResource(R.string.social_privacy_security_title),
+        onBack = onBack
+    ) { contentModifier ->
         LazyColumn(
-            modifier = Modifier
-                .padding(padding)
-                .fillMaxSize(),
+            modifier = contentModifier,
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             // Account Privacy Section
             item {
                 SettingsSectionHeader(
-                    title = "Account Privacy",
+                    title = stringResource(R.string.social_account_privacy),
                     icon = Icons.Default.Lock
                 )
             }
 
             item {
                 SocialSettingsToggle(
-                    title = "Private Account",
-                    description = "Only approved followers can see your posts",
+                    title = stringResource(R.string.social_private_account),
+                    description = stringResource(R.string.social_private_account_desc),
                     icon = Icons.Default.LockPerson,
                     isChecked = settings.isAccountPrivate,
                     onCheckedChange = {
@@ -431,8 +592,8 @@ fun PrivacySettingsScreen(
 
             item {
                 SocialSettingsToggle(
-                    title = "Hide from Search",
-                    description = "Don't show your profile in search results",
+                    title = stringResource(R.string.social_hide_search),
+                    description = stringResource(R.string.social_hide_search_desc),
                     icon = Icons.Default.SearchOff,
                     isChecked = settings.hideFromSearch,
                     onCheckedChange = {
@@ -446,14 +607,14 @@ fun PrivacySettingsScreen(
             item { Spacer(Modifier.height(8.dp)) }
             item {
                 SettingsSectionHeader(
-                    title = "Interactions",
+                    title = stringResource(R.string.social_interactions),
                     icon = Icons.Default.People
                 )
             }
 
             item {
                 SocialSettingsSelector(
-                    title = "Who can message you",
+                    title = stringResource(R.string.social_who_can_message),
                     currentValue = settings.allowDMsFrom.displayName,
                     description = settings.allowDMsFrom.description,
                     icon = Icons.Default.Mail,
@@ -463,7 +624,7 @@ fun PrivacySettingsScreen(
 
             item {
                 SocialSettingsSelector(
-                    title = "Who can tag you",
+                    title = stringResource(R.string.social_who_can_tag),
                     currentValue = settings.allowTagging.displayName,
                     icon = Icons.Default.AlternateEmail,
                     onClick = { showTagDialog = true }
@@ -474,7 +635,7 @@ fun PrivacySettingsScreen(
             item { Spacer(Modifier.height(8.dp)) }
             item {
                 SettingsSectionHeader(
-                    title = "Activity Status",
+                    title = stringResource(R.string.social_activity_status),
                     icon = Icons.Default.Visibility
                 )
             }
@@ -494,8 +655,8 @@ fun PrivacySettingsScreen(
 
             item {
                 SocialSettingsToggle(
-                    title = "Read Receipts",
-                    description = "Show when you've read messages",
+                    title = stringResource(R.string.social_read_receipts),
+                    description = stringResource(R.string.social_read_receipts_desc),
                     icon = Icons.Default.DoneAll,
                     isChecked = settings.showReadReceipts,
                     onCheckedChange = {
@@ -509,15 +670,15 @@ fun PrivacySettingsScreen(
             item { Spacer(Modifier.height(8.dp)) }
             item {
                 SettingsSectionHeader(
-                    title = "Security",
+                    title = stringResource(R.string.social_security),
                     icon = Icons.Default.Security
                 )
             }
 
             item {
                 SocialSettingsToggle(
-                    title = "Two-Factor Authentication",
-                    description = "Add extra security to your account",
+                    title = stringResource(R.string.social_two_factor),
+                    description = stringResource(R.string.social_two_factor_desc),
                     icon = Icons.Default.PhonelinkLock,
                     isChecked = settings.twoFactorEnabled,
                     onCheckedChange = {
@@ -602,21 +763,61 @@ fun PrivacySettingsScreen(
             item { Spacer(Modifier.height(8.dp)) }
             item {
                 SettingsSectionHeader(
-                    title = "Data & History",
+                    title = stringResource(R.string.social_data_history),
                     icon = Icons.Default.History,
-                    subtitle = "Manage your data"
+                    subtitle = stringResource(R.string.social_data_history_desc)
                 )
             }
 
             item {
                 Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.25f))) {
                     Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                        Text("Your local preferences and mock data stay on this device.", style = MaterialTheme.typography.bodyMedium)
+                        Text(stringResource(R.string.social_data_local_hint), style = MaterialTheme.typography.bodyMedium)
                         Text(
                             "Use Backup & Restore in Settings for export and recovery tools.",
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
+                    }
+                }
+            }
+
+            item { Spacer(Modifier.height(8.dp)) }
+            item {
+                SettingsSectionHeader(
+                    title = "Account Care",
+                    icon = Icons.Default.SelfImprovement,
+                    subtitle = "Take a break or schedule deletion with a safety window"
+                )
+            }
+
+            item {
+                Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.25f))) {
+                    Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                        Text(
+                            text = if (accountStatus?.hasDeletionScheduled == true)
+                                "Deletion is scheduled. Sign in again within the grace period to cancel it."
+                            else
+                                "Need a real break? Try Detox Mode in Wellbeing before choosing account deletion.",
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                        Button(
+                            onClick = {
+                                if (accountStatus?.hasDeletionScheduled == true) {
+                                    showCancelDeletionDialog = true
+                                } else {
+                                    showDeleteDialog = true
+                                }
+                            },
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = if (accountStatus?.hasDeletionScheduled == true)
+                                    MaterialTheme.colorScheme.primary
+                                else
+                                    MaterialTheme.colorScheme.error
+                            )
+                        ) {
+                            Text(if (accountStatus?.hasDeletionScheduled == true) "Cancel scheduled deletion" else "Delete account")
+                        }
                     }
                 }
             }
@@ -627,7 +828,7 @@ fun PrivacySettingsScreen(
     if (showDMDialog) {
         AlertDialog(
             onDismissRequest = { showDMDialog = false },
-            title = { Text("Who can message you?") },
+            title = { Text(stringResource(R.string.social_who_can_message_title)) },
             text = {
                 Column {
                     DMPermission.entries.forEach { option ->
@@ -661,7 +862,7 @@ fun PrivacySettingsScreen(
             },
             confirmButton = {
                 TextButton(onClick = { showDMDialog = false }) {
-                    Text("Cancel")
+                    Text(stringResource(R.string.action_cancel))
                 }
             }
         )
@@ -671,7 +872,7 @@ fun PrivacySettingsScreen(
     if (showTagDialog) {
         AlertDialog(
             onDismissRequest = { showTagDialog = false },
-            title = { Text("Who can tag you?") },
+            title = { Text(stringResource(R.string.social_who_can_tag_title)) },
             text = {
                 Column {
                     TagPermission.entries.forEach { option ->
@@ -698,7 +899,7 @@ fun PrivacySettingsScreen(
             },
             confirmButton = {
                 TextButton(onClick = { showTagDialog = false }) {
-                    Text("Cancel")
+                    Text(stringResource(R.string.action_cancel))
                 }
             }
         )
@@ -717,23 +918,12 @@ fun NotificationSettingsScreen(
     var settings by remember { mutableStateOf(SocialSettingsManager.getNotificationSettings(context)) }
     var showQuietHoursSection by remember { mutableStateOf(settings.quietHoursEnabled) }
 
-    Scaffold(
-        contentWindowInsets = WindowInsets(0, 0, 0, 0),
-        topBar = {
-            TopAppBar(
-                title = { Text("Notifications", fontWeight = FontWeight.Bold) },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back")
-                    }
-                }
-            )
-        }
-    ) { padding ->
+    SocialSettingsScaffold(
+        title = stringResource(R.string.social_notifications_title),
+        onBack = onBack
+    ) { contentModifier ->
         LazyColumn(
-            modifier = Modifier
-                .padding(padding)
-                .fillMaxSize(),
+            modifier = contentModifier,
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
@@ -848,7 +1038,7 @@ fun NotificationSettingsScreen(
             item { Spacer(Modifier.height(8.dp)) }
             item {
                 SettingsSectionHeader(
-                    title = "Quiet Hours 🌙",
+                    title = "Quiet Hours",
                     icon = Icons.Default.Nightlight,
                     subtitle = "For when you need peace"
                 )
@@ -971,23 +1161,12 @@ fun ContentPreferencesScreen(
     val context = LocalContext.current
     var settings by remember { mutableStateOf(SocialSettingsManager.getContentPreferences(context)) }
 
-    Scaffold(
-        contentWindowInsets = WindowInsets(0, 0, 0, 0),
-        topBar = {
-            TopAppBar(
-                title = { Text("Content & Media", fontWeight = FontWeight.Bold) },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-                    }
-                }
-            )
-        }
-    ) { padding ->
+    SocialSettingsScaffold(
+        title = stringResource(R.string.social_content_media_title),
+        onBack = onBack
+    ) { contentModifier ->
         LazyColumn(
-            modifier = Modifier
-                .padding(padding)
-                .fillMaxSize(),
+            modifier = contentModifier,
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
@@ -1105,23 +1284,12 @@ fun AccessibilitySettingsScreen(
     val context = LocalContext.current
     var settings by remember { mutableStateOf(SocialSettingsManager.getAccessibilitySettings(context)) }
 
-    Scaffold(
-        contentWindowInsets = WindowInsets(0, 0, 0, 0),
-        topBar = {
-            TopAppBar(
-                title = { Text("Accessibility", fontWeight = FontWeight.Bold) },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-                    }
-                }
-            )
-        }
-    ) { padding ->
+    SocialSettingsScaffold(
+        title = stringResource(R.string.social_accessibility_title),
+        onBack = onBack
+    ) { contentModifier ->
         LazyColumn(
-            modifier = Modifier
-                .padding(padding)
-                .fillMaxSize(),
+            modifier = contentModifier,
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
@@ -1271,28 +1439,24 @@ fun AccessibilitySettingsScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WellbeingSettingsScreen(
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    authViewModel: AuthViewModel
 ) {
     val context = LocalContext.current
     var settings by remember { mutableStateOf(SocialSettingsManager.getWellbeingSettings(context)) }
+    val accountStatus by authViewModel.accountStatus.collectAsState()
+    var detoxDays by remember { mutableStateOf(3) }
 
-    Scaffold(
-        contentWindowInsets = WindowInsets(0, 0, 0, 0),
-        topBar = {
-            TopAppBar(
-                title = { Text("NeuroBalance 🧠✨", fontWeight = FontWeight.Bold) },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-                    }
-                }
-            )
-        }
-    ) { padding ->
+    LaunchedEffect(Unit) {
+        authViewModel.refreshCurrentAccountStatus()
+    }
+
+    SocialSettingsScaffold(
+        title = stringResource(R.string.social_neurobalance_title),
+        onBack = onBack
+    ) { contentModifier ->
         LazyColumn(
-            modifier = Modifier
-                .padding(padding)
-                .fillMaxSize(),
+            modifier = contentModifier,
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
@@ -1399,6 +1563,60 @@ fun WellbeingSettingsScreen(
             item { Spacer(Modifier.height(8.dp)) }
             item {
                 SettingsSectionHeader(
+                    title = "Detox Mode",
+                    icon = Icons.Default.SelfImprovement,
+                    subtitle = "Sign out and quiet the app for a while without deleting your account"
+                )
+            }
+            item {
+                Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.25f))) {
+                    Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                        Text(
+                            text = if (accountStatus?.isDetoxActive == true)
+                                "Detox mode is active until ${accountStatus?.detox_until ?: "your scheduled return"}."
+                            else
+                                "Start a break that silences push notifications, enables quiet hours, and signs you out so the break actually sticks.",
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                        if (accountStatus?.isDetoxActive == true) {
+                            OutlinedButton(
+                                onClick = {
+                                    authViewModel.endDetoxMode { _, message ->
+                                        Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+                                    }
+                                }
+                            ) {
+                                Text("End detox early")
+                            }
+                        } else {
+                            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                                listOf(listOf(1, 3), listOf(7, 14)).forEach { row ->
+                                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                        row.forEach { days ->
+                                            FilterChip(
+                                                selected = detoxDays == days,
+                                                onClick = { detoxDays = days },
+                                                label = { Text("$days day${if (days == 1) "" else "s"}") }
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+                            Button(onClick = {
+                                authViewModel.startDetoxMode(detoxDays) { _, message ->
+                                    Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+                                }
+                            }) {
+                                Text("Start detox")
+                            }
+                        }
+                    }
+                }
+            }
+
+            item { Spacer(Modifier.height(8.dp)) }
+            item {
+                SettingsSectionHeader(
                     title = "Calm Mode",
                     icon = Icons.Default.Spa
                 )
@@ -1487,23 +1705,12 @@ fun AnimationSettingsScreen(
     val themeState by themeViewModel.themeState.collectAsState()
     val animSettings = themeState.animationSettings
 
-    Scaffold(
-        contentWindowInsets = WindowInsets(0, 0, 0, 0),
-        topBar = {
-            TopAppBar(
-                title = { Text("Animation Settings", fontWeight = FontWeight.Bold) },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-                    }
-                }
-            )
-        }
-    ) { padding ->
+    SocialSettingsScaffold(
+        title = "Animation Settings",
+        onBack = onBack
+    ) { contentModifier ->
         LazyColumn(
-            modifier = Modifier
-                .padding(padding)
-                .fillMaxSize(),
+            modifier = contentModifier,
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
@@ -1634,6 +1841,10 @@ fun SettingsSectionHeader(
         }
     }
 }
+
+@Composable
+private fun settingsPaneContentMaxWidth() =
+    canonicalSettingsPaneMaxWidth()
 
 @Composable
 fun SocialSettingsToggle(

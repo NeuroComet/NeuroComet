@@ -173,7 +173,7 @@ fun DmConversationScreenV2(
                                 .data(avatar)
                                 .crossfade(true)
                                 .build(),
-                            contentDescription = "Avatar",
+                            contentDescription = stringResource(R.string.cd_avatar),
                             modifier = Modifier
                                 .size(40.dp)
                                 .clip(CircleShape)
@@ -187,9 +187,9 @@ fun DmConversationScreenV2(
                                 overflow = TextOverflow.Ellipsis
                             )
                             val status = when {
-                                isUserBlocked -> "Blocked"
-                                isUserMuted -> "Muted"
-                                else -> "Direct message"
+                                isUserBlocked -> stringResource(R.string.status_blocked)
+                                isUserMuted -> stringResource(R.string.status_muted)
+                                else -> stringResource(R.string.dm_direct_message)
                             }
                             Text(
                                 text = status,
@@ -201,13 +201,13 @@ fun DmConversationScreenV2(
                 },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.cd_back))
                     }
                 },
                 actions = {
                     Box {
                         IconButton(onClick = { showMenu = true }) {
-                            Icon(Icons.Filled.MoreVert, contentDescription = "Conversation options")
+                            Icon(Icons.Filled.MoreVert, contentDescription = stringResource(R.string.dm_conversation_options))
                         }
 
                         // Pre-fetch strings for Toast messages
@@ -243,7 +243,7 @@ fun DmConversationScreenV2(
                                 leadingIcon = { Icon(Icons.Filled.Search, null) }
                             )
                             DropdownMenuItem(
-                                text = { Text("Wallpaper") },
+                                text = { Text(stringResource(R.string.dm_wallpaper)) },
                                 onClick = {
                                     showMenu = false
                                     showWallpaperPicker = true
@@ -306,12 +306,12 @@ fun DmConversationScreenV2(
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         Text(
-                            text = "Messaging is disabled",
+                            text = stringResource(R.string.dm_messaging_disabled_title),
                             style = MaterialTheme.typography.titleSmall,
                             color = MaterialTheme.colorScheme.onErrorContainer
                         )
                         Text(
-                            text = "You blocked this user. Unblock to send messages.",
+                            text = stringResource(R.string.dm_messaging_disabled_body),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onErrorContainer
                         )
@@ -393,14 +393,14 @@ fun DmConversationScreenV2(
                             OutlinedTextField(
                                 value = searchQuery,
                                 onValueChange = { searchQuery = it },
-                                placeholder = { Text("Search messages…", style = MaterialTheme.typography.bodySmall) },
+                                placeholder = { Text(stringResource(R.string.dm_search_messages_placeholder), style = MaterialTheme.typography.bodySmall) },
                                 modifier = Modifier.weight(1f),
                                 singleLine = true,
                                 leadingIcon = { Icon(Icons.Filled.Search, null, modifier = Modifier.size(18.dp)) },
                                 trailingIcon = {
                                     if (searchQuery.isNotEmpty()) {
                                         IconButton(onClick = { searchQuery = "" }) {
-                                            Icon(Icons.Filled.Clear, "Clear", modifier = Modifier.size(18.dp))
+                                            Icon(Icons.Filled.Clear, stringResource(R.string.cd_clear_search), modifier = Modifier.size(18.dp))
                                         }
                                     }
                                 },
@@ -412,7 +412,7 @@ fun DmConversationScreenV2(
                             )
                             Spacer(Modifier.width(8.dp))
                             TextButton(onClick = { showSearch = false; searchQuery = "" }) {
-                                Text("Done")
+                                Text(stringResource(R.string.dm_done))
                             }
                         }
                     }
@@ -426,7 +426,7 @@ fun DmConversationScreenV2(
             if (filteredMessages.isEmpty()) {
                 Box(modifier = Modifier.fillMaxSize().weight(1f), contentAlignment = Alignment.Center) {
                     Text(
-                        text = if (searchQuery.isNotBlank()) "No messages matching \"$searchQuery\"" else "Say hi 👋",
+                        text = if (searchQuery.isNotBlank()) stringResource(R.string.dm_no_messages_matching, searchQuery) else stringResource(R.string.dm_say_hi),
                         style = MessageTextStyles.headerTitle
                     )
                 }
@@ -474,7 +474,7 @@ fun DmConversationScreenV2(
                         }
                     }
                 ) {
-                    Icon(Icons.Filled.KeyboardArrowDown, contentDescription = "Scroll to latest")
+                    Icon(Icons.Filled.KeyboardArrowDown, contentDescription = stringResource(R.string.cd_scroll_to_latest))
                 }
             }
         }
@@ -525,19 +525,21 @@ private fun DmComposerV2(
             ) {
                 Icon(
                     imageVector = if (showEmojiPicker) Icons.Filled.Keyboard else Icons.Filled.EmojiEmotions,
-                    contentDescription = if (showEmojiPicker) "Keyboard" else "Emoji"
+                    contentDescription = stringResource(if (showEmojiPicker) R.string.cd_keyboard else R.string.cd_emoji_picker)
                 )
             }
+
+            val messagePlaceholder = stringResource(R.string.dm_message_placeholder)
 
             TextField(
                 value = text,
                 onValueChange = onTextChange,
                 modifier = Modifier
                     .weight(1f)
-                    .semantics { contentDescription = "Message input" },
+                    .semantics { contentDescription = messagePlaceholder },
                 placeholder = {
                     Text(
-                        "Message",
+                        messagePlaceholder,
                         style = MessageTextStyles.inputText.copy(
                             color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
                         )
@@ -565,7 +567,7 @@ private fun DmComposerV2(
                 enabled = text.trim().isNotEmpty(),
                 modifier = Modifier.size(MessagesTokens.touchTarget)
             ) {
-                Icon(Icons.AutoMirrored.Filled.Send, contentDescription = "Send")
+                Icon(Icons.AutoMirrored.Filled.Send, contentDescription = stringResource(R.string.dm_send))
             }
         }
     }
@@ -591,9 +593,9 @@ private fun SimpleEmojiPanel(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("Emoji", style = MaterialTheme.typography.titleSmall)
+                Text(stringResource(R.string.dm_emoji), style = MaterialTheme.typography.titleSmall)
                 IconButton(onClick = onDismiss, modifier = Modifier.size(36.dp)) {
-                    Icon(Icons.Filled.Close, contentDescription = "Close emoji panel")
+                    Icon(Icons.Filled.Close, contentDescription = stringResource(R.string.cd_close))
                 }
             }
 

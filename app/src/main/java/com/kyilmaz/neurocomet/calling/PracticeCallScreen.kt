@@ -8,6 +8,8 @@ import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.ui.res.stringResource
+import com.kyilmaz.neurocomet.R
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material.icons.filled.*
@@ -37,10 +39,10 @@ fun PracticeCallSelectionScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Practice Calls") },
+                title = { Text(stringResource(R.string.call_practice_title)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.cd_back))
                     }
                 }
             )
@@ -56,7 +58,7 @@ fun PracticeCallSelectionScreen(
         ) {
             item {
                 Text(
-                    "Practice phone calls with AI personas",
+                    stringResource(R.string.call_practice_intro),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -64,7 +66,7 @@ fun PracticeCallSelectionScreen(
             item {
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    "Choose a Practice Partner",
+                    stringResource(R.string.call_practice_choose_partner),
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.primary
@@ -76,7 +78,7 @@ fun PracticeCallSelectionScreen(
             item {
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
-                    "?? The AI will speak responses aloud. Type or use voice to respond!",
+                    stringResource(R.string.call_practice_helper),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center,
@@ -108,7 +110,7 @@ private fun PersonaCard(persona: NeurodivergentPersona, onClick: () -> Unit) {
                 Text(text = persona.displayName, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
                 Text(text = persona.description, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 2, overflow = TextOverflow.Ellipsis)
             }
-            Icon(Icons.Filled.Call, contentDescription = "Start call", tint = MaterialTheme.colorScheme.primary)
+            Icon(Icons.Filled.Call, contentDescription = stringResource(R.string.cd_start_call), tint = MaterialTheme.colorScheme.primary)
         }
     }
 }
@@ -151,12 +153,33 @@ fun PracticeCallScreen(persona: NeurodivergentPersona, onEndCall: () -> Unit) {
                         Spacer(modifier = Modifier.width(12.dp))
                         Column {
                             Text(text = persona.displayName, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold, color = Color.White)
-                            Text(text = when { isSpeaking -> "Speaking..."; state is SimulatorState.Generating -> "Thinking..."; state is SimulatorState.Connected -> "Connected"; else -> GeminiCallSimulator.formatDuration() }, style = MaterialTheme.typography.bodySmall, color = Color.White.copy(alpha = 0.7f))
+                            Text(
+                                text = when {
+                                    isSpeaking -> stringResource(R.string.call_status_speaking)
+                                    state is SimulatorState.Generating -> stringResource(R.string.call_status_thinking)
+                                    state is SimulatorState.Connected -> stringResource(R.string.call_status_connected)
+                                    else -> GeminiCallSimulator.formatDuration()
+                                },
+                                style = MaterialTheme.typography.bodySmall,
+                                color = Color.White.copy(alpha = 0.7f)
+                            )
                         }
                     }
                 },
-                navigationIcon = { IconButton(onClick = { audioManager.stop(); GeminiCallSimulator.endCall(); onEndCall() }) { Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "End call", tint = Color.White) } },
-                actions = { IconButton(onClick = { audioEnabled = !audioEnabled; if (!audioEnabled) audioManager.stop() }) { Icon(if (audioEnabled) Icons.AutoMirrored.Filled.VolumeUp else Icons.AutoMirrored.Filled.VolumeOff, contentDescription = "Mute audio", tint = Color.White) } },
+                navigationIcon = {
+                    IconButton(onClick = { audioManager.stop(); GeminiCallSimulator.endCall(); onEndCall() }) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.call_end), tint = Color.White)
+                    }
+                },
+                actions = {
+                    IconButton(onClick = { audioEnabled = !audioEnabled; if (!audioEnabled) audioManager.stop() }) {
+                        Icon(
+                            if (audioEnabled) Icons.AutoMirrored.Filled.VolumeUp else Icons.AutoMirrored.Filled.VolumeOff,
+                            contentDescription = stringResource(if (audioEnabled) R.string.call_mute_audio else R.string.call_unmute_audio),
+                            tint = Color.White
+                        )
+                    }
+                },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent)
             )
             when (val currentState = state) {
@@ -165,7 +188,7 @@ fun PracticeCallScreen(persona: NeurodivergentPersona, onEndCall: () -> Unit) {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             AsyncImage(model = avatarUrl(persona.avatarSeed), contentDescription = persona.displayName, modifier = Modifier.size(120.dp).scale(pulseScale).clip(CircleShape), contentScale = ContentScale.Crop)
                             Spacer(modifier = Modifier.height(24.dp))
-                            Text(text = "Calling ${persona.displayName}...", style = MaterialTheme.typography.titleLarge, color = Color.White)
+                            Text(text = stringResource(R.string.call_status_calling_persona, persona.displayName), style = MaterialTheme.typography.titleLarge, color = Color.White)
                             Spacer(modifier = Modifier.height(8.dp))
                             CircularProgressIndicator(modifier = Modifier.size(24.dp), color = Color.White, strokeWidth = 2.dp)
                         }
@@ -178,7 +201,7 @@ fun PracticeCallScreen(persona: NeurodivergentPersona, onEndCall: () -> Unit) {
                             Spacer(modifier = Modifier.height(16.dp))
                             Text(text = currentState.message, style = MaterialTheme.typography.bodyLarge, color = Color.White, textAlign = TextAlign.Center)
                             Spacer(modifier = Modifier.height(24.dp))
-                            Button(onClick = { GeminiCallSimulator.startCall(persona) }, colors = ButtonDefaults.buttonColors(containerColor = Color.White.copy(alpha = 0.2f))) { Icon(Icons.Filled.Refresh, contentDescription = null); Spacer(modifier = Modifier.width(8.dp)); Text("Retry", color = Color.White) }
+                            Button(onClick = { GeminiCallSimulator.startCall(persona) }, colors = ButtonDefaults.buttonColors(containerColor = Color.White.copy(alpha = 0.2f))) { Icon(Icons.Filled.Refresh, contentDescription = null); Spacer(modifier = Modifier.width(8.dp)); Text(stringResource(R.string.call_retry), color = Color.White) }
                         }
                     }
                 }
@@ -199,7 +222,7 @@ fun PracticeCallScreen(persona: NeurodivergentPersona, onEndCall: () -> Unit) {
                                 .padding(horizontal = 12.dp, vertical = 8.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            IconButton(onClick = { isMuted = !isMuted }, modifier = Modifier.size(40.dp).clip(CircleShape).background(if (isMuted) Color(0xFFE53935).copy(alpha = 0.2f) else Color.White.copy(alpha = 0.1f))) { Icon(if (isMuted) Icons.Filled.MicOff else Icons.Filled.Mic, contentDescription = "Mute", tint = if (isMuted) Color(0xFFE53935) else Color.White, modifier = Modifier.size(20.dp)) }
+                            IconButton(onClick = { isMuted = !isMuted }, modifier = Modifier.size(40.dp).clip(CircleShape).background(if (isMuted) Color(0xFFE53935).copy(alpha = 0.2f) else Color.White.copy(alpha = 0.1f))) { Icon(if (isMuted) Icons.Filled.MicOff else Icons.Filled.Mic, contentDescription = stringResource(if (isMuted) R.string.call_unmute_microphone else R.string.call_mute_microphone), tint = if (isMuted) Color(0xFFE53935) else Color.White, modifier = Modifier.size(20.dp)) }
                             Spacer(modifier = Modifier.width(8.dp))
                             BasicTextField(
                                 value = messageText,
@@ -208,13 +231,13 @@ fun PracticeCallScreen(persona: NeurodivergentPersona, onEndCall: () -> Unit) {
                                 textStyle = MaterialTheme.typography.bodyLarge.copy(color = Color.White),
                                 cursorBrush = SolidColor(Color.White),
                                 decorationBox = { innerTextField ->
-                                    if (messageText.isEmpty()) Text("Type what youd say...", color = Color.White.copy(alpha = 0.5f), style = MaterialTheme.typography.bodyLarge)
+                                    if (messageText.isEmpty()) Text(stringResource(R.string.call_type_prompt), color = Color.White.copy(alpha = 0.5f), style = MaterialTheme.typography.bodyLarge)
                                     innerTextField()
                                 }
                             )
                             Spacer(modifier = Modifier.width(8.dp))
-                            AnimatedVisibility(visible = messageText.isNotBlank(), enter = scaleIn() + fadeIn(), exit = scaleOut() + fadeOut()) { IconButton(onClick = { if (messageText.isNotBlank()) { audioManager.stop(); GeminiCallSimulator.sendMessage(messageText); messageText = "" } }, modifier = Modifier.size(44.dp).clip(CircleShape).background(MaterialTheme.colorScheme.primary)) { Icon(Icons.AutoMirrored.Filled.Send, contentDescription = "Send", tint = Color.White, modifier = Modifier.size(20.dp)) } }
-                            AnimatedVisibility(visible = messageText.isBlank(), enter = scaleIn() + fadeIn(), exit = scaleOut() + fadeOut()) { IconButton(onClick = { audioManager.stop(); GeminiCallSimulator.endCall(); onEndCall() }, modifier = Modifier.size(44.dp).clip(CircleShape).background(Color(0xFFE53935))) { Icon(Icons.Filled.CallEnd, contentDescription = "End call", tint = Color.White, modifier = Modifier.size(20.dp)) } }
+                            AnimatedVisibility(visible = messageText.isNotBlank(), enter = scaleIn() + fadeIn(), exit = scaleOut() + fadeOut()) { IconButton(onClick = { if (messageText.isNotBlank()) { audioManager.stop(); GeminiCallSimulator.sendMessage(messageText); messageText = "" } }, modifier = Modifier.size(44.dp).clip(CircleShape).background(MaterialTheme.colorScheme.primary)) { Icon(Icons.AutoMirrored.Filled.Send, contentDescription = stringResource(R.string.dm_send), tint = Color.White, modifier = Modifier.size(20.dp)) } }
+                            AnimatedVisibility(visible = messageText.isBlank(), enter = scaleIn() + fadeIn(), exit = scaleOut() + fadeOut()) { IconButton(onClick = { audioManager.stop(); GeminiCallSimulator.endCall(); onEndCall() }, modifier = Modifier.size(44.dp).clip(CircleShape).background(Color(0xFFE53935))) { Icon(Icons.Filled.CallEnd, contentDescription = stringResource(R.string.call_end), tint = Color.White, modifier = Modifier.size(20.dp)) } }
                         }
                     }
                 }

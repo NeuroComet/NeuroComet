@@ -21,6 +21,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.*
+import java.io.ByteArrayOutputStream
 import java.io.File
 import java.time.Instant
 import java.time.ZoneId
@@ -119,6 +120,8 @@ class BackupViewModel(application: Application) : AndroidViewModel(application) 
         private const val BACKUP_DIR = "neurocomet_backups"
         private const val BACKUP_VERSION = "1.0.0"
         private const val PREFS_NAME = "neurocomet_backup_settings"
+        private const val MAX_IMPORT_BYTES = 5 * 1024 * 1024
+        private const val MAX_BACKUP_ID_LENGTH = 80
 
         // SharedPreferences keys
         private const val KEY_AUTO_FREQUENCY = "backup_auto_frequency"
@@ -220,6 +223,41 @@ class BackupViewModel(application: Application) : AndroidViewModel(application) 
         return dir
     }
 
+    private fun sanitizeBackupId(raw: String?): String {
+        val cleaned = (raw ?: "")
+            .replace(Regex("[^A-Za-z0-9._-]"), "_")
+            .trim('_', '.', '-')
+            .take(MAX_BACKUP_ID_LENGTH)
+        return cleaned.ifBlank { System.currentTimeMillis().toString() }
+    }
+
+    private fun backupFileForId(backupId: String): File {
+        return File(getBackupDir(), "backup_${sanitizeBackupId(backupId)}.ncb")
+    }
+
+    private fun metadataFileForId(backupId: String): File {
+        return File(getBackupDir(), "meta_${sanitizeBackupId(backupId)}.json")
+    }
+
+    private fun readBackupTextFromUri(uri: Uri): String {
+        val context = getApplication<Application>()
+        val output = ByteArrayOutputStream()
+        context.contentResolver.openInputStream(uri)?.use { input ->
+            val buffer = ByteArray(DEFAULT_BUFFER_SIZE)
+            var totalBytes = 0
+            while (true) {
+                val read = input.read(buffer)
+                if (read == -1) break
+                totalBytes += read
+                if (totalBytes > MAX_IMPORT_BYTES) {
+                    throw IllegalArgumentException("Selected backup is too large")
+                }
+                output.write(buffer, 0, read)
+            }
+        } ?: throw Exception("Could not read the selected file")
+        return output.toString(Charsets.UTF_8.name())
+    }
+
     private fun loadBackupList() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -276,15 +314,14 @@ class BackupViewModel(application: Application) : AndroidViewModel(application) 
                 updateProgress("Saving backup...", 0.95f)
 
                 val sizeBytes = jsonString.toByteArray().size.toLong()
-                val backupId = try {
+                val backupId = sanitizeBackupId(try {
                     json.parseToJsonElement(jsonString).jsonObject["backup_id"]?.jsonPrimitive?.content
                         ?: "${System.currentTimeMillis()}_$userId"
                 } catch (_: Exception) {
                     "${System.currentTimeMillis()}_$userId"
-                }
+                })
 
-                val dir = getBackupDir()
-                File(dir, "backup_$backupId.ncb").writeText(jsonString)
+                backupFileForId(backupId).writeText(jsonString)
 
                 val scope = _state.value.settings.scope
                 val metadata = BackupMetadata(
@@ -297,7 +334,7 @@ class BackupViewModel(application: Application) : AndroidViewModel(application) 
                     dataManifest = emptyMap(),
                     scope = scope
                 )
-                File(dir, "meta_$backupId.json").writeText(
+                metadataFileForId(backupId).writeText(
                     json.encodeToString(BackupMetadata.serializer(), metadata)
                 )
 
@@ -364,8 +401,7 @@ class BackupViewModel(application: Application) : AndroidViewModel(application) 
 
                 updateProgress("Loading backup...", 0.05f)
 
-                val dir = getBackupDir()
-                val file = File(dir, "backup_$backupId.ncb")
+                val file = backupFileForId(backupId)
                 if (!file.exists()) {
                     _state.update {
                         it.copy(isRestoring = false, errorMessage = "Backup file not found")
@@ -468,7 +504,7 @@ class BackupViewModel(application: Application) : AndroidViewModel(application) 
                         val messages = backupData["messages"]!!.jsonArray
                         for (msg in messages) {
                             try {
-                                client.safeInsert("messages", msg.jsonObject)
+                                client.safeInsert("dm_messages", msg.jsonObject)
                             } catch (_: Exception) { failedItems++ }
                         }
                     } catch (e: Exception) {
@@ -632,9 +668,8 @@ class BackupViewModel(application: Application) : AndroidViewModel(application) 
 
     fun deleteBackup(backupId: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val dir = getBackupDir()
-            File(dir, "backup_$backupId.ncb").delete()
-            File(dir, "meta_$backupId.json").delete()
+            backupFileForId(backupId).delete()
+            metadataFileForId(backupId).delete()
             loadBackupList()
         }
     }
@@ -713,8 +748,7 @@ class BackupViewModel(application: Application) : AndroidViewModel(application) 
                         val sizeBytes = jsonString.toByteArray().size.toLong()
                         val backupId = "${System.currentTimeMillis()}_test_${index}_$userId"
 
-                        val dir = getBackupDir()
-                        File(dir, "backup_$backupId.ncb").writeText(jsonString)
+                        backupFileForId(backupId).writeText(jsonString)
 
                         val metadata = BackupMetadata(
                             backupId = backupId,
@@ -727,12 +761,12 @@ class BackupViewModel(application: Application) : AndroidViewModel(application) 
                             scope = scope,
                             label = label
                         )
-                        File(dir, "meta_$backupId.json").writeText(
+                        metadataFileForId(backupId).writeText(
                             json.encodeToString(BackupMetadata.serializer(), metadata)
                         )
 
                         // Validate: re-read and parse the backup
-                        val readBack = File(dir, "backup_$backupId.ncb").readText()
+                        val readBack = backupFileForId(backupId).readText()
                         val parsed = json.parseToJsonElement(readBack).jsonObject
                         val version = parsed["backup_version"]?.jsonPrimitive?.content
                         val hasTypedSettings = parsed["all_local_settings"]
@@ -796,8 +830,7 @@ class BackupViewModel(application: Application) : AndroidViewModel(application) 
             try {
                 _state.update { it.copy(errorMessage = null, successMessage = null) }
 
-                val dir = getBackupDir()
-                val file = File(dir, "backup_$backupId.ncb")
+                val file = backupFileForId(backupId)
                 if (!file.exists()) {
                     _state.update { it.copy(errorMessage = "Backup file not found: $backupId") }
                     return@launch
@@ -882,8 +915,7 @@ class BackupViewModel(application: Application) : AndroidViewModel(application) 
     fun shareBackup(backupId: String) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val dir = getBackupDir()
-                val file = File(dir, "backup_$backupId.ncb")
+                val file = backupFileForId(backupId)
                 if (!file.exists()) {
                     _state.update { it.copy(errorMessage = "Backup file not found") }
                     return@launch
@@ -963,9 +995,8 @@ class BackupViewModel(application: Application) : AndroidViewModel(application) 
                 val sizeBytes = jsonString.toByteArray().size.toLong()
 
                 // Also save a local copy for the backup list
-                val backupId = "${System.currentTimeMillis()}_$userId"
-                val dir = getBackupDir()
-                File(dir, "backup_$backupId.ncb").writeText(jsonString)
+                val backupId = sanitizeBackupId("${System.currentTimeMillis()}_$userId")
+                backupFileForId(backupId).writeText(jsonString)
                 val metadata = BackupMetadata(
                     backupId = backupId,
                     createdAt = Instant.now().toString(),
@@ -976,7 +1007,7 @@ class BackupViewModel(application: Application) : AndroidViewModel(application) 
                     dataManifest = emptyMap(),
                     scope = _state.value.settings.scope
                 )
-                File(dir, "meta_$backupId.json").writeText(
+                metadataFileForId(backupId).writeText(
                     json.encodeToString(BackupMetadata.serializer(), metadata)
                 )
 
@@ -1015,7 +1046,7 @@ class BackupViewModel(application: Application) : AndroidViewModel(application) 
     fun exportExistingBackupToUri(backupId: String, uri: Uri) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val file = File(getBackupDir(), "backup_$backupId.ncb")
+                val file = backupFileForId(backupId)
                 if (!file.exists()) {
                     _state.update { it.copy(errorMessage = "Backup file not found") }
                     return@launch
@@ -1076,11 +1107,10 @@ class BackupViewModel(application: Application) : AndroidViewModel(application) 
 
                 updateProgress("Reading backup file...", 0.1f)
 
-                val context = getApplication<Application>()
-                val rawJson = context.contentResolver.openInputStream(uri)?.use { input ->
-                    input.bufferedReader(Charsets.UTF_8).readText()
-                } ?: run {
-                    _state.update { it.copy(isRestoring = false, errorMessage = "Could not read the selected file") }
+                val rawJson = try {
+                    readBackupTextFromUri(uri)
+                } catch (e: IllegalArgumentException) {
+                    _state.update { it.copy(isRestoring = false, errorMessage = e.message ?: "Selected backup is too large") }
                     return@launch
                 }
 
@@ -1109,12 +1139,13 @@ class BackupViewModel(application: Application) : AndroidViewModel(application) 
 
                 // Save locally so it appears in the backup list
                 updateProgress("Importing backup...", 0.3f)
-                val importedId = backupData["backup_id"]?.jsonPrimitive?.content
-                    ?: "${System.currentTimeMillis()}_imported"
+                val importedId = sanitizeBackupId(
+                    backupData["backup_id"]?.jsonPrimitive?.content
+                        ?: "${System.currentTimeMillis()}_imported"
+                )
                 val sizeBytes = rawJson.toByteArray().size.toLong()
 
-                val dir = getBackupDir()
-                File(dir, "backup_$importedId.ncb").writeText(rawJson)
+                backupFileForId(importedId).writeText(rawJson)
 
                 val metadata = BackupMetadata(
                     backupId = importedId,
@@ -1124,7 +1155,7 @@ class BackupViewModel(application: Application) : AndroidViewModel(application) 
                     isEncrypted = false,
                     storageLocation = "imported"
                 )
-                File(dir, "meta_$importedId.json").writeText(
+                metadataFileForId(importedId).writeText(
                     json.encodeToString(BackupMetadata.serializer(), metadata)
                 )
                 loadBackupList()
@@ -1163,11 +1194,10 @@ class BackupViewModel(application: Application) : AndroidViewModel(application) 
                 _state.update { it.copy(isRestoring = true, errorMessage = null, successMessage = null) }
                 updateProgress("Reading backup file...", 0.2f)
 
-                val context = getApplication<Application>()
-                val rawJson = context.contentResolver.openInputStream(uri)?.use { input ->
-                    input.bufferedReader(Charsets.UTF_8).readText()
-                } ?: run {
-                    _state.update { it.copy(isRestoring = false, errorMessage = "Could not read the selected file") }
+                val rawJson = try {
+                    readBackupTextFromUri(uri)
+                } catch (e: IllegalArgumentException) {
+                    _state.update { it.copy(isRestoring = false, errorMessage = e.message ?: "Selected backup is too large") }
                     return@launch
                 }
 
@@ -1184,12 +1214,13 @@ class BackupViewModel(application: Application) : AndroidViewModel(application) 
                     return@launch
                 }
 
-                val importedId = backupData["backup_id"]?.jsonPrimitive?.content
-                    ?: "${System.currentTimeMillis()}_imported"
+                val importedId = sanitizeBackupId(
+                    backupData["backup_id"]?.jsonPrimitive?.content
+                        ?: "${System.currentTimeMillis()}_imported"
+                )
                 val sizeBytes = rawJson.toByteArray().size.toLong()
 
-                val dir = getBackupDir()
-                File(dir, "backup_$importedId.ncb").writeText(rawJson)
+                backupFileForId(importedId).writeText(rawJson)
 
                 val metadata = BackupMetadata(
                     backupId = importedId,
@@ -1199,7 +1230,7 @@ class BackupViewModel(application: Application) : AndroidViewModel(application) 
                     isEncrypted = false,
                     storageLocation = "imported"
                 )
-                File(dir, "meta_$importedId.json").writeText(
+                metadataFileForId(importedId).writeText(
                     json.encodeToString(BackupMetadata.serializer(), metadata)
                 )
                 loadBackupList()
@@ -1263,7 +1294,7 @@ class BackupViewModel(application: Application) : AndroidViewModel(application) 
                         val conversations = safeSelect("conversations", "*", "id=in.(${convIds.joinToString(",")})")
                         put("conversations", conversations); manifest["conversations"] = conversations.size
                         val allMessages = buildJsonArray {
-                            for (cid in convIds) { safeSelect("messages", "*", "conversation_id=eq.$cid&order=created_at.asc").forEach { add(it) } }
+                            for (cid in convIds) { safeSelect("dm_messages", "*", "conversation_id=eq.$cid&order=created_at.asc").forEach { add(it) } }
                         }
                         put("messages", allMessages); manifest["messages"] = allMessages.size
                     }

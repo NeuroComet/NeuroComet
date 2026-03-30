@@ -45,6 +45,7 @@ import '../screens/auth/stay_signed_in_screen.dart';
 import '../screens/settings/parental_blocked_screen.dart';
 import '../screens/settings/dm_privacy_settings_screen.dart';
 import '../screens/settings/social_settings_screen.dart';
+import '../screens/settings/wellbeing_settings_screen.dart';
 import '../screens/settings/backup_settings_screen.dart';
 import '../services/supabase_service.dart';
 
@@ -283,11 +284,23 @@ class AppRouter {
       ),
       GoRoute(
         path: '/report',
-        builder: (context, state) => const FeedbackScreen(),
+        builder: (context, state) => const FeedbackBugReportScreen(),
       ),
       GoRoute(
         path: '/feedback',
         builder: (context, state) => const FeedbackScreen(),
+      ),
+      GoRoute(
+        path: '/feedback/bug',
+        builder: (context, state) => const FeedbackBugReportScreen(),
+      ),
+      GoRoute(
+        path: '/feedback/feature',
+        builder: (context, state) => const FeedbackFeatureRequestScreen(),
+      ),
+      GoRoute(
+        path: '/feedback/general',
+        builder: (context, state) => const FeedbackGeneralScreen(),
       ),
       // Legal pages for app store compliance
       GoRoute(
@@ -316,6 +329,11 @@ class AppRouter {
       GoRoute(
         path: '/settings/social',
         builder: (context, state) => const SocialSettingsScreen(),
+      ),
+
+      GoRoute(
+        path: '/settings/wellbeing',
+        builder: (context, state) => const WellbeingSettingsScreen(),
       ),
 
       // DM Privacy Settings
@@ -358,6 +376,5 @@ class AppRouter {
     ),
   );
 }
-
 
 

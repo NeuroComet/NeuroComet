@@ -86,6 +86,77 @@ object SupabaseTestData {
     }
 
     // =========================================================================
+    // Automated Table Tests
+    // =========================================================================
+
+    /**
+     * Test a specific table by trying to read 1 row from it
+     */
+    private suspend fun testTableAccess(tableName: String): Result<String> = withContext(Dispatchers.IO) {
+        val client = AppSupabaseClient.client
+            ?: return@withContext Result.failure(Exception("Supabase not configured"))
+            
+        try {
+            // Attempt to select exactly 1 row (just checking if the table exists and is readable)
+            val result = safeSelect(
+                table = tableName,
+                columns = "id", // assume most tables have an 'id' column, or it will just fail gracefully
+                filters = "limit=1"
+            )
+            
+            Result.success("✅ '$tableName' is accessible.")
+        } catch (e: Throwable) {
+            // If the error contains something like "relation does not exist", it's a clear failure
+            Result.failure(Exception("❌ '$tableName' error: ${e.message?.take(100)}..."))
+        }
+    }
+
+    /**
+     * Comprehensive test that checks all known tables in the schema
+     */
+    suspend fun testAllTables(): Result<List<String>> = withContext(Dispatchers.IO) {
+        if (!AppSupabaseClient.isAvailable()) {
+            return@withContext Result.failure(Exception("Supabase not configured"))
+        }
+
+        val tablesToTest = listOf(
+            "users",
+            "profiles",
+            "posts",
+            "post_likes",
+            "post_comments",
+            "bookmarks",
+            "blocked_users",
+            "reports",
+            "conversations",
+            "dm_messages",
+            "call_signals",
+            "call_history",
+            "notifications"
+        )
+
+        val results = mutableListOf<String>()
+        var successCount = 0
+
+        for (table in tablesToTest) {
+            val res = testTableAccess(table)
+            res.fold(
+                onSuccess = { 
+                    results.add(it)
+                    successCount++
+                },
+                onFailure = { results.add(it.message ?: "Unknown error on $table") }
+            )
+        }
+
+        if (successCount == tablesToTest.size) {
+            Result.success(results)
+        } else {
+            Result.success(results.apply { add(0, "⚠️ Passed $successCount / ${tablesToTest.size} tables") })
+        }
+    }
+
+    // =========================================================================
     // Send Test Data Functions
     // =========================================================================
 

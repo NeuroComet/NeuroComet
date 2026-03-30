@@ -248,7 +248,7 @@ object RegulationLiveSessionManager {
         session: RegulationLiveSession,
         remainingMillis: Long
     ) = NotificationCompat.Builder(context, NotificationChannels.CHANNEL_LIVE_EVENTS)
-        .setSmallIcon(R.drawable.ic_launcher_foreground)
+        .setSmallIcon(R.drawable.neuro_comet_icon_monochrome)
         .setContentTitle(buildNotificationTitle(session, remainingMillis))
         .setContentText(buildNotificationText(session, remainingMillis))
         .setStyle(

@@ -9,6 +9,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -19,12 +20,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -35,6 +38,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.kyilmaz.neurocomet.ui.design.M3ETopAppBar
 
 // ─── Data model for a collapsible section group ─────────────
 
@@ -43,7 +47,7 @@ private data class DevSectionGroup(
     val title: String,
     val icon: ImageVector,
     val searchTerms: String,
-    val content: @Composable () -> Unit
+    val content: @Composable () -> Unit,
 )
 
 // ─── Collapsible group composable ───────────────────────────
@@ -57,7 +61,14 @@ private fun CollapsibleGroup(
     content: @Composable () -> Unit
 ) {
     var expanded by remember { mutableStateOf(initiallyExpanded) }
-    val isExpanded = expanded || forceExpanded
+
+    LaunchedEffect(forceExpanded) {
+        if (forceExpanded) {
+            expanded = true
+        }
+    }
+
+    val isExpanded = expanded
 
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -106,6 +117,7 @@ fun DevOptionsScreen(
 ) {
     val context = LocalContext.current
     val application = context.applicationContext as Application
+    val contentMaxWidth = canonicalSettingsPaneMaxWidth()
     val listState = rememberLazyListState()
     var searchQuery by remember { mutableStateOf("") }
 
@@ -113,17 +125,14 @@ fun DevOptionsScreen(
 
     val sectionGroups = remember(devOptionsViewModel, safetyViewModel, feedViewModel, authViewModel, themeViewModel) {
         listOf(
-            DevSectionGroup("app_info", "App Info & Diagnostics", Icons.Filled.Info, "version build device os memory") { AppInfoDevSection() },
+            DevSectionGroup("app_info", "App Info & Diagnostics", Icons.Filled.Info, "version build device os memory") { AppInfoDevSection(devOptionsViewModel) },
             DevSectionGroup("live_session_lab", "Live Session Lab", Icons.Filled.Timer, "live activity live session regulation recharge focus sprint stim braille notification") { RegulationLiveSessionLabSection() },
             DevSectionGroup("environment", "Environment", Icons.Filled.Cloud, "staging production local backend") { EnvironmentPickerDevSection(devOptionsViewModel) },
-            DevSectionGroup("feature_flags", "Feature Flags", Icons.Filled.Flag, "flags feed video chat story search ai") { FeatureFlagsDevSection(devOptionsViewModel) },
-            DevSectionGroup("ab_testing", "A/B Testing", Icons.Filled.Science, "ab test experiment variant split traffic control") { ABTestingDevSection() },
-            DevSectionGroup("ads", "Google Ads", Icons.Filled.Tv, "ads banner interstitial rewarded premium") { GoogleAdsDevTestSection() },
-            DevSectionGroup("auth", "Authentication", Icons.Filled.Lock, "auth login sign in session user 2fa") { AuthenticationTestingSection(authViewModel) },
-            DevSectionGroup("biometric", "Biometric & MFA", Icons.Filled.Fingerprint, "biometric fido passkey totp backup codes mfa") { BiometricFidoDevSection(authViewModel) },
-            DevSectionGroup("safety", "Content Safety", Icons.Filled.Security, "content safety audience kids filter pin parental") { ContentSafetyDevSection(devOptionsViewModel, safetyViewModel) },
-            DevSectionGroup("dm_debug", "DM Delivery", Icons.Filled.Chat, "dm message overlay send failure delay rate limit moderation") { DmDebugDevSection(devOptionsViewModel) },
-            DevSectionGroup("rendering", "Rendering & Network", Icons.Filled.NetworkCheck, "rendering offline loading error latency fallback network") { RenderingNetworkDevSection(devOptionsViewModel) },
+            DevSectionGroup("flags", "Feature Flags", Icons.Filled.Flag, "Toggles for experimental features") { FeatureFlagsDevSection(devOptionsViewModel) },
+            DevSectionGroup("rendering", "Rendering & Network", Icons.Filled.NetworkCheck, "Offline simulation and loading states") { RenderingNetworkDevSection(devOptionsViewModel) },
+            DevSectionGroup("payments", "Payments & Subs", Icons.Filled.Payment, "Simulate mock transactions") { PaymentsTestingSection() },
+            DevSectionGroup("safety", "Content Safety", Icons.Filled.Security, "Kids mode, Audience, PIN") { ContentSafetyDevSection(devOptionsViewModel, safetyViewModel) },
+            DevSectionGroup("dm_debug", "DM Delivery", Icons.AutoMirrored.Filled.Chat, "dm message overlay send failure delay rate limit moderation") { DmDebugDevSection(devOptionsViewModel) },
             DevSectionGroup("widgets", "Widgets", Icons.Filled.Widgets, "widgets neurodivergent accessible") { NeurodivergentWidgetsDevSection() },
             DevSectionGroup("images", "Images", Icons.Filled.Image, "images customization filters") { ImageCustomizationDevSection() },
             DevSectionGroup("explore", "Explore Views", Icons.Filled.Explore, "explore discover trending") { ExploreViewsDevSection() },
@@ -133,25 +142,29 @@ fun DevOptionsScreen(
             DevSectionGroup("location", "Location & Sensors", Icons.Filled.Sensors, "location gps sensors pressure") { EnhancedLocationSensorsDevSection() },
             DevSectionGroup("contact_picker", "Contact Picker", Icons.Filled.Contacts, "contact picker android 17 cinnamonbun cinnamon bun session privacy contacts api 36.1") { ContactPickerDevSection() },
             DevSectionGroup("storage", "Local Storage", Icons.Filled.Storage, "storage preferences credentials") { LocalStorageDevSection() },
+            DevSectionGroup("supabase_test", "Supabase DB Testing", Icons.Filled.CloudSync, "supabase database posts users tables test") { SupabaseDbTestDevSection() },
             DevSectionGroup("supabase", "Supabase", Icons.Filled.CloudUpload, "supabase database posts") { SupabaseTestDataSection() },
             DevSectionGroup("games", "Games", Icons.Filled.SportsEsports, "games achievements") { GamesTestingSection(onNavigateToGame) },
             DevSectionGroup("language", "Language", Icons.Filled.Language, "language locale translation") { LanguageTestingSection(themeViewModel) },
             DevSectionGroup("backup", "Backup & Restore", Icons.Filled.CloudUpload, "backup restore export import data") { BackupDevTestSection(onNavigateToBackup) },
+            DevSectionGroup("feedback_beta", "Feedback & Beta", Icons.Filled.Feedback, "feedback beta bug report feature request offline queue rate limit submission") { FeedbackBetaDevSection(devOptionsViewModel) },
             DevSectionGroup("stress", "Stress Testing", Icons.Filled.Speed, "stress test performance diagnostic") { StressTestingSection(feedViewModel, context) }
         )
     }
 
-    val filteredGroups = if (searchQuery.isBlank()) sectionGroups
-    else {
-        val q = searchQuery.lowercase()
-        sectionGroups.filter { group ->
-            group.title.lowercase().contains(q) || group.searchTerms.contains(q)
+    val filteredGroups = remember(searchQuery, sectionGroups) {
+        if (searchQuery.isBlank()) sectionGroups
+        else {
+            val q = searchQuery.lowercase()
+            sectionGroups.filter { group ->
+                group.title.lowercase().contains(q) || group.searchTerms.contains(q)
+            }
         }
     }
 
     Scaffold(
         topBar = {
-            TopAppBar(
+            M3ETopAppBar(
                 title = { Text("Developer Options", fontWeight = FontWeight.ExtraBold) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
@@ -161,49 +174,59 @@ fun DevOptionsScreen(
             )
         }
     ) { padding ->
-        LazyColumn(
-            state = listState,
-            modifier = Modifier.fillMaxSize().padding(padding).padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-            contentPadding = PaddingValues(vertical = 12.dp)
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding),
+            contentAlignment = Alignment.TopCenter
         ) {
-            item(key = "header") { DevHeader() }
+            LazyColumn(
+                state = listState,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .widthIn(max = contentMaxWidth)
+                    .padding(horizontal = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+                contentPadding = PaddingValues(vertical = 12.dp)
+            ) {
+                item(key = "header") { DevHeader() }
 
-            item(key = "search") {
-                OutlinedTextField(
-                    value = searchQuery,
-                    onValueChange = { searchQuery = it },
-                    modifier = Modifier.fillMaxWidth(),
-                    placeholder = { Text("Search dev options…") },
-                    leadingIcon = { Icon(Icons.Filled.Search, contentDescription = null) },
-                    trailingIcon = {
-                        if (searchQuery.isNotEmpty()) {
-                            IconButton(onClick = { searchQuery = "" }) {
-                                Icon(Icons.Filled.Clear, contentDescription = "Clear search")
+                item(key = "search") {
+                    OutlinedTextField(
+                        value = searchQuery,
+                        onValueChange = { searchQuery = it },
+                        modifier = Modifier.fillMaxWidth(),
+                        placeholder = { Text("Search dev options…") },
+                        leadingIcon = { Icon(Icons.Filled.Search, contentDescription = null) },
+                        trailingIcon = {
+                            if (searchQuery.isNotEmpty()) {
+                                IconButton(onClick = { searchQuery = "" }) {
+                                    Icon(Icons.Filled.Clear, contentDescription = "Clear search")
+                                }
                             }
+                        },
+                        singleLine = true,
+                        shape = RoundedCornerShape(12.dp)
+                    )
+                }
+
+                item(key = "quick_actions") { QuickActionsBar(devOptionsViewModel, safetyViewModel, context, feedViewModel) }
+                item(key = "active_overrides") { ActiveOverridesIndicator(devOptionsViewModel) }
+
+                filteredGroups.forEach { group ->
+                    item(key = group.key) {
+                        CollapsibleGroup(
+                            title = group.title,
+                            icon = group.icon,
+                            forceExpanded = searchQuery.isNotBlank()
+                        ) {
+                            group.content()
                         }
-                    },
-                    singleLine = true,
-                    shape = RoundedCornerShape(12.dp)
-                )
-            }
-
-            item(key = "quick_actions") { QuickActionsBar(devOptionsViewModel, safetyViewModel, context, feedViewModel) }
-            item(key = "active_overrides") { ActiveOverridesIndicator(devOptionsViewModel) }
-
-            filteredGroups.forEach { group ->
-                item(key = group.key) {
-                    CollapsibleGroup(
-                        title = group.title,
-                        icon = group.icon,
-                        forceExpanded = searchQuery.isNotBlank()
-                    ) {
-                        group.content()
                     }
                 }
-            }
 
-            item(key = "footer") { Spacer(Modifier.height(40.dp)) }
+                item(key = "footer") { Spacer(Modifier.height(40.dp)) }
+            }
         }
     }
 }
@@ -274,34 +297,40 @@ private fun QuickActionsBar(
 @Composable
 private fun ActiveOverridesIndicator(devOptionsViewModel: DevOptionsViewModel) {
     val options by devOptionsViewModel.options.collectAsState()
-    val defaults = DevOptions()
-
-    val activeCount = listOf(
-        options.verboseLogging != defaults.verboseLogging,
-        options.environment != defaults.environment,
-        options.showDmDebugOverlay != defaults.showDmDebugOverlay,
-        options.dmForceSendFailure != defaults.dmForceSendFailure,
-        options.dmArtificialSendDelayMs != defaults.dmArtificialSendDelayMs,
-        options.moderationOverride != defaults.moderationOverride,
-        options.forceAudience != defaults.forceAudience,
-        options.forceKidsFilterLevel != defaults.forceKidsFilterLevel,
-        options.forcePinSet != defaults.forcePinSet,
-        options.forcePinVerifySuccess != defaults.forcePinVerifySuccess,
-        options.simulateOffline != defaults.simulateOffline,
-        options.simulateLoadingError != defaults.simulateLoadingError,
-        options.infiniteLoading != defaults.infiniteLoading,
-        options.showFallbackUi != defaults.showFallbackUi,
-        options.networkLatencyMs != defaults.networkLatencyMs,
-        options.forceLoggedOut != defaults.forceLoggedOut,
-        options.bypassBiometric != defaults.bypassBiometric,
-        options.force2FA != defaults.force2FA,
-        options.enableNewFeedLayout != defaults.enableNewFeedLayout,
-        options.enableVideoChat != defaults.enableVideoChat,
-        options.enableStoryReactions != defaults.enableStoryReactions,
-        options.enableAdvancedSearch != defaults.enableAdvancedSearch,
-        options.enableAiSuggestions != defaults.enableAiSuggestions,
-        options.showPerformanceOverlay != defaults.showPerformanceOverlay
-    ).count { it }
+    val activeCount = remember(options) {
+        val defaults = DevOptions()
+        listOf(
+            options.verboseLogging != defaults.verboseLogging,
+            options.environment != defaults.environment,
+            options.showDmDebugOverlay != defaults.showDmDebugOverlay,
+            options.dmForceSendFailure != defaults.dmForceSendFailure,
+            options.dmArtificialSendDelayMs != defaults.dmArtificialSendDelayMs,
+            options.dmMinIntervalOverrideMs != defaults.dmMinIntervalOverrideMs,
+            options.moderationOverride != defaults.moderationOverride,
+            options.forceAudience != defaults.forceAudience,
+            options.forceKidsFilterLevel != defaults.forceKidsFilterLevel,
+            options.forcePinSet != defaults.forcePinSet,
+            options.forcePinVerifySuccess != defaults.forcePinVerifySuccess,
+            options.simulateOffline != defaults.simulateOffline,
+            options.simulateLoadingError != defaults.simulateLoadingError,
+            options.infiniteLoading != defaults.infiniteLoading,
+            options.showFallbackUi != defaults.showFallbackUi,
+            options.networkLatencyMs != defaults.networkLatencyMs,
+            options.forceLoggedOut != defaults.forceLoggedOut,
+            options.bypassBiometric != defaults.bypassBiometric,
+            options.force2FA != defaults.force2FA,
+            options.enableNewFeedLayout != defaults.enableNewFeedLayout,
+            options.enableVideoChat != defaults.enableVideoChat,
+            options.enableStoryReactions != defaults.enableStoryReactions,
+            options.enableAdvancedSearch != defaults.enableAdvancedSearch,
+            options.enableAiSuggestions != defaults.enableAiSuggestions,
+            options.showPerformanceOverlay != defaults.showPerformanceOverlay,
+            options.enableHandoff != defaults.enableHandoff,
+            options.devMenuEnabled != defaults.devMenuEnabled,
+            options.bypassFeedbackRateLimit != defaults.bypassFeedbackRateLimit,
+            options.forceFeedbackSubmitFailure != defaults.forceFeedbackSubmitFailure
+        ).count { it }
+    }
 
     if (activeCount > 0) {
         Card(
@@ -455,7 +484,7 @@ private fun rememberDevLiveSessionRemaining(session: RegulationLiveSession): Sta
 ) {
     while (true) {
         value = RegulationLiveSessionManager.remainingMillis(session)
-        if (session.isPaused || value <= 0L) break
+        if (session.isPaused || (value <= 0L)) break
         kotlinx.coroutines.delay(1_000L)
     }
 }

@@ -78,6 +78,11 @@ object SecurityManager {
         val isAppTampered = checkAppIntegrity(context, details)
         val isDeveloperOptions = checkDeveloperOptions(context, details)
         val isAdbEnabled = checkAdbEnabled(context, details)
+        val isAdvancedProtection = isAdvancedProtectionEnabled(context)
+
+        if (isAdvancedProtection) {
+            details.add("Android Advanced Protection Mode (AAPM) is enabled")
+        }
 
         // Calculate threat level
         val threatLevel = calculateThreatLevel(
@@ -257,8 +262,7 @@ object SecurityManager {
             Build.BOARD.lowercase().contains("nox"),
             Build.BOOTLOADER.lowercase().contains("nox"),
             Build.HARDWARE.lowercase().contains("nox"),
-            Build.PRODUCT.lowercase().contains("nox"),
-            Build.SERIAL.lowercase().contains("nox")
+            Build.PRODUCT.lowercase().contains("nox")
         )
 
         if (emulatorIndicators.any { it }) {
@@ -429,6 +433,29 @@ object SecurityManager {
                 true
             } else false
         } catch (_: Exception) {
+            false
+        }
+    }
+
+    /**
+     * Check if Android Advanced Protection Mode (AAPM) is enabled.
+     * New in Android 17 (API 37+).
+     * Uses reflection to avoid compile-time dependency on preview SDK.
+     */
+    fun isAdvancedProtectionEnabled(context: Context): Boolean {
+        return if (Build.VERSION.SDK_INT >= 37) {
+            try {
+                val apmClass = Class.forName("android.security.advancedprotection.AdvancedProtectionManager")
+                val apm = context.getSystemService(apmClass)
+                if (apm != null) {
+                    val method = apmClass.getMethod("isAdvancedProtectionEnabled")
+                    method.invoke(apm) as? Boolean ?: false
+                } else false
+            } catch (e: Exception) {
+                Log.w(TAG, "Failed to check Advanced Protection Mode", e)
+                false
+            }
+        } else {
             false
         }
     }

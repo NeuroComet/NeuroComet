@@ -8,14 +8,15 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -26,10 +27,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -112,29 +115,32 @@ fun NeuroLinkedText(
         buildLinkedAnnotatedString(text, links, linkStyle)
     }
 
-    ClickableText(
-        text = annotatedText,
-        modifier = modifier,
-        style = style.copy(color = MaterialTheme.colorScheme.onSurface),
-        maxLines = maxLines,
-        onClick = { offset ->
-            // Find which link was clicked
-            annotatedText.getStringAnnotations(
-                tag = "LINK",
-                start = offset,
-                end = offset
-            ).firstOrNull()?.let { annotation ->
-                val linkIndex = annotation.item.toIntOrNull() ?: return@let
-                val link = links.getOrNull(linkIndex) ?: return@let
+    var textLayoutResult by remember { mutableStateOf<TextLayoutResult?>(null) }
 
-                if (onLinkClick != null) {
-                    onLinkClick(link)
-                } else {
-                    // Default handling
-                    handleLinkClick(context, link, uriHandler)
+    Text(
+        text = annotatedText,
+        modifier = modifier.pointerInput(annotatedText, links) {
+            detectTapGestures { position ->
+                val offset = textLayoutResult?.getOffsetForPosition(position) ?: return@detectTapGestures
+                annotatedText.getStringAnnotations(
+                    tag = "LINK",
+                    start = offset,
+                    end = offset
+                ).firstOrNull()?.let { annotation ->
+                    val linkIndex = annotation.item.toIntOrNull() ?: return@let
+                    val link = links.getOrNull(linkIndex) ?: return@let
+
+                    if (onLinkClick != null) {
+                        onLinkClick(link)
+                    } else {
+                        handleLinkClick(context, link, uriHandler)
+                    }
                 }
             }
-        }
+        },
+        style = style.copy(color = MaterialTheme.colorScheme.onSurface),
+        maxLines = maxLines,
+        onTextLayout = { textLayoutResult = it }
     )
 }
 

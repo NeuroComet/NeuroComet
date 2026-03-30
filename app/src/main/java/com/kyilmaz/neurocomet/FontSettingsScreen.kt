@@ -19,7 +19,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -28,6 +28,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.ui.res.stringResource
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.FormatSize
@@ -45,8 +46,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -61,6 +60,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.kyilmaz.neurocomet.ui.design.M3ETopAppBar
 
 /**
  * Font Settings Screen
@@ -74,6 +74,7 @@ fun FontSettingsScreen(
     themeViewModel: ThemeViewModel,
     onBack: () -> Unit
 ) {
+    val contentMaxWidth = canonicalSettingsPaneMaxWidth()
     val themeState by themeViewModel.themeState.collectAsState()
     val fontSettings = themeState.fontSettings
 
@@ -81,27 +82,29 @@ fun FontSettingsScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text("Font & Reading") },
+            M3ETopAppBar(
+                title = { Text(stringResource(R.string.font_settings_title)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.cd_back))
                     }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface
-                ),
-                modifier = Modifier.statusBarsPadding()
+                }
             )
         }
     ) { padding ->
-        LazyColumn(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding),
-            contentPadding = PaddingValues(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            contentAlignment = Alignment.TopCenter
         ) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .widthIn(max = contentMaxWidth),
+                contentPadding = PaddingValues(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
             // === QUICK PRESETS ===
             item {
                 Text(
@@ -124,35 +127,35 @@ fun FontSettingsScreen(
                 ) {
                     item {
                         PresetChip(
-                            label = "📖 Dyslexia",
+                            label = "Dyslexia",
                             isSelected = fontSettings == FontPresets.dyslexiaFriendly,
                             onClick = { themeViewModel.applyFontPreset(FontPresets.dyslexiaFriendly) }
                         )
                     }
                     item {
                         PresetChip(
-                            label = "⚡ ADHD",
+                            label = "ADHD",
                             isSelected = fontSettings == FontPresets.adhdFocus,
                             onClick = { themeViewModel.applyFontPreset(FontPresets.adhdFocus) }
                         )
                     }
                     item {
                         PresetChip(
-                            label = "🔄 Autism",
+                            label = "Autism",
                             isSelected = fontSettings == FontPresets.autismConsistent,
                             onClick = { themeViewModel.applyFontPreset(FontPresets.autismConsistent) }
                         )
                     }
                     item {
                         PresetChip(
-                            label = "👁️ Low Vision",
+                            label = "Low Vision",
                             isSelected = fontSettings == FontPresets.lowVision,
                             onClick = { themeViewModel.applyFontPreset(FontPresets.lowVision) }
                         )
                     }
                     item {
                         PresetChip(
-                            label = "🌿 Calm",
+                            label = "Calm",
                             isSelected = fontSettings == FontPresets.anxietyCalm,
                             onClick = { themeViewModel.applyFontPreset(FontPresets.anxietyCalm) }
                         )
@@ -259,6 +262,7 @@ fun FontSettingsScreen(
                 Spacer(Modifier.height(32.dp))
             }
         }
+        }
     }
 }
 
@@ -305,7 +309,7 @@ private fun FontPreviewCard(fontSettings: FontSettings) {
                     shape = RoundedCornerShape(16.dp)
                 ) {
                     Text(
-                        text = "Hey! How are you doing today? 💜",
+                        text = "Hey! How are you doing today?",
                         style = NeuroDivergentTypography.messageBody(fontSettings),
                         modifier = Modifier.padding(12.dp),
                         color = MaterialTheme.colorScheme.onSurface
@@ -322,7 +326,7 @@ private fun FontPreviewCard(fontSettings: FontSettings) {
                     shape = RoundedCornerShape(16.dp)
                 ) {
                     Text(
-                        text = "I'm doing great! This font is so much easier to read! ✨",
+                        text = "I'm doing great! This font is so much easier to read!",
                         style = NeuroDivergentTypography.messageBody(fontSettings),
                         modifier = Modifier.padding(12.dp),
                         color = MaterialTheme.colorScheme.onPrimaryContainer

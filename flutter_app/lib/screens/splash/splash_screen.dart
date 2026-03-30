@@ -42,7 +42,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
 
 
     _logoScale = Tween<double>(begin: 0.5, end: 1.0).animate(
-      CurvedAnimation(parent: _logoController, curve: Curves.elasticOut),
+      CurvedAnimation(parent: _logoController, curve: Curves.easeOut),
     );
 
     _logoOpacity = Tween<double>(begin: 0.0, end: 1.0).animate(
@@ -84,75 +84,64 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: isDark
-                ? [
-                    const Color(0xFF1A1A2E),
-                    const Color(0xFF16213E),
-                  ]
-                : [
-                    AppColors.primaryPurple.withAlpha(30),
-                    AppColors.secondaryTeal.withAlpha(30),
-                  ],
-          ),
-        ),
+      backgroundColor: isDark ? const Color(0xFF1A1A2E) : Theme.of(context).colorScheme.background,
+      body: SafeArea(
+        // Push content below the camera cutout / status bar
         child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // Animated logo - using the polished NeuroCometLogo
-              AnimatedBuilder(
-                animation: _logoController,
-                builder: (context, child) {
-                  return Opacity(
-                    opacity: _logoOpacity.value,
-                    child: Transform.scale(
-                      scale: _logoScale.value,
-                      child: const NeuroCometLogo(
-                        size: 160,
-                        animated: true,
-                        showGlow: true,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Animated logo — reduced from 160 → 100 to match Android brand mark size
+                  AnimatedBuilder(
+                    animation: _logoController,
+                    builder: (context, child) {
+                      return Opacity(
+                        opacity: _logoOpacity.value,
+                        child: Transform.scale(
+                          scale: _logoScale.value,
+                          child: const NeuroCometLogo(
+                            size: 100,
+                            animated: true,
+                            showGlow: false,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 24),
+
+                  // App name with animation
+                  SlideTransition(
+                    position: _textSlide,
+                    child: FadeTransition(
+                      opacity: _textOpacity,
+                      child: Column(
+                        children: [
+                          Text(
+                            'NeuroComet',
+                            style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.primaryPurple,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            'A safe space for neurodivergent minds',
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              color: Theme.of(context).colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  );
-                },
-              ),
-              const SizedBox(height: 32),
-
-              // App name with animation
-              SlideTransition(
-                position: _textSlide,
-                child: FadeTransition(
-                  opacity: _textOpacity,
-                  child: Column(
-                    children: [
-                      Text(
-                        'NeuroComet',
-                        style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.primaryPurple,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        'A safe space for neurodivergent minds',
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                    ],
                   ),
-                ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
-      ),
     );
   }
 }
-

@@ -9,6 +9,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
+import com.kyilmaz.neurocomet.ui.design.LocalM3EPhysics
+import com.kyilmaz.neurocomet.ui.design.rememberM3EPhysics
 
 /**
  * Neurodivergent-friendly theming engine for the NeuroComet application.
@@ -738,6 +740,14 @@ fun NeuroThemeApplication(
 ) {
     val themeState by themeViewModel.themeState.collectAsState()
     val context = androidx.compose.ui.platform.LocalContext.current
+    val physics = rememberM3EPhysics(themeState.animationSettings)
+    val isSystemDark = androidx.compose.foundation.isSystemInDarkTheme()
+
+    val effectiveIsDark = when (themeState.themeMode) {
+        com.kyilmaz.neurocomet.ui.theme.ThemeMode.DARK -> true
+        com.kyilmaz.neurocomet.ui.theme.ThemeMode.LIGHT -> false
+        else -> isSystemDark
+    }
 
     // Determine the base color scheme
     var colorScheme: ColorScheme = when {
@@ -745,18 +755,18 @@ fun NeuroThemeApplication(
         themeState.useDynamicColor &&
         themeState.colorSchemeSource == com.kyilmaz.neurocomet.ui.theme.ColorSchemeSource.DYNAMIC &&
         android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S -> {
-            if (themeState.isDarkMode) {
+            if (effectiveIsDark) {
                 androidx.compose.material3.dynamicDarkColorScheme(context)
             } else {
                 androidx.compose.material3.dynamicLightColorScheme(context)
             }
         }
         // Otherwise use the neurodivergent theme based on selected state
-        else -> getColorSchemeForState(themeState.selectedState, themeState.isDarkMode)
+        else -> getColorSchemeForState(themeState.selectedState, effectiveIsDark)
     }
 
     if (themeState.isHighContrast) {
-        colorScheme = highContrastOverlay(colorScheme, themeState.isDarkMode)
+        colorScheme = highContrastOverlay(colorScheme, effectiveIsDark)
     }
 
     // Apply automatic text scaling for blind/accessibility themes
@@ -776,7 +786,8 @@ fun NeuroThemeApplication(
 
     // Provide font settings via CompositionLocal
     androidx.compose.runtime.CompositionLocalProvider(
-        LocalFontSettings provides themeState.fontSettings
+        LocalFontSettings provides themeState.fontSettings,
+        LocalM3EPhysics provides physics
     ) {
         MaterialTheme(
             colorScheme = colorScheme,

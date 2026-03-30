@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../core/constants/app_constants.dart';
 
 /// Privacy Policy Screen for app store compliance
 class PrivacyPolicyScreen extends StatelessWidget {
@@ -314,7 +315,7 @@ class AboutScreen extends StatelessWidget {
             ),
             const SizedBox(height: 4),
             Text(
-              'Version 1.0.0',
+              'Version ${AppConstants.appVersion}',
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: theme.colorScheme.outline,
               ),
@@ -352,7 +353,7 @@ class AboutScreen extends StatelessWidget {
               onTap: () => showLicensePage(
                 context: context,
                 applicationName: 'NeuroComet',
-                applicationVersion: '1.0.0',
+                applicationVersion: AppConstants.appVersion,
               ),
             ),
             const Divider(),

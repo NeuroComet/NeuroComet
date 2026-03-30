@@ -60,6 +60,10 @@ object DevOptionsSettings {
     // Keys – Performance
     private const val KEY_SHOW_PERFORMANCE_OVERLAY = "show_performance_overlay"
 
+    // Keys – Feedback & Beta
+    private const val KEY_BYPASS_FEEDBACK_RATE_LIMIT = "bypass_feedback_rate_limit"
+    private const val KEY_FORCE_FEEDBACK_SUBMIT_FAILURE = "force_feedback_submit_failure"
+
     // ─── Helpers ────────────────────────────────────────────
 
     private fun isDebugBuild(context: Context): Boolean =
@@ -160,7 +164,10 @@ object DevOptionsSettings {
             bypassBiometric = p.getBoolean(KEY_BYPASS_BIOMETRIC, false),
             force2FA = p.getBoolean(KEY_FORCE_2FA, false),
             // Performance
-            showPerformanceOverlay = p.getBoolean(KEY_SHOW_PERFORMANCE_OVERLAY, false)
+            showPerformanceOverlay = p.getBoolean(KEY_SHOW_PERFORMANCE_OVERLAY, false),
+            // Feedback & Beta
+            bypassFeedbackRateLimit = p.getBoolean(KEY_BYPASS_FEEDBACK_RATE_LIMIT, false),
+            forceFeedbackSubmitFailure = p.getBoolean(KEY_FORCE_FEEDBACK_SUBMIT_FAILURE, false)
         )
     }
 
@@ -240,6 +247,10 @@ object DevOptionsSettings {
 
     // Performance
     fun setShowPerformanceOverlay(context: Context, v: Boolean) { prefs(context).edit { putBoolean(KEY_SHOW_PERFORMANCE_OVERLAY, v) } }
+
+    // Feedback & Beta
+    fun setBypassFeedbackRateLimit(context: Context, v: Boolean) { prefs(context).edit { putBoolean(KEY_BYPASS_FEEDBACK_RATE_LIMIT, v) } }
+    fun setForceFeedbackSubmitFailure(context: Context, v: Boolean) { prefs(context).edit { putBoolean(KEY_FORCE_FEEDBACK_SUBMIT_FAILURE, v) } }
 
     // Reset
     fun resetAll(context: Context) {

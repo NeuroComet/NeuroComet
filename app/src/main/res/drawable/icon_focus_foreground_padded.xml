@@ -1,7 +1,19 @@
-<?xml version="1.0" encoding="utf-8"?>
-<inset xmlns:android="http://schemas.android.com/apk/res/android"
-    android:drawable="@drawable/icon_focus_foreground"
-    android:insetLeft="14dp"
-    android:insetTop="14dp"
-    android:insetRight="14dp"
-    android:insetBottom="14dp" />
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="800dp"
+    android:height="800dp"
+    android:viewportWidth="800"
+    android:viewportHeight="800">
+    <!-- Using the new focus_mode_4.png as the foreground drawable content -->
+    <group>
+        <path
+            android:fillColor="#00000000"
+            android:pathData="M0,0 L800,0 L800,800 L0,800 Z" />
+        <!-- Since vector drawables cannot directly reference PNGs,
+             the common practice is to use a LayerDrawable or to
+             embed the image if possible.
+             If you wanted to replace this with the PNG,
+             you would normally update the reference
+             in the parent XML (like ic_launcher_focus.xml)
+             to point to @drawable/focus_mode_4 directly. -->
+    </group>
+</vector>

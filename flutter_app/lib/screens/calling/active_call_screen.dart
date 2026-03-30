@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import '../../services/webrtc_call_service.dart';
+import '../../services/gemini_practice_call_service.dart';
 import '../../core/theme/app_colors.dart';
 
 /// Full-screen active call screen — Instagram-style voice/video calling UI.
 /// Mirrors the Android ActiveCallScreen.kt.
 class ActiveCallScreen extends StatefulWidget {
-  const ActiveCallScreen({super.key});
+  final bool isPracticeCall;
+  const ActiveCallScreen({super.key, this.isPracticeCall = false});
 
   @override
   State<ActiveCallScreen> createState() => _ActiveCallScreenState();
@@ -17,6 +19,7 @@ class ActiveCallScreen extends StatefulWidget {
 class _ActiveCallScreenState extends State<ActiveCallScreen>
     with SingleTickerProviderStateMixin {
   final _callService = WebRTCCallService.instance;
+  GeminiPracticeCallService? _geminiService;
   late AnimationController _pulseController;
   bool _showControls = true;
   Timer? _controlsTimer;
@@ -24,6 +27,12 @@ class _ActiveCallScreenState extends State<ActiveCallScreen>
   @override
   void initState() {
     super.initState();
+    if (widget.isPracticeCall) {
+      const apiKey = String.fromEnvironment('GEMINI_API_KEY', defaultValue: '');
+      if (apiKey.isNotEmpty) {
+        _geminiService = GeminiPracticeCallService(apiKey);
+      }
+    }
     _callService.addListener(_onCallStateChanged);
     _pulseController = AnimationController(
       duration: const Duration(milliseconds: 1200),

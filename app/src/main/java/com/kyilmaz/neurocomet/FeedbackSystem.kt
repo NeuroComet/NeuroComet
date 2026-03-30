@@ -2,6 +2,7 @@ package com.kyilmaz.neurocomet
 
 import android.content.Context
 import android.os.Build
+import android.util.Log
 import androidx.compose.animation.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -30,6 +31,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.core.content.edit
+import io.github.jan.supabase.auth.auth
+import io.github.jan.supabase.postgrest.from
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -138,9 +145,13 @@ object FeedbackManager {
     }
 
     /**
-     * Check if user can submit feedback (rate limiting)
+     * Check if user can submit feedback (rate limiting).
+     * Respects [DevOptions.bypassFeedbackRateLimit] in debug builds.
      */
     fun canSubmitFeedback(context: Context): Boolean {
+        // Dev option bypass
+        if (DevOptionsSettings.get(context).bypassFeedbackRateLimit) return true
+
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         val lastSubmissionTime = prefs.getLong(KEY_LAST_SUBMISSION_TIME, 0)
         val submissionsCount = prefs.getInt(KEY_SUBMISSIONS_COUNT, 0)
@@ -189,6 +200,109 @@ object FeedbackManager {
             MAX_DAILY_SUBMISSIONS
         } else {
             (MAX_DAILY_SUBMISSIONS - submissionsCount).coerceAtLeast(0)
+        }
+    }
+
+    // ── Supabase persistence with offline queue ──
+
+    private const val KEY_PENDING_FEEDBACK = "pending_feedback"
+    private const val TAG = "FeedbackManager"
+
+    /**
+     * Submit feedback data to Supabase. Falls back to local queue on failure.
+     * Respects [DevOptions.forceFeedbackSubmitFailure] in debug builds.
+     */
+    suspend fun submitToSupabase(context: Context, data: Map<String, Any?>) {
+        withContext(Dispatchers.IO) {
+            // Dev option: force all submissions to the offline queue
+            if (DevOptionsSettings.get(context).forceFeedbackSubmitFailure) {
+                Log.d(TAG, "Dev option: forcing feedback submit failure → queuing locally")
+                queueLocally(context, data)
+                return@withContext
+            }
+            try {
+                val client = AppSupabaseClient.client
+                if (client != null) {
+                    client.from("feedback").insert(data)
+                    Log.d(TAG, "Feedback submitted to Supabase")
+                } else {
+                    // No client — queue locally
+                    queueLocally(context, data)
+                }
+            } catch (e: Exception) {
+                Log.w(TAG, "Supabase insert failed, queuing locally", e)
+                queueLocally(context, data)
+            }
+        }
+    }
+
+    private fun queueLocally(context: Context, data: Map<String, Any?>) {
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val existing = prefs.getStringSet(KEY_PENDING_FEEDBACK, emptySet())?.toMutableSet() ?: mutableSetOf()
+        val json = JSONObject(data.mapValues { it.value?.toString() }).toString()
+        existing.add(json)
+        prefs.edit { putStringSet(KEY_PENDING_FEEDBACK, existing) }
+        Log.d(TAG, "Feedback queued locally (${existing.size} pending)")
+    }
+
+    /**
+     * Flush any pending offline feedback to Supabase.
+     * Call before each new submission to opportunistically sync.
+     */
+    suspend fun flushPendingFeedback(context: Context) {
+        withContext(Dispatchers.IO) {
+            val client = AppSupabaseClient.client ?: return@withContext
+            val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            val pending = prefs.getStringSet(KEY_PENDING_FEEDBACK, emptySet())?.toMutableSet() ?: return@withContext
+            if (pending.isEmpty()) return@withContext
+
+            val remaining = mutableSetOf<String>()
+            for (jsonStr in pending) {
+                try {
+                    val jsonObj = JSONObject(jsonStr)
+                    val map = mutableMapOf<String, Any?>()
+                    jsonObj.keys().forEach { key -> map[key] = jsonObj.opt(key) }
+                    client.from("feedback").insert(map)
+                    Log.d(TAG, "Flushed pending feedback item")
+                } catch (e: Exception) {
+                    Log.w(TAG, "Failed to flush pending item, keeping in queue", e)
+                    remaining.add(jsonStr)
+                }
+            }
+            prefs.edit { putStringSet(KEY_PENDING_FEEDBACK, remaining) }
+        }
+    }
+
+    /**
+     * Build a standard feedback payload map for Supabase.
+     */
+    fun buildPayload(
+        context: Context,
+        type: String,
+        title: String? = null,
+        description: String,
+        severity: String? = null,
+        category: String? = null,
+        rating: Int? = null,
+        includeDeviceInfo: Boolean = true
+    ): Map<String, Any?> {
+        val userId = try {
+            AppSupabaseClient.client?.auth?.currentUserOrNull()?.id
+        } catch (_: Exception) { null }
+
+        return buildMap {
+            put("type", type)
+            if (title != null) put("title", title)
+            put("description", description)
+            if (severity != null) put("severity", severity)
+            if (category != null) put("category", category)
+            if (rating != null) put("rating", rating)
+            if (includeDeviceInfo) put("device_info", getDeviceInfo(context))
+            put("user_id", userId)
+            put("app_version", BuildConfig.VERSION_NAME)
+            put("submitted_at", SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US).apply {
+                timeZone = TimeZone.getTimeZone("UTC")
+            }.format(Date()))
         }
     }
 }
@@ -281,38 +395,150 @@ val MOCK_FEATURE_REQUESTS = listOf(
 )
 
 // ═══════════════════════════════════════════════════════════════
-// MAIN FEEDBACK SCREEN
+// MAIN FEEDBACK HUB SCREEN
 // ═══════════════════════════════════════════════════════════════
 
-enum class FeedbackInitialAction {
-    NONE,
-    BUG_REPORT,
-    FEATURE_REQUEST,
-    GENERAL_FEEDBACK
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FeedbackHubScreen(
     onBack: () -> Unit,
-    initialAction: FeedbackInitialAction = FeedbackInitialAction.NONE
+    onOpenBugReport: () -> Unit = {},
+    onOpenFeatureRequest: () -> Unit = {},
+    onOpenGeneralFeedback: () -> Unit = {}
 ) {
     val context = LocalContext.current
-    var showBugReporter by remember { mutableStateOf(initialAction == FeedbackInitialAction.BUG_REPORT) }
-    var showFeatureRequest by remember { mutableStateOf(initialAction == FeedbackInitialAction.FEATURE_REQUEST) }
-    var showFeedbackForm by remember { mutableStateOf(initialAction == FeedbackInitialAction.GENERAL_FEEDBACK) }
-    var selectedTab by remember { mutableIntStateOf(0) }
+    val scope = rememberCoroutineScope()
 
-    // Track if we came from a direct action - if so, go back when dialog closes
-    val cameFromDirectAction = initialAction != FeedbackInitialAction.NONE
+    // Opportunistically flush any pending offline feedback
+    LaunchedEffect(Unit) {
+        scope.launch { FeedbackManager.flushPendingFeedback(context) }
+    }
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Feedback Hub") },
+                title = { Text(stringResource(R.string.feedback_title)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.cd_back))
+                    }
+                }
+            )
+        }
+    ) { padding ->
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding),
+            contentPadding = PaddingValues(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            // ── Closed Beta banner ──
+            item {
+                Surface(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(16.dp),
+                    color = MaterialTheme.colorScheme.tertiaryContainer,
+                    tonalElevation = 2.dp
+                ) {
+                    Row(
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text("🧪", style = MaterialTheme.typography.titleMedium)
+                        Spacer(Modifier.width(12.dp))
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = "Closed Beta",
+                                style = MaterialTheme.typography.labelLarge,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onTertiaryContainer
+                            )
+                            Text(
+                                text = "Your feedback shapes NeuroComet! All submissions are reviewed by the dev team.",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onTertiaryContainer.copy(alpha = 0.8f)
+                            )
+                        }
+                    }
+                }
+            }
+
+            // ── Navigation cards ──
+            item {
+                FeedbackOptionCard(
+                    icon = Icons.Filled.BugReport,
+                    title = "Report a Bug",
+                    description = "Found something broken? Let us know so we can fix it.",
+                    emoji = "🐛",
+                    color = MaterialTheme.colorScheme.errorContainer,
+                    contentColor = MaterialTheme.colorScheme.onErrorContainer,
+                    onClick = onOpenBugReport
+                )
+            }
+
+            item {
+                FeedbackOptionCard(
+                    icon = Icons.Filled.Lightbulb,
+                    title = "Request a Feature",
+                    description = "Have an idea to make NeuroComet better? We'd love to hear it!",
+                    emoji = "💡",
+                    color = MaterialTheme.colorScheme.primaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    onClick = onOpenFeatureRequest
+                )
+            }
+
+            item {
+                FeedbackOptionCard(
+                    icon = Icons.Filled.Feedback,
+                    title = "Send Feedback",
+                    description = "Share your thoughts, suggestions, or just say hi!",
+                    emoji = "💬",
+                    color = MaterialTheme.colorScheme.secondaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                    onClick = onOpenGeneralFeedback
+                )
+            }
+
+            item {
+                Spacer(Modifier.height(8.dp))
+                Text(
+                    text = "All feedback is reviewed by our team. We prioritize features based on community votes and impact on neurodivergent users.",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+        }
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// STANDALONE SCREENS — Bug Report, Feature Request, General Feedback
+// ═══════════════════════════════════════════════════════════════
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun BugReportScreen(onBack: () -> Unit) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    var title by remember { mutableStateOf("") }
+    var description by remember { mutableStateOf("") }
+    var severity by remember { mutableStateOf(BugSeverity.MEDIUM) }
+    var includeDeviceInfo by remember { mutableStateOf(true) }
+
+    val deviceInfo = remember { FeedbackManager.getDeviceInfo(context) }
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Report a Bug") },
+                navigationIcon = {
+                    IconButton(onClick = onBack) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.cd_back))
                     }
                 }
             )
@@ -322,82 +548,396 @@ fun FeedbackHubScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
+                .verticalScroll(rememberScrollState())
+                .padding(24.dp)
         ) {
-            // Tab Row
-            PrimaryTabRow(selectedTabIndex = selectedTab) {
-                Tab(
-                    selected = selectedTab == 0,
-                    onClick = { selectedTab = 0 },
-                    text = { Text("Submit") },
-                    icon = { Icon(Icons.Outlined.Create, null) }
-                )
-                Tab(
-                    selected = selectedTab == 1,
-                    onClick = { selectedTab = 1 },
-                    text = { Text("Requests") },
-                    icon = { Icon(Icons.Outlined.Lightbulb, null) }
-                )
-                Tab(
-                    selected = selectedTab == 2,
-                    onClick = { selectedTab = 2 },
-                    text = { Text("Roadmap") },
-                    icon = { Icon(Icons.Outlined.Timeline, null) }
-                )
+            // Info card
+            Card(
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.3f)
+                ),
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                Row(
+                    modifier = Modifier.padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text("🐛", style = MaterialTheme.typography.headlineMedium)
+                    Spacer(Modifier.width(12.dp))
+                    Text(
+                        text = "Found a bug? Let us know so we can fix it!",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
             }
 
-            when (selectedTab) {
-                0 -> SubmitFeedbackTab(
-                    onBugReport = { showBugReporter = true },
-                    onFeatureRequest = { showFeatureRequest = true },
-                    onGeneralFeedback = { showFeedbackForm = true }
+            Spacer(Modifier.height(24.dp))
+
+            OutlinedTextField(
+                value = title,
+                onValueChange = { title = it },
+                label = { Text("Bug Title") },
+                placeholder = { Text(stringResource(R.string.feedback_bug_title_placeholder)) },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true
+            )
+
+            Spacer(Modifier.height(16.dp))
+
+            OutlinedTextField(
+                value = description,
+                onValueChange = { description = it },
+                label = { Text("Steps to Reproduce") },
+                placeholder = { Text(stringResource(R.string.feedback_steps_placeholder)) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(150.dp),
+                maxLines = 8
+            )
+
+            Spacer(Modifier.height(16.dp))
+
+            Text(
+                text = "Severity",
+                style = MaterialTheme.typography.titleSmall,
+                fontWeight = FontWeight.SemiBold
+            )
+            Spacer(Modifier.height(8.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                BugSeverity.entries.forEach { sev ->
+                    FilterChip(
+                        selected = severity == sev,
+                        onClick = { severity = sev },
+                        label = { Text(sev.name) },
+                        colors = FilterChipDefaults.filterChipColors(
+                            selectedContainerColor = when (sev) {
+                                BugSeverity.LOW -> Color(0xFF4CAF50)
+                                BugSeverity.MEDIUM -> Color(0xFFFF9800)
+                                BugSeverity.HIGH -> Color(0xFFFF5722)
+                                BugSeverity.CRITICAL -> Color(0xFFF44336)
+                            }
+                        )
+                    )
+                }
+            }
+
+            Spacer(Modifier.height(16.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Checkbox(
+                    checked = includeDeviceInfo,
+                    onCheckedChange = { includeDeviceInfo = it }
                 )
-                1 -> FeatureRequestsTab()
-                2 -> RoadmapTab()
+                Spacer(Modifier.width(8.dp))
+                Text("Include device information")
+            }
+
+            if (includeDeviceInfo) {
+                Spacer(Modifier.height(8.dp))
+                Card(
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant
+                    )
+                ) {
+                    Text(
+                        text = deviceInfo,
+                        style = MaterialTheme.typography.bodySmall,
+                        modifier = Modifier.padding(12.dp)
+                    )
+                }
+            }
+
+            Spacer(Modifier.height(24.dp))
+
+            Button(
+                onClick = {
+                    scope.launch {
+                        FeedbackManager.flushPendingFeedback(context)
+                        val payload = FeedbackManager.buildPayload(
+                            context = context,
+                            type = "bug_report",
+                            title = title,
+                            description = description,
+                            severity = severity.name.lowercase()
+                        )
+                        FeedbackManager.submitToSupabase(context, payload)
+                        FeedbackManager.recordSubmission(context)
+                    }
+                    onBack()
+                },
+                enabled = title.isNotBlank() && description.isNotBlank(),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Icon(Icons.AutoMirrored.Filled.Send, null)
+                Spacer(Modifier.width(8.dp))
+                Text("Submit Bug Report")
             }
         }
     }
+}
 
-    // Dialogs
-    if (showBugReporter) {
-        BugReporterDialog(
-            onDismiss = {
-                showBugReporter = false
-                if (cameFromDirectAction) onBack()
-            },
-            onSubmit = { title, desc, severity ->
-                FeedbackManager.recordSubmission(context)
-                showBugReporter = false
-                if (cameFromDirectAction) onBack()
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun FeatureRequestScreen(onBack: () -> Unit) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    var title by remember { mutableStateOf("") }
+    var description by remember { mutableStateOf("") }
+    var category by remember { mutableStateOf(FeatureCategory.OTHER) }
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Request a Feature") },
+                navigationIcon = {
+                    IconButton(onClick = onBack) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.cd_back))
+                    }
+                }
+            )
+        }
+    ) { padding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .verticalScroll(rememberScrollState())
+                .padding(24.dp)
+        ) {
+            // Info card
+            Card(
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f)
+                ),
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                Row(
+                    modifier = Modifier.padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text("💡", style = MaterialTheme.typography.headlineMedium)
+                    Spacer(Modifier.width(12.dp))
+                    Text(
+                        text = "Have an idea? We'd love to hear it!",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
             }
-        )
+
+            Spacer(Modifier.height(24.dp))
+
+            OutlinedTextField(
+                value = title,
+                onValueChange = { title = it },
+                label = { Text("Feature Title") },
+                placeholder = { Text(stringResource(R.string.feedback_feature_title_placeholder)) },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true
+            )
+
+            Spacer(Modifier.height(16.dp))
+
+            OutlinedTextField(
+                value = description,
+                onValueChange = { description = it },
+                label = { Text("Description") },
+                placeholder = { Text(stringResource(R.string.feedback_feature_desc_placeholder)) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(150.dp),
+                maxLines = 8
+            )
+
+            Spacer(Modifier.height(16.dp))
+
+            Text(
+                text = "Category",
+                style = MaterialTheme.typography.titleSmall,
+                fontWeight = FontWeight.SemiBold
+            )
+            Spacer(Modifier.height(8.dp))
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .horizontalScroll(rememberScrollState()),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                FeatureCategory.entries.forEach { cat ->
+                    FilterChip(
+                        selected = category == cat,
+                        onClick = { category = cat },
+                        label = { Text(cat.name.lowercase().replaceFirstChar { it.uppercase() }) },
+                        leadingIcon = if (category == cat) {
+                            { Icon(Icons.Filled.Check, null, Modifier.size(16.dp)) }
+                        } else {
+                            { Icon(getCategoryIcon(cat), null, Modifier.size(16.dp)) }
+                        }
+                    )
+                }
+            }
+
+            Spacer(Modifier.height(24.dp))
+
+            Button(
+                onClick = {
+                    scope.launch {
+                        FeedbackManager.flushPendingFeedback(context)
+                        val payload = FeedbackManager.buildPayload(
+                            context = context,
+                            type = "feature_request",
+                            title = title,
+                            description = description,
+                            category = category.name.lowercase()
+                        )
+                        FeedbackManager.submitToSupabase(context, payload)
+                        FeedbackManager.recordSubmission(context)
+                    }
+                    onBack()
+                },
+                enabled = title.isNotBlank() && description.isNotBlank(),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Icon(Icons.AutoMirrored.Filled.Send, null)
+                Spacer(Modifier.width(8.dp))
+                Text("Submit Request")
+            }
+        }
     }
+}
 
-    if (showFeatureRequest) {
-        FeatureRequestDialog(
-            onDismiss = {
-                showFeatureRequest = false
-                if (cameFromDirectAction) onBack()
-            },
-            onSubmit = { title, desc, category ->
-                FeedbackManager.recordSubmission(context)
-                showFeatureRequest = false
-                if (cameFromDirectAction) onBack()
-            }
-        )
-    }
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun GeneralFeedbackScreen(onBack: () -> Unit) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    var feedback by remember { mutableStateOf("") }
+    var rating by remember { mutableIntStateOf(0) }
 
-    if (showFeedbackForm) {
-        GeneralFeedbackDialog(
-            onDismiss = {
-                showFeedbackForm = false
-                if (cameFromDirectAction) onBack()
-            },
-            onSubmit = { feedback ->
-                FeedbackManager.recordSubmission(context)
-                showFeedbackForm = false
-                if (cameFromDirectAction) onBack()
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Send Feedback") },
+                navigationIcon = {
+                    IconButton(onClick = onBack) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.cd_back))
+                    }
+                }
+            )
+        }
+    ) { padding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .verticalScroll(rememberScrollState())
+                .padding(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            // Info card
+            Card(
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.3f)
+                ),
+                shape = RoundedCornerShape(12.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Row(
+                    modifier = Modifier.padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text("💬", style = MaterialTheme.typography.headlineMedium)
+                    Spacer(Modifier.width(12.dp))
+                    Text(
+                        text = "Your feedback helps us make NeuroComet better for everyone.",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
             }
-        )
+
+            Spacer(Modifier.height(24.dp))
+
+            Text(
+                text = "How's NeuroComet?",
+                style = MaterialTheme.typography.headlineSmall,
+                fontWeight = FontWeight.Bold
+            )
+
+            Spacer(Modifier.height(20.dp))
+
+            // Star rating
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                repeat(5) { index ->
+                    IconButton(onClick = { rating = index + 1 }) {
+                        Icon(
+                            if (index < rating) Icons.Filled.Star else Icons.Outlined.Star,
+                            "Rate ${index + 1}",
+                            tint = if (index < rating)
+                                Color(0xFFFFD700)
+                            else
+                                MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.size(36.dp)
+                        )
+                    }
+                }
+            }
+
+            Spacer(Modifier.height(16.dp))
+
+            OutlinedTextField(
+                value = feedback,
+                onValueChange = { feedback = it },
+                label = { Text("Your thoughts (optional)") },
+                placeholder = { Text(stringResource(R.string.feedback_general_placeholder)) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(120.dp),
+                maxLines = 6
+            )
+
+            Spacer(Modifier.height(24.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                OutlinedButton(
+                    onClick = onBack,
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text("Cancel")
+                }
+                Button(
+                    onClick = {
+                        scope.launch {
+                            FeedbackManager.flushPendingFeedback(context)
+                            val payload = FeedbackManager.buildPayload(
+                                context = context,
+                                type = "general_feedback",
+                                description = feedback,
+                                rating = rating
+                            )
+                            FeedbackManager.submitToSupabase(context, payload)
+                            FeedbackManager.recordSubmission(context)
+                        }
+                        onBack()
+                    },
+                    enabled = rating > 0,
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text("Submit")
+                }
+            }
+        }
     }
 }
 
@@ -841,7 +1381,7 @@ fun BugReporterDialog(
         AlertDialog(
             onDismissRequest = onDismiss,
             icon = { Icon(Icons.Filled.CheckCircle, null, tint = Color(0xFF4CAF50)) },
-            title = { Text("Bug Report Submitted") },
+            title = { Text(stringResource(R.string.feedback_bug_submitted)) },
             text = { Text("Thank you for helping us improve NeuroComet! We'll investigate this issue.") },
             confirmButton = {
                 TextButton(onClick = onDismiss) {
@@ -889,7 +1429,7 @@ fun BugReporterDialog(
                     value = title,
                     onValueChange = { title = it },
                     label = { Text("Bug Title") },
-                    placeholder = { Text("Brief description of the issue") },
+                    placeholder = { Text(stringResource(R.string.feedback_bug_title_placeholder)) },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true
                 )
@@ -900,7 +1440,7 @@ fun BugReporterDialog(
                     value = description,
                     onValueChange = { description = it },
                     label = { Text("Steps to Reproduce") },
-                    placeholder = { Text("1. Go to...\n2. Tap on...\n3. The bug appears") },
+                    placeholder = { Text(stringResource(R.string.feedback_steps_placeholder)) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(150.dp),
@@ -1000,7 +1540,7 @@ fun FeatureRequestDialog(
         AlertDialog(
             onDismissRequest = onDismiss,
             icon = { Icon(Icons.Filled.Lightbulb, null, tint = Color(0xFFFFD700)) },
-            title = { Text("Feature Request Submitted") },
+            title = { Text(stringResource(R.string.feedback_feature_submitted)) },
             text = { Text("Your idea has been submitted! The community can now vote on it.") },
             confirmButton = {
                 TextButton(onClick = onDismiss) {
@@ -1048,7 +1588,7 @@ fun FeatureRequestDialog(
                     value = title,
                     onValueChange = { title = it },
                     label = { Text("Feature Title") },
-                    placeholder = { Text("What would you like to see?") },
+                    placeholder = { Text(stringResource(R.string.feedback_feature_title_placeholder)) },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true
                 )
@@ -1059,7 +1599,7 @@ fun FeatureRequestDialog(
                     value = description,
                     onValueChange = { description = it },
                     label = { Text("Description") },
-                    placeholder = { Text("Describe how this feature would help you...") },
+                    placeholder = { Text(stringResource(R.string.feedback_feature_desc_placeholder)) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(150.dp),
@@ -1118,7 +1658,7 @@ fun FeatureRequestDialog(
 @Composable
 fun GeneralFeedbackDialog(
     onDismiss: () -> Unit,
-    onSubmit: (feedback: String) -> Unit
+    onSubmit: (feedback: String, rating: Int) -> Unit
 ) {
     var feedback by remember { mutableStateOf("") }
     var rating by remember { mutableIntStateOf(0) }
@@ -1128,7 +1668,7 @@ fun GeneralFeedbackDialog(
         AlertDialog(
             onDismissRequest = onDismiss,
             icon = { Icon(Icons.Filled.Favorite, null, tint = Color(0xFFE91E63)) },
-            title = { Text("Thank You!") },
+            title = { Text(stringResource(R.string.feedback_thank_you)) },
             text = { Text("Your feedback helps us make NeuroComet better for everyone.") },
             confirmButton = {
                 TextButton(onClick = onDismiss) {
@@ -1181,7 +1721,7 @@ fun GeneralFeedbackDialog(
                     value = feedback,
                     onValueChange = { feedback = it },
                     label = { Text("Your thoughts (optional)") },
-                    placeholder = { Text("Tell us what you think...") },
+                    placeholder = { Text(stringResource(R.string.feedback_general_placeholder)) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(120.dp),
@@ -1202,7 +1742,7 @@ fun GeneralFeedbackDialog(
                     }
                     Button(
                         onClick = {
-                            onSubmit(feedback)
+                            onSubmit(feedback, rating)
                             showSuccessMessage = true
                         },
                         enabled = rating > 0,

@@ -1,0 +1,14 @@
+{
+  "name": "neurocomet-svg-preview-export",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Exports shared neuro state SVG sources and PNG previews for Calm Waters and Sensory Mode.",
+  "scripts": {
+    "export": "node export_neuro_state_icon_previews.mjs"
+  },
+  "dependencies": {
+    "@resvg/resvg-js": "^2.6.2"
+  }
+}
+

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import '../../core/constants/app_constants.dart';
 import '../../core/theme/app_colors.dart';
 import '../../services/supabase_service.dart';
 import '../../l10n/app_localizations.dart';
@@ -53,6 +54,112 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
     super.dispose();
   }
 
+  Future<bool> _handleAccountStateAfterSignIn() async {
+    final status = await SupabaseService.getCurrentAccountStatus();
+    if (!mounted || status == null) return true;
+
+    if (status.detoxUntil != null && !status.isDetoxActive) {
+      await SupabaseService.endDetoxMode();
+      return true;
+    }
+
+    if (status.hasDeletionScheduled) {
+      return _showPendingDeletionDialog(status);
+    }
+
+    if (status.isDetoxActive) {
+      return _showDetoxDialog(status);
+    }
+
+    return true;
+  }
+
+  Future<bool> _showPendingDeletionDialog(AccountStatus status) async {
+    final action = await showDialog<String>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        title: const Text('Account deletion is scheduled'),
+        content: Text(
+          'This account is set to be deleted after the 14-day grace period. Cancel it to keep using NeuroComet, or stay signed out and let deletion continue.\n\nScheduled for: ${status.deletionScheduledAt?.toLocal() ?? 'soon'}',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, 'keep'),
+            child: const Text('Keep scheduled'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, 'cancel'),
+            child: const Text('Cancel deletion'),
+          ),
+        ],
+      ),
+    );
+
+    if (action == 'cancel') {
+      final result = await SupabaseService.cancelAccountDeletion();
+      if (!mounted) return false;
+      if (result['success'] == true) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(result['message']?.toString() ?? 'Account deletion cancelled')),
+        );
+        return true;
+      }
+      setState(() => _error = result['message']?.toString() ?? 'Failed to cancel deletion');
+      return false;
+    }
+
+    await SupabaseService.signOut();
+    if (!mounted) return false;
+    setState(() {
+      _error = 'Your account is still scheduled for deletion. Sign in again if you want to cancel it.';
+    });
+    return false;
+  }
+
+  Future<bool> _showDetoxDialog(AccountStatus status) async {
+    final action = await showDialog<String>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        title: const Text('Detox mode is active'),
+        content: Text(
+          'Your account is taking a break until ${status.detoxUntil?.toLocal() ?? 'your scheduled return'}. End detox early if you’re ready to come back, or stay signed out and protect your break.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, 'stay'),
+            child: const Text('Stay on break'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, 'end'),
+            child: const Text('End detox'),
+          ),
+        ],
+      ),
+    );
+
+    if (action == 'end') {
+      final result = await SupabaseService.endDetoxMode();
+      if (!mounted) return false;
+      if (result['success'] == true) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(result['message']?.toString() ?? 'Detox mode ended')),
+        );
+        return true;
+      }
+      setState(() => _error = result['message']?.toString() ?? 'Failed to end detox');
+      return false;
+    }
+
+    await SupabaseService.signOut();
+    if (!mounted) return false;
+    setState(() {
+      _error = 'Detox mode is still active. Sign in again when you’re ready to come back.';
+    });
+    return false;
+  }
+
   Future<void> _handleAuth() async {
     final l10n = context.l10n;
     if (!_formKey.currentState!.validate()) return;
@@ -89,7 +196,13 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
         await supabase.auth.signUp(
           email: _emailController.text.trim(),
           password: _passwordController.text,
+          emailRedirectTo: AppConstants.supabaseCallbackUrl,
         );
+      }
+
+      if (_isSignIn) {
+        final canContinue = await _handleAccountStateAfterSignIn();
+        if (!canContinue) return;
       }
 
       if (mounted) {
@@ -113,6 +226,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
   }
 
   void _showForgotPasswordDialog(BuildContext context) {
+    final l10n = context.l10n;
     final resetEmailController = TextEditingController(text: _emailController.text);
     showDialog(
       context: context,
@@ -121,21 +235,21 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
         String? resultMessage;
         return StatefulBuilder(
           builder: (context, setDialogState) => AlertDialog(
-            title: const Text('Reset Password'),
+            title: Text(l10n.get('resetPassword')),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'Enter your email address and we\'ll send you a link to reset your password.',
+                Text(
+                  l10n.get('resetPasswordDescription'),
                 ),
                 const SizedBox(height: 16),
                 TextField(
                   controller: resetEmailController,
                   keyboardType: TextInputType.emailAddress,
-                  decoration: const InputDecoration(
-                    labelText: 'Email',
-                    prefixIcon: Icon(Icons.email_outlined),
+                  decoration: InputDecoration(
+                    labelText: l10n.email,
+                    prefixIcon: const Icon(Icons.email_outlined),
                   ),
                 ),
                 if (resultMessage != null) ...[
@@ -155,7 +269,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(dialogContext),
-                child: const Text('Cancel'),
+                child: Text(l10n.cancel),
               ),
               FilledButton(
                 onPressed: isSending
@@ -163,7 +277,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
                     : () async {
                         final email = resetEmailController.text.trim();
                         if (email.isEmpty) {
-                          setDialogState(() => resultMessage = 'Please enter your email.');
+                          setDialogState(() => resultMessage = l10n.get('enterEmail'));
                           return;
                         }
                         setDialogState(() {
@@ -179,10 +293,13 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
                             return;
                           }
 
-                          await SupabaseService.client.auth.resetPasswordForEmail(email);
+                          await SupabaseService.client.auth.resetPasswordForEmail(
+                            email,
+                            redirectTo: AppConstants.supabaseCallbackUrl,
+                          );
                           setDialogState(() {
                             isSending = false;
-                            resultMessage = 'Password reset link sent! Check your inbox.';
+                            resultMessage = l10n.get('resetLinkSent');
                           });
                         } catch (e) {
                           setDialogState(() {
@@ -196,7 +313,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
                         width: 16, height: 16,
                         child: CircularProgressIndicator(strokeWidth: 2),
                       )
-                    : const Text('Send Reset Link'),
+                    : Text(l10n.get('sendResetLink')),
               ),
             ],
           ),
@@ -251,18 +368,20 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
           );
         },
         child: SafeArea(
+          bottom: true,
+          top: true,
           child: Center(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.all(24),
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const NeuroCometLogo(
-                    size: 140,
+                    size: 100,
                     animated: true,
                     showGlow: true,
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 16),
                   Text(
                     l10n.appName,
                     style: theme.textTheme.headlineLarge?.copyWith(
@@ -270,7 +389,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
                       color: theme.colorScheme.primary,
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 6),
                   Text(
                     l10n.safeSpace,
                     style: theme.textTheme.bodyLarge?.copyWith(
@@ -278,14 +397,14 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 40),
+                  const SizedBox(height: 24),
                   Card(
-                    elevation: 4,
+                    elevation: 2,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(24),
+                      borderRadius: BorderRadius.circular(20),
                     ),
                     child: Padding(
-                      padding: const EdgeInsets.all(24),
+                      padding: const EdgeInsets.all(20),
                       child: Form(
                         key: _formKey,
                         child: Column(
@@ -347,7 +466,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
                                 controller: _confirmPasswordController,
                                 obscureText: _obscureConfirmPassword,
                                 decoration: InputDecoration(
-                                  labelText: l10n.reply,
+                                  labelText: l10n.confirmPassword,
                                   prefixIcon: const Icon(Icons.lock_outlined),
                                   suffixIcon: IconButton(
                                     icon: Icon(
@@ -443,7 +562,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
                               const SizedBox(height: 16),
                               TextButton(
                                 onPressed: () => _showForgotPasswordDialog(context),
-                                child: const Text('Forgot Password?'),
+                                child: Text(l10n.forgotPassword),
                               ),
                             ],
                             const SizedBox(height: 8),

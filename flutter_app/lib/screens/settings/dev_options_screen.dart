@@ -101,6 +101,10 @@ class DevOptionsNotifier extends Notifier<DevOptions> {
   // ── A/B Testing ─────────────────────────────────────────
   void setAbTestVariant(ABTestVariant value) => _update((s) => s.copyWith(abTestVariant: value));
 
+  // ── Feedback & Beta Testing ────────────────────────────
+  void setBypassFeedbackRateLimit(bool value) => _update((s) => s.copyWith(bypassFeedbackRateLimit: value));
+  void setForceFeedbackSubmitFailure(bool value) => _update((s) => s.copyWith(forceFeedbackSubmitFailure: value));
+
   // ── Reset ────────────────────────────────────────────
   void resetAll() {
     state = const DevOptions();
@@ -196,6 +200,7 @@ class _DevOptionsScreenState extends ConsumerState<DevOptionsScreen> {
       _SectionEntry('Supabase', 'supabase database posts backend', Icons.storage,
         SupabaseDevSection(showResult: _showResult, postsCount: _postsCount, usersCount: _usersCount, onRefresh: _refreshCounts)),
       _SectionEntry('Stress Testing', 'stress test performance widgets animations memory', Icons.speed, const StressTestingDevSection()),
+      _SectionEntry('Feedback & Beta', 'feedback beta bug report feature request offline queue rate limit submission', Icons.feedback, const FeedbackBetaDevSection()),
       _SectionEntry('Reset', 'reset clear defaults', Icons.restart_alt, const ResetDevSection()),
     ];
 

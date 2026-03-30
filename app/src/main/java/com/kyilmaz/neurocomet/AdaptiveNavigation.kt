@@ -25,7 +25,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
@@ -78,13 +77,10 @@ enum class ContentType {
  */
 @Composable
 fun calculateNavigationType(): NavigationType {
-    val configuration = LocalConfiguration.current
-    val screenWidthDp = configuration.screenWidthDp
-
-    return when {
-        screenWidthDp >= 840 -> NavigationType.PERMANENT_DRAWER
-        screenWidthDp >= 600 -> NavigationType.NAVIGATION_RAIL
-        else -> NavigationType.BOTTOM_NAVIGATION
+    return when (rememberCanonicalLayout().navigationChrome) {
+        CanonicalNavigationChrome.PERMANENT_DRAWER -> NavigationType.PERMANENT_DRAWER
+        CanonicalNavigationChrome.NAVIGATION_RAIL -> NavigationType.NAVIGATION_RAIL
+        CanonicalNavigationChrome.BOTTOM_BAR -> NavigationType.BOTTOM_NAVIGATION
     }
 }
 
@@ -93,14 +89,7 @@ fun calculateNavigationType(): NavigationType {
  */
 @Composable
 fun calculateContentType(): ContentType {
-    val configuration = LocalConfiguration.current
-    val screenWidthDp = configuration.screenWidthDp
-
-    return if (screenWidthDp >= 840) {
-        ContentType.DUAL_PANE
-    } else {
-        ContentType.SINGLE_PANE
-    }
+    return if (rememberCanonicalLayout().supportsMultiPane) ContentType.DUAL_PANE else ContentType.SINGLE_PANE
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -390,8 +379,11 @@ fun NeurodivergentPermanentDrawerContent(
     userAvatar: String? = null,
     userName: String? = null,
     isPremium: Boolean = false,
+    isGuestUser: Boolean = false,
     onProfileClick: () -> Unit = {},
     onSettingsClick: () -> Unit = {},
+    collapsed: Boolean = false,
+    onToggleCollapsed: (Boolean) -> Unit = {},
     modifier: Modifier = Modifier,
     highContrast: Boolean = false
 ) {
@@ -400,7 +392,7 @@ fun NeurodivergentPermanentDrawerContent(
     val settingsItems = navItems.filter { it.section == NavigationSection.SETTINGS }
 
     PermanentDrawerSheet(
-        modifier = modifier.width(280.dp),
+        modifier = modifier.width(if (collapsed) 96.dp else 280.dp),
         drawerContainerColor = if (highContrast) Color.Black else MaterialTheme.colorScheme.surface
     ) {
         Column(
@@ -408,96 +400,94 @@ fun NeurodivergentPermanentDrawerContent(
                 .fillMaxHeight()
                 .padding(16.dp)
         ) {
-            // App branding header
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 16.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                // App logo/icon
-                Box(
-                    modifier = Modifier
-                        .size(48.dp)
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(
-                            Brush.linearGradient(
-                                listOf(
-                                    MaterialTheme.colorScheme.primary,
-                                    MaterialTheme.colorScheme.tertiary
-                                )
-                            )
-                        ),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        "🧠",
-                        fontSize = 24.sp
-                    )
-                }
-                Spacer(Modifier.width(12.dp))
-                Column {
-                    Text(
-                        "NeuroComet",
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold,
-                        color = if (highContrast) Color.White else MaterialTheme.colorScheme.onSurface
-                    )
-                    Text(
-                        "Your neurodivergent space",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = if (highContrast) Color.Gray else MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            }
+            DrawerBrandHeader(
+                collapsed = collapsed,
+                highContrast = highContrast,
+                onToggleCollapsed = { onToggleCollapsed(!collapsed) }
+            )
 
             HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
 
             // User profile section
-            DrawerProfileCard(
-                userAvatar = userAvatar,
-                userName = userName,
-                isPremium = isPremium,
-                onClick = onProfileClick,
-                highContrast = highContrast
-            )
-
-            Spacer(Modifier.height(16.dp))
-
-            // Main navigation
-            Text(
-                "Navigation",
-                style = MaterialTheme.typography.labelMedium,
-                color = if (highContrast) Color.Gray else MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(vertical = 8.dp)
-            )
-
-            mainItems.forEach { item ->
-                DrawerNavItem(
-                    item = item,
-                    selected = currentRoute == item.route,
-                    onClick = { onNavigate(item.route) },
+            if (collapsed) {
+                DrawerProfileCompactButton(
+                    userAvatar = userAvatar,
+                    userName = userName,
+                    isGuestUser = isGuestUser,
+                    onClick = onProfileClick,
                     highContrast = highContrast
                 )
-            }
 
-            // Secondary items
-            if (secondaryItems.isNotEmpty()) {
                 Spacer(Modifier.height(16.dp))
+
+                mainItems.forEach { item ->
+                    DrawerCompactNavItem(
+                        item = item,
+                        selected = currentRoute == item.route,
+                        onClick = { onNavigate(item.route) },
+                        highContrast = highContrast
+                    )
+                }
+
+                if (secondaryItems.isNotEmpty()) {
+                    Spacer(Modifier.height(12.dp))
+                    secondaryItems.forEach { item ->
+                        DrawerCompactNavItem(
+                            item = item,
+                            selected = currentRoute == item.route,
+                            onClick = { onNavigate(item.route) },
+                            highContrast = highContrast
+                        )
+                    }
+                }
+            } else {
+                DrawerProfileCard(
+                    userAvatar = userAvatar,
+                    userName = userName,
+                    isPremium = isPremium,
+                    isGuestUser = isGuestUser,
+                    onClick = onProfileClick,
+                    onToggleCollapsed = { onToggleCollapsed(true) },
+                    highContrast = highContrast
+                )
+
+                Spacer(Modifier.height(16.dp))
+
+                // Main navigation
                 Text(
-                    "More",
+                    "Navigation",
                     style = MaterialTheme.typography.labelMedium,
                     color = if (highContrast) Color.Gray else MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
 
-                secondaryItems.forEach { item ->
+                mainItems.forEach { item ->
                     DrawerNavItem(
                         item = item,
                         selected = currentRoute == item.route,
                         onClick = { onNavigate(item.route) },
                         highContrast = highContrast
                     )
+                }
+
+                // Secondary items
+                if (secondaryItems.isNotEmpty()) {
+                    Spacer(Modifier.height(16.dp))
+                    Text(
+                        "More",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = if (highContrast) Color.Gray else MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(vertical = 8.dp)
+                    )
+
+                    secondaryItems.forEach { item ->
+                        DrawerNavItem(
+                            item = item,
+                            selected = currentRoute == item.route,
+                            onClick = { onNavigate(item.route) },
+                            highContrast = highContrast
+                        )
+                    }
                 }
             }
 
@@ -506,18 +496,123 @@ fun NeurodivergentPermanentDrawerContent(
             // Settings at bottom
             HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
 
-            DrawerNavItem(
-                item = AdaptiveNavItem(
-                    route = "settings",
-                    labelRes = R.string.nav_settings,
-                    iconFilled = Icons.Filled.Settings,
-                    iconOutlined = Icons.Outlined.Settings,
-                    section = NavigationSection.SETTINGS
-                ),
-                selected = currentRoute == "settings",
-                onClick = onSettingsClick,
-                highContrast = highContrast
+            val settingsItem = AdaptiveNavItem(
+                route = "settings",
+                labelRes = R.string.nav_settings,
+                iconFilled = Icons.Filled.Settings,
+                iconOutlined = Icons.Outlined.Settings,
+                section = NavigationSection.SETTINGS
             )
+
+            if (collapsed) {
+                DrawerCompactNavItem(
+                    item = settingsItem,
+                    selected = currentRoute == "settings",
+                    onClick = onSettingsClick,
+                    highContrast = highContrast
+                )
+            } else {
+                DrawerNavItem(
+                    item = settingsItem,
+                    selected = currentRoute == "settings",
+                    onClick = onSettingsClick,
+                    highContrast = highContrast
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun DrawerBrandHeader(
+    collapsed: Boolean,
+    highContrast: Boolean,
+    onToggleCollapsed: () -> Unit
+) {
+    if (collapsed) {
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            IconButton(onClick = onToggleCollapsed) {
+                Icon(
+                    imageVector = Icons.Filled.Menu,
+                    contentDescription = stringResource(R.string.a11y_open_menu),
+                    tint = if (highContrast) Color.White else MaterialTheme.colorScheme.onSurface
+                )
+            }
+            Box(
+                modifier = Modifier
+                    .size(44.dp)
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(
+                        Brush.linearGradient(
+                            listOf(
+                                MaterialTheme.colorScheme.primary,
+                                MaterialTheme.colorScheme.tertiary
+                            )
+                        )
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Psychology,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onPrimary,
+                    modifier = Modifier.size(24.dp)
+                )
+            }
+        }
+    } else {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(48.dp)
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(
+                        Brush.linearGradient(
+                            listOf(
+                                MaterialTheme.colorScheme.primary,
+                                MaterialTheme.colorScheme.tertiary
+                            )
+                        )
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Psychology,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onPrimary,
+                    modifier = Modifier.size(28.dp)
+                )
+            }
+            Spacer(Modifier.width(12.dp))
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    "NeuroComet",
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = if (highContrast) Color.White else MaterialTheme.colorScheme.onSurface
+                )
+                Text(
+                    "Your neurodivergent space",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = if (highContrast) Color.Gray else MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+            IconButton(onClick = onToggleCollapsed) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.MenuOpen,
+                    contentDescription = stringResource(R.string.a11y_close_menu),
+                    tint = if (highContrast) Color.White else MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
         }
     }
 }
@@ -527,7 +622,9 @@ private fun DrawerProfileCard(
     userAvatar: String?,
     userName: String?,
     isPremium: Boolean,
+    isGuestUser: Boolean,
     onClick: () -> Unit,
+    onToggleCollapsed: () -> Unit,
     highContrast: Boolean
 ) {
     Card(
@@ -578,14 +675,119 @@ private fun DrawerProfileCard(
                             color = Color(0xFFFFD700)
                         )
                     }
+                } else if (isGuestUser) {
+                    Text(
+                        text = stringResource(R.string.settings_sign_in_desc),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = if (highContrast) Color.LightGray else MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
+                    )
                 }
             }
 
-            Icon(
-                Icons.AutoMirrored.Filled.MenuOpen,
-                contentDescription = "View profile",
-                tint = if (highContrast) Color.Gray else MaterialTheme.colorScheme.onSurfaceVariant
+            IconButton(onClick = onToggleCollapsed) {
+                Icon(
+                    Icons.AutoMirrored.Filled.MenuOpen,
+                    contentDescription = stringResource(R.string.a11y_close_menu),
+                    tint = if (highContrast) Color.Gray else MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun DrawerProfileCompactButton(
+    userAvatar: String?,
+    userName: String?,
+    isGuestUser: Boolean,
+    onClick: () -> Unit,
+    highContrast: Boolean
+) {
+    Surface(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick),
+        color = Color.Transparent
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(6.dp)
+        ) {
+            ClippedImage(
+                imageUrl = userAvatar,
+                shape = CircleShape,
+                size = 40.dp,
+                contentDescription = if (isGuestUser) stringResource(R.string.auth_sign_in) else (userName ?: "Profile")
             )
+            Text(
+                text = if (isGuestUser) stringResource(R.string.auth_sign_in) else (userName ?: "Profile"),
+                style = MaterialTheme.typography.labelSmall,
+                color = if (highContrast) Color.White else MaterialTheme.colorScheme.onSurface,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+    }
+}
+
+@Composable
+private fun DrawerCompactNavItem(
+    item: AdaptiveNavItem,
+    selected: Boolean,
+    onClick: () -> Unit,
+    highContrast: Boolean
+) {
+    val label = stringResource(item.labelRes)
+    val backgroundColor = if (selected) {
+        if (highContrast) Color.White.copy(alpha = 0.1f) else MaterialTheme.colorScheme.primaryContainer
+    } else {
+        Color.Transparent
+    }
+    val contentColor = if (selected) {
+        if (highContrast) Color.White else MaterialTheme.colorScheme.onPrimaryContainer
+    } else {
+        if (highContrast) Color.Gray else MaterialTheme.colorScheme.onSurfaceVariant
+    }
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Surface(
+            modifier = Modifier
+                .size(56.dp)
+                .semantics { contentDescription = label }
+                .clickable(onClick = onClick),
+            shape = RoundedCornerShape(16.dp),
+            color = backgroundColor
+        ) {
+            Box(contentAlignment = Alignment.Center) {
+                Icon(
+                    imageVector = if (selected) item.iconFilled else item.iconOutlined,
+                    contentDescription = null,
+                    tint = contentColor,
+                    modifier = Modifier.size(24.dp)
+                )
+                if (item.badgeCount > 0) {
+                    Badge(
+                        modifier = Modifier
+                            .align(Alignment.TopEnd)
+                            .offset(x = 4.dp, y = (-2).dp)
+                    ) {
+                        Text(
+                            text = if (item.badgeCount > 99) "99+" else item.badgeCount.toString(),
+                            fontSize = 9.sp
+                        )
+                    }
+                }
+            }
         }
     }
 }

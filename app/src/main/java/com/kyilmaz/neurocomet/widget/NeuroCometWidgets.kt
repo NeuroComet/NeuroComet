@@ -35,49 +35,15 @@ import java.util.*
 // NEURODIVERGENT AFFIRMATIONS
 // ═══════════════════════════════════════════════════════════════
 
-val DAILY_AFFIRMATIONS = listOf(
-    // Self-acceptance
-    "Your brain is not broken, it's beautifully different 🧠✨",
-    "You deserve accommodations, not apologies 💜",
-    "Masking is exhausting. Being yourself is brave 🦋",
-    "Your needs are valid, even the ones others don't understand 🌟",
-    "Rest is productive. Recharging is necessary 🔋",
-
-    // ADHD-specific
-    "Your hyperfocus is a superpower when aimed right ⚡",
-    "Time blindness isn't your fault - use tools, not guilt ⏰",
-    "Starting is the hardest part. You've got this 🚀",
-    "Your brain craves novelty - that's not a flaw, it's a feature 🎨",
-    "Parallel tasks? Your brain loves efficiency 🔀",
-
-    // Autism-specific
-    "Your special interests make you fascinating 🌈",
-    "Routines aren't rigid - they're your comfort architecture 🏛️",
-    "Stimming is self-regulation, not something to hide ✋",
-    "Your attention to detail catches what others miss 🔍",
-    "Social rules are exhausting. Your energy matters more 💫",
-
-    // Anxiety & overwhelm
-    "It's okay to leave. Your comfort matters 🚪",
-    "Saying no is a complete sentence 🛑",
-    "Small steps still move you forward 👣",
-    "You've survived 100% of your hard days 💪",
-    "This feeling will pass. You are not your anxiety 🌊",
-
-    // Executive function
-    "Done is better than perfect ✅",
-    "One task at a time is still progress 📝",
-    "Body doubling works - find your people 👥",
-    "External structure isn't cheating, it's smart 🧩",
-    "Your brain needs dopamine. Reward yourself often 🎁",
-
-    // Sensory
-    "Protecting your senses is self-care 🎧",
-    "Comfort clothes are valid professional attire 👕",
-    "You're allowed to control your environment 🎚️",
-    "Sensory needs aren't preferences, they're requirements 💡",
-    "Your nervous system is communicating. Listen to it 🫀"
-)
+private fun dailyAffirmations(context: Context): List<String> {
+    val affirmations = context.resources
+        .getStringArray(R.array.widget_daily_affirmations)
+        .map { it.trim() }
+        .filter { it.isNotEmpty() }
+    return affirmations.ifEmpty {
+        listOf(context.getString(R.string.widget_affirmation_default_text))
+    }
+}
 
 // Stim suggestions for different needs
 val STIM_SUGGESTIONS = mapOf(
@@ -183,14 +149,35 @@ object WidgetPreferences {
         val isRunning = prefs.getBoolean(KEY_TIMER_RUNNING, false)
         if (isRunning) {
             val endTime = prefs.getLong(KEY_TIMER_END_TIME, 0)
-            val remaining = ((endTime - System.currentTimeMillis()) / 60000).toInt()
-            return remaining.coerceAtLeast(0)
+            val remainingMs = endTime - System.currentTimeMillis()
+            if (remainingMs <= 0L) {
+                prefs.edit()
+                    .putBoolean(KEY_TIMER_RUNNING, false)
+                    .putLong(KEY_TIMER_END_TIME, 0L)
+                    .putInt(KEY_FOCUS_MINUTES, 25)
+                    .apply()
+                return 25
+            }
+            return ((remainingMs + 59_999L) / 60_000L).toInt()
         }
         return prefs.getInt(KEY_FOCUS_MINUTES, 25)
     }
 
     fun isTimerRunning(context: Context): Boolean {
-        return getPrefs(context).getBoolean(KEY_TIMER_RUNNING, false)
+        val prefs = getPrefs(context)
+        val isRunning = prefs.getBoolean(KEY_TIMER_RUNNING, false)
+        if (!isRunning) return false
+
+        val endTime = prefs.getLong(KEY_TIMER_END_TIME, 0L)
+        if (endTime <= System.currentTimeMillis()) {
+            prefs.edit()
+                .putBoolean(KEY_TIMER_RUNNING, false)
+                .putLong(KEY_TIMER_END_TIME, 0L)
+                .putInt(KEY_FOCUS_MINUTES, 25)
+                .apply()
+            return false
+        }
+        return true
     }
 
     // Tasks
@@ -276,11 +263,12 @@ object WidgetPreferences {
     }
 
     fun getLastStimBreak(context: Context): Long {
-        return getPrefs(context).getLong(KEY_LAST_STIM_BREAK, System.currentTimeMillis())
+        return getPrefs(context).getLong(KEY_LAST_STIM_BREAK, 0L)
     }
 
     fun getMinutesSinceStimBreak(context: Context): Int {
         val last = getLastStimBreak(context)
+        if (last <= 0L) return 0
         return ((System.currentTimeMillis() - last) / 60000).toInt()
     }
 
@@ -300,27 +288,29 @@ object WidgetPreferences {
         val prefs = getPrefs(context)
         val today = SimpleDateFormat("yyyy-MM-dd", Locale.US).format(Date())
         val savedDate = prefs.getString(KEY_AFFIRMATION_DATE, "")
+        val affirmations = dailyAffirmations(context)
 
         return if (savedDate == today) {
             val index = prefs.getInt(KEY_DAILY_AFFIRMATION_INDEX, 0)
-            DAILY_AFFIRMATIONS.getOrElse(index) { DAILY_AFFIRMATIONS.first() }
+            affirmations.getOrElse(index) { affirmations.first() }
         } else {
-            val newIndex = (0 until DAILY_AFFIRMATIONS.size).random()
+            val newIndex = (0 until affirmations.size).random()
             prefs.edit()
                 .putString(KEY_AFFIRMATION_DATE, today)
                 .putInt(KEY_DAILY_AFFIRMATION_INDEX, newIndex)
                 .apply()
-            DAILY_AFFIRMATIONS[newIndex]
+            affirmations[newIndex]
         }
     }
 
     fun getNextAffirmation(context: Context): String {
         val prefs = getPrefs(context)
+        val affirmations = dailyAffirmations(context)
         val currentIndex = prefs.getInt(KEY_DAILY_AFFIRMATION_INDEX, 0)
-        val newIndex = (currentIndex + 1) % DAILY_AFFIRMATIONS.size
+        val newIndex = (currentIndex + 1) % affirmations.size
         prefs.edit().putInt(KEY_DAILY_AFFIRMATION_INDEX, newIndex).apply()
         updateAllWidgets(context)
-        return DAILY_AFFIRMATIONS[newIndex]
+        return affirmations[newIndex]
     }
 
     // ═══════════════════════════════════════════════════════════
@@ -433,8 +423,8 @@ class EnergyWidgetProvider : AppWidgetProvider() {
         val views = RemoteViews(context.packageName, R.layout.widget_energy)
 
         // Set energy level text
-        views.setTextViewText(R.id.widget_energy_level, "$energyLevel%")
-        views.setTextViewText(R.id.widget_energy_label, getEnergyLabel(energyLevel))
+        views.setTextViewText(R.id.widget_energy_level, context.getString(R.string.widget_energy_percent_format, energyLevel))
+        views.setTextViewText(R.id.widget_energy_label, getEnergyLabel(context, energyLevel))
 
         // Set emoji based on level
         views.setTextViewText(R.id.widget_energy_emoji, getEnergyEmoji(energyLevel))
@@ -469,13 +459,13 @@ class EnergyWidgetProvider : AppWidgetProvider() {
         }
     }
 
-    private fun getEnergyLabel(level: Int): String {
+    private fun getEnergyLabel(context: Context, level: Int): String {
         return when {
-            level >= 80 -> "High Energy"
-            level >= 60 -> "Good Energy"
-            level >= 40 -> "Moderate"
-            level >= 20 -> "Low Battery"
-            else -> "Recharging"
+            level >= 80 -> context.getString(R.string.widget_energy_state_high)
+            level >= 60 -> context.getString(R.string.widget_energy_state_good)
+            level >= 40 -> context.getString(R.string.widget_energy_state_moderate)
+            level >= 20 -> context.getString(R.string.widget_energy_state_low_battery)
+            else -> context.getString(R.string.widget_energy_state_recharging)
         }
     }
 
@@ -547,8 +537,8 @@ class FocusTimerWidgetProvider : AppWidgetProvider() {
         val views = RemoteViews(context.packageName, R.layout.widget_focus_timer)
 
         // Set time display
-        views.setTextViewText(R.id.widget_timer_minutes, String.format("%02d", minutes))
-        views.setTextViewText(R.id.widget_timer_label, if (isRunning) "Focus Time" else "Ready")
+        views.setTextViewText(R.id.widget_timer_minutes, String.format(Locale.getDefault(), "%02d", minutes))
+        views.setTextViewText(R.id.widget_timer_label, context.getString(if (isRunning) R.string.widget_focus_active else R.string.widget_focus_ready))
 
         // Set status emoji
         views.setTextViewText(
@@ -560,7 +550,7 @@ class FocusTimerWidgetProvider : AppWidgetProvider() {
         val buttonAction = if (isRunning) ACTION_PAUSE_TIMER else ACTION_START_TIMER
         views.setTextViewText(
             R.id.widget_timer_button,
-            if (isRunning) "⏸️ Pause" else "▶️ Start"
+            context.getString(if (isRunning) R.string.widget_focus_pause else R.string.widget_focus_start)
         )
         views.setOnClickPendingIntent(
             R.id.widget_timer_button,
@@ -649,10 +639,10 @@ class MoodWidgetProvider : AppWidgetProvider() {
 
         // Set last check-in time
         val checkInText = if (lastCheckIn > 0) {
-            val sdf = SimpleDateFormat("h:mm a", Locale.getDefault())
-            "Last: ${sdf.format(Date(lastCheckIn))}"
+            val formattedTime = android.text.format.DateFormat.getTimeFormat(context).format(Date(lastCheckIn))
+            context.getString(R.string.widget_mood_last_checkin, formattedTime)
         } else {
-            "How are you?"
+            context.getString(R.string.widget_daily_checkin)
         }
         views.setTextViewText(R.id.widget_mood_time, checkInText)
 
@@ -934,14 +924,37 @@ class StimBreakWidgetProvider : AppWidgetProvider() {
         val views = RemoteViews(context.packageName, R.layout.widget_stim_break)
 
         // Set last break time
-        views.setTextViewText(R.id.widget_break_last, "Last: ${formatTime(lastBreak)}")
+        views.setTextViewText(
+            R.id.widget_break_last,
+            if (lastBreak > 0L) {
+                context.getString(R.string.widget_mood_last_checkin, formatTime(context, lastBreak))
+            } else {
+                context.getString(R.string.widget_stim_break_last_placeholder)
+            }
+        )
+
+        views.setTextViewText(
+            R.id.widget_break_emoji,
+            when {
+                lastBreak <= 0L -> context.getString(R.string.widget_stim_break_default_emoji)
+                minutesSinceBreak >= breakInterval -> "⏰"
+                breakInterval - minutesSinceBreak <= 10 -> "🔔"
+                else -> "🧘"
+            }
+        )
 
         // Set minutes since last break
-        views.setTextViewText(R.id.widget_break_since, "$minutesSinceBreak min ago")
+        views.setTextViewText(
+            R.id.widget_break_since,
+            context.resources.getQuantityString(R.plurals.widget_stim_break_since_minutes, minutesSinceBreak, minutesSinceBreak)
+        )
 
         // Set next break reminder
-        val nextBreakIn = breakInterval - minutesSinceBreak
-        views.setTextViewText(R.id.widget_break_next, "Next in: $nextBreakIn min")
+        val nextBreakIn = (breakInterval - minutesSinceBreak).coerceAtLeast(0)
+        views.setTextViewText(
+            R.id.widget_break_next,
+            context.resources.getQuantityString(R.plurals.widget_stim_break_next_in_minutes, nextBreakIn, nextBreakIn)
+        )
 
         // Set click actions
         views.setOnClickPendingIntent(
@@ -960,9 +973,8 @@ class StimBreakWidgetProvider : AppWidgetProvider() {
         appWidgetManager.updateAppWidget(appWidgetId, views)
     }
 
-    private fun formatTime(timestamp: Long): String {
-        val sdf = SimpleDateFormat("h:mm a", Locale.getDefault())
-        return sdf.format(Date(timestamp))
+    private fun formatTime(context: Context, timestamp: Long): String {
+        return android.text.format.DateFormat.getTimeFormat(context).format(Date(timestamp))
     }
 
     private fun createPendingIntent(context: Context, action: String): PendingIntent {

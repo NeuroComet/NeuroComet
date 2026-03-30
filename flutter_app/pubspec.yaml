@@ -4,7 +4,7 @@ description: >-
   individuals. Connect, share, and thrive in a sensory-friendly environment 
   with calming features, practice tools, and a supportive community.
 publish_to: 'none'
-version: 1.0.0+1
+version: 2.0.0-beta03+1
 
 # App metadata
 # homepage: https://neurocomet.app
@@ -90,6 +90,8 @@ dependencies:
   google_fonts: ^8.0.1
 
   cupertino_icons: ^1.0.6
+  google_generative_ai: ^0.4.7
+  speech_to_text: ^7.3.0
 
 dev_dependencies:
   flutter_test:

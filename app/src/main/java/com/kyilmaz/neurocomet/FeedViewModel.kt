@@ -12,6 +12,7 @@ package com.kyilmaz.neurocomet
 import android.app.Application
 import android.content.Context
 import android.content.Intent
+import com.kyilmaz.neurocomet.ads.GoogleAdsManager
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.delay
@@ -564,12 +565,24 @@ class FeedViewModel(application: Application) : AndroidViewModel(application) {
             throw SecurityException("Debug features are not available in production builds.")
         }
 
+        // Keep GoogleAdsManager in sync with the simulated status
+        GoogleAdsManager.devSetSimulatePremium(enabled)
+
+        // If enabled, also simulate a successful purchase in SubscriptionManager for full integration testing
+        if (enabled) {
+            SubscriptionManager.simulateTestSuccess()
+        } else {
+            SubscriptionManager.resetTestPurchase()
+        }
+
         _uiState.update {
             it.copy(
                 isFakePremiumEnabled = enabled,
                 isPremium = if (enabled) true else realPremiumStatus
             )
         }
+        // Force an update on GoogleAdsManager's state flow to push changes to UI listeners
+        GoogleAdsManager.devUpdateAdsState()
     }
 
     // --- Feed toggles ---
@@ -611,8 +624,17 @@ class FeedViewModel(application: Application) : AndroidViewModel(application) {
                 // keep loading forever
                 return@launch
             }
-            if (opts.networkLatencyMs > 0) {
-                delay(opts.networkLatencyMs)
+
+            // --- PREMIUM BENEFIT: Faster Loading ---
+            // If the user is premium, reduce the simulated network latency by 75%
+            val effectiveLatency = if (_uiState.value.isPremium) {
+                (opts.networkLatencyMs / 4).coerceAtLeast(0)
+            } else {
+                opts.networkLatencyMs
+            }
+
+            if (effectiveLatency > 0) {
+                delay(effectiveLatency)
             }
 
             // Combine localized explore posts with localized feed posts

@@ -50,7 +50,8 @@ enum class AnimationType {
 }
 
 data class ThemeState(
-    val isDarkMode: Boolean = false,
+    val themeMode: com.kyilmaz.neurocomet.ui.theme.ThemeMode = com.kyilmaz.neurocomet.ui.theme.ThemeMode.SYSTEM,
+    val isDarkMode: Boolean = false, // Kept for legacy compatibility
     val isHighContrast: Boolean = false,
     val textScaleFactor: Float = 1.0f,
     val selectedState: NeuroState = NeuroState.DEFAULT,
@@ -77,7 +78,18 @@ class ThemeViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun setDarkMode(isDarkMode: Boolean) {
-        val newState = _themeState.value.copy(isDarkMode = isDarkMode)
+        val newState = _themeState.value.copy(
+            isDarkMode = isDarkMode
+        )
+        _themeState.value = newState
+        persist(newState)
+    }
+
+    fun setThemeMode(mode: com.kyilmaz.neurocomet.ui.theme.ThemeMode) {
+        val newState = _themeState.value.copy(
+            themeMode = mode,
+            isDarkMode = mode == com.kyilmaz.neurocomet.ui.theme.ThemeMode.DARK
+        )
         _themeState.value = newState
         persist(newState)
     }

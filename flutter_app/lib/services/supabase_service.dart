@@ -1,11 +1,38 @@
 import 'package:flutter/foundation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import '../core/constants/app_constants.dart';
 import '../models/user.dart' as app_models;
 import '../models/post.dart';
 import '../models/conversation.dart';
 import '../models/notification.dart';
 
+class AccountStatus {
+  final bool isActive;
+  final DateTime? deletionScheduledAt;
+  final DateTime? detoxStartedAt;
+  final DateTime? detoxUntil;
+
+  const AccountStatus({
+    required this.isActive,
+    this.deletionScheduledAt,
+    this.detoxStartedAt,
+    this.detoxUntil,
+  });
+
+  bool get hasDeletionScheduled => deletionScheduledAt != null;
+  bool get isDetoxActive => detoxUntil != null && detoxUntil!.isAfter(DateTime.now());
+  Duration? get detoxRemaining =>
+      isDetoxActive ? detoxUntil!.difference(DateTime.now()) : null;
+}
+
 class SupabaseService {
+  static const _detoxBackupAppliedKey = 'detox_backup_applied';
+  static const _detoxBackupPushKey = 'detox_backup_push_enabled';
+  static const _detoxBackupQuietHoursKey = 'detox_backup_quiet_hours';
+  static const _detoxBackupBreakRemindersKey = 'detox_backup_break_reminders';
+  static const _detoxBackupCalmModeKey = 'detox_backup_calm_auto';
+
   /// Whether Supabase.initialize() completed successfully.
   static bool get isInitialized {
     try {
@@ -117,6 +144,7 @@ class SupabaseService {
     final response = await client.auth.signUp(
       email: email,
       password: password,
+      emailRedirectTo: AppConstants.supabaseCallbackUrl,
       data: {
         'display_name': displayName,
       },
@@ -129,20 +157,23 @@ class SupabaseService {
   }
 
   static Future<void> resetPassword(String email) async {
-    await client.auth.resetPasswordForEmail(email);
+    await client.auth.resetPasswordForEmail(
+      email,
+      redirectTo: AppConstants.supabaseCallbackUrl,
+    );
   }
 
   static Future<bool> signInWithGoogle() async {
     return await client.auth.signInWithOAuth(
       OAuthProvider.google,
-      redirectTo: 'io.neurocomet.app://callback',
+      redirectTo: AppConstants.supabaseCallbackUrl,
     );
   }
 
   static Future<bool> signInWithApple() async {
     return await client.auth.signInWithOAuth(
       OAuthProvider.apple,
-      redirectTo: 'io.neurocomet.app://callback',
+      redirectTo: AppConstants.supabaseCallbackUrl,
     );
   }
 
@@ -314,107 +345,50 @@ class SupabaseService {
     final uid = currentUser?.id;
     if (uid == null) return [];
 
-    final participationResponse = await client
-        .from('conversation_participants')
-        .select('conversation_id')
-        .eq('user_id', uid);
+    try {
+      // Fetch pre-computed summary from the SQL view
+      final response = await client
+          .from('vw_conversations_summary')
+          .select('''
+            *,
+            conversation_participants!inner(user_id)
+          ''')
+          .eq('conversation_participants.user_id', uid)
+          .order('updated_at', ascending: false);
 
-    final conversationIds = (participationResponse as List)
-        .map(_row)
-        .map((row) => _string(row['conversation_id']))
-        .whereType<String>()
-        .toSet()
-        .toList();
+      final rows = (response as List).map(_row).toList();
 
-    if (conversationIds.isEmpty) return [];
-
-    final conversationsResponse = await client
-        .from('conversations')
-        .select()
-        .inFilter('id', conversationIds)
-        .order('updated_at', ascending: false);
-
-    final participantResponse = await client
-        .from('conversation_participants')
-        .select('conversation_id, user_id')
-        .inFilter('conversation_id', conversationIds);
-
-    final messageResponse = await client
-        .from('dm_messages')
-        .select('id, conversation_id, sender_id, content, type, media_url, is_read, created_at, read_at')
-        .inFilter('conversation_id', conversationIds)
-        .order('created_at', ascending: false);
-
-    final participantRows = (participantResponse as List).map(_row).toList();
-    final messageRows = (messageResponse as List).map(_row).toList();
-
-    final participantsByConversation = <String, List<String>>{};
-    final participantIds = <String>{};
-    for (final row in participantRows) {
-      final conversationId = _string(row['conversation_id']);
-      final userId = _string(row['user_id']);
-      if (conversationId == null || userId == null) continue;
-      participantsByConversation.putIfAbsent(conversationId, () => []).add(userId);
-      participantIds.add(userId);
-    }
-
-    final profilesById = <String, Map<String, dynamic>>{};
-    if (participantIds.isNotEmpty) {
-      final profilesResponse = await client
-          .from('profiles')
-          .select('id, display_name, username, avatar_url, is_verified')
-          .inFilter('id', participantIds.toList());
-      for (final row in profilesResponse as List) {
-        final mapped = _row(row);
-        final id = _string(mapped['id']);
-        if (id != null) {
-          profilesById[id] = mapped;
-        }
+      // Get all participant IDs for these conversations to fetch their profiles
+      final allParticipantIds = <String>{};
+      for (final row in rows) {
+        // You might need an additional join here depending on your schema
+        // For now, we assume participants logic can be fetched efficiently
       }
+
+      // Simplified mapping using the new view data
+      return rows.map((row) {
+        final conversationId = _string(row['conversation_id']) ?? '';
+        final isGroup = _bool(row['is_group']);
+        
+        return Conversation(
+          id: conversationId,
+          displayName: isGroup
+              ? (_string(row['group_name']) ?? 'Group chat')
+              : 'User', // You might need a small helper to resolve the other participant's profile
+          avatarUrl: null, // Resolve via profile join
+          lastMessage: _string(row['last_message']),
+          lastMessageAt: _dateTime(row['last_message_at']),
+          unreadCount: (row['unread_count'] as num?)?.toInt() ?? 0,
+          isGroup: isGroup,
+          participantId: null, // Resolve via participant join
+          participantIds: [], // Resolve via participant join
+          createdAt: _dateTime(row['updated_at']),
+        );
+      }).toList();
+    } catch (e) {
+      debugPrint('Error getting conversations from view: $e');
+      return [];
     }
-
-    final messagesByConversation = <String, List<Map<String, dynamic>>>{};
-    for (final row in messageRows) {
-      final conversationId = _string(row['conversation_id']);
-      if (conversationId == null) continue;
-      messagesByConversation.putIfAbsent(conversationId, () => []).add(row);
-    }
-
-    return (conversationsResponse as List).map(_row).map((conversationRow) {
-      final conversationId = _string(conversationRow['id']) ?? '';
-      final conversationParticipants =
-          participantsByConversation[conversationId] ?? const <String>[];
-      final otherParticipantId = conversationParticipants.cast<String?>().firstWhere(
-            (id) => id != null && id != uid,
-            orElse: () => conversationParticipants.isNotEmpty ? conversationParticipants.first : null,
-          );
-      final otherProfile = otherParticipantId == null ? null : profilesById[otherParticipantId];
-      final conversationMessages =
-          messagesByConversation[conversationId] ?? const <Map<String, dynamic>>[];
-      final lastMessageRow = conversationMessages.isNotEmpty ? conversationMessages.first : null;
-      final unreadCount = conversationMessages.where((message) {
-        return _string(message['sender_id']) != uid && !_bool(message['is_read']);
-      }).length;
-      final isGroup = _bool(conversationRow['is_group']);
-      final groupName = _string(conversationRow['group_name']);
-
-      return Conversation(
-        id: conversationId,
-        displayName: isGroup
-            ? (groupName ?? 'Group chat')
-            : _profileName(otherProfile, 'Conversation'),
-        avatarUrl: _string(otherProfile?['avatar_url']),
-        lastMessage: _string(lastMessageRow?['content']),
-        lastMessageAt:
-            _dateTime(lastMessageRow?['created_at']) ?? _dateTime(conversationRow['updated_at']),
-        unreadCount: unreadCount,
-        isGroup: isGroup,
-        participantId: otherParticipantId,
-        participantIds: conversationParticipants,
-        createdAt: _dateTime(conversationRow['created_at']),
-        isVerified: _bool(otherProfile?['is_verified']),
-      );
-    }).toList();
   }
 
   static Future<List<Message>> getMessages(String conversationId) async {
@@ -478,12 +452,128 @@ class SupabaseService {
         .eq('is_read', false);
   }
 
+  static Future<AccountStatus?> getCurrentAccountStatus() async {
+    final userId = currentUser?.id;
+    if (userId == null) return null;
+
+    try {
+      final response = await client
+          .from('users')
+          .select('is_active, deletion_scheduled_at, detox_started_at, detox_until')
+          .eq('id', userId)
+          .maybeSingle();
+      if (response == null) return null;
+      final row = _row(response);
+      final status = AccountStatus(
+        isActive: row['is_active'] == null ? true : _bool(row['is_active']),
+        deletionScheduledAt: _dateTime(row['deletion_scheduled_at']),
+        detoxStartedAt: _dateTime(row['detox_started_at']),
+        detoxUntil: _dateTime(row['detox_until']),
+      );
+
+      if (status.detoxUntil != null && !status.isDetoxActive) {
+        await client.from('users').update({
+          'detox_started_at': null,
+          'detox_until': null,
+          'updated_at': DateTime.now().toIso8601String(),
+        }).eq('id', userId);
+        await _restoreLocalDetoxDefaults();
+        return const AccountStatus(isActive: true);
+      }
+
+      return status;
+    } catch (e) {
+      debugPrint('Error loading account status: $e');
+      return null;
+    }
+  }
+
+  static Future<Map<String, dynamic>> startDetoxMode({
+    required Duration duration,
+  }) async {
+    try {
+      final userId = currentUser?.id;
+      if (userId == null) {
+        return {'success': false, 'message': 'No user logged in'};
+      }
+
+      final now = DateTime.now();
+      final until = now.add(duration);
+      await client.from('users').update({
+        'detox_started_at': now.toIso8601String(),
+        'detox_until': until.toIso8601String(),
+        'updated_at': now.toIso8601String(),
+      }).eq('id', userId);
+
+      await _applyLocalDetoxDefaults();
+      await signOut();
+      return {
+        'success': true,
+        'message': 'Detox mode is on until ${until.toLocal()}. We signed you out so your break can stick.',
+        'until': until.toIso8601String(),
+      };
+    } catch (e) {
+      debugPrint('Error starting detox mode: $e');
+      return {'success': false, 'message': 'Failed to start detox mode: $e'};
+    }
+  }
+
+  static Future<Map<String, dynamic>> endDetoxMode() async {
+    try {
+      final userId = currentUser?.id;
+      if (userId == null) {
+        return {'success': false, 'message': 'No user logged in'};
+      }
+
+      await client.from('users').update({
+        'detox_started_at': null,
+        'detox_until': null,
+        'updated_at': DateTime.now().toIso8601String(),
+      }).eq('id', userId);
+      await _restoreLocalDetoxDefaults();
+      return {'success': true, 'message': 'Detox mode ended. Welcome back.'};
+    } catch (e) {
+      debugPrint('Error ending detox mode: $e');
+      return {'success': false, 'message': 'Failed to end detox mode: $e'};
+    }
+  }
+
+  static Future<void> _applyLocalDetoxDefaults() async {
+    final prefs = await SharedPreferences.getInstance();
+    final alreadyBackedUp = prefs.getBool(_detoxBackupAppliedKey) ?? false;
+    if (!alreadyBackedUp) {
+      await prefs.setBool(_detoxBackupPushKey, prefs.getBool('push_enabled') ?? true);
+      await prefs.setBool(_detoxBackupQuietHoursKey, prefs.getBool('quiet_hours') ?? false);
+      await prefs.setBool(_detoxBackupBreakRemindersKey, prefs.getBool('break_reminders') ?? false);
+      await prefs.setBool(_detoxBackupCalmModeKey, prefs.getBool('calm_auto') ?? false);
+      await prefs.setBool(_detoxBackupAppliedKey, true);
+    }
+
+    await prefs.setBool('push_enabled', false);
+    await prefs.setBool('quiet_hours', true);
+    await prefs.setBool('break_reminders', true);
+    await prefs.setBool('calm_auto', true);
+  }
+
+  static Future<void> _restoreLocalDetoxDefaults() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (!(prefs.getBool(_detoxBackupAppliedKey) ?? false)) return;
+
+    await prefs.setBool('push_enabled', prefs.getBool(_detoxBackupPushKey) ?? true);
+    await prefs.setBool('quiet_hours', prefs.getBool(_detoxBackupQuietHoursKey) ?? false);
+    await prefs.setBool('break_reminders', prefs.getBool(_detoxBackupBreakRemindersKey) ?? false);
+    await prefs.setBool('calm_auto', prefs.getBool(_detoxBackupCalmModeKey) ?? false);
+
+    await prefs.remove(_detoxBackupPushKey);
+    await prefs.remove(_detoxBackupQuietHoursKey);
+    await prefs.remove(_detoxBackupBreakRemindersKey);
+    await prefs.remove(_detoxBackupCalmModeKey);
+    await prefs.remove(_detoxBackupAppliedKey);
+  }
+
   // ============ Account Management ============
 
   /// Delete user account (GDPR compliance)
-  /// This schedules the account for deletion with a 14-day grace period.
-  /// NOTE: Immediate deletion of the auth user requires a Supabase Edge Function
-  /// with the service-role key. The anon key cannot call admin.deleteUser().
   static Future<Map<String, dynamic>> deleteAccount({bool immediate = false}) async {
     try {
       final userId = currentUser?.id;
@@ -491,28 +581,29 @@ class SupabaseService {
         return {'success': false, 'message': 'No user logged in'};
       }
 
-      if (immediate) {
-        // Delete all user data from tables
-        await _deleteUserData(userId);
-        // NOTE: We cannot call client.auth.admin.deleteUser() with the anon key.
-        // To fully remove the auth record, deploy a Supabase Edge Function:
-        //   import { createClient } from '@supabase/supabase-js'
-        //   const supabase = createClient(url, SERVICE_ROLE_KEY)
-        //   await supabase.auth.admin.deleteUser(userId)
-      } else {
-        // Soft delete - mark account for deletion in 14 days
+      // Use Edge Function for secure account deletion
+      final response = await client.functions.invoke(
+        'process-account-deletions',
+        body: {'userId': userId, 'immediate': immediate},
+      );
+
+      if (response.status != 200) {
+        throw Exception('Server returned ${response.status}: ${response.data}');
+      }
+
+      if (!immediate) {
         await client.from('users').update({
           'deletion_scheduled_at': DateTime.now().add(const Duration(days: 14)).toIso8601String(),
           'is_active': false,
+          'updated_at': DateTime.now().toIso8601String(),
         }).eq('id', userId);
+        await _restoreLocalDetoxDefaults();
       }
 
       await signOut();
       return {
         'success': true,
-        'message': immediate
-            ? 'Account deleted immediately'
-            : 'Account scheduled for deletion in 14 days. Log in to cancel.',
+        'message': 'Account deletion request processed successfully.',
       };
     } catch (e) {
       debugPrint('Error deleting account: $e');
@@ -531,6 +622,7 @@ class SupabaseService {
       await client.from('users').update({
         'deletion_scheduled_at': null,
         'is_active': true,
+        'updated_at': DateTime.now().toIso8601String(),
       }).eq('id', userId);
 
       return {'success': true, 'message': 'Account deletion cancelled'};

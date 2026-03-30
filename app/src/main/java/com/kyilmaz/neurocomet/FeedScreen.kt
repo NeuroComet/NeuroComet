@@ -12,6 +12,7 @@
 package com.kyilmaz.neurocomet
 
 import android.content.Context
+import android.content.ClipData
 import android.content.Intent
 import android.view.ViewGroup
 import android.widget.Toast
@@ -43,6 +44,7 @@ import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -58,6 +60,8 @@ import com.kyilmaz.neurocomet.ui.components.NeuroLinkedText
 import com.kyilmaz.neurocomet.ui.components.defaultNeuroLinkStyle
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.draw.scale
+import com.kyilmaz.neurocomet.ui.design.M3ESurfaceVariant
+import com.kyilmaz.neurocomet.ui.design.M3ESurface
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.Stroke
@@ -93,6 +97,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -117,10 +122,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -154,7 +157,10 @@ import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.Spring
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
+import com.kyilmaz.neurocomet.ui.design.M3EDesignSystem
+import com.kyilmaz.neurocomet.ui.design.M3ETopAppBar
 import kotlinx.coroutines.launch
 
 // Feed filter options - uses MaterialTheme.colorScheme for dynamic colors
@@ -972,6 +978,7 @@ fun RainbowInfinitySymbol(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FeedScreen(
     posts: List<Post>,
@@ -996,10 +1003,13 @@ fun FeedScreen(
     onSettingsClick: () -> Unit = {},
     onHashtagClick: (String) -> Unit = {}
 ) {
+    val adsState by com.kyilmaz.neurocomet.ads.GoogleAdsManager.adsState.collectAsState()
     val context = LocalContext.current
+    val canonicalLayout = LocalCanonicalLayout.current
     val parentalState = remember { ParentalControlsSettings.getState(context) }
     val isPostingBlocked = shouldBlockFeature(parentalState, BlockableFeature.POSTING) != null
     val isDark = MaterialTheme.colorScheme.background.luminance() < 0.5f
+    val feedContentMaxWidth = ((canonicalLayout.maxContentWidthDp ?: canonicalLayout.widthDp).coerceAtMost(920)).dp
 
     var showCreatePostDialog by remember { mutableStateOf(false) }
     var showCreateStoryDialog by remember { mutableStateOf(false) }
@@ -1007,8 +1017,8 @@ fun FeedScreen(
     var selectedFilter by remember { mutableStateOf(FeedFilter.FOR_YOU) }
 
     // Filter posts based on selected pill — matches Flutter _filterPosts logic
-    val filteredPosts = remember(posts, selectedFilter) {
-        when (selectedFilter) {
+    val filteredPosts = remember(posts, selectedFilter, safetyState.audience) {
+        val categoryFiltered = when (selectedFilter) {
             FeedFilter.FOR_YOU -> posts
             FeedFilter.FOLLOWING -> {
                 // No category/tag fields on Android Post model yet, show first 5 as fallback
@@ -1034,79 +1044,93 @@ fun FeedScreen(
                 winsPosts.ifEmpty { emptyList() }
             }
         }
+        // Apply audience-based content filtering so minors never see age-inappropriate posts
+        ContentFiltering.filterPostsByAudience(categoryFiltered, safetyState.audience)
     }
 
     // Animation flags
     val animateLogos = animationSettings.shouldAnimate(AnimationType.LOGO)
     val animateStories = animationSettings.shouldAnimate(AnimationType.STORY)
+    val animateLoading = animationSettings.shouldAnimate(AnimationType.LOADING)
 
     Column(
         modifier = modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        // Modern Header matching Flutter design
-        FeedHeader(
-            animateLogos = animateLogos,
-            isPostingBlocked = isPostingBlocked,
-            onCreatePost = {
-                if (isPostingBlocked) {
-                    showPostingBlockedMessage = true
-                } else {
-                    showCreatePostDialog = true
+        M3ETopAppBar(
+            title = { NeuroCometLogo(animateLogos = animateLogos) },
+            actions = {
+                IconButton(
+                    onClick = {
+                        if (isPostingBlocked) {
+                            showPostingBlockedMessage = true
+                        } else {
+                            showCreatePostDialog = true
+                        }
+                    }
+                ) {
+                    Icon(
+                        Icons.Outlined.AddBox,
+                        contentDescription = stringResource(R.string.feed_action_create_post)
+                    )
                 }
-            },
-            onSettings = onSettingsClick,
-            isDark = isDark
+                IconButton(onClick = onSettingsClick) {
+                    Icon(Icons.Outlined.Settings, contentDescription = stringResource(R.string.nav_settings))
+                }
+            }
         )
 
-        // Get navbar height for bottom padding
-        val navBarPadding = WindowInsets.navigationBars.asPaddingValues()
-        val navBarHeight = navBarPadding.calculateBottomPadding()
-
-        // Optimized scroll state for high refresh rate displays
         val lazyListState = rememberLazyListState()
-
-        // Track scroll state to pause animations during scroll for smoother performance
         val isFeedScrolling by remember {
             derivedStateOf { lazyListState.isScrollInProgress }
         }
 
-        // Show loading indicator when loading and no posts yet
-        if (isLoading && posts.isEmpty()) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(32.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.TopCenter
+        ) {
+            val contentModifier = Modifier
+                .fillMaxSize()
+                .widthIn(max = feedContentMaxWidth)
+
+            if (isLoading && posts.isEmpty()) {
+                Box(
+                    modifier = contentModifier.padding(24.dp),
+                    contentAlignment = Alignment.Center
                 ) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(48.dp),
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                    Spacer(Modifier.height(16.dp))
-                    Text(
-                        text = "Loading your feed...",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        if (animateLoading) {
+                            NeuroLoadingAnimation(
+                                modifier = Modifier.widthIn(max = 120.dp),
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        } else {
+                            NeuroCometBrandMark(
+                                modifier = Modifier.size(56.dp),
+                                haloColor = MaterialTheme.colorScheme.primary,
+                                accentColor = MaterialTheme.colorScheme.secondary,
+                                motionEnabled = false
+                            )
+                        }
+                        Spacer(Modifier.height(16.dp))
+                        Text(
+                            text = stringResource(R.string.feed_loading),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
                 }
-            }
-        } else {
-            // Main content
-            LazyColumn(
-                state = lazyListState,
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(
-                    top = 0.dp,
-                    bottom = 80.dp + navBarHeight
-                ),
-                flingBehavior = ScrollableDefaults.flingBehavior()
-            ) {
+            } else {
+                LazyColumn(
+                    state = lazyListState,
+                    modifier = contentModifier,
+                    contentPadding = PaddingValues(bottom = M3EDesignSystem.Spacing.xxxl),
+                    flingBehavior = ScrollableDefaults.flingBehavior()
+                ) {
                 // Enhanced Stories Section
                 item(key = "stories_section") {
                     EnhancedStoriesSection(
@@ -1159,15 +1183,19 @@ fun FeedScreen(
                 }
 
                 // Feed Posts with Banner Ads
-                val showAds = GoogleAdsManager.shouldShowAds()
+                // IMPORTANT: Use the observed adsState to ensure the list reacts when premium status changes
+                val currentAdsState = adsState // Read property to register recomposition dependency
 
                 itemsIndexed(
                     items = filteredPosts,
                     key = { _, post -> post.id ?: post.hashCode() }
                 ) { index, post ->
+                    // Determine if we should show ads right now based on the latest state
+                    val showAds = com.kyilmaz.neurocomet.ads.GoogleAdsManager.shouldShowAds()
+
                     // Show banner ad after post at index 4, 9, 14, etc. (every 5 posts)
                     if (showAds && index > 0 && index % 5 == 4) {
-                        BannerAd(
+                        com.kyilmaz.neurocomet.ads.BannerAd(
                             modifier = Modifier.padding(
                                 horizontal = if (enableNewFeedLayout) 8.dp else 12.dp,
                                 vertical = if (enableNewFeedLayout) 4.dp else 8.dp
@@ -1189,6 +1217,7 @@ fun FeedScreen(
                         compactMode = enableNewFeedLayout
                     )
                 }
+            }
             }
         }
     }
@@ -1673,8 +1702,10 @@ fun BubblyPostCard(
         detectEmotionalTone(post.content)
     }
 
-    val clipboardManager = LocalClipboardManager.current
     val context = LocalContext.current
+    val clipboardManager = remember(context) {
+        context.getSystemService(android.content.ClipboardManager::class.java)
+    }
 
     // Read content preferences to respect hide-like-counts setting
     val contentPrefs = remember { SocialSettingsManager.getContentPreferences(context) }
@@ -1684,14 +1715,18 @@ fun BubblyPostCard(
     val unbookmarkedText = stringResource(R.string.post_unbookmarked)
     val copiedText = stringResource(R.string.post_copied)
     val hideText = stringResource(R.string.post_hide)
+    val removedText = stringResource(R.string.toast_removed)
+    val savedText = stringResource(R.string.toast_saved)
     val nowFollowingText = stringResource(R.string.post_now_following, post.userId ?: "")
     val unfollowedText = stringResource(R.string.post_unfollowed, post.userId ?: "")
+    val blockedUserText = stringResource(R.string.toast_user_blocked_post, post.userId ?: "")
+    val reportedText = stringResource(R.string.toast_reported)
 
     // ========================================================================
     // BUBBLY POST CARD - Clean Dynamic Color Design
     // ========================================================================
 
-    Card(
+    M3ESurface(
         modifier = Modifier
             .fillMaxWidth()
             .padding(
@@ -1699,19 +1734,13 @@ fun BubblyPostCard(
                 vertical = if (compactMode) 4.dp else 6.dp
             ),
         shape = RoundedCornerShape(if (compactMode) 16.dp else 20.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainerLow
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        border = BorderStroke(
-            width = 2.dp,
-            color = MaterialTheme.colorScheme.outline
-        )
+        variant = if (compactMode) M3ESurfaceVariant.Settings else M3ESurfaceVariant.Feed,
+        shadowElevation = if (compactMode) 10.dp else 16.dp,
+        contentPadding = PaddingValues(if (compactMode) 12.dp else 16.dp)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(if (compactMode) 12.dp else 16.dp)
         ) {
             // ============ HEADER ROW ============
             Row(
@@ -1852,7 +1881,9 @@ fun BubblyPostCard(
                                 }
                             },
                             onClick = {
-                                clipboardManager.setText(AnnotatedString(post.content))
+                                clipboardManager?.setPrimaryClip(
+                                    ClipData.newPlainText("NeuroComet post text", post.content)
+                                )
                                 showMenu = false
                                 Toast.makeText(context, copiedText, Toast.LENGTH_SHORT).show()
                             }
@@ -1918,7 +1949,7 @@ fun BubblyPostCard(
                             },
                             onClick = {
                                 showMenu = false
-                                Toast.makeText(context, "We'll show you less content like this", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(context, removedText, Toast.LENGTH_SHORT).show()
                             }
                         )
 
@@ -1956,7 +1987,7 @@ fun BubblyPostCard(
                                 },
                                 onClick = {
                                     showMenu = false
-                                    Toast.makeText(context, "@${post.userId} blocked", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(context, blockedUserText, Toast.LENGTH_SHORT).show()
                                 }
                             )
                         }
@@ -2141,7 +2172,7 @@ fun BubblyPostCard(
                 IconButton(
                     onClick = {
                         isBookmarked = !isBookmarked
-                        Toast.makeText(context, if (isBookmarked) "Saved!" else "Removed", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, if (isBookmarked) savedText else removedText, Toast.LENGTH_SHORT).show()
                     }
                 ) {
                     Icon(
@@ -2199,8 +2230,9 @@ fun BubblyPostCard(
             postId = post.id?.toString() ?: "",
             onDismiss = { showReportDialog = false },
             onReport = { reason ->
+                // TODO: POST reason to /reports backend when available
                 showReportDialog = false
-                Toast.makeText(context, "Report submitted. Thank you!", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, reportedText, Toast.LENGTH_LONG).show()
             }
         )
     }
@@ -2245,7 +2277,7 @@ fun PostMediaCarousel(
             pageSpacing = 0.dp,
             beyondViewportPageCount = 1 // Preload adjacent pages for smooth scrolling
         ) { page ->
-            val item = mediaItems[page]
+            val item = mediaItems.getOrNull(page) ?: return@HorizontalPager
 
             Box(
                 modifier = Modifier.fillMaxSize(),
@@ -2983,4 +3015,5 @@ fun VideoPlayerView(videoUrl: String, modifier: Modifier = Modifier) {
         }
     )
 }
+
 

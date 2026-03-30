@@ -48,7 +48,13 @@ fun StoryScreen(
     var isPaused by remember { mutableStateOf(false) }
     var showDeleteConfirmation by remember { mutableStateOf(false) }
 
-    val currentItem = story.items[currentItemIndex]
+    if (story.items.isEmpty()) {
+        LaunchedEffect(Unit) { onDismiss() }
+        return
+    }
+    
+    val safeIndex = currentItemIndex.coerceIn(story.items.indices)
+    val currentItem = story.items[safeIndex]
 
     fun navigateTo(index: Int) {
         if (index in story.items.indices) {

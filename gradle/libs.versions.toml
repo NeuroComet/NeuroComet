@@ -10,20 +10,18 @@ junitVersion = "1.3.0"
 espressoCore = "3.7.0"
 lifecycleRuntimeKtx = "2.10.0"
 activityCompose = "1.12.2"
-composeBom = "2025.12.01" # Updated from "2024.11.00"
+composeBom = "2025.12.01"
 revenuecat = "9.19.0"
 coilCompose = "2.7.0"
 coroutinesTest = "1.10.2"
 webrtc = "1.3.10"
-
-# Added versions for manually managed dependencies in app/build.gradle.kts
 firebaseBom = "34.7.0"
 media3 = "1.9.0"
 composeIconsExtended = "1.7.8"
-navigationCompose = "2.9.6" # Using this stable version of navigation-compose to avoid known issues.
+navigationCompose = "2.9.6"
 supabaseBom = "3.3.0"
-ktorClientAndroid = "3.3.3"
-kotlinxSerializationJson = "1.9.0"
+ktorClient = "3.1.0"
+kotlinxSerializationJson = "1.8.0"
 profileinstaller = "1.4.1"
 material = "1.13.0"
 appcompat = "1.7.1"
@@ -46,34 +44,32 @@ androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "u
 androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
-
-# NeuroComet Specific Libraries (Now using version references)
 androidx-compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "composeIconsExtended" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 androidx-media3-exoplayer = { module = "androidx.media3:media3-exoplayer", version.ref = "media3" }
 androidx-media3-ui = { module = "androidx.media3:media3-ui", version.ref = "media3" }
 supabase-bom = { module = "io.github.jan-tennert.supabase:bom", version.ref = "supabaseBom" }
-ktor-client-android = { module = "io.ktor:ktor-client-android", version.ref = "ktorClientAndroid" }
-ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktorClientAndroid" }
-ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktorClientAndroid" }
-ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktorClientAndroid" }
-ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktorClientAndroid" }
+ktor-client-android = { module = "io.ktor:ktor-client-android", version.ref = "ktorClient" }
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktorClient" }
+ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktorClient" }
+ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktorClient" }
+ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktorClient" }
+ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktorClient" }
+ktor-client-auth = { module = "io.ktor:ktor-client-auth", version.ref = "ktorClient" }
+ktor-client-websockets = { module = "io.ktor:ktor-client-websockets", version.ref = "ktorClient" }
+ktor-client-encoding = { module = "io.ktor:ktor-client-encoding", version.ref = "ktorClient" }
+ktor-client-json = { module = "io.ktor:ktor-client-json", version.ref = "ktorClient" }
+ktor-client-timeout = { module = "io.ktor:ktor-client-timeout", version.ref = "ktorClient" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
-
 webrtc = { module = "io.getstream:stream-webrtc-android", version.ref = "webrtc" }
-
 revenuecat-purchases = { module = "com.revenuecat.purchases:purchases", version.ref = "revenuecat" }
-
 firebase-auth = { module = "com.google.firebase:firebase-auth" }
-
 supabase-postgrest = { module = "io.github.jan-tennert.supabase:postgrest-kt" }
 supabase-auth = { module = "io.github.jan-tennert.supabase:auth-kt" }
 supabase-realtime = { module = "io.github.jan-tennert.supabase:realtime-kt" }
-
 coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutinesTest" }
-
 androidx-profileinstaller = { module = "androidx.profileinstaller:profileinstaller", version.ref = "profileinstaller" }
 google-material = { module = "com.google.android.material:material", version.ref = "material" }
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
@@ -81,7 +77,6 @@ androidx-biometric = { module = "androidx.biometric:biometric", version.ref = "b
 play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocation" }
 play-services-ads = { module = "com.google.android.gms:play-services-ads", version.ref = "playServicesAds" }
 kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
-
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

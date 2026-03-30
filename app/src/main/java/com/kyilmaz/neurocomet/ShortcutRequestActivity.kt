@@ -58,8 +58,9 @@ class ShortcutRequestActivity : Activity() {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             }
 
-            // Create the icon bitmap that looks like the preview
-            val iconBitmap = createShortcutBitmap(iconStyle)
+            // Create the icon bitmap using the same rendering path as the picker preview
+            val iconBitmap = renderDepthEnhancedIconBitmap(this, iconStyle, 432, previewOptimized = true)
+                ?: createFallbackShortcutBitmap(iconStyle)
             // Use adaptive bitmap - launcher will apply its icon shape mask
             val iconCompat = IconCompat.createWithAdaptiveBitmap(iconBitmap)
 
@@ -107,32 +108,17 @@ class ShortcutRequestActivity : Activity() {
      * Creates a bitmap for the shortcut icon that matches the app icon preview.
      * Uses adaptive bitmap sizing so the launcher applies proper icon masking.
      */
-    private fun createShortcutBitmap(iconStyle: AppIconStyle): android.graphics.Bitmap {
-        val (backgroundResId, foregroundResId) = when (iconStyle) {
-            AppIconStyle.DEFAULT -> Pair(R.drawable.neuro_comet_icon_background, R.drawable.neuro_comet_icon_foreground_vector)
-            AppIconStyle.CALM -> Pair(R.drawable.icon_calm_background, R.drawable.icon_calm_foreground)
-            AppIconStyle.FOCUS -> Pair(R.drawable.icon_focus_background, R.drawable.icon_focus_foreground)
-            AppIconStyle.ENERGY -> Pair(R.drawable.icon_energy_background, R.drawable.icon_energy_foreground)
-            AppIconStyle.SENSORY_FRIENDLY -> Pair(R.drawable.icon_sensory_background, R.drawable.icon_sensory_foreground)
-            AppIconStyle.NEURODIVERSITY_PRIDE -> Pair(R.drawable.icon_pride_background, R.drawable.icon_pride_foreground)
-        }
-
+    private fun createFallbackShortcutBitmap(iconStyle: AppIconStyle): android.graphics.Bitmap {
         // Use 432px (108dp at xxxhdpi) for adaptive icon sizing
         val size = 432
         val bitmap = android.graphics.Bitmap.createBitmap(size, size, android.graphics.Bitmap.Config.ARGB_8888)
         val canvas = android.graphics.Canvas(bitmap)
+        val adaptiveDrawable = getAdaptiveIconDrawable(this, iconStyle)
+            ?: androidx.core.content.ContextCompat.getDrawable(this, getIconResourceId(iconStyle))
 
-        // Draw background filling entire canvas
-        val background = androidx.core.content.ContextCompat.getDrawable(this, backgroundResId)
-        background?.setBounds(0, 0, size, size)
-        background?.draw(canvas)
-
-        // Draw foreground filling entire canvas
-        val foreground = androidx.core.content.ContextCompat.getDrawable(this, foregroundResId)
-        foreground?.setBounds(0, 0, size, size)
-        foreground?.draw(canvas)
+        adaptiveDrawable?.setBounds(0, 0, size, size)
+        adaptiveDrawable?.draw(canvas)
 
         return bitmap
     }
 }
-

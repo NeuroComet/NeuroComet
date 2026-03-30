@@ -35,6 +35,9 @@
     <!-- Notifications (API 33+) -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
+    <!-- Android Advanced Protection Mode detection (API 37+) -->
+    <uses-permission android:name="android.permission.QUERY_ADVANCED_PROTECTION_MODE" />
+
     <!-- Required for Google Ads -->
     <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
 
@@ -68,9 +71,9 @@
         android:networkSecurityConfig="@xml/network_security_config"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/neuro_comet_icon"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/neuro_comet_icon_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.NeuroComet"
         android:extractNativeLibs="false"
@@ -89,6 +92,66 @@
             android:windowSoftInputMode="adjustResize">
         </activity>
 
+        <activity
+            android:name=".MainActivityDefault"
+            android:exported="true"
+            android:theme="@style/Theme.NeuroComet"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".MainActivityDefaultAlias"
+            android:exported="true"
+            android:theme="@style/Theme.NeuroComet"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".MainActivityDefaultLauncherAlias"
+            android:exported="true"
+            android:theme="@style/Theme.NeuroComet"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".MainActivityDefaultIconAlias"
+            android:exported="true"
+            android:theme="@style/Theme.NeuroComet"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".MainActivityDefaultVisualAlias"
+            android:exported="true"
+            android:theme="@style/Theme.NeuroComet"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".MainActivityCalm"
+            android:exported="true"
+            android:theme="@style/Theme.NeuroComet"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".MainActivityFocus"
+            android:exported="true"
+            android:theme="@style/Theme.NeuroComet"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".MainActivityEnergy"
+            android:exported="true"
+            android:theme="@style/Theme.NeuroComet"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".MainActivitySensory"
+            android:exported="true"
+            android:theme="@style/Theme.NeuroComet"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".MainActivityPride"
+            android:exported="true"
+            android:theme="@style/Theme.NeuroComet"
+            android:windowSoftInputMode="adjustResize" />
+
         <!-- Transparent activity for shortcut requests -->
         <activity
             android:name=".ShortcutRequestActivity"
@@ -99,12 +162,12 @@
 
         <!-- Default Icon Alias - enabled by default -->
         <activity-alias
-            android:name=".MainActivityDefault"
+            android:name=".LauncherDefault"
             android:targetActivity=".MainActivity"
             android:enabled="true"
             android:exported="true"
-            android:icon="@mipmap/ic_launcher"
-            android:roundIcon="@mipmap/ic_launcher_round"
+            android:icon="@mipmap/neuro_comet_icon"
+            android:roundIcon="@mipmap/neuro_comet_icon_round"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -117,7 +180,7 @@
 
         <!-- Calm Icon Alias -->
         <activity-alias
-            android:name=".MainActivityCalm"
+            android:name=".LauncherCalm"
             android:targetActivity=".MainActivity"
             android:enabled="false"
             android:exported="true"
@@ -135,7 +198,7 @@
 
         <!-- Focus Icon Alias -->
         <activity-alias
-            android:name=".MainActivityFocus"
+            android:name=".LauncherFocus"
             android:targetActivity=".MainActivity"
             android:enabled="false"
             android:exported="true"
@@ -153,7 +216,7 @@
 
         <!-- Energy Icon Alias -->
         <activity-alias
-            android:name=".MainActivityEnergy"
+            android:name=".LauncherEnergy"
             android:targetActivity=".MainActivity"
             android:enabled="false"
             android:exported="true"
@@ -171,7 +234,7 @@
 
         <!-- Sensory Friendly Icon Alias -->
         <activity-alias
-            android:name=".MainActivitySensory"
+            android:name=".LauncherSensory"
             android:targetActivity=".MainActivity"
             android:enabled="false"
             android:exported="true"
@@ -189,7 +252,7 @@
 
         <!-- Neurodiversity Pride Icon Alias -->
         <activity-alias
-            android:name=".MainActivityPride"
+            android:name=".LauncherPride"
             android:targetActivity=".MainActivity"
             android:enabled="false"
             android:exported="true"
@@ -208,6 +271,72 @@
         <!-- Shortcut receiver for handling shortcut creation callbacks.
              Not exported: only receives PendingIntent broadcasts from our own
              ShortcutManagerCompat calls, so external apps cannot trigger it. -->
+        <receiver
+            android:name=".widget.EnergyWidgetProvider"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_energy_info" />
+        </receiver>
+
+        <receiver
+            android:name=".widget.FocusTimerWidgetProvider"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_focus_timer_info" />
+        </receiver>
+
+        <receiver
+            android:name=".widget.MoodWidgetProvider"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_mood_info" />
+        </receiver>
+
+        <receiver
+            android:name=".widget.SpoonWidgetProvider"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_spoon_info" />
+        </receiver>
+
+        <receiver
+            android:name=".widget.AffirmationWidgetProvider"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_affirmation_info" />
+        </receiver>
+
+        <receiver
+            android:name=".widget.StimBreakWidgetProvider"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_stim_break_info" />
+        </receiver>
+
         <receiver
             android:name=".ShortcutReceiver"
             android:exported="false">

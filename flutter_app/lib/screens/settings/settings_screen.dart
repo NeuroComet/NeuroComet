@@ -10,6 +10,7 @@ import '../../providers/message_delete_mode_provider.dart';
 import '../../services/supabase_service.dart';
 import '../../l10n/app_localizations.dart';
 import '../../core/theme/app_colors.dart';
+import '../../core/constants/app_constants.dart';
 
 /// Premium Settings screen with modern design language
 /// Matches the visual style of Notifications and Messages screens
@@ -181,8 +182,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                     _ModernSettingsCard(
                       children: [
                         _ModernSettingsItem(
-                          title: 'Go Premium',
-                          description: '\$4.99/month or \$39.99/year',
+                          title: l10n.get('goPremium'),
+                          description: l10n.get('premiumPricing'),
                           icon: Icons.star_rounded,
                           iconColor: const Color(0xFFFFD700),
                           showGradientIcon: true,
@@ -461,18 +462,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                   _ModernSettingsCard(
                     children: [
                       _ModernSettingsItem(
-                        title: l10n.reportProblem,
-                        description: 'Report bugs or issues',
-                        icon: Icons.bug_report_rounded,
-                        iconColor: AppColors.error,
-                        onTap: () => context.push('/report'),
-                      ),
-                      _ModernSettingsDivider(),
-                      _ModernSettingsItem(
-                        title: 'Request Feature',
-                        description: 'Suggest new features',
-                        icon: Icons.lightbulb_rounded,
-                        iconColor: const Color(0xFFFFD700),
+                        title: 'Feedback Hub',
+                        description: 'Report bugs, request features & share feedback',
+                        icon: Icons.feedback_rounded,
+                        iconColor: AppColors.primaryPurple,
                         onTap: () => context.push('/feedback'),
                       ),
                       _ModernSettingsDivider(),
@@ -572,7 +565,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                     tapCount: _easterEggTapCount,
                     l10n: l10n,
                   ),
-                  const SizedBox(height: 100),
+                  const SizedBox(height: 16),
                 ]),
               ),
             ),
@@ -668,7 +661,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
     showLicensePage(
       context: context,
       applicationName: context.l10n.appName,
-      applicationVersion: '1.0.0',
+      applicationVersion: AppConstants.appVersion,
     );
   }
 
@@ -1683,7 +1676,7 @@ class _AppVersionInfo extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Text(
-            'Version 1.0.0',
+            'Version ${AppConstants.appVersion}',
             style: theme.textTheme.bodySmall?.copyWith(
               color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
             ),

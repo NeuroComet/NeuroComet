@@ -243,10 +243,10 @@ fun ImageEditorDialog(
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { Text("Edit Image", fontWeight = FontWeight.Bold) },
+                    title = { Text(stringResource(R.string.image_editor_title), fontWeight = FontWeight.Bold) },
                     navigationIcon = {
                         IconButton(onClick = onDismiss) {
-                            Icon(Icons.Filled.Close, "Close")
+                            Icon(Icons.Filled.Close, stringResource(R.string.cd_close))
                         }
                     },
                     actions = {
@@ -267,7 +267,7 @@ fun ImageEditorDialog(
                         TextButton(
                             onClick = { onSave(editState) }
                         ) {
-                            Text("Done", fontWeight = FontWeight.Bold)
+                            Text(stringResource(R.string.image_editor_done), fontWeight = FontWeight.Bold)
                         }
                     }
                 )
@@ -660,7 +660,7 @@ private fun AdjustPanel(
 
         // Brightness
         AdjustSlider(
-            label = "Brightness",
+            label = stringResource(R.string.image_editor_brightness),
             icon = Icons.Outlined.WbSunny,
             value = brightness,
             valueRange = -1f..1f,
@@ -670,7 +670,7 @@ private fun AdjustPanel(
 
         // Contrast
         AdjustSlider(
-            label = "Contrast",
+            label = stringResource(R.string.image_editor_contrast),
             icon = Icons.Outlined.Contrast,
             value = contrast,
             valueRange = 0.5f..2f,
@@ -680,7 +680,7 @@ private fun AdjustPanel(
 
         // Saturation
         AdjustSlider(
-            label = "Saturation",
+            label = stringResource(R.string.image_editor_saturation),
             icon = Icons.Outlined.Palette,
             value = saturation,
             valueRange = 0f..2f,
@@ -983,23 +983,23 @@ private fun CropRotatePanel(
             @Suppress("DEPRECATION")
             TransformButton(
                 icon = Icons.Filled.RotateLeft,
-                label = "Rotate Left",
+                label = stringResource(R.string.image_editor_rotate_left),
                 onClick = { onRotate(-90f) }
             )
             @Suppress("DEPRECATION")
             TransformButton(
                 icon = Icons.Filled.RotateRight,
-                label = "Rotate Right",
+                label = stringResource(R.string.image_editor_rotate_right),
                 onClick = { onRotate(90f) }
             )
             TransformButton(
                 icon = Icons.Filled.Flip,
-                label = "Flip H",
+                label = stringResource(R.string.image_editor_flip_h),
                 onClick = onFlipHorizontal
             )
             TransformButton(
                 icon = Icons.Outlined.SwapVert,
-                label = "Flip V",
+                label = stringResource(R.string.image_editor_flip_v),
                 onClick = onFlipVertical
             )
         }
@@ -1068,25 +1068,25 @@ private fun EditorToolbar(
         ) {
             ToolbarItem(
                 icon = Icons.Outlined.AutoAwesome,
-                label = "Filters",
+                label = stringResource(R.string.image_editor_tab_filters),
                 isSelected = selectedTool == EditorTool.FILTER,
                 onClick = { onToolSelect(EditorTool.FILTER) }
             )
             ToolbarItem(
                 icon = Icons.Outlined.Tune,
-                label = "Adjust",
+                label = stringResource(R.string.image_editor_tab_adjust),
                 isSelected = selectedTool == EditorTool.ADJUST,
                 onClick = { onToolSelect(EditorTool.ADJUST) }
             )
             ToolbarItem(
                 icon = Icons.Outlined.Draw,
-                label = "Draw",
+                label = stringResource(R.string.image_editor_tab_draw),
                 isSelected = selectedTool == EditorTool.DRAW,
                 onClick = { onToolSelect(EditorTool.DRAW) }
             )
             ToolbarItem(
                 icon = Icons.Outlined.TextFields,
-                label = "Text",
+                label = stringResource(R.string.image_editor_tab_text),
                 isSelected = selectedTool == EditorTool.TEXT,
                 onClick = { onToolSelect(EditorTool.TEXT) }
             )
@@ -1098,7 +1098,7 @@ private fun EditorToolbar(
             )
             ToolbarItem(
                 icon = Icons.Outlined.Crop,
-                label = "Crop",
+                label = stringResource(R.string.image_editor_tab_crop),
                 isSelected = selectedTool == EditorTool.CROP,
                 onClick = { onToolSelect(EditorTool.CROP) }
             )
@@ -1285,7 +1285,7 @@ private fun TextInputDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Add Text") },
+        title = { Text(stringResource(R.string.image_editor_add_text_title)) },
         text = {
             OutlinedTextField(
                 value = text,

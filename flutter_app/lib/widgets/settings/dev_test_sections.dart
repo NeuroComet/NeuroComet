@@ -1204,3 +1204,70 @@ class ABTestingDevSection extends ConsumerWidget {
   }
 }
 
+class FeedbackBetaDevSection extends ConsumerWidget {
+  const FeedbackBetaDevSection({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final options = ref.watch(devOptionsProvider);
+    final notifier = ref.read(devOptionsProvider.notifier);
+    final theme = Theme.of(context);
+
+    return DevTestCard(
+      title: 'Feedback & Beta Testing',
+      icon: Icons.feedback,
+      children: [
+        Text(
+          'Test feedback submission, offline queuing, and rate-limit behaviour.',
+          style: TextStyle(fontSize: 12, color: theme.colorScheme.onSurfaceVariant),
+        ),
+        const SizedBox(height: 12),
+        SwitchListTile(
+          contentPadding: EdgeInsets.zero,
+          title: const Text('Bypass Feedback Rate Limit', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+          subtitle: const Text('Skip the 5/day submission cap', style: TextStyle(fontSize: 11)),
+          value: options.bypassFeedbackRateLimit,
+          onChanged: notifier.setBypassFeedbackRateLimit,
+        ),
+        const Divider(),
+        SwitchListTile(
+          contentPadding: EdgeInsets.zero,
+          title: const Text('Force Submission Failure', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+          subtitle: const Text('Always fail remote insert → queue offline', style: TextStyle(fontSize: 11)),
+          value: options.forceFeedbackSubmitFailure,
+          onChanged: notifier.setForceFeedbackSubmitFailure,
+        ),
+        const SizedBox(height: 12),
+        Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(Icons.cloud_queue, size: 18, color: theme.colorScheme.onSurfaceVariant),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Offline queue active${options.forceFeedbackSubmitFailure ? " (forced)" : ""}',
+                    style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Text(
+                options.bypassFeedbackRateLimit
+                    ? 'Rate limit is bypassed — unlimited submissions.'
+                    : 'Rate limit is active — 5 submissions per day.',
+                style: TextStyle(fontSize: 11, color: theme.colorScheme.onSurfaceVariant),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}

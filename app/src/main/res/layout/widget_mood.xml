@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="48sp"
-        android:text="😊" />
+        android:text="@string/widget_mood_default_emoji" />
 
     <!-- Last check-in time -->
     <TextView
@@ -23,7 +23,7 @@
         android:layout_marginTop="4dp"
         android:textSize="12sp"
         android:textColor="@color/widget_text_secondary"
-        android:text="How are you?" />
+        android:text="@string/widget_daily_checkin" />
 
     <!-- Mood selection buttons -->
     <LinearLayout
@@ -39,7 +39,7 @@
             android:layout_height="40dp"
             android:gravity="center"
             android:textSize="24sp"
-            android:text="😊"
+            android:text="@string/widget_mood_happy_emoji"
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:clickable="true"
             android:focusable="true" />
@@ -50,7 +50,7 @@
             android:layout_height="40dp"
             android:gravity="center"
             android:textSize="24sp"
-            android:text="😌"
+            android:text="@string/widget_mood_calm_emoji"
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:clickable="true"
             android:focusable="true" />
@@ -61,7 +61,7 @@
             android:layout_height="40dp"
             android:gravity="center"
             android:textSize="24sp"
-            android:text="😢"
+            android:text="@string/widget_mood_sad_emoji"
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:clickable="true"
             android:focusable="true" />
@@ -72,7 +72,7 @@
             android:layout_height="40dp"
             android:gravity="center"
             android:textSize="24sp"
-            android:text="😰"
+            android:text="@string/widget_mood_anxious_emoji"
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:clickable="true"
             android:focusable="true" />
@@ -83,7 +83,7 @@
             android:layout_height="40dp"
             android:gravity="center"
             android:textSize="24sp"
-            android:text="😴"
+            android:text="@string/widget_mood_tired_emoji"
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:clickable="true"
             android:focusable="true" />

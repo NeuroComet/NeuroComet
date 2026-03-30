@@ -1,21 +1,21 @@
 package com.kyilmaz.neurocomet.ui.design
 
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
-import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
@@ -50,18 +50,19 @@ fun M3ENavigationBar(
     items: List<M3ENavItem>,
     modifier: Modifier = Modifier
 ) {
-    Surface(
+    M3ESurface(
         modifier = modifier
             .fillMaxWidth()
             .height(M3EDesignSystem.ComponentHeight.navigationBar),
-        color = MaterialTheme.colorScheme.surfaceContainer,
+        shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
+        variant = M3ESurfaceVariant.Navigation,
         shadowElevation = M3EDesignSystem.Elevation.navigation,
-        tonalElevation = 0.dp
+        contentPadding = PaddingValues(horizontal = M3EDesignSystem.Spacing.xs)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = M3EDesignSystem.Spacing.xs),
+                .padding(top = M3EDesignSystem.Spacing.xxs),
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -104,40 +105,53 @@ private fun M3ENavigationBarItem(
     badgeCount: Int = 0,
     modifier: Modifier = Modifier
 ) {
+    val physics = LocalM3EPhysics.current
+    val interactionSource = remember { MutableInteractionSource() }
+    val pressScale by rememberM3EPressScale(
+        interactionSource = interactionSource,
+        role = M3EPhysicsRole.STANDARD
+    )
+
     val animatedIndicatorWidth by animateDpAsState(
         targetValue = if (selected) 64.dp else 0.dp,
-        animationSpec = spring(
-            dampingRatio = Spring.DampingRatioMediumBouncy,
-            stiffness = Spring.StiffnessMediumLow
-        ),
+        animationSpec = physics.dpSpec(M3EPhysicsRole.EMPHASIZED),
         label = "indicatorWidth"
     )
     
     val animatedIndicatorColor by animateColorAsState(
         targetValue = if (selected) {
-            MaterialTheme.colorScheme.secondaryContainer
+            MaterialTheme.colorScheme.secondary.copy(alpha = 0.14f)
         } else {
             Color.Transparent
         },
-        animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
+        animationSpec = physics.colorSpec(M3EPhysicsRole.STANDARD),
         label = "indicatorColor"
+    )
+    val animatedIndicatorBorder by animateColorAsState(
+        targetValue = if (selected) Color.White.copy(alpha = 0.22f) else Color.Transparent,
+        animationSpec = physics.colorSpec(M3EPhysicsRole.STANDARD),
+        label = "indicatorBorder"
     )
     
     val contentColor by animateColorAsState(
         targetValue = if (selected) {
-            MaterialTheme.colorScheme.onSecondaryContainer
+            MaterialTheme.colorScheme.onSurface
         } else {
             MaterialTheme.colorScheme.onSurfaceVariant
         },
-        animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
+        animationSpec = physics.colorSpec(M3EPhysicsRole.CALM),
         label = "contentColor"
     )
     
     Column(
         modifier = modifier
+            .graphicsLayer {
+                scaleX = pressScale
+                scaleY = pressScale
+            }
             .fillMaxHeight()
             .clickable(
-                interactionSource = remember { MutableInteractionSource() },
+                interactionSource = interactionSource,
                 indication = null,
                 onClick = onClick
             )
@@ -155,7 +169,20 @@ private fun M3ENavigationBarItem(
                 .width(animatedIndicatorWidth.coerceAtLeast(48.dp))
                 .height(32.dp)
                 .clip(M3EDesignSystem.Shapes.PillShape)
-                .background(animatedIndicatorColor),
+                .background(
+                    if (selected) {
+                        Brush.verticalGradient(
+                            colors = listOf(
+                                Color.White.copy(alpha = 0.12f),
+                                animatedIndicatorColor,
+                                MaterialTheme.colorScheme.secondary.copy(alpha = 0.08f)
+                            )
+                        )
+                    } else {
+                        Brush.verticalGradient(listOf(Color.Transparent, Color.Transparent))
+                    }
+                )
+                .border(1.dp, animatedIndicatorBorder, M3EDesignSystem.Shapes.PillShape),
             contentAlignment = Alignment.Center
         ) {
             BadgedBox(
@@ -210,20 +237,32 @@ fun M3ETopAppBar(
     actions: @Composable RowScope.() -> Unit = {},
     scrollBehavior: TopAppBarScrollBehavior? = null
 ) {
-    TopAppBar(
-        title = title,
-        modifier = modifier,
-        navigationIcon = navigationIcon,
-        actions = actions,
-        scrollBehavior = scrollBehavior,
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.surface,
-            scrolledContainerColor = MaterialTheme.colorScheme.surfaceContainer,
-            titleContentColor = MaterialTheme.colorScheme.onSurface,
-            navigationIconContentColor = MaterialTheme.colorScheme.onSurface,
-            actionIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.background)
+    ) {
+        Spacer(
+            modifier = Modifier
+                .fillMaxWidth()
+                .windowInsetsTopHeight(WindowInsets.statusBars)
         )
-    )
+        TopAppBar(
+            title = title,
+            modifier = Modifier.fillMaxWidth(),
+            navigationIcon = navigationIcon,
+            actions = actions,
+            scrollBehavior = scrollBehavior,
+            windowInsets = WindowInsets(0, 0, 0, 0),
+            colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = MaterialTheme.colorScheme.background,
+                scrolledContainerColor = MaterialTheme.colorScheme.background,
+                titleContentColor = MaterialTheme.colorScheme.onBackground,
+                navigationIconContentColor = MaterialTheme.colorScheme.onBackground,
+                actionIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        )
+    }
 }
 
 /**
@@ -238,20 +277,32 @@ fun M3ELargeTopAppBar(
     actions: @Composable RowScope.() -> Unit = {},
     scrollBehavior: TopAppBarScrollBehavior? = null
 ) {
-    LargeTopAppBar(
-        title = title,
-        modifier = modifier,
-        navigationIcon = navigationIcon,
-        actions = actions,
-        scrollBehavior = scrollBehavior,
-        colors = TopAppBarDefaults.largeTopAppBarColors(
-            containerColor = MaterialTheme.colorScheme.surface,
-            scrolledContainerColor = MaterialTheme.colorScheme.surfaceContainer,
-            titleContentColor = MaterialTheme.colorScheme.onSurface,
-            navigationIconContentColor = MaterialTheme.colorScheme.onSurface,
-            actionIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.background)
+    ) {
+        Spacer(
+            modifier = Modifier
+                .fillMaxWidth()
+                .windowInsetsTopHeight(WindowInsets.statusBars)
         )
-    )
+        LargeTopAppBar(
+            title = title,
+            modifier = Modifier.fillMaxWidth(),
+            navigationIcon = navigationIcon,
+            actions = actions,
+            scrollBehavior = scrollBehavior,
+            windowInsets = WindowInsets(0, 0, 0, 0),
+            colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = MaterialTheme.colorScheme.background,
+                scrolledContainerColor = MaterialTheme.colorScheme.background,
+                titleContentColor = MaterialTheme.colorScheme.onBackground,
+                navigationIconContentColor = MaterialTheme.colorScheme.onBackground,
+                actionIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        )
+    }
 }
 
 /**
@@ -305,20 +356,11 @@ fun M3ETabRow(
     modifier: Modifier = Modifier,
     tabs: @Composable () -> Unit
 ) {
-    TabRow(
+    SecondaryTabRow(
         selectedTabIndex = selectedTabIndex,
         modifier = modifier,
         containerColor = MaterialTheme.colorScheme.surface,
         contentColor = MaterialTheme.colorScheme.onSurface,
-        indicator = { tabPositions ->
-            if (selectedTabIndex < tabPositions.size) {
-                TabRowDefaults.SecondaryIndicator(
-                    modifier = Modifier.tabIndicatorOffset(tabPositions[selectedTabIndex]),
-                    height = 3.dp,
-                    color = MaterialTheme.colorScheme.primary
-                )
-            }
-        },
         divider = {
             HorizontalDivider(
                 thickness = 1.dp,
@@ -338,21 +380,12 @@ fun M3EScrollableTabRow(
     modifier: Modifier = Modifier,
     tabs: @Composable () -> Unit
 ) {
-    ScrollableTabRow(
+    SecondaryScrollableTabRow(
         selectedTabIndex = selectedTabIndex,
         modifier = modifier,
         containerColor = MaterialTheme.colorScheme.surface,
         contentColor = MaterialTheme.colorScheme.onSurface,
         edgePadding = M3EDesignSystem.Spacing.md,
-        indicator = { tabPositions ->
-            if (selectedTabIndex < tabPositions.size) {
-                TabRowDefaults.SecondaryIndicator(
-                    modifier = Modifier.tabIndicatorOffset(tabPositions[selectedTabIndex]),
-                    height = 3.dp,
-                    color = MaterialTheme.colorScheme.primary
-                )
-            }
-        },
         divider = {
             HorizontalDivider(
                 thickness = 1.dp,
@@ -398,4 +431,5 @@ fun M3ETab(
         unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant
     )
 }
+
 

@@ -40,6 +40,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.kyilmaz.neurocomet.ui.design.M3ESurfaceVariant
+import com.kyilmaz.neurocomet.ui.design.M3ESurface
 
 private const val THERAPY_BOT_ID = "Therapy_Bot"
 private const val THERAPY_BOT_AVATAR = "https://i.pravatar.cc/150?u=therapybot"
@@ -75,14 +77,13 @@ fun LegacyBubblyPostCard(
 
     val quietBackground = MaterialTheme.colorScheme.surface
 
-    Card(
-        shape = cardShape,
-        elevation = CardDefaults.cardElevation(defaultElevation = if (isQuietMode) 0.dp else 2.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.Transparent),
-        border = if (isQuietMode) BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant) else null,
+    M3ESurface(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 8.dp)
+            .padding(horizontal = 8.dp),
+        shape = cardShape,
+        variant = if (isQuietMode) M3ESurfaceVariant.Settings else M3ESurfaceVariant.Feed,
+        shadowElevation = if (isQuietMode) 8.dp else 14.dp
     ) {
         Box(
             modifier = Modifier
@@ -187,3 +188,4 @@ private fun ActionButton(icon: ImageVector, label: String?, tint: Color, onClick
         }
     }
 }
+
