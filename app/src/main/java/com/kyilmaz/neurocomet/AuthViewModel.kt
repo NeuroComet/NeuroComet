@@ -212,6 +212,16 @@ class AuthViewModel : ViewModel() {
         refreshAuthState()
         viewModelScope.launch {
             restoreUserFromCurrentSession()
+            // Debug-only: if the tester previously tapped "Skip" on the Auth
+            // screen, keep them signed in as guest across cold launches so
+            // adb VIEW intents for App Links testing land directly in the
+            // NavHost without the Auth screen re-appearing every run.
+            if (BuildConfig.DEBUG && _user.value == null) {
+                val skipped = context.applicationContext
+                    .getSharedPreferences(GUEST_PREFS, Context.MODE_PRIVATE)
+                    .getBoolean(KEY_GUEST_SKIP, false)
+                if (skipped) _user.value = GUEST_USER
+            }
         }
     }
 
@@ -812,6 +822,7 @@ class AuthViewModel : ViewModel() {
         }
         // Clear persisted audience so next sign-in triggers age verification
         applicationContext?.let { AudiencePrefs.clear(it) }
+        clearGuestSkip()
         _user.value = null
         _accountStatus.value = null
         _pendingAccountAction.value = null
@@ -827,7 +838,23 @@ class AuthViewModel : ViewModel() {
             _error.value = "Authentication is required"
             return
         }
-        _user.value = User(
+        _user.value = GUEST_USER
+        // Persist so cold-launches (e.g. from adb VIEW intents during App Links
+        // testing) don't re-show the Auth screen every run.
+        applicationContext?.getSharedPreferences(GUEST_PREFS, Context.MODE_PRIVATE)
+            ?.edit()?.putBoolean(KEY_GUEST_SKIP, true)?.apply()
+    }
+
+    /** Clears the persisted guest-skip flag (called from signOut). */
+    private fun clearGuestSkip() {
+        applicationContext?.getSharedPreferences(GUEST_PREFS, Context.MODE_PRIVATE)
+            ?.edit()?.remove(KEY_GUEST_SKIP)?.apply()
+    }
+
+    companion object {
+        private const val GUEST_PREFS = "guest_auth_prefs"
+        private const val KEY_GUEST_SKIP = "guest_skip_enabled"
+        private val GUEST_USER = User(
             id = "guest_user",
             name = "Guest",
             avatarUrl = "",

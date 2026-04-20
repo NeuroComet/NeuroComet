@@ -406,7 +406,19 @@ fun NeuroCometApp(
         if (uri != null && uri.scheme == "https" &&
             (uri.host == "getneurocomet.com" || uri.host == "www.getneurocomet.com")
         ) {
-            navController.handleDeepLink(link)
+            // Defer until the NavGraph is actually set + give one frame for
+            // the NavHost composable to register destinations. Without this,
+            // a cold-launch VIEW intent can fire handleDeepLink() before the
+            // graph is ready, throwing IllegalStateException and force-closing
+            // the app.
+            kotlinx.coroutines.delay(50)
+            try {
+                // Probe: reading graph throws if not yet set.
+                navController.graph
+                navController.handleDeepLink(link)
+            } catch (t: Throwable) {
+                Log.w("DeepLink", "handleDeepLink failed for ${uri}: ${t.message}")
+            }
         }
         deepLinkActivity?.deepLinkIntent?.value = null
     }
@@ -1602,7 +1614,10 @@ fun NeuroCometApp(
                 }
                 composable(
                     route = Screen.PostDetail.route,
-                    arguments = listOf(navArgument("postId") { type = NavType.LongType }),
+                    arguments = listOf(navArgument("postId") {
+                        type = NavType.LongType
+                        defaultValue = 0L
+                    }),
                     deepLinks = listOf(
                         navDeepLink { uriPattern = "https://getneurocomet.com/post/{postId}" },
                         navDeepLink { uriPattern = "https://www.getneurocomet.com/post/{postId}" },
@@ -1614,7 +1629,7 @@ fun NeuroCometApp(
                         feedUiState = feedState,
                         feedViewModel = feedViewModel,
                         safetyState = safetyState,
-                        currentUserId = authState.id,
+                        currentUserId = authState?.id ?: "",
                         isMockInterfaceEnabled = feedState.isMockInterfaceEnabled,
                         onBack = {
                             if (!navController.popBackStack()) {

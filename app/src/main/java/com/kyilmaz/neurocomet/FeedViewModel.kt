@@ -1655,7 +1655,7 @@ class FeedViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun sharePost(context: Context, post: Post) {
-        val postUrl = "https://neurocomet.com/post/${post.id}"
+        val postUrl = AppLinks.postUrl(post.id)
         val shareTitle = post.content.ifBlank { "NeuroComet post" }.take(80)
         val sendIntent = Intent().apply {
             action = Intent.ACTION_SEND

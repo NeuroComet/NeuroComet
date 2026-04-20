@@ -234,7 +234,7 @@ fun M3EPostCard(
                     },
                     onCopyLink = {
                         clipboardManager?.setPrimaryClip(
-                            ClipData.newPlainText("NeuroComet post link", "https://getneurocomet.com/post/${post.id}")
+                            ClipData.newPlainText("NeuroComet post link", com.kyilmaz.neurocomet.AppLinks.postUrl(post.id))
                         )
                         Toast.makeText(context, "Link copied!", Toast.LENGTH_SHORT).show()
                     },
