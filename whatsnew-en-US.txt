@@ -1,6 +1,9 @@
-What's New (v2.0.0-rc13)
-- Less battery drain: call setup deferred until needed.
-- Faster cold launch: messaging and ad SDK load later.
-- Fewer widget wakeups (energy, spoon, mood, stim-break).
-- Better call history lazy loading.
-- Stability and performance polish.
+Welcome to the NeuroComet v2.0.0 milestone! 🚀 We've rewired your digital orbit to be safer and smoother than ever.
+
+✨ PROTECT YOUR MIND: Advanced 2FA (Biometrics & Passkeys) is here.
+🌿 REAL BREAKS: New 'Detox Mode' lets you step away without the noise.
+♿ BETTER ACCESS: Refined Braille & Screen Reader support.
+🛠️ PRO TECH: GitHub login & massive battery optimizations.
+🌍 GLOBAL: Localized for 15+ languages.
+
+Your safe space, evolved. Find your orbit today! ☄️✨

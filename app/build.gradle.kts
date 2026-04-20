@@ -72,8 +72,8 @@ android {
         applicationId = "com.kyilmaz.neurocomet"
         minSdk = 26
         targetSdk = 36
-        versionCode = 192
-        versionName = "2.0.0-rc36"
+        versionCode = 193
+        versionName = "2.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
