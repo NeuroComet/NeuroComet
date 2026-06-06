@@ -1,0 +1,1932 @@
+STRINGS THAT NEED TRANSLATION
+================================================================================
+
+app_name (untranslated in 30 languages)
+  English: NeuroComet
+
+auth_2fa_code_placeholder (untranslated in 30 languages)
+  English: 123456
+
+create_story_url_placeholder (untranslated in 30 languages)
+  English: https://…
+
+post_late_2_author (untranslated in 30 languages)
+  English: MidlifeMike
+
+post_late_2_content (untranslated in 30 languages)
+  English: Spent decades thinking I was broken. Turns out I\'m just wired differently. Late diagnosis is still valid diagnosis 💜
+
+post_late_3_author (untranslated in 30 languages)
+  English: IdentityCrisis
+
+post_late_3_content (untranslated in 30 languages)
+  English: Unmasking after 40 years is HARD. Who am I without the performance? Slowly rediscovering myself
+
+post_late_4_author (untranslated in 30 languages)
+  English: GriefAndGrowth
+
+post_late_5_author (untranslated in 30 languages)
+  English: NewChapter
+
+post_late_5_content (untranslated in 30 languages)
+  English: It\'s never too late to learn about yourself. Late-diagnosed at 52, and life is finally making sense!
+
+post_mental_2_author (untranslated in 30 languages)
+  English: DepressionDiana
+
+post_mental_2_content (untranslated in 30 languages)
+  English: Some days, just existing is an achievement. Be proud of the small wins. You\'re doing better than you think 💙
+
+post_mental_3_author (untranslated in 30 languages)
+  English: TherapyTom
+
+post_mental_3_content (untranslated in 30 languages)
+  English: Finally found a neurodivergent-affirming therapist! They understand that \'just try harder\' isn\'t helpful. Game changer!
+
+post_mental_4_author (untranslated in 30 languages)
+  English: HealingHannah
+
+post_mental_4_content (untranslated in 30 languages)
+  English: Journaling prompts for rough days: What\'s draining me? What\'s one kind thing I can do for myself right now?
+
+post_mental_5_author (untranslated in 30 languages)
+  English: CopingChris
+
+post_mental_5_content (untranslated in 30 languages)
+  English: Medication isn\'t a failure - it\'s a tool. Just like glasses for vision. No shame in chemical support 💊
+
+post_work_2_author (untranslated in 30 languages)
+  English: StudentSara
+
+post_work_2_content (untranslated in 30 languages)
+  English: College disability services changed everything. Extra time, quiet testing rooms, note-taking support. Ask for help! 🎓
+
+post_work_3_author (untranslated in 30 languages)
+  English: RemoteRick
+
+post_work_3_content (untranslated in 30 languages)
+  English: WFH is my dream. No fluorescent lights, no open offices, no surprise social interactions. Productivity skyrocketed!
+
+post_work_4_author (untranslated in 30 languages)
+  English: MeetingMary
+
+post_work_5_author (untranslated in 30 languages)
+  English: CareerCoach
+
+post_work_5_content (untranslated in 30 languages)
+  English: Neurodivergent-friendly career paths: programming, research, art, writing, data analysis. Play to your strengths! 📈
+
+explore_lgbtq (untranslated in 29 languages)
+  English: LGBTQ+
+
+post_late_4_content (untranslated in 29 languages)
+  English: Grieving the support I could have had growing up. But also grateful for finally understanding myself 🌱
+
+post_work_4_content (untranslated in 29 languages)
+  English: Cameras off in meetings when I need them. Standing during calls. These \'small\' accommodations make huge differences
+
+post_adhd_1_author (untranslated in 28 languages)
+  English: FocusedFinn
+
+post_adhd_1_content (untranslated in 28 languages)
+  English: 🧠 Just discovered the power of body doubling! Working alongside someone (even virtually) helps me stay on task so much better.
+
+post_adhd_2_author (untranslated in 28 languages)
+  English: TimeBlindTina
+
+post_adhd_2_content (untranslated in 28 languages)
+  English: Anyone else use timers for EVERYTHING? I set 25-min work blocks and it\'s a game changer. Pomodoro for the win! 🍅
+
+post_adhd_3_author (untranslated in 28 languages)
+  English: HyperfocusHarry
+
+post_adhd_3_content (untranslated in 28 languages)
+  English: TIP: Put your phone in another room during deep work. Out of sight = out of mind. Finally finishing projects!
+
+post_adhd_4_author (untranslated in 28 languages)
+  English: ScatterbrainSally
+
+post_adhd_4_content (untranslated in 28 languages)
+  English: External scaffolding is my superpower! Visual reminders, apps, alarms - my environment remembers so I don\'t have to 📝
+
+post_adhd_5_author (untranslated in 28 languages)
+  English: ImpulsiveIvy
+
+post_adhd_5_content (untranslated in 28 languages)
+  English: Started using \'implementation intentions\' - instead of \'I\'ll exercise\' I say \'At 7am, I put on shoes and walk\'. Works! 🏃‍♀️
+
+post_late_1_author (untranslated in 28 languages)
+  English: LateBloomLisa
+
+post_late_1_content (untranslated in 28 languages)
+  English: Diagnosed at 35. Everything suddenly makes sense - the struggles, the differences, the \'quirks\'. Grief and relief mixed 🔍
+
+post_mask_1_author (untranslated in 28 languages)
+  English: UnmaskingUri
+
+post_mask_1_content (untranslated in 28 languages)
+  English: Finally dropping the mask at home. It\'s exhausting pretending to be \'normal\' all day. Safe spaces matter 🎭
+
+post_mask_2_author (untranslated in 28 languages)
+  English: BurnoutBeth
+
+post_mask_2_content (untranslated in 28 languages)
+  English: Masking led to burnout. Now I\'m slowly learning who I am without the performance. It\'s scary but freeing
+
+post_mask_3_author (untranslated in 28 languages)
+  English: AuthenticAva
+
+post_mask_3_content (untranslated in 28 languages)
+  English: Found friends who accept the real me - stims, infodumps, and all. They say I\'m \'more interesting\' unmasked! ✨
+
+post_mask_4_author (untranslated in 28 languages)
+  English: ExhaustedEli
+
+post_mask_4_content (untranslated in 28 languages)
+  English: The price of masking: migraines, fatigue, identity confusion. Is \'fitting in\' worth my wellbeing? Reconsidering…
+
+post_mask_5_author (untranslated in 28 languages)
+  English: GrowingGrace
+
+post_mask_5_content (untranslated in 28 languages)
+  English: Started stimming publicly. Heart raced at first, but literally no one cared. The fear was bigger than reality 💪
+
+post_mental_1_author (untranslated in 28 languages)
+  English: AnxietyAlly
+
+post_mental_1_content (untranslated in 28 languages)
+  English: ADHD + anxiety is a rough combo. Tips that help me: structured routines, movement breaks, and lots of self-compassion 🧘
+
+post_safefood_1_author (untranslated in 28 languages)
+  English: TextureSensitive
+
+post_safefood_1_content (untranslated in 28 languages)
+  English: Found a new safe food! These rice crackers have the perfect crunch without being too loud. Sharing the brand in comments 🍘
+
+post_safefood_2_author (untranslated in 28 languages)
+  English: BeigeFoodClub
+
+post_safefood_2_content (untranslated in 28 languages)
+  English: Reminder that \'safe foods\' are valid! Sometimes plain pasta is self-care. No shame in eating what works for you 🍝
+
+post_safefood_3_author (untranslated in 28 languages)
+  English: SensoryChef
+
+post_safefood_3_content (untranslated in 28 languages)
+  English: I made a sensory-friendly recipe book! All recipes avoid common texture triggers. Would anyone want me to share it?
+
+post_safefood_4_author (untranslated in 28 languages)
+  English: PickyEaterPete
+
+post_safefood_4_content (untranslated in 28 languages)
+  English: Does anyone else have \'safe restaurants\'? Places where you know exactly what to order and it\'s always consistent?
+
+post_safefood_5_author (untranslated in 28 languages)
+  English: MealPrepMolly
+
+post_safefood_5_content (untranslated in 28 languages)
+  English: Batch cooking my safe foods on Sunday = less decision fatigue all week! Currently rotating 5 meals I actually enjoy 💪
+
+post_sleep_1_author (untranslated in 28 languages)
+  English: NightOwlNate
+
+post_sleep_1_content (untranslated in 28 languages)
+  English: Finally found a weighted blanket that doesn\'t make me overheat! Deep pressure + cool fabric = actually sleeping 😴
+
+post_sleep_2_author (untranslated in 28 languages)
+  English: RestlessRachel
+
+post_sleep_2_content (untranslated in 28 languages)
+  English: Wind-down routine that works for my brain: dim lights, no screens 1hr before, same playlist every night. Consistency is key!
+
+post_sleep_3_author (untranslated in 28 languages)
+  English: InsomniaIan
+
+post_sleep_3_content (untranslated in 28 languages)
+  English: Anyone else\'s brain do the \'remember every embarrassing moment\' thing at 2am? Started journaling before bed to \'close tabs\'
+
+post_sleep_4_author (untranslated in 28 languages)
+  English: SleepySteph
+
+post_sleep_4_content (untranslated in 28 languages)
+  English: White noise vs brown noise vs pink noise - which works for you? I\'m team brown noise, it\'s like a hug for my ears 🔊
+
+post_sleep_5_author (untranslated in 28 languages)
+  English: DreamyDan
+
+post_sleep_5_content (untranslated in 28 languages)
+  English: Started using blackout curtains AND a sleep mask. Totally dark room = finally getting deep sleep cycles!
+
+post_social_1_author (untranslated in 28 languages)
+  English: ConvoCoach
+
+post_social_1_content (untranslated in 28 languages)
+  English: Scripts for small talk! \'How\'s your day going?\' → \'Any fun weekend plans?\' → \'That sounds nice!\' Memorized patterns help! 💬
+
+post_social_2_author (untranslated in 28 languages)
+  English: FriendshipFred
+
+post_social_2_content (untranslated in 28 languages)
+  English: Quality over quantity. Having 2-3 close friends who \'get it\' is worth more than 100 acquaintances 👥
+
+post_social_3_author (untranslated in 28 languages)
+  English: AwkwardAndy
+
+post_social_3_content (untranslated in 28 languages)
+  English: It\'s okay to leave social events early! \'I had a great time, heading out now\' - no long explanation needed 👋
+
+post_social_4_author (untranslated in 28 languages)
+  English: BoundaryBella
+
+post_social_4_content (untranslated in 28 languages)
+  English: \'I need to think about that\' is a complete sentence. No pressure to respond immediately!
+
+post_social_5_author (untranslated in 28 languages)
+  English: ParallelPaul
+
+post_social_5_content (untranslated in 28 languages)
+  English: Parallel play is valid adult friendship! Gaming together, crafting in the same room - connection without constant interaction
+
+post_work_1_author (untranslated in 28 languages)
+  English: AccommodationAce
+
+post_work_1_content (untranslated in 28 languages)
+  English: Got my workplace accommodations approved! Noise-canceling headphones, flexible hours, written instructions. Know your rights! 💼
+
+post_ace_2_author (untranslated in 27 languages)
+  English: AroAceVibes
+
+image_editor_enter_text (untranslated in 26 languages)
+  English: Enter your text…
+
+image_editor_type_text (untranslated in 26 languages)
+  English: Type your text…
+
+post_default_2_author (untranslated in 26 languages)
+  English: HelpfulHelen
+
+post_default_2_content (untranslated in 26 languages)
+  English: Remember: everyone\'s journey is different. What works for one person might not work for another, and that\'s okay!
+
+post_default_3_author (untranslated in 26 languages)
+  English: ResourceRon
+
+post_default_3_content (untranslated in 26 languages)
+  English: Great resources in the pinned post! Check them out if you\'re new here 📚
+
+post_default_4_author (untranslated in 26 languages)
+  English: SupportiveSue
+
+post_default_4_content (untranslated in 26 languages)
+  English: This is a judgment-free zone. Ask questions, share struggles, celebrate wins. We\'ve got you! 🌟
+
+post_default_5_author (untranslated in 26 languages)
+  English: WelcomingWill
+
+post_default_5_content (untranslated in 26 languages)
+  English: New members: introduce yourself! What brings you here? What do you hope to learn or share?
+
+post_lgbtq_2_author (untranslated in 26 languages)
+  English: ProudAndAutistic
+
+post_lgbtq_2_content (untranslated in 26 languages)
+  English: Happy to be queer AND neurodivergent! Both are part of who I am, and both are valid and beautiful ✨
+
+post_lgbtq_3_author (untranslated in 26 languages)
+  English: IntersectionAlex
+
+post_lgbtq_3_content (untranslated in 26 languages)
+  English: Research shows ND folks are more likely to be LGBTQ+. We break the mold in so many ways! 💜
+
+post_lgbtq_4_author (untranslated in 26 languages)
+  English: CommunityCarla
+
+post_lgbtq_4_content (untranslated in 26 languages)
+  English: This space accepting ALL of me without questions is healing. Thank you for being here 🙏
+
+post_lgbtq_5_author (untranslated in 26 languages)
+  English: AlliedAndy
+
+post_lgbtq_5_content (untranslated in 26 languages)
+  English: Whether you\'re figuring out identity, already out, or just supporting - you belong here! 🏳️‍🌈
+
+post_nb_3_author (untranslated in 26 languages)
+  English: GenderFluid
+
+post_ace_2_content (untranslated in 25 languages)
+  English: Aromantic spectrum representation matters! QPRs, chosen families, and friendship-centered lives are beautiful 💚
+
+post_ace_3_author (untranslated in 25 languages)
+  English: SpectrumExplorer
+
+post_ace_3_content (untranslated in 25 languages)
+  English: Gray-ace, demi, aego - so many ways to experience (or not experience) attraction. All valid! 🖤🩶🤍💜
+
+post_ace_4_author (untranslated in 25 languages)
+  English: NormalizeAce
+
+post_ace_4_content (untranslated in 25 languages)
+  English: Not experiencing attraction the \'typical\' way doesn\'t make us broken. Different is just different 💜
+
+post_ace_5_author (untranslated in 25 languages)
+  English: AcePride
+
+post_ace_5_content (untranslated in 25 languages)
+  English: Ace week resources coming up! Educational content and community stories to share 🖤🩶🤍💜
+
+post_coming_1_author (untranslated in 25 languages)
+  English: CameOutCarla
+
+post_coming_1_content (untranslated in 25 languages)
+  English: Coming out as both ND and queer to my family was terrifying but freeing. You do it on YOUR timeline! 🚪💜
+
+post_coming_2_author (untranslated in 25 languages)
+  English: SafeHarbor
+
+post_coming_2_content (untranslated in 25 languages)
+  English: This community is a safe space to explore. You don\'t have to have all the answers yet 💙
+
+post_coming_3_author (untranslated in 25 languages)
+  English: JourneyStories
+
+post_coming_3_content (untranslated in 25 languages)
+  English: Sharing coming out stories helps others feel less alone. Comment yours if you\'re comfortable! 🌈
+
+post_coming_4_author (untranslated in 25 languages)
+  English: StillFiguringOut
+
+post_coming_4_content (untranslated in 25 languages)
+  English: Not sure about labels yet and that\'s okay! Questioning is part of the journey, not the end 💜
+
+post_coming_5_author (untranslated in 25 languages)
+  English: FoundFamily
+
+post_coming_5_content (untranslated in 25 languages)
+  English: Chosen family when bio family doesn\'t understand. The ND+LGBTQ+ community has your back 🏠💜
+
+post_meltdown_2_author (untranslated in 25 languages)
+  English: CopingCarla
+
+post_nb_2_author (untranslated in 25 languages)
+  English: TheyThemThem
+
+post_nb_2_content (untranslated in 25 languages)
+  English: They/them pronouns please! Our community respects everyone\'s identity 💜
+
+post_nb_3_content (untranslated in 25 languages)
+  English: Some days more femme, some days more masc, some days ??? And all of it is valid! ✨
+
+post_nb_4_author (untranslated in 25 languages)
+  English: EnbyExplorer
+
+post_nb_4_content (untranslated in 25 languages)
+  English: Finding gender-affirming clothing that\'s also sensory-friendly is an adventure! Share your finds! 👕
+
+post_nb_5_author (untranslated in 25 languages)
+  English: IdentityJourney
+
+post_nb_5_content (untranslated in 25 languages)
+  English: It took me years to understand my gender. ND brain + gender exploration = complex but worth it 💛🤍💜🖤
+
+post_pride_1_author (untranslated in 25 languages)
+  English: PrideParade
+
+post_pride_2_author (untranslated in 25 languages)
+  English: QueerCommunity
+
+post_pride_2_content (untranslated in 25 languages)
+  English: Sensory-friendly pride events are the BEST. Pride with ear plugs and sunglasses! 🎉🏳️‍🌈
+
+post_pride_3_author (untranslated in 25 languages)
+  English: LoveIsLove
+
+post_pride_3_content (untranslated in 25 languages)
+  English: Remember: you don\'t need to \'prove\' your identity to anyone. Your experience is valid! 💖
+
+post_pride_4_author (untranslated in 25 languages)
+  English: JoyfulQueer
+
+post_pride_4_content (untranslated in 25 languages)
+  English: Celebrating queer joy today! What makes you happy about being part of this community? 🎊
+
+post_pride_5_author (untranslated in 25 languages)
+  English: PrideHistory
+
+post_pride_5_content (untranslated in 25 languages)
+  English: Learning LGBTQ+ history has been my special interest this month. So much to celebrate and honor! 📚🏳️‍🌈
+
+post_special_1_author (untranslated in 25 languages)
+  English: DinoDave
+
+post_trans_3_author (untranslated in 25 languages)
+  English: SupportiveSpace
+
+post_trans_3_content (untranslated in 25 languages)
+  English: Name and pronoun stickers in my profile! Respect is non-negotiable here 🏳️‍⚧️
+
+post_trans_4_author (untranslated in 25 languages)
+  English: TransitionTips
+
+post_trans_4_content (untranslated in 25 languages)
+  English: Navigating healthcare as trans AND ND can be extra challenging. Let\'s share resources and support! 💪
+
+post_trans_5_author (untranslated in 25 languages)
+  English: AuthenticMe
+
+post_trans_5_content (untranslated in 25 languages)
+  English: Finally living as my true self. The ND community has been incredibly welcoming. Grateful 💜
+
+post_video_indicator (untranslated in 25 languages)
+  English: Video
+
+posting_restricted_message (untranslated in 25 languages)
+  English: Posting has been disabled by parental controls. Ask a parent or guardian to change this setting.
+
+posting_restricted_title (untranslated in 25 languages)
+  English: Posting Restricted
+
+settings_section_premium (untranslated in 25 languages)
+  English: Premium
+
+theme_dynamic_colors_desc (untranslated in 25 languages)
+  English: Use colors from your device wallpaper (Material You)
+
+theme_dynamic_colors_unavailable (untranslated in 25 languages)
+  English: Requires Android 12 or higher
+
+explore_view_standard (untranslated in 24 languages)
+  English: Standard
+
+mock_dm_hey (untranslated in 24 languages)
+  English: Hey! Love your posts about sensory tips! 💜
+
+mock_notif_filtered_msg (untranslated in 24 languages)
+  English: We\'ve hidden some content that may not be suitable. You can adjust this in settings.
+
+mock_notif_filtered_title (untranslated in 24 languages)
+  English: Content filtered
+
+mock_notif_follow_msg (untranslated in 24 languages)
+  English: %s started following you
+
+mock_notif_follow_title (untranslated in 24 languages)
+  English: New follower
+
+mock_notif_like_msg (untranslated in 24 languages)
+  English: The one about mechanical keyboards.
+
+mock_notif_like_title (untranslated in 24 languages)
+  English: %s liked your post
+
+mock_notif_mention_title (untranslated in 24 languages)
+  English: You were mentioned
+
+mock_notif_reply_msg (untranslated in 24 languages)
+  English: I totally agree with that! Great perspective.
+
+mock_notif_reply_title (untranslated in 24 languages)
+  English: Reply from %s
+
+mock_notif_repost_title (untranslated in 24 languages)
+  English: Your post was reposted
+
+mock_notif_safety_msg (untranslated in 24 languages)
+  English: Remember to take breaks! You\'ve been active for a while. 💙
+
+mock_notif_safety_title (untranslated in 24 languages)
+  English: Safety reminder
+
+mock_post_adulting (untranslated in 24 languages)
+  English: Adulting with ADHD: Forgot to pay rent again, but somehow remembered every line of dialogue from a movie I watched 10 years ago. My landlord is not amused.
+
+mock_post_art (untranslated in 24 languages)
+  English: 🎨 Art class was so fun today! We painted sunsets and mine has ALL the colors! 🌅
+
+mock_post_bracelet (untranslated in 24 languages)
+  English: 🌈 Made a friendship bracelet for my best friend! The colors are so pretty together! 💕
+
+mock_post_cat (untranslated in 24 languages)
+  English: My cat learned a new trick today! She can high-five now! 🐱✋ So proud of her!
+
+mock_post_dating_adhd (untranslated in 24 languages)
+  English: Dating with ADHD is wild. Hyperfocusing on someone new then completely forgetting to text back for 3 days 😅 Anyone else?
+
+mock_post_dinosaur (untranslated in 24 languages)
+  English: Today I learned that dinosaurs lived millions of years ago! 🦕 T-Rex is my favorite!
+
+mock_post_dog (untranslated in 24 languages)
+  English: 🐕 My dog is my best helper! He sits with me when I do homework and it makes me feel calm! 🐾
+
+mock_post_game (untranslated in 24 languages)
+  English: 🎮 Just beat my high score in my favorite game! Practice really does make perfect! 🏆
+
+mock_post_hyperfocus (untranslated in 24 languages)
+  English: Just had a breakthrough on my project! Hyperfocus is a superpower when you can direct it. Late night coding sessions hit different.
+
+mock_post_organizing (untranslated in 24 languages)
+  English: Just finished sorting all my project files into categorized folders. The visual order is immensely satisfying. My therapist says this is a healthy coping mechanism.
+
+mock_post_puzzle (untranslated in 24 languages)
+  English: 🌈 Just finished my rainbow puzzle! 1000 pieces completed! Who else loves puzzles? 🧩
+
+mock_post_reading (untranslated in 24 languages)
+  English: 📖 Reading time is the BEST! I\'m on chapter 10 of my favorite book series! Who else loves reading? 📚
+
+mock_post_school_stress (untranslated in 24 languages)
+  English: School stress is real right now. Midterms + social anxiety = wanting to hide in my room for a week. At least my noise-canceling headphones help.
+
+mock_post_weighted_vest (untranslated in 24 languages)
+  English: Trying out my new weighted vest today. Instant calm, highly recommend for sensory regulation! Also helps with my anxiety during exams.
+
+mock_post_workplace (untranslated in 24 languages)
+  English: Workplace accommodations are finally in place! Took 6 months of advocacy but got my quiet workspace approved. HR was surprisingly supportive once I provided the documentation.
+
+post_meltdown_1_author (untranslated in 24 languages)
+  English: RecoveryRen
+
+post_meltdown_1_content (untranslated in 24 languages)
+  English: Reminder: Meltdowns aren\'t \'bad behavior\' - they\'re nervous system overload. Be gentle with yourself after 💙
+
+post_meltdown_2_content (untranslated in 24 languages)
+  English: My meltdown kit: noise-canceling headphones, sunglasses, weighted lap pad, water, and a \'safe person\' contact
+
+post_meltdown_3_author (untranslated in 24 languages)
+  English: PreventionPat
+
+post_meltdown_3_content (untranslated in 24 languages)
+  English: Learning my warning signs: irritability spike, sound sensitivity increase, physical tension. Catching it early helps!
+
+post_meltdown_4_author (untranslated in 24 languages)
+  English: SafeSpaceSam
+
+post_meltdown_4_content (untranslated in 24 languages)
+  English: Created a \'calm corner\' in my home with dim lights, soft textures, and NO demands. Essential recovery zone 🏠
+
+post_meltdown_5_author (untranslated in 24 languages)
+  English: SupportiveSue
+
+post_meltdown_5_content (untranslated in 24 languages)
+  English: Post-meltdown self-care: rest, hydration, comfort food, and absolutely NO self-criticism. Recovery takes time 🌸
+
+post_sensory_2_author (untranslated in 24 languages)
+  English: LightSensitiveLuna
+
+post_sensory_3_author (untranslated in 24 languages)
+  English: TagHaterTaylor
+
+post_sensory_3_content (untranslated in 24 languages)
+  English: Spent an hour removing all clothing tags today. Worth every second. Why do brands make them so scratchy?! 👕
+
+post_sensory_4_author (untranslated in 24 languages)
+  English: ScentSensitiveAlex
+
+post_sensory_4_content (untranslated in 24 languages)
+  English: Unscented everything is the way. Made a list of truly fragrance-free products, happy to share!
+
+post_sensory_5_author (untranslated in 24 languages)
+  English: QuietQuinn
+
+post_sensory_5_content (untranslated in 24 languages)
+  English: Created a \'sensory map\' of my city - quiet cafes, low-stim stores, accessible escape routes. Super helpful! 🗺️
+
+post_special_1_content (untranslated in 24 languages)
+  English: Three hours researching dinosaur feather evolution and I regret NOTHING! Who wants to hear about Archaeopteryx? 🦕
+
+post_special_2_author (untranslated in 24 languages)
+  English: TrainTracker
+
+post_special_2_content (untranslated in 24 languages)
+  English: My special interest is train schedules. I can tell you every stop on 47 metro lines. Ask me anything! 🚂
+
+post_special_3_author (untranslated in 24 languages)
+  English: MushroomMike
+
+post_special_3_content (untranslated in 24 languages)
+  English: Fungi are INCREDIBLE. Did you know there\'s a mushroom that can break down plastic? Mycelium is the future! 🍄
+
+post_special_4_author (untranslated in 24 languages)
+  English: LoreExplorer
+
+post_special_4_content (untranslated in 24 languages)
+  English: When your special interest has lore, you BECOME the wiki. 400 hours in this game and still learning! 🎮
+
+post_special_5_author (untranslated in 24 languages)
+  English: StarStruck
+
+post_special_5_content (untranslated in 24 languages)
+  English: Space facts incoming! A day on Venus is longer than a year on Venus. Mind = blown every time I think about it ✨
+
+post_stim_2_author (untranslated in 24 languages)
+  English: HappyFlapper
+
+post_stim_2_content (untranslated in 24 languages)
+  English: Normalize stimming in public! I was rocking at the grocery store and a kid said \'she\'s dancing!\' Made my day 💃
+
+post_stim_3_author (untranslated in 24 languages)
+  English: ChewySam
+
+post_stim_3_content (untranslated in 24 languages)
+  English: For my fellow oral stimmers - found chewable necklaces that look like actual jewelry. Discreet AND functional!
+
+post_stim_4_author (untranslated in 24 languages)
+  English: SpinnerSophie
+
+post_stim_4_content (untranslated in 24 languages)
+  English: Movement is medicine! When I can\'t stim openly, I do toe-tapping under my desk. Subtle but still helps 🦶
+
+post_stim_5_author (untranslated in 24 languages)
+  English: SensorySeeker
+
+post_stim_5_content (untranslated in 24 languages)
+  English: Built a \'stim kit\' for my bag: putty, textured cards, fidget cube. Always prepared for regulation needs!
+
+post_trans_2_author (untranslated in 24 languages)
+  English: GenderExplorer
+
+post_trans_2_content (untranslated in 24 languages)
+  English: ND brains often experience gender differently. Our journeys are valid even if they\'re not \'typical\' 💙💗🤍
+
+theme_disabled_dynamic_active (untranslated in 24 languages)
+  English: Disabled (Dynamic Colors active)
+
+theme_dynamic_colors_active (untranslated in 24 languages)
+  English: Dynamic Colors Active
+
+theme_dynamic_colors_hint (untranslated in 24 languages)
+  English: Disable Dynamic Colors in Quick Settings below to use custom themes.
+
+theme_made_with_love (untranslated in 24 languages)
+  English: Made with 💜 for every unique mind
+
+theme_rainbow_unlocked (untranslated in 24 languages)
+  English: 🦄 You\'ve unlocked the Rainbow Brain theme!\nScroll down to Secret Themes to try it!
+
+dm_reply_to_placeholder (untranslated in 23 languages)
+  English: Reply to %s…
+
+icon_applied (untranslated in 23 languages)
+  English: Icon applied! Restart your launcher if it doesn\'t update. 🎨
+
+icon_customization_subtitle (untranslated in 23 languages)
+  English: Pick an icon that matches your mood and needs
+
+mock_dm_conv1_msg1 (untranslated in 23 languages)
+  English: Hey, how are you feeling today?
+
+mock_dm_conv1_msg2 (untranslated in 23 languages)
+  English: I\'m good, thanks! Just chilling.
+
+mock_dm_conv2_msg1 (untranslated in 23 languages)
+  English: Did you see that new scam post? Don\'t fall for it!
+
+mock_dm_conv2_msg2 (untranslated in 23 languages)
+  English: Thanks for the warning. I saw the phishing attempt.
+
+mock_dm_conv3_msg1 (untranslated in 23 languages)
+  English: Hey! I saw your post about executive function struggles. I totally relate!
+
+mock_dm_conv3_msg2 (untranslated in 23 languages)
+  English: Right?! Some days are just harder than others.
+
+mock_dm_conv3_msg3 (untranslated in 23 languages)
+  English: Have you tried body doubling? It really helps me stay on task.
+
+mock_dm_conv3_msg4 (untranslated in 23 languages)
+  English: I\'ve heard of it but never tried. How does it work for you?
+
+mock_dm_conv3_msg5 (untranslated in 23 languages)
+  English: I just video call a friend while we both work on our own stuff. The accountability helps!
+
+mock_dm_conv4_msg1 (untranslated in 23 languages)
+  English: Yo! That productivity hack you shared was 🔥
+
+mock_dm_conv4_msg2 (untranslated in 23 languages)
+  English: Glad it helped! The Pomodoro technique is a game changer.
+
+mock_dm_conv4_msg3 (untranslated in 23 languages)
+  English: I modified it to 25 min work / 10 min stim break. Works way better for my ADHD brain.
+
+mock_dm_conv4_msg4 (untranslated in 23 languages)
+  English: That\'s genius! Mind if I share that tip in my next post?
+
+mock_dm_conv4_msg5 (untranslated in 23 languages)
+  English: Go for it! Tag me 😄
+
+mock_dm_conv5_msg1 (untranslated in 23 languages)
+  English: 🎨 Just finished a new painting during my hyperfocus session!
+
+mock_dm_conv5_msg2 (untranslated in 23 languages)
+  English: OMG I need to see it! You\'re so talented!
+
+mock_dm_conv5_msg3 (untranslated in 23 languages)
+  English: Thanks! It\'s all blues and purples - very calming colors. I\'ll post it later today.
+
+mock_dm_conv5_msg4 (untranslated in 23 languages)
+  English: Those are my favorite colors too! They really help when I\'m overstimulated.
+
+mock_dm_conv6_msg1 (untranslated in 23 languages)
+  English: Hi there! Wanted to share a grounding technique that helped me today.
+
+mock_dm_conv6_msg2 (untranslated in 23 languages)
+  English: I\'m all ears! Been having a rough week with anxiety.
+
+mock_dm_conv6_msg3 (untranslated in 23 languages)
+  English: Try the 5-4-3-2-1 method: 5 things you see, 4 you hear, 3 you touch, 2 you smell, 1 you taste.
+
+mock_dm_conv6_msg4 (untranslated in 23 languages)
+  English: This is really helpful, thank you! 💙
+
+mock_dm_conv6_msg5 (untranslated in 23 languages)
+  English: Anytime! We\'re all in this together. 🤗
+
+mock_dm_conv7_msg1 (untranslated in 23 languages)
+  English: Just got the new mechanical keyboard! The clicks are SO satisfying 🎹
+
+mock_dm_conv7_msg2 (untranslated in 23 languages)
+  English: Ooooh which switches did you get?
+
+mock_dm_conv7_msg3 (untranslated in 23 languages)
+  English: Cherry MX Blues! The tactile feedback is *chef\'s kiss* for my stimming needs.
+
+mock_dm_conv7_msg4 (untranslated in 23 languages)
+  English: I\'ve been eyeing those! Do they help you focus while coding?
+
+mock_dm_conv7_msg5 (untranslated in 23 languages)
+  English: Absolutely! The rhythmic clicking is like a built-in focus soundtrack. Highly recommend!
+
+mock_dm_conv7_msg6 (untranslated in 23 languages)
+  English: Adding to cart right now 😂
+
+mock_dm_conv8_msg1 (untranslated in 23 languages)
+  English: Low spoon day today 😴 How are you managing?
+
+mock_dm_conv8_msg2 (untranslated in 23 languages)
+  English: Same here. Decided to cancel all non-essential plans.
+
+mock_dm_conv8_msg3 (untranslated in 23 languages)
+  English: That\'s smart! Self-care isn\'t selfish. Rest up! 💜
+
+mock_dm_question (untranslated in 23 languages)
+  English: Quick question about that fidget toy you recommended?
+
+mock_dm_sure (untranslated in 23 languages)
+  English: Sure, happy to help! What would you like to know?
+
+mock_dm_thanks (untranslated in 23 languages)
+  English: Thanks so much! Your content is super helpful too!
+
+mock_notif_badge_msg (untranslated in 23 languages)
+  English: You verified your humanity! 🎉
+
+mock_notif_badge_title (untranslated in 23 languages)
+  English: New Badge Earned
+
+mock_post_body_doubling (untranslated in 23 languages)
+  English: Just discovered body doubling on NeuroComet and WOW. Studied for 3 hours straight with my virtual study buddy! 📚🎉 Anyone else find this helpful?
+
+mock_post_brain_different (untranslated in 23 languages)
+  English: Reminder: Your brain works differently, not wrong. 🧠💜 Embrace your unique way of processing the world!
+
+mock_post_late_diagnosis (untranslated in 23 languages)
+  English: PSA: Getting diagnosed as an adult is valid. Got mine at 34 and suddenly my entire life makes sense. The grief of \'what could have been\' is real but so is the relief of finally understanding yourself.
+
+mock_post_launch_pad (untranslated in 23 languages)
+  English: Pro tip: Create a \'launch pad\' by your door with everything you need for the day. Keys, wallet, meds, snacks - all in one spot! 🚀 ADHD life hack #247
+
+mock_post_lunch_win (untranslated in 23 languages)
+  English: Today\'s win: I remembered to eat lunch! 🎊 Setting phone alarms for basic needs is self-care. Don\'t let anyone tell you otherwise. 💪
+
+mock_post_quiet_space (untranslated in 23 languages)
+  English: Need a quiet space. Going into Overload Mode for the rest of the afternoon. See you all tomorrow. #QuietMode
+
+mock_post_stim_toys (untranslated in 23 languages)
+  English: My stim toy collection is growing! 🌈 These fidget tools have helped me so much in meetings. No shame in stimming! ✨
+
+mock_post_workspace (untranslated in 23 languages)
+  English: ✨ Finally got my sensory-friendly workspace set up! Noise-canceling headphones, soft lighting, and my weighted lap pad. Game changer for focus! 🎧💡
+
+post_ace_1_author (untranslated in 23 languages)
+  English: AceSpace
+
+post_ace_1_content (untranslated in 23 languages)
+  English: Asexual AND autistic - the \'double A\' club! Understanding both has been a journey of self-discovery 🖤🤍💜
+
+post_comments_shares_count (untranslated in 23 languages)
+  English: %d comments • %d shares
+
+post_nb_1_author (untranslated in 23 languages)
+  English: NonBinaryNinja
+
+post_nb_1_content (untranslated in 23 languages)
+  English: Non-binary and neurodivergent! Gender is a construct I\'m happily deconstructing 💛🤍💜🖤
+
+post_pride_1_content (untranslated in 23 languages)
+  English: Pride month may be June, but we celebrate ALL year! Queer joy is ND-friendly joy 🌈✨
+
+post_sensory_1_author (untranslated in 23 languages)
+  English: OverwhelmOllie
+
+post_sensory_1_content (untranslated in 23 languages)
+  English: Loop earplugs CHANGED MY LIFE. Still hear conversations but takes the edge off sensory-overload environments 🎧
+
+post_sensory_2_content (untranslated in 23 languages)
+  English: Warm-toned light bulbs + dimmer switches made my home a safe haven. Harsh fluorescents are banned!
+
+post_share_post_via (untranslated in 23 languages)
+  English: Share post via
+
+post_share_story (untranslated in 23 languages)
+  English: Share Story
+
+post_share_topic (untranslated in 23 languages)
+  English: Share Topic
+
+post_share_via (untranslated in 23 languages)
+  English: Share via…
+
+post_trans_1_author (untranslated in 23 languages)
+  English: TransAndProud
+
+post_trans_1_content (untranslated in 23 languages)
+  English: Being trans AND autistic means processing identity on multiple levels. It\'s complex but beautiful 🏳️‍⚧️
+
+premium_dialog_title (untranslated in 23 languages)
+  English: Premium
+
+create_story_background_color (untranslated in 22 languages)
+  English: Background Color
+
+create_story_caption_label (untranslated in 22 languages)
+  English: Caption (optional)
+
+create_story_caption_placeholder (untranslated in 22 languages)
+  English: Add a caption…
+
+create_story_create_text (untranslated in 22 languages)
+  English: Create a text story
+
+create_story_gradient_backgrounds (untranslated in 22 languages)
+  English: Gradient Backgrounds
+
+create_story_message_label (untranslated in 22 languages)
+  English: Your message
+
+create_story_message_placeholder (untranslated in 22 languages)
+  English: What\'s on your mind?
+
+create_story_posting (untranslated in 22 languages)
+  English: Posting…
+
+create_story_share_link (untranslated in 22 languages)
+  English: Share a link with a preview
+
+create_story_text_preview (untranslated in 22 languages)
+  English: Your text here…
+
+create_story_understood (untranslated in 22 languages)
+  English: Understood
+
+easter_egg_rainbow_unlocked (untranslated in 22 languages)
+  English: 🦄 You\'ve unlocked the Rainbow Brain theme!\nFind it in Theme Settings → Secret Themes
+
+mock_notif_repost_msg (untranslated in 22 languages)
+  English: %s shared your post about ADHD tips with %d followers
+
+mock_notif_welcome_msg (untranslated in 22 languages)
+  English: We\'re so glad you\'re here. This is a safe space designed for neurodivergent minds.
+
+mock_notif_welcome_title (untranslated in 22 languages)
+  English: Welcome to NeuroComet! 👋
+
+post_unsave (untranslated in 22 languages)
+  English: Remove from Saved
+
+share_category_chooser (untranslated in 22 languages)
+  English: Share %s
+
+share_category_subject (untranslated in 22 languages)
+  English: %s - NeuroComet Community
+
+share_category_text (untranslated in 22 languages)
+  English: Check out the %1$s community on NeuroComet! 🧠✨\n\nJoin a supportive space for neurodivergent individuals.\n\nhttps://NeuroComet.app/community/%2$s
+
+share_explore_topic_chooser (untranslated in 22 languages)
+  English: Share %s
+
+share_explore_topic_subject (untranslated in 22 languages)
+  English: %1$s %2$s - NeuroComet Community
+
+share_explore_topic_text (untranslated in 22 languages)
+  English: Check out the %1$s community on NeuroComet! %2$s\n\n%3$s\n\n👥 %4$s members\n📝 %5$s posts\n\nJoin the conversation: NeuroComet.app/explore/%6$s
+
+share_story_chooser (untranslated in 22 languages)
+  English: Share Story
+
+share_story_text (untranslated in 22 languages)
+  English: Check out %1$s\'s story! %2$s
+
+story_like (untranslated in 22 languages)
+  English: Like
+
+tone_celebration (untranslated in 22 languages)
+  English: Celebrating!
+
+tone_informative (untranslated in 22 languages)
+  English: Informative
+
+tone_may_be_intense (untranslated in 22 languages)
+  English: May be intense
+
+ads_loading (untranslated in 21 languages)
+  English: Loading ad…
+
+comments_close (untranslated in 21 languages)
+  English: Close comments
+
+comments_no_comments_yet (untranslated in 21 languages)
+  English: No comments yet
+
+comments_replying_to (untranslated in 21 languages)
+  English: Replying to %s
+
+comments_send_comment (untranslated in 21 languages)
+  English: Send comment
+
+create_post_share_thoughts (untranslated in 21 languages)
+  English: Share your thoughts with the community…
+
+explore_topic_stimming (untranslated in 21 languages)
+  English: Stimming
+
+game_constellation_connect (untranslated in 21 languages)
+  English: Constellation Connect
+
+game_constellation_connect_desc (untranslated in 21 languages)
+  English: Draw lines between stars to create constellations
+
+game_constellation_connect_hint (untranslated in 21 languages)
+  English: Connect the stars to reveal patterns ⭐
+
+game_mood_mixer (untranslated in 21 languages)
+  English: Mood Mixer
+
+game_mood_mixer_desc (untranslated in 21 languages)
+  English: Blend colors to match your current mood
+
+game_mood_mixer_hint (untranslated in 21 languages)
+  English: Drag colors together to create new feelings 🎨
+
+game_safe_space_hint (untranslated in 21 languages)
+  English: Add items to create your perfect calm space 🏠
+
+game_worry_jar_hint (untranslated in 21 languages)
+  English: Type a worry and release it to the jar ✨
+
+game_zen_sand (untranslated in 21 languages)
+  English: Zen Sand Garden
+
+game_zen_sand_desc (untranslated in 21 languages)
+  English: Draw calming patterns in virtual sand
+
+game_zen_sand_hint (untranslated in 21 languages)
+  English: Trace your finger to create ripples 🏝️
+
+parental_pin_confirm_label (untranslated in 21 languages)
+  English: Confirm PIN
+
+parental_pin_confirm_new_label (untranslated in 21 languages)
+  English: Confirm New PIN
+
+parental_pin_current_label (untranslated in 21 languages)
+  English: Current PIN
+
+parental_pin_enter_confirm (untranslated in 21 languages)
+  English: Enter PIN to confirm
+
+parental_pin_new_label (untranslated in 21 languages)
+  English: New PIN
+
+post_stim_1_author (untranslated in 21 languages)
+  English: StimSquad
+
+privacy_muted_word_label (untranslated in 21 languages)
+  English: Word or phrase
+
+settings_my_profile_desc (untranslated in 21 languages)
+  English: View and edit your profile, energy status &amp; preferences
+
+settings_section_safety (untranslated in 21 languages)
+  English: Safety &amp; Wellbeing
+
+settings_section_support (untranslated in 21 languages)
+  English: Help &amp; Support
+
+story_liked (untranslated in 21 languages)
+  English: Liked
+
+story_reply (untranslated in 21 languages)
+  English: Reply
+
+theme_settings_subtitle (untranslated in 21 languages)
+  English: Choose a theme that works for you
+
+theme_settings_title (untranslated in 21 languages)
+  English: Theme Settings
+
+tone_anxious (untranslated in 21 languages)
+  English: May feel intense
+
+tone_excited (untranslated in 21 languages)
+  English: Exciting!
+
+tone_frustrated (untranslated in 21 languages)
+  English: Venting
+
+tone_happy (untranslated in 21 languages)
+  English: Positive vibes
+
+tone_question (untranslated in 21 languages)
+  English: Seeking help
+
+tone_sad (untranslated in 21 languages)
+  English: Emotional content
+
+comment_button_content_description (untranslated in 20 languages)
+  English: Comment
+
+comments_be_first (untranslated in 20 languages)
+  English: Be the first to share your thoughts!
+
+create_post_add_media (untranslated in 20 languages)
+  English: Add Media
+
+create_post_chars_over (untranslated in 20 languages)
+  English: %d characters over limit
+
+create_post_chars_remaining (untranslated in 20 languages)
+  English: %d characters remaining
+
+create_post_content_warning (untranslated in 20 languages)
+  English: Content Warning
+
+create_post_content_warning_desc (untranslated in 20 languages)
+  English: This post may contain sensitive content
+
+create_post_image_url (untranslated in 20 languages)
+  English: Image URL
+
+create_post_video_url (untranslated in 20 languages)
+  English: Video URL
+
+explore_view_compact (untranslated in 20 languages)
+  English: Compact
+
+image_edit_text (untranslated in 20 languages)
+  English: Text
+
+more_options_content_description (untranslated in 20 languages)
+  English: More options
+
+post_hidden (untranslated in 20 languages)
+  English: Post hidden
+
+post_image_content_description (untranslated in 20 languages)
+  English: Post image
+
+report_dialog_cancel (untranslated in 20 languages)
+  English: Cancel
+
+report_dialog_reason_hint (untranslated in 20 languages)
+  English: Tell us more (optional)
+
+report_dialog_submit (untranslated in 20 languages)
+  English: Submit Report
+
+report_dialog_title (untranslated in 20 languages)
+  English: Report Content
+
+security_check_failed (untranslated in 20 languages)
+  English: Security check failed. This app cannot run on this device.
+
+share_button_content_description (untranslated in 20 languages)
+  English: Share
+
+theme_current_theme (untranslated in 20 languages)
+  English: Current Theme
+
+theme_dynamic_colors (untranslated in 20 languages)
+  English: Dynamic Colors
+
+theme_quick_settings (untranslated in 20 languages)
+  English: Quick Settings
+
+unknown_user_id (untranslated in 20 languages)
+  English: Unknown
+
+comments_view_all (untranslated in 19 languages)
+  English: View all %d comments
+
+create_post_how_feeling (untranslated in 19 languages)
+  English: How are you feeling?
+
+dm_kids_disabled_body (untranslated in 19 languages)
+  English: Direct Messages are disabled for kids mode (under 13). A parent can change this in Settings → Safety &amp; Parental Controls.
+
+explore_ptsd (untranslated in 19 languages)
+  English: PTSD
+
+explore_view_grid (untranslated in 19 languages)
+  English: Grid
+
+like_button_content_description (untranslated in 19 languages)
+  English: Like
+
+menu_block_user (untranslated in 19 languages)
+  English: Block User
+
+menu_mute_notifications (untranslated in 19 languages)
+  English: Mute Notifications
+
+menu_search_chat (untranslated in 19 languages)
+  English: Search in Chat
+
+menu_unmute_notifications (untranslated in 19 languages)
+  English: Unmute Notifications
+
+menu_view_profile (untranslated in 19 languages)
+  English: View Profile
+
+post_bookmark (untranslated in 19 languages)
+  English: Bookmark
+
+post_bookmarked (untranslated in 19 languages)
+  English: Bookmarked!
+
+post_copied (untranslated in 19 languages)
+  English: Copied to clipboard
+
+post_copy_text (untranslated in 19 languages)
+  English: Copy text
+
+post_delete_post (untranslated in 19 languages)
+  English: Delete Post
+
+post_follow_user (untranslated in 19 languages)
+  English: Follow @%s
+
+post_following_indicator (untranslated in 19 languages)
+  English: • Following
+
+post_not_interested (untranslated in 19 languages)
+  English: Not interested
+
+post_now_following (untranslated in 19 languages)
+  English: Following @%s
+
+post_photos_count (untranslated in 19 languages)
+  English: %d photos
+
+post_report_post (untranslated in 19 languages)
+  English: Report Post
+
+post_time_days_ago (untranslated in 19 languages)
+  English: %dd ago
+
+post_time_hours_ago (untranslated in 19 languages)
+  English: %dh ago
+
+post_time_just_now (untranslated in 19 languages)
+  English: Just now
+
+post_time_minutes_ago (untranslated in 19 languages)
+  English: %dm ago
+
+post_unbookmark (untranslated in 19 languages)
+  English: Remove bookmark
+
+post_unbookmarked (untranslated in 19 languages)
+  English: Bookmark removed
+
+post_unfollow_user (untranslated in 19 languages)
+  English: Unfollow @%s
+
+post_unfollowed (untranslated in 19 languages)
+  English: Unfollowed @%s
+
+premium_dialog_message (untranslated in 19 languages)
+  English: Premium upgrades are not wired in this demo build.
+
+profile_badges_achievements (untranslated in 19 languages)
+  English: Badges &amp; Achievements
+
+profile_communication_preferences (untranslated in 19 languages)
+  English: Communication &amp; Preferences
+
+profile_earned (untranslated in 19 languages)
+  English: Earned
+
+profile_got_it (untranslated in 19 languages)
+  English: Got it!
+
+profile_how_feeling (untranslated in 19 languages)
+  English: How are you feeling?
+
+profile_how_to_communicate (untranslated in 19 languages)
+  English: How to communicate with me
+
+profile_interests_subtitle (untranslated in 19 languages)
+  English: These topics bring them joy - ask about them!
+
+profile_joined (untranslated in 19 languages)
+  English: Joined
+
+profile_posts_will_appear (untranslated in 19 languages)
+  English: When you share photos or videos, they\'ll appear here.
+
+profile_selected (untranslated in 19 languages)
+  English: Selected
+
+profile_special_interests (untranslated in 19 languages)
+  English: Special Interests ✨
+
+profile_website (untranslated in 19 languages)
+  English: Website
+
+security_debug_not_allowed (untranslated in 19 languages)
+  English: Debugging is not allowed in production builds.
+
+security_emulator_not_allowed (untranslated in 19 languages)
+  English: This app cannot run on emulators.
+
+security_integrity_failed (untranslated in 19 languages)
+  English: App integrity verification failed.
+
+security_rooted_device (untranslated in 19 languages)
+  English: This app cannot run on rooted devices for your security.
+
+security_status_at_risk (untranslated in 19 languages)
+  English: 🔴 Device security: At risk - Security features enabled
+
+security_status_critical (untranslated in 19 languages)
+  English: 🚨 Device security: Critical - App restrictions active
+
+security_status_excellent (untranslated in 19 languages)
+  English: ✅ Device security: Excellent
+
+security_status_fair (untranslated in 19 languages)
+  English: ⚠️ Device security: Fair - Some features may be restricted
+
+security_status_good (untranslated in 19 languages)
+  English: ✅ Device security: Good
+
+security_tampering_detected (untranslated in 19 languages)
+  English: Security framework tampering detected.
+
+settings_go_premium (untranslated in 19 languages)
+  English: Go Premium ⭐
+
+settings_premium_active (untranslated in 19 languages)
+  English: Premium Active ✨
+
+settings_premium_thanks (untranslated in 19 languages)
+  English: Thank you for your support!
+
+settings_theme_desc (untranslated in 19 languages)
+  English: Colors, styles &amp; neurodivergent themes
+
+story_user_story_content_description (untranslated in 19 languages)
+  English: %s\'s Story
+
+action_delete_chat (untranslated in 18 languages)
+  English: Delete Chat
+
+action_react (untranslated in 18 languages)
+  English: React…
+
+ads_premium_no_ads (untranslated in 18 languages)
+  English: No ads - Premium member
+
+ads_watch_to_support (untranslated in 18 languages)
+  English: Watch a short ad to support NeuroComet
+
+create_post_close (untranslated in 18 languages)
+  English: Close
+
+explore_topic_queer_pride (untranslated in 18 languages)
+  English: Queer Pride
+
+explore_view_large (untranslated in 18 languages)
+  English: Large
+
+feed_content_hidden_kids (untranslated in 18 languages)
+  English: Content hidden for kids mode
+
+feed_reading_time_minutes (untranslated in 18 languages)
+  English: ⏱️ ~%dm read
+
+feed_reading_time_seconds (untranslated in 18 languages)
+  English: ⏱️ ~%ds read
+
+feed_removed_from_saved (untranslated in 18 languages)
+  English: Removed from saved
+
+feed_save_post (untranslated in 18 languages)
+  English: Save post
+
+feed_saved (untranslated in 18 languages)
+  English: Saved!
+
+game_worry_jar (untranslated in 18 languages)
+  English: Worry Jar
+
+game_worry_jar_desc (untranslated in 18 languages)
+  English: Write worries and watch them float away
+
+image_edit_contrast (untranslated in 18 languages)
+  English: Contrast
+
+image_edit_saturation (untranslated in 18 languages)
+  English: Saturation
+
+image_edit_stickers (untranslated in 18 languages)
+  English: Stickers
+
+menu_copy_link (untranslated in 18 languages)
+  English: Copy Link
+
+menu_hide (untranslated in 18 languages)
+  English: Hide
+
+menu_report (untranslated in 18 languages)
+  English: Report
+
+menu_share (untranslated in 18 languages)
+  English: Share
+
+menu_unblock_user (untranslated in 18 languages)
+  English: Unblock User
+
+messages_empty_hint (untranslated in 18 languages)
+  English: Tip: Try Explore → tap a profile → Message (mock).
+
+messages_filtering_unread (untranslated in 18 languages)
+  English: You\'re filtering to Unread.
+
+messages_no_results_subtitle (untranslated in 18 languages)
+  English: Try a different search or switch back to All.
+
+messages_no_results_title (untranslated in 18 languages)
+  English: No results
+
+post_add_more_media (untranslated in 18 languages)
+  English: Add more
+
+post_max_media_reached (untranslated in 18 languages)
+  English: Maximum %d items allowed
+
+post_media_count (untranslated in 18 languages)
+  English: %d of %d
+
+post_remove_media (untranslated in 18 languages)
+  English: Remove
+
+post_save (untranslated in 18 languages)
+  English: Save Post
+
+post_share (untranslated in 18 languages)
+  English: Share
+
+profile_about (untranslated in 18 languages)
+  English: About
+
+profile_cancel (untranslated in 18 languages)
+  English: Cancel
+
+profile_no_badges_yet (untranslated in 18 languages)
+  English: No badges yet
+
+profile_no_posts_yet (untranslated in 18 languages)
+  English: No posts yet
+
+profile_share_first_post (untranslated in 18 languages)
+  English: Share your first post!
+
+settings_data (untranslated in 18 languages)
+  English: Data &amp; Storage
+
+settings_data_desc (untranslated in 18 languages)
+  English: Cache, downloads &amp; data usage
+
+settings_feedback_desc (untranslated in 18 languages)
+  English: Share your thoughts &amp; suggestions
+
+settings_help_center_desc (untranslated in 18 languages)
+  English: FAQs, guides &amp; tutorials
+
+settings_privacy_desc (untranslated in 18 languages)
+  English: Who can see your content &amp; message you
+
+settings_reduce_motion_desc (untranslated in 18 languages)
+  English: Minimize animations &amp; movement
+
+settings_section_account (untranslated in 18 languages)
+  English: Account
+
+settings_text_display (untranslated in 18 languages)
+  English: Text &amp; Display
+
+settings_text_display_desc (untranslated in 18 languages)
+  English: Font size, reading options &amp; dyslexia support
+
+toast_copied (untranslated in 18 languages)
+  English: Copied!
+
+toast_hidden (untranslated in 18 languages)
+  English: Hidden from feed
+
+toast_notifications_muted (untranslated in 18 languages)
+  English: Notifications muted 🔕
+
+toast_notifications_unmuted (untranslated in 18 languages)
+  English: Notifications unmuted 🔔
+
+toast_profile_coming_soon (untranslated in 18 languages)
+  English: Profile view coming soon! 👤
+
+toast_reported (untranslated in 18 languages)
+  English: Reported, thank you!
+
+toast_search_coming_soon (untranslated in 18 languages)
+  English: Chat search coming soon! 🔍
+
+toast_shared (untranslated in 18 languages)
+  English: Shared!
+
+toast_user_blocked (untranslated in 18 languages)
+  English: User blocked ✗
+
+toast_user_unblocked (untranslated in 18 languages)
+  English: User unblocked ✓
+
+action_archive (untranslated in 17 languages)
+  English: Archive
+
+action_unpin (untranslated in 17 languages)
+  English: Unpin
+
+ads_disabled_kids (untranslated in 17 languages)
+  English: Ads are disabled in Kids Mode
+
+ads_error_load_failed (untranslated in 17 languages)
+  English: Ad failed to load
+
+ads_rewarded_complete (untranslated in 17 languages)
+  English: Thank you! You earned a reward.
+
+create_post_image_url_hint (untranslated in 17 languages)
+  English: Optional: Image URL
+
+create_post_posting (untranslated in 17 languages)
+  English: Posting…
+
+create_post_tone_label (untranslated in 17 languages)
+  English: Tone
+
+create_post_video_url_hint (untranslated in 17 languages)
+  English: Optional: Video URL
+
+explore_adhd (untranslated in 17 languages)
+  English: ADHD
+
+explore_topic_adhd_hacks (untranslated in 17 languages)
+  English: ADHD Hacks
+
+explore_topic_gaming (untranslated in 17 languages)
+  English: Gaming
+
+game_safe_space (untranslated in 17 languages)
+  English: Safe Space Builder
+
+game_safe_space_desc (untranslated in 17 languages)
+  English: Design your own calming virtual room
+
+image_edit_add_text (untranslated in 17 languages)
+  English: Add text…
+
+image_edit_adjust (untranslated in 17 languages)
+  English: Adjust
+
+image_edit_brightness (untranslated in 17 languages)
+  English: Brightness
+
+image_edit_crop (untranslated in 17 languages)
+  English: Crop
+
+image_edit_done (untranslated in 17 languages)
+  English: Done
+
+image_edit_draw (untranslated in 17 languages)
+  English: Draw
+
+image_edit_drawing_on (untranslated in 17 languages)
+  English: Drawing mode on
+
+image_edit_filters (untranslated in 17 languages)
+  English: Filters
+
+image_edit_title (untranslated in 17 languages)
+  English: Edit Image
+
+image_edit_undo (untranslated in 17 languages)
+  English: Undo
+
+notifications_unread_count (untranslated in 17 languages)
+  English: %d unread
+
+post_block_user (untranslated in 17 languages)
+  English: Block @%s
+
+settings_animation (untranslated in 17 languages)
+  English: Animation Settings
+
+settings_animation_desc (untranslated in 17 languages)
+  English: Control motion and visual effects
+
+settings_animation_disabled (untranslated in 17 languages)
+  English: All animations disabled
+
+settings_premium_price (untranslated in 17 languages)
+  English: Ad-free experience • $2/month or $60 lifetime
+
+settings_section_about (untranslated in 17 languages)
+  English: About
+
+settings_theme (untranslated in 17 languages)
+  English: Theme Settings
+
+widget_add_task (untranslated in 17 languages)
+  English: Add Task
+
+widget_calm_corner (untranslated in 17 languages)
+  English: Calm Corner
+
+widget_daily_checkin (untranslated in 17 languages)
+  English: How are you feeling?
+
+widget_energy_description (untranslated in 17 languages)
+  English: Track your energy and social battery level from your home screen
+
+widget_energy_level (untranslated in 17 languages)
+  English: Energy Level
+
+widget_energy_name (untranslated in 17 languages)
+  English: Energy Level
+
+widget_focus_timer (untranslated in 17 languages)
+  English: Focus Timer
+
+widget_minutes_remaining (untranslated in 17 languages)
+  English: minutes remaining
+
+widget_sensory_status (untranslated in 17 languages)
+  English: Sensory Status
+
+widget_social_battery (untranslated in 17 languages)
+  English: Social Battery
+
+widget_task_checklist (untranslated in 17 languages)
+  English: Today\'s Tasks
+
+action_copy (untranslated in 16 languages)
+  English: Copy
+
+action_retry (untranslated in 16 languages)
+  English: Retry
+
+create_post_add_image (untranslated in 16 languages)
+  English: Add Image
+
+create_post_add_video (untranslated in 16 languages)
+  English: Add Video
+
+create_story_add_button (untranslated in 16 languages)
+  English: ADD STORY
+
+create_story_cancel (untranslated in 16 languages)
+  English: Cancel
+
+create_story_duration_hint (untranslated in 16 languages)
+  English: Duration in seconds (e.g., 5)
+
+create_story_image_url_hint (untranslated in 16 languages)
+  English: Image URL for your story
+
+explore_section_daily_living (untranslated in 16 languages)
+  English: Daily Living
+
+explore_section_family (untranslated in 16 languages)
+  English: Family &amp; Parenting
+
+explore_section_health (untranslated in 16 languages)
+  English: Health &amp; Wellness
+
+explore_section_interests (untranslated in 16 languages)
+  English: Special Interests &amp; Hobbies
+
+explore_section_sensory (untranslated in 16 languages)
+  English: Sensory &amp; Regulation
+
+explore_section_social (untranslated in 16 languages)
+  English: Social &amp; Communication
+
+explore_section_work (untranslated in 16 languages)
+  English: Work &amp; Education
+
+explore_topic_adhd_hacks_desc (untranslated in 16 languages)
+  English: Productivity tips, time management, and life hacks for ADHD brains
+
+explore_topic_safe_foods (untranslated in 16 languages)
+  English: Safe Foods
+
+icon_customization_title (untranslated in 16 languages)
+  English: Choose Your Icon
+
+icon_style_calm (untranslated in 16 languages)
+  English: Calm Waters
+
+icon_style_calm_desc (untranslated in 16 languages)
+  English: Soothing blue tones for relaxation
+
+icon_style_default (untranslated in 16 languages)
+  English: Default Comet
+
+icon_style_default_desc (untranslated in 16 languages)
+  English: The classic NeuroComet icon
+
+icon_style_energy (untranslated in 16 languages)
+  English: Energy Burst
+
+icon_style_energy_desc (untranslated in 16 languages)
+  English: Vibrant colors for motivation
+
+icon_style_focus (untranslated in 16 languages)
+  English: Focus Mode
+
+icon_style_focus_desc (untranslated in 16 languages)
+  English: Minimal design to reduce distractions
+
+icon_style_pride (untranslated in 16 languages)
+  English: Neurodiversity Pride
+
+icon_style_pride_desc (untranslated in 16 languages)
+  English: Celebrate neurodivergent identity
+
+icon_style_sensory (untranslated in 16 languages)
+  English: Sensory Friendly
+
+icon_style_sensory_desc (untranslated in 16 languages)
+  English: Muted tones gentle on the eyes
+
+messages_empty_subtitle (untranslated in 16 languages)
+  English: When you message someone, it will show up here.
+
+messages_empty_title (untranslated in 16 languages)
+  English: No conversations yet
+
+moments_new_count (untranslated in 16 languages)
+  English: %d new
+
+notification_action_dismiss (untranslated in 16 languages)
+  English: Dismiss
+
+notification_action_mark_read (untranslated in 16 languages)
+  English: Mark as read
+
+notification_action_reply (untranslated in 16 languages)
+  English: Reply
+
+notification_action_view (untranslated in 16 languages)
+  English: View
+
+notification_badge_earned_message (untranslated in 16 languages)
+  English: You earned the achievement: %s
+
+notification_badge_earned_title (untranslated in 16 languages)
+  English: Badge Earned: %s
+
+notification_icon_description (untranslated in 16 languages)
+  English: Notification icon
+
+profile_more_options (untranslated in 16 languages)
+  English: More Options
+
+profile_mutual_friends (untranslated in 16 languages)
+  English: Mutual Friends
+
+settings_blocked (untranslated in 16 languages)
+  English: Blocked Accounts
+
+settings_blocked_desc (untranslated in 16 languages)
+  English: Manage users you\'ve blocked
+
+settings_break_reminders (untranslated in 16 languages)
+  English: Break Reminders
+
+settings_break_reminders_desc (untranslated in 16 languages)
+  English: Get prompted to take breaks
+
+settings_content_filters (untranslated in 16 languages)
+  English: Content Filters
+
+settings_content_filters_desc (untranslated in 16 languages)
+  English: Manage sensitive content settings
+
+settings_dark_mode (untranslated in 16 languages)
+  English: Dark Mode
+
+settings_dark_mode_desc (untranslated in 16 languages)
+  English: Use dark theme for low-light environments
+
+settings_feedback (untranslated in 16 languages)
+  English: Send Feedback
+
+settings_help_center (untranslated in 16 languages)
+  English: Help Center
+
+settings_high_contrast (untranslated in 16 languages)
+  English: High Contrast
+
+settings_high_contrast_desc (untranslated in 16 languages)
+  English: Maximum contrast for visibility
+
+settings_keep_screen_on (untranslated in 16 languages)
+  English: Keep Screen On
+
+settings_keep_screen_on_desc (untranslated in 16 languages)
+  English: Prevent screen from dimming during focus time
+
+settings_kid_mode (untranslated in 16 languages)
+  English: Kid Mode
+
+settings_kid_mode_desc (untranslated in 16 languages)
+  English: Age-appropriate content filtering
+
+settings_licenses (untranslated in 16 languages)
+  English: Open Source Licenses
+
+settings_my_profile (untranslated in 16 languages)
+  English: My Profile
+
+settings_notif_desc (untranslated in 16 languages)
+  English: Customize what notifications you receive
+
+settings_notif_prefs (untranslated in 16 languages)
+  English: Notification Preferences
+
+settings_parental (untranslated in 16 languages)
+  English: Parental Controls
+
+settings_parental_desc (untranslated in 16 languages)
+  English: Safety settings for younger users
+
+settings_parental_pin_set (untranslated in 16 languages)
+  English: PIN is set • Tap to manage
+
+settings_privacy (untranslated in 16 languages)
+  English: Privacy Settings
+
+settings_privacy_policy (untranslated in 16 languages)
+  English: Privacy Policy
+
+settings_quiet_hours (untranslated in 16 languages)
+  English: Quiet Hours
+
+settings_quiet_hours_desc (untranslated in 16 languages)
+  English: Schedule do-not-disturb periods
+
+settings_reduce_motion (untranslated in 16 languages)
+  English: Reduce Motion
+
+settings_report_issue (untranslated in 16 languages)
+  English: Report an Issue
+
+settings_report_issue_desc (untranslated in 16 languages)
+  English: Let us know about bugs or problems
+
+settings_screen_reader (untranslated in 16 languages)
+  English: Screen Reader
+
+settings_screen_reader_desc (untranslated in 16 languages)
+  English: Optimize for assistive technologies
+
+settings_terms (untranslated in 16 languages)
+  English: Terms of Service
+
+simulate_badge_notification_toast (untranslated in 16 languages)
+  English: Simulated: New Badge Notification!
+
+story_add_button_content_description (untranslated in 16 languages)
+  English: Add Story
+
+story_close_button_content_description (untranslated in 16 languages)
+  English: Close story
+
+story_content_description (untranslated in 16 languages)
+  English: Story content
+
+story_delete_button_content_description (untranslated in 16 languages)
+  English: Delete story
+
+story_delete_dialog_cancel (untranslated in 16 languages)
+  English: Cancel
+
+story_delete_dialog_confirm (untranslated in 16 languages)
+  English: DELETE
+
+story_delete_dialog_text (untranslated in 16 languages)
+  English: This will permanently delete this story. This action cannot be undone.
+
+story_delete_dialog_title (untranslated in 16 languages)
+  English: Delete Story?
+
+story_your_story_label (untranslated in 16 languages)
+  English: Your Story
+
+tone_neutral (untranslated in 16 languages)
+  English: Neutral
+
+comments_send_button_description (untranslated in 15 languages)
+  English: Send
+
+dm_search_conversations_placeholder (untranslated in 15 languages)
+  English: Search conversations
+
+game_emotion_garden_hint (untranslated in 15 languages)
+  English: Tap to plant an emotion flower, watch it grow! 🌸
+
+neuro_state_colorblind_deuter (untranslated in 15 languages)
+  English: Deuteranopia
+
+neuro_state_colorblind_protan (untranslated in 15 languages)
+  English: Protanopia
+
+neuro_state_colorblind_tritan (untranslated in 15 languages)
+  English: Tritanopia
+
+post_content_hidden_kids (untranslated in 15 languages)
+  English: Content hidden for kids mode
+
+settings_app_icon (untranslated in 15 languages)
+  English: App Icon
+
+settings_app_icon_desc (untranslated in 15 languages)
+  English: Choose your favorite icon style
+
+share_sheet_copy_link_desc (untranslated in 15 languages)
+  English: Copy post link to clipboard
+
+share_sheet_repost_desc (untranslated in 15 languages)
+  English: Share to your feed
+
+share_sheet_send_dm_desc (untranslated in 15 languages)
+  English: Share directly to a friend
+
+share_sheet_share_via_desc (untranslated in 15 languages)
+  English: Share to other apps
+
+splash_msg_anxiety_grounding_3 (untranslated in 15 languages)
+  English: Stable &amp; secure
+
+splash_msg_autism_low_stim_2 (untranslated in 15 languages)
+  English: Soft &amp; gentle
+
+splash_msg_colorblind_deuter_2 (untranslated in 15 languages)
+  English: Blue &amp; orange clarity
+
+splash_msg_colorblind_protan_2 (untranslated in 15 languages)
+  English: Blue &amp; yellow harmony
+
+splash_msg_colorblind_tritan_2 (untranslated in 15 languages)
+  English: Pink &amp; teal contrast
+
+splash_msg_dyslexia_friendly_1 (untranslated in 15 languages)
+  English: Clear &amp; readable
+
+tone_supportive (untranslated in 15 languages)
+  English: Supportive
+
+topic_more_options_soon (untranslated in 15 languages)
+  English: More options coming soon! ⚙️
+
+topic_not_found (untranslated in 15 languages)
+  English: Topic not found
+
+topic_share (untranslated in 15 languages)
+  English: Share Topic
+
+topic_tab_posts (untranslated in 15 languages)
+  English: Posts
+
+widget_focus_timer_name (untranslated in 15 languages)
+  English: Focus Timer
+

@@ -1,0 +1,25 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/9.4.0-rc-1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+Warning: SDK processing. This version only understands SDK XML versions up to 3 but an SDK XML file of version 4 was encountered. This can happen if you use versions of Android Studio and the command-line tools that were released at different times.
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:generateDebugBuildConfig UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:processDebugGoogleServices UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :app:processDebugNavigationResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:generateDebugRFile UP-TO-DATE
+
+> Task :app:compileDebugKotlin
+w: The feature plugin:androidx.compose.compiler.plugins.kotlin:featureFlag=OptimizeNonSkippingGroups is enabled by default and specifying this option explicitly is not necessary.
+w: file:///C:/Users/bkyil/AndroidStudioProjects/NeuroComet/app/src/main/java/com/kyilmaz/neurocomet/IconCustomization.kt:1016:33 'static field EXTRA_SHORTCUT_INTENT: String' is deprecated. Deprecated in Java.
+w: file:///C:/Users/bkyil/AndroidStudioProjects/NeuroComet/app/src/main/java/com/kyilmaz/neurocomet/IconCustomization.kt:1017:33 'static field EXTRA_SHORTCUT_NAME: String' is deprecated. Deprecated in Java.
+w: file:///C:/Users/bkyil/AndroidStudioProjects/NeuroComet/app/src/main/java/com/kyilmaz/neurocomet/IconCustomization.kt:1018:33 'static field EXTRA_SHORTCUT_ICON: String' is deprecated. Deprecated in Java.
+w: file:///C:/Users/bkyil/AndroidStudioProjects/NeuroComet/app/src/main/java/com/kyilmaz/neurocomet/IconCustomization.kt:1034:33 'static field EXTRA_SHORTCUT_INTENT: String' is deprecated. Deprecated in Java.
+w: file:///C:/Users/bkyil/AndroidStudioProjects/NeuroComet/app/src/main/java/com/kyilmaz/neurocomet/IconCustomization.kt:1035:33 'static field EXTRA_SHORTCUT_NAME: String' is deprecated. Deprecated in Java.
+w: file:///C:/Users/bkyil/AndroidStudioProjects/NeuroComet/app/src/main/java/com/kyilmaz/neurocomet/IconCustomization.kt:1036:33 'static field EXTRA_SHORTCUT_ICON: String' is deprecated. Deprecated in Java.
+
+BUILD SUCCESSFUL in 47s
+8 actionable tasks: 1 executed, 7 up-to-date
+Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.4.0-rc-1/userguide/configuration_cache_enabling.html

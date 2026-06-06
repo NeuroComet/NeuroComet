@@ -1,0 +1,6 @@
+﻿source=2816x1536 segWidth=563
+segment 0 avgRgb=125,139,151 avgSat=26 avgLum=137 count=24064
+segment 1 avgRgb=141,139,160 avgSat=25 avgLum=141 count=24064
+segment 2 avgRgb=147,128,155 avgSat=29 avgLum=134 count=24063
+segment 3 avgRgb=126,149,149 avgSat=25 avgLum=144 count=24063
+segment 4 avgRgb=131,132,133 avgSat=8 avgLum=132 count=24061

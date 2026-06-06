@@ -1,0 +1,5 @@
+﻿Baseline (values/strings.xml): 1435 strings
+
+Locale counts:
+
+Files with missing strings:

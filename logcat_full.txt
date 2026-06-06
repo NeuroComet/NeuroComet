@@ -1,0 +1,1035 @@
+--------- beginning of main
+02-26 22:37:00.582  7369  9282 I AiAiTranslate: C2T langIding: ar / 0.001851
+02-26 22:37:00.582  7369  9282 I AiAiTranslate: C2T langIding: ja / 0.001150
+02-26 22:37:00.582  7369  9282 I AiAiTranslate: C2T langIding: az / 0.000039
+02-26 22:37:00.582  7369  9282 I AiAiTranslate: C2T langIding: zu / 0.004818
+02-26 22:37:00.582  7369  9282 I AiAiTranslate: C2T langIding: ro / 0.000844
+02-26 22:37:00.582  7369  9282 I AiAiTranslate: C2T langIding: ceb / 0.004145
+02-26 22:37:00.582  7369  9282 I AiAiTranslate: C2T langIding: be / 0.000117
+02-26 22:37:00.582  7369  9282 I AiAiTranslate: C2T langIding: ru / 0.001070
+02-26 22:37:00.582  7369  9282 I AiAiTranslate: C2T langIding: bg / 0.000741
+02-26 22:37:00.582  7369  9282 I AiAiTranslate: C2T langIding: hi-Latn / 0.470052
+02-26 22:37:00.582  7369  9282 I AiAiTranslate: C2T langIding: bn / 0.000030
+02-26 22:37:00.582  7369  9282 I AiAiTranslate: C2T langIding: jv / 0.004587
+02-26 22:37:00.583  7369  9282 I AiAiTranslate: C2T langIding: unknown / 0.002222
+02-26 22:37:00.583  7369  9282 I AiAiTranslate: C2T langIding: bs / 0.002627
+02-26 22:37:00.583  7369  9282 I AiAiTranslate: C2T langIding: sd / 0.000732
+02-26 22:37:00.583  7369  9282 I AiAiTranslate: C2T langIding: ka / 0.000111
+02-26 22:37:00.583  7369  9282 I AiAiTranslate: C2T langIding: si / 0.000013
+02-26 22:37:00.583  7369  9282 I AiAiTranslate: C2T langIding: sk / 0.000129
+02-26 22:37:00.583  7369  9282 I AiAiTranslate: C2T langIding: sl / 0.000473
+02-26 22:37:00.583  7369  9282 I AiAiTranslate: C2T langIding: sm / 0.001412
+02-26 22:37:00.583  7369  9282 I AiAiTranslate: C2T langIding: sn / 0.000938
+02-26 22:37:00.583  7369  9282 I AiAiTranslate: C2T langIding: so / 0.028460
+02-26 22:37:00.583  7369  9282 I AiAiTranslate: C2T langIding: ca / 0.003777
+02-26 22:37:00.583  7369  9282 I AiAiTranslate: C2T langIding: sq / 0.000096
+02-26 22:37:00.583  7369  9282 I AiAiTranslate: C2T langIding: sr / 0.001055
+02-26 22:37:00.583  7369  9282 I AiAiTranslate: C2T langIding: kk / 0.000094
+02-26 22:37:00.583  7369  9282 I AiAiTranslate: C2T langIding: st / 0.018716
+02-26 22:37:00.584  7369  9282 I AiAiTranslate: C2T langIding: km / 0.000235
+02-26 22:37:00.584  7369  9282 I AiAiTranslate: C2T langIding: su / 0.000948
+02-26 22:37:00.584  7369  9282 I AiAiTranslate: C2T langIding: kn / 0.000008
+02-26 22:37:00.584  7369  9282 I AiAiTranslate: C2T langIding: sv / 0.003051
+02-26 22:37:00.584  7369  9282 I AiAiTranslate: C2T langIding: ko / 0.000583
+02-26 22:37:00.584  7369  9282 I AiAiTranslate: C2T langIding: sw / 0.001834
+02-26 22:37:00.584  7369  9282 I AiAiTranslate: C2T langIding: ku / 0.000396
+02-26 22:37:00.584  7369  9282 I AiAiTranslate: C2T langIding: co / 0.000412
+02-26 22:37:00.584  7369  9282 I AiAiTranslate: C2T langIding: ta / 0.000018
+02-26 22:37:00.585  7369  9282 I AiAiTranslate: C2T langIding: ky / 0.000566
+02-26 22:37:00.585  7369  9282 I AiAiTranslate: C2T langIding: cs / 0.000035
+02-26 22:37:00.585  7369  9282 I AiAiTranslate: C2T langIding: te / 0.000188
+02-26 22:37:00.585  7369  9282 I AiAiTranslate: C2T langIding: tg / 0.000801
+02-26 22:37:00.585  7369  9282 I AiAiTranslate: C2T langIding: th / 0.000024
+02-26 22:37:00.585  7369  9282 I AiAiTranslate: C2T langIding: la / 0.000087
+02-26 22:37:00.585  7369  9282 I AiAiTranslate: C2T langIding: cy / 0.000684
+02-26 22:37:00.585  7369  9282 I AiAiTranslate: C2T langIding: lb / 0.000171
+02-26 22:37:00.585  7369  9282 I AiAiTranslate: C2T langIding: da / 0.022572
+02-26 22:37:00.585  7369  9282 I AiAiTranslate: C2T langIding: tr / 0.000720
+02-26 22:37:00.585  7369  9282 I AiAiTranslate: C2T langIding: de / 0.002962
+02-26 22:37:00.585  7369  9282 I AiAiTranslate: C2T langIding: lo / 0.000026
+02-26 22:37:00.586  7369  9282 I AiAiTranslate: C2T langIding: ar-Latn / 0.004826
+02-26 22:37:00.586  7369  9282 I AiAiTranslate: C2T langIding: lt / 0.000465
+02-26 22:37:00.586  7369  9282 I AiAiTranslate: C2T langIding: lv / 0.000052
+02-26 22:37:00.586  7369  9282 I AiAiTranslate: C2T langIding: el-Latn / 0.003125
+02-26 22:37:00.586  7369  9282 I AiAiTranslate: C2T langIding: uk / 0.000776
+02-26 22:37:00.586  7369  9282 I AiAiTranslate: C2T langIding: mg / 0.026244
+02-26 22:37:00.586  7369  9282 I AiAiTranslate: C2T langIding: mi / 0.007006
+02-26 22:37:00.586  7369  9282 I AiAiTranslate: C2T langIding: ur / 0.000321
+02-26 22:37:00.586  7369  9282 I AiAiTranslate: C2T langIding: mk / 0.002331
+02-26 22:37:00.586  7369  9282 I AiAiTranslate: C2T langIding: haw / 0.000109
+02-26 22:37:00.586  7369  9282 I AiAiTranslate: C2T langIding: ml / 0.000058
+02-26 22:37:00.586  7369  9282 I AiAiTranslate: C2T langIding: mn / 0.000385
+02-26 22:37:00.586  7369  9282 I AiAiTranslate: C2T langIding: mr / 0.002599
+02-26 22:37:00.586  7369  9282 I AiAiTranslate: C2T langIding: uz / 0.000355
+02-26 22:37:00.586  7369  9282 I AiAiTranslate: C2T langIding: ms / 0.007997
+02-26 22:37:00.586  7369  9282 I AiAiTranslate: C2T langIding: el / 0.000070
+02-26 22:37:00.587  7369  9282 I AiAiTranslate: C2T langIding: mt / 0.001629
+02-26 22:37:00.587  7369  9282 I AiAiTranslate: C2T langIding: en / 0.067639
+02-26 22:37:00.590  7369  9282 I AiAiTranslate: C2T langIding: eo / 0.000381
+02-26 22:37:00.590  7369  9282 I AiAiTranslate: C2T langIding: my / 0.000082
+02-26 22:37:00.590  7369  9282 I AiAiTranslate: C2T langIding: es / 0.001144
+02-26 22:37:00.590  7369  9282 I AiAiTranslate: C2T langIding: et / 0.000275
+02-26 22:37:00.590  7369  9282 I AiAiTranslate: C2T langIding: eu / 0.016028
+02-26 22:37:00.590  7369  9282 I AiAiTranslate: C2T langIding: vi / 0.002064
+02-26 22:37:00.590  7369  9282 I AiAiTranslate: C2T langIding: ne / 0.000791
+02-26 22:37:00.590  7369  9282 I AiAiTranslate: C2T langIding: fa / 0.001621
+02-26 22:37:00.590  7369  9282 I AiAiTranslate: C2T langIding: nl / 0.001860
+02-26 22:37:00.591  7369  9282 I AiAiTranslate: C2T langIding: zh-Latn / 0.000164
+02-26 22:37:00.591  7369  9282 I AiAiTranslate: C2T langIding: no / 0.047988
+02-26 22:37:00.591  7369  9282 I AiAiTranslate: C2T langIding: fi / 0.004618
+02-26 22:37:00.591  7369  9282 I AiAiTranslate: C2T langIding: ny / 0.000914
+02-26 22:37:00.591  7369  9282 I AiAiTranslate: C2T langIding: fr / 0.000301
+02-26 22:37:00.591  7369  9282 I AiAiTranslate: C2T langIding: ru-Latn / 0.000449
+02-26 22:37:00.591  7369  9282 I AiAiTranslate: C2T langIding: fy / 0.001029
+02-26 22:37:00.591  7369  9282 I AiAiTranslate: C2T langIding: bg-Latn / 0.004638
+02-26 22:37:00.591  7369  9282 I AiAiTranslate: C2T langIding: ga / 0.000372
+02-26 22:37:00.591  7369  9282 I AiAiTranslate: C2T langIding: gd / 0.009931
+02-26 22:37:00.591  7369  9282 I AiAiTranslate: C2T langIding: ja-Latn / 0.019465
+02-26 22:37:00.591  7369  9282 I AiAiTranslate: C2T langIding: gl / 0.004258
+02-26 22:37:00.591  7369  9282 I AiAiTranslate: C2T langIding: gu / 0.000061
+02-26 22:37:00.591  7369  9282 I AiAiTranslate: C2T langIding: xh / 0.002128
+02-26 22:37:00.591  7369  9282 I AiAiTranslate: C2T langIding: pa / 0.000680
+02-26 22:37:00.591  7369  9282 I AiAiTranslate: C2T langIding: ha / 0.083522
+02-26 22:37:00.592  7369  9282 I AiAiTranslate: C2T langIding: pl / 0.000192
+02-26 22:37:00.594  5992 27298 I FusedLocation: stationary throttling disengaged [CONTEXT service_id=6 ]
+--------- beginning of system
+02-26 22:37:00.606  1827  2115 D ActivityManager: sync unfroze 22641 com.yelp.android for 3
+02-26 22:37:00.617  1390  1390 D AOC     : A3:MSG: tmd3743_device.cc, 997: USF: TMD3743: C/G switch 1 -> 0 d_lux:26.92 w_lux: 15.95 C:0.57 G:0.24
+02-26 22:37:00.620  1339  1361 I AIDL    : Gnss::setPositionMode: Called
+02-26 22:37:00.621  1339  1361 I AIDL    : Gnss::setPositionMode: Exit
+02-26 22:37:00.621  1160  1231 W PixelGnssChreClient: UpdateLocationInterval 0 and Location start 1.
+02-26 22:37:00.624  1339  1361 I AIDL    : Gnss::start: Called
+02-26 22:37:00.624  1086  2002 D usf_sensor_hal: accelerometer: Enter Batch. Period = 20000000, latency = 0.
+02-26 22:37:00.624  1390  1390 D AOC     : A3:MSG: controller.cc, 933: SysMem: ipc: C-F1-Ar, cmd ID: 0x00c8, tag: 0xad, rc: 0
+02-26 22:37:00.624  1390  1390 D AOC     : A3:MSG: controller.cc, 933: SysMem: ipc: C-F1-Ar, cmd ID: 0x00c8, tag: 0xae, rc: 0
+02-26 22:37:00.624  1339  1361 I AIDL    : GNSS Version : [ SPOTNAV_4.15.5_9_260119_R1_307118_Jan 16 2026_13:13:42 ]
+02-26 22:37:00.624  1339  1361 I AIDL    : GNSS Commit Hash: d4e25680c3ad9b457f504569005687745c0e2c73
+02-26 22:37:00.625  1160  1231 W PixelGnssChreClient: LocationStart 1 and Interval 0.
+02-26 22:37:00.626  1339  1365 I AIDL    : GNSSReportStatus: status=3 cbIsNULL=0
+02-26 22:37:00.626  1390  1390 D AOC     : A3:MSG: usf_sensor.cc, 2566: USF: Received reconfig sampling request for ICM45631 Accelerometer.
+02-26 22:37:00.626  1390  1390 D AOC     : A3:MSG: icm456xy_device.cc, 443: USF: Device: type: 0, p/l: 20000000 ns/ 0 ns, O/WM/I: 50/3/17
+02-26 22:37:00.627  1339  1365 I AIDL    : GNSSReportStatus: gnssStatusCb() returned
+02-26 22:37:00.627  1086  2002 D usf_sensor_hal: IMU temperature: Enter Batch. Period = 666667000, latency = 0.
+02-26 22:37:00.627  1339  1365 I AIDL    : GNSSReportStatus: status=1 cbIsNULL=0
+02-26 22:37:00.628  1338  2419 D GNSS    : GNSS Library Version: 
+02-26 22:37:00.628  1338  2419 D GNSS    : GNSS SW 36(Android 16) Commit=d4e25680c3ad9b457f504569005687745c0e2c73 GL=
+02-26 22:37:00.628  1390  1390 D AOC     : A3:MSG: usf_sensor.cc, 2566: USF: Received reconfig sampling request for ICM45631 Temperature.
+02-26 22:37:00.630  1338  2419 I LibSITRil-Gps: RequestAGPS: msgId=233 data=0x0 data_len=0 callback=0x716e64c300
+02-26 22:37:00.630  1338  2419 D RILClient: [OemClient] RILC_Send msgId:233 lengh:0 channel:0
+02-26 22:37:00.630  1338  2419 D RILClient: [OemClient]REQ (clientId = 1, t = 149, msgId = 233, len = 0 channel = 0)
+02-26 22:37:00.630  1086  2002 D usf_sensor_hal: accelerometer: Enter Flush
+02-26 22:37:00.630  1160  1377 W PixelGnssChreClient: Failed to find the AR endpoint. Will not connect until it is available.
+02-26 22:37:00.630  1338  2419 I LibSITRil-Gps: RequestAGPS: msgId=230 data=0x0 data_len=0 callback=0x716e64c300
+02-26 22:37:00.630  1338  2419 D RILClient: [OemClient] RILC_Send msgId:230 lengh:0 channel:0
+02-26 22:37:00.630  1338  2419 D RILClient: [OemClient]REQ (clientId = 1, t = 150, msgId = 230, len = 0 channel = 0)
+02-26 22:37:00.630  1070  1070 I CHRE.HAL: Client 3 registers endpoint id 1
+02-26 22:37:00.632  1070  1115 I CHRE.HAL: Added embedded endpoint (0x70676e7373000000, 0x1)
+02-26 22:37:00.632  1070  1115 I CHRE.HAL: Embedded endpoint (0x70676e7373000000, 0x1) ready
+02-26 22:37:00.632  1339  1365 I AIDL    : GNSSReportStatus: gnssStatusCb() returned
+02-26 22:37:00.632  1339  1365 I AIDL    : GNSSStartHandler: Success
+02-26 22:37:00.632  1086  2270 I sensor-suez: Vendor atom [id = 100243] reported.
+02-26 22:37:00.632  1086  2270 I sensor-suez: Vendor atom [id = 100243] reported.
+02-26 22:37:00.632  1338  2429 D RILClient: [OemClient]RSP: (clientId = 1, t = 149, msgId = 233, len = 30, channel = 0, status = 0)
+02-26 22:37:00.632  1338  2429 I LibSITRil-Gps: RequestAGPS: msgId=201 data=0x716e482410 data_len=2 callback=0x716e64c300
+02-26 22:37:00.632  1338  2429 D RILClient: [OemClient] RILC_Send msgId:201 lengh:2 channel:0
+02-26 22:37:00.632  1338  2429 D RILClient: [OemClient]REQ (clientId = 1, t = 151, msgId = 201, len = 2 channel = 0)
+02-26 22:37:00.632  1338  2429 I LibSITRil-Gps: RequestAGPS: msgId=229 data=0x0 data_len=0 callback=0x716e64c300
+02-26 22:37:00.632  1338  2429 D RILClient: [OemClient] RILC_Send msgId:229 lengh:0 channel:0
+02-26 22:37:00.632  1338  2429 D RILClient: [OemClient]REQ (clientId = 1, t = 152, msgId = 229, len = 0 channel = 0)
+02-26 22:37:00.632  1338  2429 D RILClient: [OemClient]RSP: (clientId = 1, t = 150, msgId = 230, len = 8, channel = 0, status = 0)
+02-26 22:37:00.637  1070  1115 D CHRE    : @ 29228.738: Parsed nanoapp message from host: app ID 0x476f6f676c001044 endpoint 0x80c1 msgType 1 payload size 3
+02-26 22:37:00.637  1070  1115 D CHRE.HAL: Received a nanoapp message from 0x476f6f676c001044 endpoint 0x80c1: Type 0x3 size 2 
+02-26 22:37:00.640  5992 27352 I FusedOrientationManager: Registering orientation client. [CONTEXT service_id=6 ]
+02-26 22:37:00.641  1070  1115 D CHRE.HAL: Received a nanoapp message from 0x476f6f676c001044 endpoint 0x80c1: Type 0x8 size 4 
+02-26 22:37:00.642  1070  1115 D CHRE    : @ 29228.739: chrexTimePulseSubscribe time_sync nanoapp instance 23
+02-26 22:37:00.642  1339  1361 I AIDL    : setActivityState: 3 1 95 3 455839 1
+02-26 22:37:00.642  1070  1115 I CHRE    : @ 29228.739: [TimeSyncManager] Activity Bypass module initialize
+02-26 22:37:00.642  1070  1115 I CHRE    : @ 29228.739: [TimeSyncManager] Activity Ready
+02-26 22:37:00.642  1070  1115 I CHRE    : @ 29228.739: [TimeSyncManager] Registered 32961 as new client 397
+02-26 22:37:00.642  1070  1115 I CHRE    : @ 29228.739: [AR] ArService: registerClient 23
+02-26 22:37:00.642  1070  1115 I CHRE    : @ 29228.739: [TimeSyncManager] AR=4 confidence=978 motion confidence=36
+02-26 22:37:00.642  1070  1115 W CHRE    : @ 29228.739: [TimeSyncManager] Unexpected event type 33026
+02-26 22:37:00.645  1390  1390 D AOC     : A3:MSG: tmd3743_device.cc, 997: USF: TMD3743: C/G switch 0 -> 1 d_lux:24.65 w_lux: 15.39 C:0.56 G:0.22
+02-26 22:37:00.647  5992 27351 I TensorGpsService: +Start : Gnss Session started [CONTEXT service_id=365 ]
+02-26 22:37:00.653  1086  2002 D usf_sensor_hal: pressure: Enter Batch. Period = 100000000, latency = 0.
+02-26 22:37:00.653  1086  2002 D usf_sensor_hal: pressure: Enter Flush
+02-26 22:37:00.653  1086  2002 E usf_sensor_hal: pressure: Requested flush on inactive sensor.
+02-26 22:37:00.653  1086  2002 I sensor-suez: Reporting HAL call [4] error [-22] on sensor [0x00000006].
+02-26 22:37:00.654  1086  2002 D usf_sensor_hal: pressure: Enter Activate. Enable = 1.
+02-26 22:37:00.656  1390  1390 D AOC     : A3:MSG: spxyz00n_sensor.cc, 102: USF: Spxyz00nSensor: Start 0, period: 40000000, latency: 100000000.
+02-26 22:37:00.656  1390  1390 D AOC     : A3:MSG: spxyz00n_sensor.cc, 114: USF: Spxyz00nSensor: Supported sampling period: 40000000 ns.
+02-26 22:37:00.659  5992  8106 W inertial-anchor: Triggering reinit due to mag declination change
+02-26 22:37:00.659  5992  8106 W Looper  : Looper already prepared for this thread with a different value for the LOOPER_PREPARE_ALLOW_NON_CALLBACKS option.
+02-26 22:37:00.659  1086  2270 I sensor-suez: Vendor atom [id = 100243] reported.
+02-26 22:37:00.659  1086  2270 I sensor-suez: Vendor atom [id = 100024] reported.
+02-26 22:37:00.659  1086  2270 I sensor-suez: Vendor atom [id = 100243] reported.
+02-26 22:37:00.660  1086  2270 I sensor-suez: Vendor atom [id = 100242] reported.
+02-26 22:37:00.660  1086  2270 I sensor-suez: Vendor atom [id = 100243] reported.
+02-26 22:37:00.665  1086  2002 D usf_sensor_hal: accelerometer: Enter Flush
+02-26 22:37:00.666  1086  2270 I sensor-suez: Vendor atom [id = 100243] reported.
+02-26 22:37:00.667  1086  2002 D usf_sensor_hal: accelerometer: Enter Batch. Period = 10000000, latency = 0.
+02-26 22:37:00.668  1390  1390 D AOC     : A3:MSG: usf_sensor.cc, 2566: USF: Received reconfig sampling request for ICM45631 Accelerometer.
+02-26 22:37:00.668  1390  1390 D AOC     : A3:MSG: icm456xy_device.cc, 443: USF: Device: type: 0, p/l: 10000000 ns/ 0 ns, O/WM/I: 50/1/50
+02-26 22:37:00.668  1086  2002 D usf_sensor_hal: IMU temperature: Enter Batch. Period = 666667000, latency = 0.
+02-26 22:37:00.669  1086  2270 I sensor-suez: Vendor atom [id = 100243] reported.
+02-26 22:37:00.670  1086  2002 D usf_sensor_hal: magnetometer: Enter Batch. Period = 200000000, latency = 0.
+02-26 22:37:00.671  1086  2270 I sensor-suez: Vendor atom [id = 100245] reported.
+02-26 22:37:00.671  1086  2270 I sensor-suez: Vendor atom [id = 100243] reported.
+02-26 22:37:00.672  1086  2002 D usf_sensor_hal: magnetometer: Enter Activate. Enable = 1.
+02-26 22:37:00.673  1070  1115 D CHRE    : @ 29228.775: Parsed nanoapp message from host: app ID 0x476f6f676c001012 endpoint 0xc msgType 5 payload size 0
+02-26 22:37:00.674  1390  1390 D AOC     : A3:MSG: mmc5616_device.cc, 448: USF: MMC56160: mmc5616_enable_measure odr = 10.
+02-26 22:37:00.674  1086  2270 I sensor-suez: Vendor atom [id = 100242] reported.
+02-26 22:37:00.674  1086  2270 I sensor-suez: Vendor atom [id = 100243] reported.
+02-26 22:37:00.675  1070  1115 D CHRE.HAL: Received a nanoapp message from 0x476f6f676c001012 endpoint 0xc: Type 0x4 size 16 
+02-26 22:37:00.675  6867  6867 D BoundBrokerSvc: onRebind: Intent { act=com.google.android.gms.onboardingconsent.api.ConsentManagerApiService.START dat=chimera-action:/... xflg=0x4 cmp=com.google.android.gms/.chimera.GmsApiService }
+02-26 22:37:00.675  1070  1115 D CHRE.HAL: Received a nanoapp message from 0x476f6f676c001012 endpoint 0xc: Type 0x6 size 0 
+02-26 22:37:00.675  1390  1390 D AOC     : A3:MSG: tmd3743_device.cc, 997: USF: TMD3743: C/G switch 1 -> 0 d_lux:42.27 w_lux: 22.72 C:0.83 G:0.37
+02-26 22:37:00.677  1086  2002 D usf_sensor_hal: magnetometer: Enter Batch. Period = 20000000, latency = 0.
+02-26 22:37:00.680  1086  2270 I sensor-suez: Vendor atom [id = 100243] reported.
+02-26 22:37:00.680  1390  1390 D AOC     : A3:MSG: usf_sensor.cc, 2566: USF: Received reconfig sampling request for MMC5616 Magnetometer.
+02-26 22:37:00.680  1390  1390 D AOC     : A3:MSG: mmc5616_device.cc, 448: USF: MMC56160: mmc5616_enable_measure odr = 50.
+02-26 22:37:00.686  1086  2002 D usf_sensor_hal: gyroscope: Enter Batch. Period = 200000000, latency = 0.
+02-26 22:37:00.686  1086  2002 D usf_sensor_hal: IMU temperature: Enter Batch. Period = 666667000, latency = 0.
+02-26 22:37:00.686  1086  2270 I sensor-suez: Vendor atom [id = 100243] reported.
+02-26 22:37:00.688  1086  2002 D usf_sensor_hal: gyroscope: Enter Activate. Enable = 1.
+02-26 22:37:00.689  5992  5992 D BoundBrokerSvc: onRebind: Intent { act=com.google.android.gms.location.network.service.START dat=chimera-action:/... xflg=0x4 cmp=com.google.android.gms/.chimera.PersistentInternalApiService }
+02-26 22:37:00.690  1086  2270 I sensor-suez: Vendor atom [id = 100242] reported.
+02-26 22:37:00.690  1086  2270 I sensor-suez: Vendor atom [id = 100243] reported.
+02-26 22:37:00.691  1086  2002 D usf_sensor_hal: gyroscope: Enter Batch. Period = 10000000, latency = 0.
+02-26 22:37:00.693  1390  1390 D AOC     : A3:MSG: usf_sensor.cc, 2566: USF: Received reconfig sampling request for ICM45631 Gyroscope.
+02-26 22:37:00.693  1086  2002 D usf_sensor_hal: IMU temperature: Enter Batch. Period = 666667000, latency = 0.
+02-26 22:37:00.693  1086  2270 I sensor-suez: Vendor atom [id = 100243] reported.
+02-26 22:37:00.693  1390  1390 D AOC     : A3:MSG: icm456xy_device.cc, 443: USF: Device: type: 1, p/l: 10000000 ns/ 0 ns, O/WM/I: 100/1/100
+02-26 22:37:00.694  1086  2002 D usf_sensor_hal: magnetometer: Enter Batch. Period = 200000000, latency = 0.
+02-26 22:37:00.694  1086  2002 D usf_sensor_hal: magnetometer: Enter Flush
+02-26 22:37:00.694  1086  2270 I sensor-suez: Vendor atom [id = 100243] reported.
+02-26 22:37:00.694  1086  2002 E usf_sensor_hal: magnetometer: Requested flush on inactive sensor.
+02-26 22:37:00.694  1086  2002 I sensor-suez: Reporting HAL call [4] error [-22] on sensor [0x00000002].
+02-26 22:37:00.694  1086  2002 D usf_sensor_hal: magnetometer: Enter Activate. Enable = 1.
+02-26 22:37:00.695  1086  2270 I sensor-suez: Vendor atom [id = 100024] reported.
+02-26 22:37:00.695  1086  2270 I sensor-suez: Vendor atom [id = 100243] reported.
+02-26 22:37:00.696  6867 18454 I ConsentManagerApiServic: (REDACTED) ConsentManagerApiService onGetService success %s
+02-26 22:37:00.696  1086  2270 I sensor-suez: Vendor atom [id = 100242] reported.
+02-26 22:37:00.696  1086  2270 I sensor-suez: Vendor atom [id = 100243] reported.
+02-26 22:37:00.697  1086  2002 D usf_sensor_hal: magnetometer: Enter Batch. Period = 20000000, latency = 0.
+02-26 22:37:00.697  1143  5486 I WifiHAL : Creating message to get link statistics; iface = 46
+02-26 22:37:00.698  1086  2270 I sensor-suez: Vendor atom [id = 100243] reported.
+02-26 22:37:00.698  1086  2270 I sensor-suez: Vendor atom [id = 100245] reported.
+02-26 22:37:00.698  1390  1390 D AOC     : A3:MSG: usf_sensor.cc, 2566: USF: Received reconfig sampling request for MMC5616 Magnetometer.
+02-26 22:37:00.699  1086  2270 I sensor-suez: Vendor atom [id = 100245] reported.
+02-26 22:37:00.699  1086  2270 I sensor-suez: Vendor atom [id = 100245] reported.
+02-26 22:37:00.705  1390  1390 D AOC     : A3:MSG: usf_sensor.cc, 1920: USF: Received start sampling request for SPL07003 Barometer (active:3).
+02-26 22:37:00.706  1070  1115 D CHRE    : @ 29228.808: Parsed nanoapp message from host: app ID 0x476f6f676c001012 endpoint 0xc msgType 2 payload size 57
+02-26 22:37:00.708  1070  1115 I CHRE    : @ 29228.808: [LONA:NS] Setting default scan interval because schedule is one shot.
+02-26 22:37:00.709  1070  1115 I CHRE    : @ 29228.808: [LONA:NS] Updating scan interval = 18446744073709551615 ns
+02-26 22:37:00.709  1070  1115 I CHRE    : @ 29228.808: [LONA:NS] Updating max_scan_acceptance_interval_ns_ = 5000000000 ns
+02-26 22:37:00.709  1070  1115 I CHRE    : @ 29228.808: [LONA:NS] HandleScheduleChange: Updating WifiScanConfig
+02-26 22:37:00.709  1070  1115 I CHRE    : @ 29228.809: [LONA:NS] Offseting schedule by = 0 ns
+02-26 22:37:00.709  1070  1115 I CHRE    : @ 29228.809: [LONA:NS] Requesting wifi scan with maxScanAgeMs = 5000 ms
+02-26 22:37:00.714  1338  2430 D RILClient: [OemClient]RSP: (clientId = 1, t = 151, msgId = 201, len = 158, channel = 0, status = 0)
+02-26 22:37:00.714  1338  2430 D RILClient: [OemClient]RSP: (clientId = 1, t = 152, msgId = 229, len = 9, channel = 0, status = 0)
+02-26 22:37:00.724  1339  1363 D GNSS    : lal_check_memory_size: tid=1363 tName=lal_state_threa memSize=5356(KB) limit=524288(KB) tx=2 rx=2
+02-26 22:37:00.725  1827  2534 D AGnssRilCbJni: requestSetIdCb. setIdflag: 1, 
+02-26 22:37:00.725  5992 27333 W Settings: Setting airplane_mode_on has moved from android.provider.Settings.System to android.provider.Settings.Global, returning read-only value.
+02-26 22:37:00.728  1339  1364 I AIDL    : GNSSAGnssRilSetSetId: Exit
+02-26 22:37:00.734  1390  1390 D AOC     : A3:MSG: tmd3743_device.cc, 997: USF: TMD3743: C/G switch 0 -> 1 d_lux:26.26 w_lux: 15.82 C:0.57 G:0.23
+02-26 22:37:00.752  6160  6172 D IwlanEventListener: Cellinfo changed
+02-26 22:37:00.752  6160  6172 D IwlanEventListener[0]: Updating handlers for the event: 11
+02-26 22:37:00.752  6160  6172 D IwlanEventListener[1]: Updating handlers for the event: 11
+02-26 22:37:00.756  6160  6184 D IwlanDataService$IwlanDataServiceHandler: msg.what = CELLINFO_CHANGED_EVENT
+02-26 22:37:00.756  6160  6184 D IwlanDataService:  Update cached cellinfo
+02-26 22:37:00.758  1827  7539 E AppOps  : attributionTag IWLAN not declared in manifest of com.google.android.iwlan
+02-26 22:37:00.763  6160  6184 D IwlanDataService$IwlanDataServiceHandler: msg.what = CELLINFO_CHANGED_EVENT
+02-26 22:37:00.763  6160  6184 D IwlanDataService:  Update cached cellinfo
+02-26 22:37:00.768  1143  5486 I WifiHAL : Getting cached scan results, iface handle = 0xb400007a56a21d50
+02-26 22:37:00.768  1143  5486 E WifiHAL : Creating message to get cached scan results
+02-26 22:37:00.769  1339  1363 I GNSS_MEMS: TGT_MEMS TargetMemsStart: mems_started0 diff:60000
+02-26 22:37:00.769  1339  1363 I GNSS_MEMS: TGT_MEMS SCSCMemsProvisioning: ASP=10000 MSP=10000 GSP=10000 PSP=50000 SSP=1000000
+02-26 22:37:00.769  1339  1363 I GNSS_MEMS: TGT_MEMS GNSSSensorWDStartRequest
+02-26 22:37:00.769  1339  1363 W libbinder.Binder: Binder 0xb4000078c7c78e58 destroyed after setMinSchedulerPolicy before being parceled.
+02-26 22:37:00.769  1339  1363 W libbinder.Binder: Binder 0xb4000078c7c78e58 destroyed after setMinSchedulerPolicy before being parceled.
+02-26 22:37:00.771  5992 27334 I TensorGpsService: Input Server Data 1 [CONTEXT service_id=365 ]
+02-26 22:37:00.773  5992  5992 I TensorGpsService: Input RL 2 [CONTEXT service_id=365 ]
+02-26 22:37:00.774  5992  5992 I TensorGpsService: Input RL 1 [CONTEXT service_id=365 ]
+02-26 22:37:00.774  1086  2002 D usf_sensor_hal: accelerometer: Enter Batch. Period = 10000000, latency = 0.
+02-26 22:37:00.774  1086  2002 D usf_sensor_hal: IMU temperature: Enter Batch. Period = 666667000, latency = 0.
+02-26 22:37:00.774  1143  5486 I WifiHAL : In GetCachedScanResultsCommand::handleResponse
+02-26 22:37:00.775  1086  2270 I sensor-suez: Vendor atom [id = 100243] reported.
+02-26 22:37:00.775  1086  2002 D usf_sensor_hal: accelerometer: Enter Activate. Enable = 1.
+02-26 22:37:00.776  7715  7715 I NotificationListener: [Service]v6.1.9-eap02 Received new notification
+02-26 22:37:00.777  1086  2270 I sensor-suez: Vendor atom [id = 100242] reported.
+02-26 22:37:00.777  1086  2270 I sensor-suez: Vendor atom [id = 100243] reported.
+02-26 22:37:00.777  1086  2002 D usf_sensor_hal: gyroscope: Enter Flush
+02-26 22:37:00.778  1086  2270 I sensor-suez: Vendor atom [id = 100243] reported.
+02-26 22:37:00.778  1339  1363 I GNSS_MEMS: TGT_MEMS GNSSSensorWDStopRequest
+02-26 22:37:00.778  1339  1363 I GNSS_MEMS: TGT_MEMS TargetMemsStart: Exit. mems_started:1
+02-26 22:37:00.778  1339  5556 I GNSS_MEMS: TGT_MEMS GNSSSensorWDThread: ret=0
+02-26 22:37:00.780  1086  2270 I sensor-suez: Vendor atom [id = 100245] reported.
+02-26 22:37:00.787  7715  8328 I NotificationPipeline: Processing new notification: 0|com.masarat.salati|1020123|null|10336
+02-26 22:37:00.788  1827  1921 I GnssLocationProvider: GNSS HAL Requesting location updates from network provider for 10000 millis.
+02-26 22:37:00.791  1390  1390 D AOC     : A3:MSG: tmd3743_device.cc, 997: USF: TMD3743: C/G switch 1 -> 0 d_lux:41.93 w_lux: 22.55 C:0.82 G:0.37
+02-26 22:37:00.791  7715  8328 I Notification4WatchManager_NB: NotificationChecker.checkIgnoreCase - onGoing
+02-26 22:37:00.792  7715  8328 W Notification4WatchManager_NB: NotificationBridgeCallback.onNotificationPosted-Ignored package : [0] com.masarat.salati
+02-26 22:37:00.792  7715  8328 I NotificationPipeline: Discarding notification: 0|com.masarat.salati|1020123|null|10336
+02-26 22:37:00.800  1339  1339 I AIDL    : Gnss::injectLocation: Called
+02-26 22:37:00.800  1339  1339 I AIDL    : GNSSInjectLocation: Called
+02-26 22:37:00.800  1339  1339 I AIDL    : GNSSInjectLocation: Exit
+02-26 22:37:00.800  1339  1339 I AIDL    : Gnss::injectLocation: Exit
+02-26 22:37:00.802  7369  9067 I AiAiEcho: SmartspaceNotificationPredictor no parser can handle this notification or notification is invalid
+02-26 22:37:00.829  1070  1115 D CHRE.HAL: Received a nanoapp message from 0x476f6f676c001044 endpoint 0x80c1: Type 0x6 size 9 
+02-26 22:37:00.830  1070  1115 D CHRE    : @ 29228.932: [TimeSync] ProcessPpsPulse: fiq counter 1122390767562
+02-26 22:37:00.834  5992  9949 I iwt     : Invalid message format - ignore and find next. [CONTEXT service_id=365 ]
+02-26 22:37:00.834  5992  9949 I iwt     : m65.ith: Frame footer not found. BETP frames must end with 0xB0B3.
+02-26 22:37:00.834  5992  9949 I iwt     : 	at m65.scs.run(:com.google.android.gms.optional_tensorgps@260862041@26.08.62 (150400-0):284)
+02-26 22:37:00.834  5992  9949 I iwt     : 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1100)
+02-26 22:37:00.834  5992  9949 I iwt     : 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+02-26 22:37:00.834  5992  9949 I iwt     : 	at java.lang.Thread.run(Thread.java:1564)
+02-26 22:37:00.835  5992  9949 I TensorGpsService: Input RT 1 [CONTEXT service_id=365 ]
+02-26 22:37:00.842  5992  9949 I TensorGpsService: Input Clock [CONTEXT service_id=365 ]
+02-26 22:37:00.850  1390  1390 D AOC     : A3:MSG: tmd3743_device.cc, 997: USF: TMD3743: C/G switch 0 -> 1 d_lux:25.88 w_lux: 15.61 C:0.56 G:0.23
+02-26 22:37:00.885  1680  1710 I pixel-thermal: VIRTUAL-SKIN-SPEAKER-MODEL: model_input: [31292.00 27553.00 28008.00 29222.00 29168.00 30039.00 31209.00 27065.00 ]
+02-26 22:37:00.885  1680  1710 I native  : I0000 00:00:1772174220.885619    1710 thermal_tflite_wrapper.cc:261] ThermalTfliteInvoke
+02-26 22:37:00.885  1680  1710 I pixel-thermal: VIRTUAL-SKIN-SPEAKER-MODEL: model_output: [27487.2 ]
+02-26 22:37:00.885  1680  1710 I pixel-thermal: VIRTUAL-SKIN-SPEAKER-MODEL: predicted_value: [27487.2 ]
+02-26 22:37:00.885  1680  1710 I pixel-thermal: VIRTUAL-SKIN-SPEAKER:27.4835 raw data: VIRTUAL-SKIN-SPEAKER:27483.5 VIRTUAL-SKIN-SPEAKER-LEGACY:28457.9 VIRTUAL-SKIN-SPEAKER-LEGACY-MODEL-DIFF:970.641 VIRTUAL-SKIN-SPEAKER-MODEL:27487.2 VIRTUAL-SKIN-SPEAKER-MODEL-CLAMPED:27487.2 VIRTUAL-SKIN-SPEAKER-MODEL-LEGACY-DIFF:-970.641 VIRTUAL-SKIN-SPEAKER-MODEL-UPPER-CLAMPED:27487.2 VIRTUAL-SKIN-SPEAKER-SUB-0:28457.9 VT_SPEAKER_LEGACY_WEIGHT:0 VT_SPEAKER_MODEL_WEIGHT:1 charging_therm:31292 disp0_therm:27553 flash_therm:28008 north_therm:29222 quiet_therm:29168 rfpa_therm:30039 soc_therm:31209 usb_pwr_therm:27065 
+02-26 22:37:00.916  1390  1390 D AOC     : A3:MSG: tmd3743_device.cc, 997: USF: TMD3743: C/G switch 1 -> 0 d_lux:26.11 w_lux: 15.46 C:0.56 G:0.23
+02-26 22:37:00.945  1390  1390 D AOC     : A3:MSG: tmd3743_device.cc, 997: USF: TMD3743: C/G switch 0 -> 1 d_lux:26.75 w_lux: 16.14 C:0.59 G:0.24
+02-26 22:37:00.966  1070  1115 I CHRE    : @ 29229.069: CHPP WIFI: Scan request success=1 at service
+02-26 22:37:00.976  1390  1390 D AOC     : A3:MSG: tmd3743_device.cc, 997: USF: TMD3743: C/G switch 1 -> 0 d_lux:41.21 w_lux: 22.12 C:0.80 G:0.36
+02-26 22:37:00.989  1070  1115 D CHRE    : @ 29229.090: [LONA:WD] Progress: 20/20
+02-26 22:37:00.990  1070  1115 D CHRE    : @ 29229.094: [LONA:AM] WiFi Scan received
+02-26 22:37:00.993  1390  1390 D AOC     : A3:MSG: usf_sensor.cc, 1920: USF: Received start sampling request for SPL07003 Barometer (active:3).
+02-26 22:37:00.993  1070  1115 D CHRE    : @ 29229.096: [LONA:BS] Pressure data received at 29219069794817 readingCount=250 total time delta=9984981247ns
+02-26 22:37:00.993  1070  1115 I CHRE    : @ 29229.096: [LONA:BS] Delivering barometer scan results
+02-26 22:37:00.998  1070  1115 D CHRE.HAL: Received a nanoapp message from 0x476f6f676c001012 endpoint 0xc: Type 0x4 size 18 
+02-26 22:37:00.999  1070  1115 D CHRE.HAL: Received a nanoapp message from 0x476f6f676c001012 endpoint 0xc: Type 0x3 size 1713 
+02-26 22:37:01.000  1070  1115 D CHRE    : @ 29229.098: [LONA:DM] Flush on no pending data -- scheduled
+02-26 22:37:01.000  1070  1115 E CHRE    : @ 29229.098: [LONA:BS] Ignoring pressure flush complete, no scan pending
+02-26 22:37:01.012  5992 27217 I FrewleTileCacheManagerV: (REDACTED) Fetched %d AP models from cache
+02-26 22:37:01.033  1390  1390 D AOC     : A3:MSG: tmd3743_device.cc, 997: USF: TMD3743: C/G switch 0 -> 1 d_lux:25.36 w_lux: 15.55 C:0.56 G:0.23
+02-26 22:37:01.038  5424  5424 E NotificationService: R.id.notification_main_column view should not be null!
+02-26 22:37:01.042  5992  8106 I FusedLocation: (REDACTED) location delivery to %s blocked - too close
+02-26 22:37:01.042  5992  8106 I FusedLocation: (REDACTED) location delivery to %s blocked - too fast
+02-26 22:37:01.042  5992  8106 I FusedLocation: (REDACTED) location delivery to %s blocked - too fast
+02-26 22:37:01.042  5992  8106 I FusedLocation: (REDACTED) location delivery to %s blocked - too fast
+02-26 22:37:01.043  5992  8106 I FusedLocation: (REDACTED) location delivery to %s blocked - too close
+02-26 22:37:01.051  5992  8106 I FusedLocation: (REDACTED) location delivery to %s blocked - too old
+02-26 22:37:01.052  1827  7544 E LocationManagerService: non-monotonic location received from network provider
+02-26 22:37:01.052  1339  1361 I AIDL    : Gnss::injectLocation: Called
+02-26 22:37:01.052  1339  1361 I AIDL    : GNSSInjectLocation: Called
+02-26 22:37:01.052  1339  1361 I AIDL    : GNSSInjectLocation: Exit
+02-26 22:37:01.052  1339  1361 I AIDL    : Gnss::injectLocation: Exit
+02-26 22:37:01.053  5992  8106 I FusedLocation: (REDACTED) location delivery to %s blocked - too close
+02-26 22:37:01.057  5992  8106 I FusedLocation: (REDACTED) location delivery to %s blocked - too fast
+02-26 22:37:01.057  1070  1115 D CHRE    : @ 29229.158: Parsed nanoapp message from host: app ID 0x476f6f676c001012 endpoint 0xc msgType 2 payload size 59
+02-26 22:37:01.058  1070  1115 I CHRE    : @ 29229.158: [LONA:NS] Setting default scan interval because schedule is one shot.
+02-26 22:37:01.058  1070  1115 I CHRE    : @ 29229.158: [LONA:NS] Updating scan interval = 18446744073709551615 ns
+02-26 22:37:01.058  1070  1115 I CHRE    : @ 29229.158: [LONA:NS] Updating max_scan_acceptance_interval_ns_ = 5000000000 ns
+02-26 22:37:01.058  1070  1115 I CHRE    : @ 29229.158: [LONA:NS] HandleScheduleChange: Updating WifiScanConfig
+02-26 22:37:01.058  1070  1115 I CHRE    : @ 29229.158: [LONA:NS] Offseting schedule by = 4655000000 ns
+02-26 22:37:01.058  1070  1115 D CHRE    : @ 29229.158: [LONA:DM] Setting flush timer for period 0, offset 4655000000, and adjustment 1000000
+02-26 22:37:01.066  5992  8106 I gkin    : Received empty WiFi-RTT scan. [CONTEXT service_id=6 ]
+02-26 22:37:01.068  5992 27345 I FusedLocation: (REDACTED) stationary throttling engaged @%s
+02-26 22:37:01.072  1086  2002 D usf_sensor_hal: accelerometer: Enter Batch. Period = 10000000, latency = 0.
+02-26 22:37:01.072  1086  2002 D usf_sensor_hal: IMU temperature: Enter Batch. Period = 666667000, latency = 0.
+02-26 22:37:01.074  1086  2270 I sensor-suez: Vendor atom [id = 100243] reported.
+02-26 22:37:01.077  1339  1361 I AIDL    : Gnss::stop: Called
+02-26 22:37:01.077  1339  1361 I AIDL    : Gnss::stop: Exit
+02-26 22:37:01.077  1339  1365 I AIDL    : GNSSReportStatus: status=2 cbIsNULL=0
+02-26 22:37:01.078  1827  1921 W AlarmManager: Unrecognized alarm listener com.android.server.location.gnss.GnssLocationProvider$$ExternalSyntheticLambda13@157dce8
+02-26 22:37:01.079  1827  1921 W AlarmManager: Unrecognized alarm listener com.android.server.location.gnss.GnssLocationProvider$$ExternalSyntheticLambda12@b27ef01
+02-26 22:37:01.080  1339  1365 I AIDL    : GNSSReportStatus: gnssStatusCb() returned
+02-26 22:37:01.081  1339  1365 I AIDL    : GNSSReportStatus: status=4 cbIsNULL=0
+02-26 22:37:01.082  1339  1365 I AIDL    : GNSSReportStatus: gnssStatusCb() returned
+02-26 22:37:01.082  1339  1365 I GNSS_MEMS: TGT_MEMS TargetMemsStop: mems_started1
+02-26 22:37:01.082  1339  1365 I GNSS_MEMS: TGT_MEMS GNSSSensorWDStartRequest
+02-26 22:37:01.082  1086  2002 D usf_sensor_hal: accelerometer: Enter Activate. Enable = 0.
+02-26 22:37:01.083  1086  2002 D usf_sensor_hal: IMU temperature: Enter Batch. Period = 666667000, latency = 0.
+02-26 22:37:01.083  1086  2002 D usf_sensor_hal: gyroscope: Enter Batch. Period = 10000000, latency = 0.
+02-26 22:37:01.083  1086  2002 D usf_sensor_hal: IMU temperature: Enter Batch. Period = 666667000, latency = 0.
+02-26 22:37:01.083  1339  1365 I GNSS_MEMS: TGT_MEMS GNSSSensorWDStopRequest
+02-26 22:37:01.083  1339  1365 I GNSS_MEMS: TGT_MEMS TargetMemsStop: Exit
+02-26 22:37:01.083  1339  1365 I AIDL    : GNSSStopHandler: Success
+02-26 22:37:01.084  1339  5556 I GNSS_MEMS: TGT_MEMS GNSSSensorWDThread: ret=0
+02-26 22:37:01.084  1086  2270 I sensor-suez: Vendor atom [id = 100242] reported.
+02-26 22:37:01.084  1086  2270 I sensor-suez: Vendor atom [id = 100243] reported.
+02-26 22:37:01.084  1086  2270 I sensor-suez: Vendor atom [id = 100243] reported.
+02-26 22:37:01.086  1086  2002 D usf_sensor_hal: pressure: Enter Activate. Enable = 0.
+02-26 22:37:01.089  1390  1390 D AOC     : A3:MSG: spxyz00n_sensor.cc, 102: USF: Spxyz00nSensor: Start 0, period: 40000000, latency: 10000000000.
+02-26 22:37:01.089  1390  1390 D AOC     : A3:MSG: spxyz00n_sensor.cc, 114: USF: Spxyz00nSensor: Supported sampling period: 40000000 ns.
+02-26 22:37:01.089  1086  2270 I sensor-suez: Vendor atom [id = 100242] reported.
+02-26 22:37:01.089  1086  2270 I sensor-suez: Vendor atom [id = 100243] reported.
+02-26 22:37:01.089  1100  1100 D Aam     : stopGnssData
+02-26 22:37:01.089  1100  1100 D AamAdapter: stopGnssData
+02-26 22:37:01.089  1100  1100 D AamBetpCapturer: stopCommand
+02-26 22:37:01.089  1100  1100 D AamBetpCapturer: wait for the thread to exit...
+02-26 22:37:01.090  5992 27351 I FusedOrientationManager: Unregistering orientation client. [CONTEXT service_id=6 ]
+02-26 22:37:01.091  1070  1115 D CHRE    : @ 29229.194: Parsed nanoapp message from host: app ID 0x476f6f676c001012 endpoint 0xc msgType 5 payload size 0
+02-26 22:37:01.092  1390  1390 D AOC     : A3:MSG: tmd3743_device.cc, 997: USF: TMD3743: C/G switch 1 -> 0 d_lux:40.47 w_lux: 22.02 C:0.80 G:0.36
+02-26 22:37:01.092  1100 27309 D AamBetpCapturer: sendStopStream
+02-26 22:37:01.092  1338 27310 D GNSS    : lal_ism_ruser_rx_betp: OSP message from ISM Client: 0x3dc (220, 3)
+02-26 22:37:01.092  1100 27309 D AamBetpCapturer: disconnectSocket
+02-26 22:37:01.092  1338 27310 W GNSS    : TCPClient_recv: Error receiving data:104
+02-26 22:37:01.092  1100  1100 D AamBetpCapturer: thread ended
+02-26 22:37:01.093  1070  1115 D CHRE.HAL: Received a nanoapp message from 0x476f6f676c001012 endpoint 0xc: Type 0x4 size 16 
+02-26 22:37:01.093  1086  2002 D usf_sensor_hal: accelerometer: Enter Batch. Period = 200000000, latency = 2000000000.
+02-26 22:37:01.095  1070  1115 D CHRE.HAL: Received a nanoapp message from 0x476f6f676c001012 endpoint 0xc: Type 0x6 size 0 
+02-26 22:37:01.095  1086  2002 D usf_sensor_hal: IMU temperature: Enter Batch. Period = 666667000, latency = 0.
+02-26 22:37:01.096  1086  2270 I sensor-suez: Vendor atom [id = 100243] reported.
+02-26 22:37:01.096  1390  1390 D AOC     : A3:MSG: usf_sensor.cc, 2566: USF: Received reconfig sampling request for ICM45631 Accelerometer.
+02-26 22:37:01.097  1390  1390 D AOC     : A3:MSG: icm456xy_device.cc, 443: USF: Device: type: 0, p/l: 20000000 ns/ 66666666 ns, O/WM/I: 100/1/100
+02-26 22:37:01.098  1086  2002 D usf_sensor_hal: magnetometer: Enter Activate. Enable = 0.
+02-26 22:37:01.099  1086  1141 W usf_sensor_hal: No sensor found to handle samples from client ID 0x1000b.
+02-26 22:37:01.101  1086  2002 D usf_sensor_hal: gyroscope: Enter Activate. Enable = 0.
+02-26 22:37:01.102  5992 27345 I TensorGpsService: -Stop : Gnss Session stopped [CONTEXT service_id=365 ]
+02-26 22:37:01.102  1086  2270 I sensor-suez: Vendor atom [id = 100242] reported.
+02-26 22:37:01.102  1086  2270 I sensor-suez: Vendor atom [id = 100243] reported.
+02-26 22:37:01.103  1086  2002 D usf_sensor_hal: IMU temperature: Enter Batch. Period = 666667000, latency = 2000000000.
+02-26 22:37:01.104  1086  2270 I sensor-suez: Vendor atom [id = 100242] reported.
+02-26 22:37:01.104  1390  1390 D AOC     : A3:MSG: icm456xy_device.cc, 443: USF: Device: type: 1, p/l: 20000000 ns/ 66666666 ns, O/WM/I: 100/1/100
+02-26 22:37:01.108  1390  1390 D AOC     : A3:MSG: usf_sensor.cc, 2566: USF: Received reconfig sampling request for ICM45631 Temperature.
+02-26 22:37:01.108  1086  2270 I sensor-suez: Vendor atom [id = 100243] reported.
+02-26 22:37:01.108  1086  2002 D usf_sensor_hal: magnetometer: Enter Activate. Enable = 0.
+02-26 22:37:01.110  1086  2270 I sensor-suez: Vendor atom [id = 100242] reported.
+02-26 22:37:01.110  1086  2270 I sensor-suez: Vendor atom [id = 100243] reported.
+02-26 22:37:01.112  1070  1115 D CHRE    : @ 29229.209: Parsed nanoapp message from host: app ID 0x476f6f676c001012 endpoint 0xc msgType 2 payload size 71
+02-26 22:37:01.112  1070  1115 I CHRE    : @ 29229.210: [LONA:NS] Setting default scan interval because schedule is one shot.
+02-26 22:37:01.112  1070  1115 I CHRE    : @ 29229.210: [LONA:NS] Updating scan interval = 18446744073709551615 ns
+02-26 22:37:01.112  1070  1115 I CHRE    : @ 29229.210: [LONA:NS] Updating max_scan_acceptance_interval_ns_ = 21600000000000 ns
+02-26 22:37:01.112  1070  1115 I CHRE    : @ 29229.210: [LONA:NS] HandleScheduleChange: Updating WifiScanConfig
+02-26 22:37:01.112  1070  1115 I CHRE    : @ 29229.210: [LONA:NS] Offseting schedule by = 21599602000000 ns
+02-26 22:37:01.112  1070  1115 D CHRE    : @ 29229.210: [LONA:DM] Setting flush timer for period 0, offset 21599602000000, and adjustment 1000000
+02-26 22:37:01.112  1390  1390 D AOC     : A3:MSG: mmc5616_device.cc, 448: USF: MMC56160: mmc5616_enable_measure odr = 10.
+02-26 22:37:01.113  5624  5698 D ImpulseConnection: timeout happen: com.google.android.apps.turbo
+02-26 22:37:01.113  5624  5698 D ImpulseConnection: unbindService for releasing a CONNECTED connection com.google.android.apps.turbo
+02-26 22:37:01.114  5624  5938 D TemperatureStateSource: sequence=2372 actualDelay=10003
+02-26 22:37:01.114   629   629 D SurfaceFlinger: setDesiredMode 4619827452008645888 {mode={fps=120.00 Hz, modePtr={id=0, vsyncRate=120.00 Hz, peakRefreshRate=120.00 Hz}}, emitEvent=false, force=false}
+02-26 22:37:01.115  1827  1933 I DisplayDeviceRepository: Display device changed render timings: "Built-in Screen", renderFrameRate=120.00001, presentationDeadlineNanos=11500000, appVsyncOffsetNanos=6233332, frameRateOverrides=[{uid=10202 frameRateHz=60.000004}]
+02-26 22:37:01.115  5624  5938 D TemperatureStateSource: Reading temperature: sequence=2373
+02-26 22:37:01.116  1680  1680 I pixel-thermal: VIRTUAL-SKIN:28.504 raw data: VIRTUAL-SKIN:28504 
+02-26 22:37:01.117  1827  1922 D WindowManager: DeferredDisplayUpdater: partially applying DisplayInfo(1280 x 2856) immediately
+02-26 22:37:01.117  1144  1189 D DeviceHalAidl: [default] setParameters: parameters: "screen_state=on"
+02-26 22:37:01.118  1066 12955 D ASvc::Module: updateScreenState: 1
+02-26 22:37:01.118  1144  1189 D DeviceHalAidl: [r_submix] setParameters: parameters: "screen_state=on"
+02-26 22:37:01.118  1066 12955 D AHAL_Module: updateScreenState: r_submix: 1
+02-26 22:37:01.118  1144  1189 D DeviceHalAidl: [bluetooth] setParameters: parameters: "screen_state=on"
+02-26 22:37:01.118  1066 12955 D AHAL_Module: updateScreenState: bluetooth: 1
+02-26 22:37:01.120  5624  5938 D TemperatureStateSource: getDeviceTemperatures: sequence=2373 deviceTemperatureType=3 temperatureSource=0 temperatures=[28.50397]
+02-26 22:37:01.120  5624  5938 D BusinessScope: Enqueuing the block
+02-26 22:37:01.120  5624  5938 D TemperatureStateSource: sequence=2373 waitTime=10000
+02-26 22:37:01.120  5624  5938 D BusinessScope: Start running the #4878 block
+02-26 22:37:01.121  5992 27217 I TFLite-in-PlayServices: Created interpreter.
+02-26 22:37:01.121  1338 27310 W gnssd   : Warning: io_worker_rx_thread: disconnected event delivered! type=6 port=0
+02-26 22:37:01.123  1680  1680 I pixel-thermal: VIRTUAL-SKIN:28.504 raw data: VIRTUAL-SKIN:28504 
+02-26 22:37:01.123  5624  5938 I TemperatureStateSource: temperature was set
+02-26 22:37:01.123  5624  5938 D BusinessScope: Enqueuing the block
+02-26 22:37:01.123  5624  5938 D ImpulseStateSource: Notify clients: 2438
+02-26 22:37:01.123  5624  5938 D BusinessScope: Finish running the #4878 block
+02-26 22:37:01.124  5624  5938 D BusinessScope: Start running the #4879 block
+02-26 22:37:01.124  5624  5938 D ImpulseConnection: bindService: com.google.android.apps.turbo
+02-26 22:37:01.130  5624  5624 D ImpulseConnection: onServiceConnected: ComponentInfo{com.google.android.apps.turbo/com.google.android.apps.turbo.adaptiveplatform.impulse.ImpulseClientService} service is null false
+02-26 22:37:01.130   634   765 I hwc-DSI-1: Commit: set early exit as off at min RR = 60
+02-26 22:37:01.130   634   765 I hwc-DSI-1: SetTe2Frequency: writes te2_freq_hz(60) to the sysfs node
+02-26 22:37:01.132  5624  5938 D BusinessScope: Finish running the #4879 block
+02-26 22:37:01.136  5992 27217 I TFLite-in-PlayServices: Created interpreter.
+02-26 22:37:01.144  5992 27217 I SemanticLocation: (REDACTED) [Inferrer] %s%s
+02-26 22:37:01.147  1338  2419 W gnssd   : Warning: io_worker_tx: cb.client.disconnect is NULL. type=6 port=0 time=29226 count=1
+02-26 22:37:01.150  1390  1390 D AOC     : A3:MSG: tmd3743_device.cc, 997: USF: TMD3743: C/G switch 0 -> 1 d_lux:25.48 w_lux: 15.35 C:0.55 G:0.23
+02-26 22:37:01.151 32205 32222 W JobInfo : Requested important-while-foreground flag for job9553 is ignored and takes no effect
+02-26 22:37:01.161  1680  1710 I pixel-thermal: BG_TASKS_THROTTLING_TRIGGER:28504.2 raw data: BG_TASKS_THROTTLING_TRIGGER:28504.2 VIRTUAL-SKIN:28504.2 VIRTUAL-SKIN-EQ:28504.2 VIRTUAL-SKIN-LEGACY:29044.1 VIRTUAL-SKIN-LEGACY-MODEL-DIFF:539.629 VIRTUAL-SKIN-LEGACY-SHUTDOWN:0 VIRTUAL-SKIN-MODEL:28504.5 VIRTUAL-SKIN-MODEL-CLAMPED:28504.5 VIRTUAL-SKIN-MODEL-LEGACY-DIFF:-539.629 VIRTUAL-SKIN-MODEL-UPDATED:28504.2 VIRTUAL-SKIN-MODEL-UPPER-CLAMPED:28504.5 VIRTUAL-SKIN-SUB-0:29012.5 VIRTUAL-SKIN-SUB-1:29044.1 VIRTUAL-SKIN-SUB-2:28674.5 VIRTUAL-SKIN-SUB-3:28363.5 VIRTUAL-SKIN-SUB-4:28542.4 VT_LEGACY_WEIGHT:0 VT_MODEL_WEIGHT:1 charging_therm:31302 disp0_therm:27559 flash_therm:28003 north_therm:29172 quiet_therm:29173 rfpa_therm:30036 soc_therm:31212 usb_pwr_therm:27068 
+02-26 22:37:01.165  1827  7539 I ActivityManager: Background started FGS: Allowed [callingPackage: com.masarat.salati; callingUid: 10336; uidState: FGS ; uidBFSL: [BFSL]; intent: Intent { xflg=0x4 cmp=com.masarat.salati/.services.PriereService (has extras) }; code:PROC_STATE_FGS; tempAllowListReason:<null>; allowWiu:-1; targetSdkVersion:35; callerTargetSdkVersion:35; startForegroundCount:0; bindFromPackage:null: isBindService:false]
+02-26 22:37:01.167   634   765 I hwc-DSI-1: Commit: set early exit as on at min RR = 120
+02-26 22:37:01.167   634   765 I hwc-DSI-1: SetTe2Frequency: writes te2_freq_hz(120) to the sysfs node
+02-26 22:37:01.169  5992  9805 I cn_CronetUrlRequestContext: destroyNativeStreamLocked org.chromium.net.impl.CronetBidirectionalStream@9b04437
+02-26 22:37:01.170  1827  7539 W ActivityManager: Foreground service started from background can not have location/camera/microphone access: service com.masarat.salati/.services.PriereService
+02-26 22:37:01.170  1827  7539 I ActivityManager: Background started FGS: Allowed [callingPackage: com.masarat.salati; callingUid: 10336; uidState: FGS ; uidBFSL: [BFSL]; intent: Intent { cmp=com.masarat.salati/.services.PriereService }; code:PROC_STATE_FGS; tempAllowListReason:<null>; allowWiu:-1; targetSdkVersion:35; callerTargetSdkVersion:35; startForegroundCount:0; bindFromPackage:null: isBindService:false]
+02-26 22:37:01.171  1827  7539 W ForegroundServiceTypeLoggerModule: Foreground service start for UID: 10336 does not have any types
+02-26 22:37:01.174 32205 27387 I System.out: getPrayerTimes: from (input) to (used)
+02-26 22:37:01.175 32205 27387 I System.out: 	date: from 2026-02-26 to 2026-02-26
+02-26 22:37:01.175 32205 27387 I System.out: 	countryCode: from US to US
+02-26 22:37:01.175 32205 27387 I System.out: 	cityName: from Santa Barbara to santabarbara
+02-26 22:37:01.175 32205 27387 I System.out: 	latitude: from 34.4167375 to 34.4167375
+02-26 22:37:01.175 32205 27387 I System.out: 	longitude: from -119.7041157 to -119.7041157
+02-26 22:37:01.175 32205 27387 I System.out: 	altitude: from 16 to 16.0
+02-26 22:37:01.175 32205 27387 I System.out: 	tZone: from -8.0 to -8.0
+02-26 22:37:01.175 32205 27387 I System.out: 	mArePrayersStatic: false
+02-26 22:37:01.175 32205 27387 I System.out: 	prayerPref.fajrAdjust: 0
+02-26 22:37:01.175 32205 27387 I System.out: 	prayerPref.sunriseAdjust: 0
+02-26 22:37:01.175 32205 27387 I System.out: 	prayerPref.dhuhrAdjust: 0
+02-26 22:37:01.175 32205 27387 I System.out: 	prayerPref.asrAdjust: 0
+02-26 22:37:01.175 32205 27387 I System.out: 	prayerPref.maghrebAdjust: 0
+02-26 22:37:01.175 32205 27387 I System.out: 	prayerPref.ishaAdjust: 0
+02-26 22:37:01.175 32205 27387 I System.out: 	prayerPref.isDSTOffset: false
+02-26 22:37:01.175 32205 27387 I System.out: 	prayerPref.isRamadan: true
+02-26 22:37:01.175 32205 27387 I System.out: 	prayerPref.calcMethod: isna to isna
+02-26 22:37:01.175 32205 27387 I System.out: 	prayerPref.mCalcParams: [15.0, 1.0, 0.0, 0.0, 15.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+02-26 22:37:01.175 32205 27387 I System.out: 	prayerPref.asrMethod: HANAFI to HANAFI
+02-26 22:37:01.175 32205 27387 I System.out: 	prayerPref.highLats: NONE to NONE
+02-26 22:37:01.175 32205 27387 I System.out: 	prayerPref.prayerFormat: TIME_24 to TIME_24
+02-26 22:37:01.175 32205 27387 I System.out: 	dayOfYear:  57
+02-26 22:37:01.175 32205 27387 I System.out: 	julianDate: 2461097.5
+02-26 22:37:01.175 32205 27387 I System.out: computeTimes: 5.391255197780008, 6.541081167724317, 12.213375054267242, 16.222072120042, 17.89442048711905, 17.826086076329368, 19.044665558145596
+02-26 22:37:01.175 32205 27387 I System.out: adjustTimes: 5.371529577780008, 6.521355547724317, 12.193649434267243, 16.202346500042, 17.87469486711905, 17.87469486711905, 19.024939938145597
+02-26 22:37:01.175 32205 27387 I System.out: adjustTimesFormat: 05:22, 06:31, 12:12, 16:12, 17:52, 17:52, 19:01
+02-26 22:37:01.182  1339  1363 I GNSS_MEMS: TGT_MEMS TargetMemsStop: mems_started0
+02-26 22:37:01.183  1339  1363 I GNSS_MEMS: TGT_MEMS TargetMemsStop: Exit
+02-26 22:37:01.189  1390  1390 D AOC     : A3:MSG: tmd3743_device.cc, 997: USF: TMD3743: C/G switch 1 -> 0 d_lux:40.97 w_lux: 21.76 C:0.79 G:0.37
+02-26 22:37:01.200  1827  5351 D AppWidgetServiceImpl: Trying to notify widget update for package com.masarat.salati with widget id: 15
+02-26 22:37:01.211  1827  5351 D AppWidgetServiceImpl: Trying to notify widget update for package com.masarat.salati with widget id: 15
+02-26 22:37:01.213  1827  5351 D AppWidgetServiceImpl: Trying to notify widget update for package com.masarat.salati with widget id: 15
+02-26 22:37:01.216  1827  5351 D AppWidgetServiceImpl: Trying to notify widget update for package com.masarat.salati with widget id: 15
+02-26 22:37:01.219  1827  5351 D AppWidgetServiceImpl: Trying to notify widget update for package com.masarat.salati with widget id: 15
+02-26 22:37:01.221  1827  5351 D AppWidgetServiceImpl: Trying to notify widget update for package com.masarat.salati with widget id: 15
+02-26 22:37:01.222  1827  5351 D AppWidgetServiceImpl: Trying to notify widget update for package com.masarat.salati with widget id: 15
+02-26 22:37:01.224  1827  5351 D AppWidgetServiceImpl: Trying to notify widget update for package com.masarat.salati with widget id: 15
+02-26 22:37:01.226  1827  5351 D AppWidgetServiceImpl: Trying to notify widget update for package com.masarat.salati with widget id: 15
+02-26 22:37:01.239  1827  6034 W ProcessStats: Tracking association SourceState{352476b com.google.android.gms/10184 BTop #121044} whose proc state 2 is better than process ProcessState{2f9670d com.google.android.webview:sandboxed_process0:org.chromium.content.app.SandboxedProcessService0:0/10184 pkg=com.google.android.gms} proc state 14 (160 skipped)
+02-26 22:37:01.244  1827  2534 D ActivityManager: Stop FGS timeout: ServiceRecord{ab5d991 u0 com.masarat.salati/.services.PriereService c:com.masarat.salati}
+02-26 22:37:01.244  1827  2534 W ForegroundServiceTypeLoggerModule: FGS stop call for: 10336 has no types!
+02-26 22:37:01.264 32205 32260 W JobInfo : Requested important-while-foreground flag for job9554 is ignored and takes no effect
+02-26 22:37:01.271  1827  5364 E ALSProbe: Max time exceeded for ALS logger - disabling: 241730671
+02-26 22:37:01.273  1086  2002 D usf_sensor_hal: ambient light: Enter Batch. Period = 250000000, latency = 0.
+02-26 22:37:01.275  1390  1390 D AOC     : A3:MSG: usf_sensor.cc, 2566: USF: Received reconfig sampling request for TMD3743 Ambient Light.
+02-26 22:37:01.277  1086  2270 I sensor-suez: Vendor atom [id = 100243] reported.
+02-26 22:37:01.277  1827  5364 V ALSProbe: Disable ALS: 241730671
+02-26 22:37:01.284 32205 32205 I System.out: getPrayerTimes: from (input) to (used)
+02-26 22:37:01.284 32205 32205 I System.out: 	date: from 2026-02-26 to 2026-02-26
+02-26 22:37:01.284 32205 32205 I System.out: 	countryCode: from US to US
+02-26 22:37:01.284 32205 32205 I System.out: 	cityName: from Santa Barbara to santabarbara
+02-26 22:37:01.284 32205 32205 I System.out: 	latitude: from 34.4167375 to 34.4167375
+02-26 22:37:01.284 32205 32205 I System.out: 	longitude: from -119.7041157 to -119.7041157
+02-26 22:37:01.284 32205 32205 I System.out: 	altitude: from 16 to 16.0
+02-26 22:37:01.284  1390  1390 D AOC     : A3:MSG: tmd3743_device.cc, 997: USF: TMD3743: C/G switch 0 -> 1 d_lux:25.34 w_lux: 15.14 C:0.55 G:0.22
+02-26 22:37:01.284 32205 32205 I System.out: 	tZone: from -8.0 to -8.0
+02-26 22:37:01.284 32205 32205 I System.out: 	mArePrayersStatic: false
+02-26 22:37:01.284 32205 32205 I System.out: 	prayerPref.fajrAdjust: 0
+02-26 22:37:01.284 32205 32205 I System.out: 	prayerPref.sunriseAdjust: 0
+02-26 22:37:01.284 32205 32205 I System.out: 	prayerPref.dhuhrAdjust: 0
+02-26 22:37:01.284 32205 32205 I System.out: 	prayerPref.asrAdjust: 0
+02-26 22:37:01.284 32205 32205 I System.out: 	prayerPref.maghrebAdjust: 0
+02-26 22:37:01.284 32205 32205 I System.out: 	prayerPref.ishaAdjust: 0
+02-26 22:37:01.284 32205 32205 I System.out: 	prayerPref.isDSTOffset: false
+02-26 22:37:01.284 32205 32205 I System.out: 	prayerPref.isRamadan: true
+02-26 22:37:01.284 32205 32205 I System.out: 	prayerPref.calcMethod: isna to isna
+02-26 22:37:01.284 32205 32205 I System.out: 	prayerPref.mCalcParams: [15.0, 1.0, 0.0, 0.0, 15.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+02-26 22:37:01.284 32205 32205 I System.out: 	prayerPref.asrMethod: HANAFI to HANAFI
+02-26 22:37:01.284 32205 32205 I System.out: 	prayerPref.highLats: NONE to NONE
+02-26 22:37:01.284 32205 32205 I System.out: 	prayerPref.prayerFormat: TIME_24 to TIME_24
+02-26 22:37:01.284 32205 32205 I System.out: 	dayOfYear:  57
+02-26 22:37:01.284 32205 32205 I System.out: 	julianDate: 2461097.5
+02-26 22:37:01.284 32205 32205 I System.out: computeTimes: 5.391255197780008, 6.541081167724317, 12.213375054267242, 16.222072120042, 17.89442048711905, 17.826086076329368, 19.044665558145596
+02-26 22:37:01.284 32205 32205 I System.out: adjustTimes: 5.371529577780008, 6.521355547724317, 12.193649434267243, 16.202346500042, 17.87469486711905, 17.87469486711905, 19.024939938145597
+02-26 22:37:01.284 32205 32205 I System.out: adjustTimesFormat: 05:22, 06:31, 12:12, 16:12, 17:52, 17:52, 19:01
+02-26 22:37:01.288  5992 27298 W AsyncOperation: operation=RegisterLocationPendingIntent, opStatusCode=10 [CONTEXT service_id=6 ]
+02-26 22:37:01.288  5992 27298 W AsyncOperation: OperationException[Status{statusCode=PendingIntent must be mutable, resolution=null}]
+02-26 22:37:01.288  5992 27298 W AsyncOperation: 	at gksd.a(:com.google.android.gms@260862035@26.08.62 (260400-873170278):143)
+02-26 22:37:01.288  5992 27298 W AsyncOperation: 	at cxze.h(:com.google.android.gms@260862035@26.08.62 (260400-873170278):15)
+02-26 22:37:01.288  5992 27298 W AsyncOperation: 	at gkqg.b(:com.google.android.gms@260862035@26.08.62 (260400-873170278):23)
+02-26 22:37:01.288  5992 27298 W AsyncOperation: 	at gkro.f(:com.google.android.gms@260862035@26.08.62 (260400-873170278):1)
+02-26 22:37:01.288  5992 27298 W AsyncOperation: 	at ctkl.fx(:com.google.android.gms@260862035@26.08.62 (260400-873170278):1)
+02-26 22:37:01.288  5992 27298 W AsyncOperation: 	at ctkp.run(:com.google.android.gms@260862035@26.08.62 (260400-873170278):118)
+02-26 22:37:01.288  5992 27298 W AsyncOperation: 	at gsnm.run(:com.google.android.gms@260862035@26.08.62 (260400-873170278):19)
+02-26 22:37:01.288  5992 27298 W AsyncOperation: 	at bgyz.c(:com.google.android.gms@260862035@26.08.62 (260400-873170278):50)
+02-26 22:37:01.288  5992 27298 W AsyncOperation: 	at bgyz.run(:com.google.android.gms@260862035@26.08.62 (260400-873170278):73)
+02-26 22:37:01.288  5992 27298 W AsyncOperation: 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1100)
+02-26 22:37:01.288  5992 27298 W AsyncOperation: 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+02-26 22:37:01.288  5992 27298 W AsyncOperation: 	at bher.run(:com.google.android.gms@260862035@26.08.62 (260400-873170278):8)
+02-26 22:37:01.288  5992 27298 W AsyncOperation: 	at java.lang.Thread.run(Thread.java:1564)
+02-26 22:37:01.289  5992 27298 W AsyncOperation: operation=RegisterLocationPendingIntent, opStatusCode=10 [CONTEXT service_id=6 ]
+02-26 22:37:01.289  5992 27298 W AsyncOperation: OperationException[Status{statusCode=PendingIntent must be mutable, resolution=null}]
+02-26 22:37:01.289  5992 27298 W AsyncOperation: 	at gksd.a(:com.google.android.gms@260862035@26.08.62 (260400-873170278):143)
+02-26 22:37:01.289  5992 27298 W AsyncOperation: 	at cxze.h(:com.google.android.gms@260862035@26.08.62 (260400-873170278):15)
+02-26 22:37:01.289  5992 27298 W AsyncOperation: 	at gkqg.b(:com.google.android.gms@260862035@26.08.62 (260400-873170278):23)
+02-26 22:37:01.289  5992 27298 W AsyncOperation: 	at gkro.f(:com.google.android.gms@260862035@26.08.62 (260400-873170278):1)
+02-26 22:37:01.289  5992 27298 W AsyncOperation: 	at ctkl.fx(:com.google.android.gms@260862035@26.08.62 (260400-873170278):1)
+02-26 22:37:01.289  5992 27298 W AsyncOperation: 	at ctkp.run(:com.google.android.gms@260862035@26.08.62 (260400-873170278):118)
+02-26 22:37:01.289  5992 27298 W AsyncOperation: 	at gsnm.run(:com.google.android.gms@260862035@26.08.62 (260400-873170278):19)
+02-26 22:37:01.289  5992 27298 W AsyncOperation: 	at bgyz.c(:com.google.android.gms@260862035@26.08.62 (260400-873170278):50)
+02-26 22:37:01.289  5992 27298 W AsyncOperation: 	at bgyz.run(:com.google.android.gms@260862035@26.08.62 (260400-873170278):92)
+02-26 22:37:01.289  5992 27298 W AsyncOperation: 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1100)
+02-26 22:37:01.289  5992 27298 W AsyncOperation: 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+02-26 22:37:01.289  5992 27298 W AsyncOperation: 	at bher.run(:com.google.android.gms@260862035@26.08.62 (260400-873170278):8)
+02-26 22:37:01.289  5992 27298 W AsyncOperation: 	at java.lang.Thread.run(Thread.java:1564)
+02-26 22:37:01.291  1827  2534 W ActivityManager: Foreground service started from background can not have location/camera/microphone access: service com.masarat.salati/.services.PersistentNotificationService
+02-26 22:37:01.297 32205 32205 I System.out: getPrayerTimes: from (input) to (used)
+02-26 22:37:01.297 32205 32205 I System.out: 	date: from 2026-02-26 to 2026-02-26
+02-26 22:37:01.297 32205 32205 I System.out: 	countryCode: from US to US
+02-26 22:37:01.297 32205 32205 I System.out: 	cityName: from Santa Barbara to santabarbara
+02-26 22:37:01.297 32205 32205 I System.out: 	latitude: from 34.4167375 to 34.4167375
+02-26 22:37:01.297 32205 32205 I System.out: 	longitude: from -119.7041157 to -119.7041157
+02-26 22:37:01.297 32205 32205 I System.out: 	altitude: from 16 to 16.0
+02-26 22:37:01.297 32205 32205 I System.out: 	tZone: from -8.0 to -8.0
+02-26 22:37:01.297 32205 32205 I System.out: 	mArePrayersStatic: false
+02-26 22:37:01.297 32205 32205 I System.out: 	prayerPref.fajrAdjust: 0
+02-26 22:37:01.297 32205 32205 I System.out: 	prayerPref.sunriseAdjust: 0
+02-26 22:37:01.297 32205 32205 I System.out: 	prayerPref.dhuhrAdjust: 0
+02-26 22:37:01.297 32205 32205 I System.out: 	prayerPref.asrAdjust: 0
+02-26 22:37:01.297 32205 32205 I System.out: 	prayerPref.maghrebAdjust: 0
+02-26 22:37:01.297 32205 32205 I System.out: 	prayerPref.ishaAdjust: 0
+02-26 22:37:01.297 32205 32205 I System.out: 	prayerPref.isDSTOffset: false
+02-26 22:37:01.297 32205 32205 I System.out: 	prayerPref.isRamadan: true
+02-26 22:37:01.297 32205 32205 I System.out: 	prayerPref.calcMethod: isna to isna
+02-26 22:37:01.297 32205 32205 I System.out: 	prayerPref.mCalcParams: [15.0, 1.0, 0.0, 0.0, 15.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+02-26 22:37:01.297 32205 32205 I System.out: 	prayerPref.asrMethod: HANAFI to HANAFI
+02-26 22:37:01.297 32205 32205 I System.out: 	prayerPref.highLats: NONE to NONE
+02-26 22:37:01.297 32205 32205 I System.out: 	prayerPref.prayerFormat: TIME_24 to TIME_24
+02-26 22:37:01.297 32205 32205 I System.out: 	dayOfYear:  57
+02-26 22:37:01.297 32205 32205 I System.out: 	julianDate: 2461097.5
+02-26 22:37:01.297 32205 32205 I System.out: computeTimes: 5.391255197780008, 6.541081167724317, 12.213375054267242, 16.222072120042, 17.89442048711905, 17.826086076329368, 19.044665558145596
+02-26 22:37:01.297 32205 32205 I System.out: adjustTimes: 5.371529577780008, 6.521355547724317, 12.193649434267243, 16.202346500042, 17.87469486711905, 17.87469486711905, 19.024939938145597
+02-26 22:37:01.297 32205 32205 I System.out: adjustTimesFormat: 05:22, 06:31, 12:12, 16:12, 17:52, 17:52, 19:01
+02-26 22:37:01.297 32205 32205 I System.out: getPrayerTimes: from (input) to (used)
+02-26 22:37:01.298 32205 32205 I System.out: 	date: from 2026-02-26 to 2026-02-26
+02-26 22:37:01.298 32205 32205 I System.out: 	countryCode: from US to US
+02-26 22:37:01.298 32205 32205 I System.out: 	cityName: from Santa Barbara to santabarbara
+02-26 22:37:01.298 32205 32205 I System.out: 	latitude: from 34.4167375 to 34.4167375
+02-26 22:37:01.298 32205 32205 I System.out: 	longitude: from -119.7041157 to -119.7041157
+02-26 22:37:01.298 32205 32205 I System.out: 	altitude: from 16 to 16.0
+02-26 22:37:01.298 32205 32205 I System.out: 	tZone: from -8.0 to -8.0
+02-26 22:37:01.298 32205 32205 I System.out: 	mArePrayersStatic: false
+02-26 22:37:01.298 32205 32205 I System.out: 	prayerPref.fajrAdjust: 0
+02-26 22:37:01.298 32205 32205 I System.out: 	prayerPref.sunriseAdjust: 0
+02-26 22:37:01.298 32205 32205 I System.out: 	prayerPref.dhuhrAdjust: 0
+02-26 22:37:01.298 32205 32205 I System.out: 	prayerPref.asrAdjust: 0
+02-26 22:37:01.298 32205 32205 I System.out: 	prayerPref.maghrebAdjust: 0
+02-26 22:37:01.298 32205 32205 I System.out: 	prayerPref.ishaAdjust: 0
+02-26 22:37:01.298 32205 32205 I System.out: 	prayerPref.isDSTOffset: false
+02-26 22:37:01.298 32205 32205 I System.out: 	prayerPref.isRamadan: true
+02-26 22:37:01.298 32205 32205 I System.out: 	prayerPref.calcMethod: isna to isna
+02-26 22:37:01.298 32205 32205 I System.out: 	prayerPref.mCalcParams: [15.0, 1.0, 0.0, 0.0, 15.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+02-26 22:37:01.298 32205 32205 I System.out: 	prayerPref.asrMethod: HANAFI to HANAFI
+02-26 22:37:01.298 32205 32205 I System.out: 	prayerPref.highLats: NONE to NONE
+02-26 22:37:01.298 32205 32205 I System.out: 	prayerPref.prayerFormat: TIME_24 to TIME_24
+02-26 22:37:01.298 32205 32205 I System.out: 	dayOfYear:  57
+02-26 22:37:01.298 32205 32205 I System.out: 	julianDate: 2461097.5
+02-26 22:37:01.298 32205 32205 I System.out: computeTimes: 5.391255197780008, 6.541081167724317, 12.213375054267242, 16.222072120042, 17.89442048711905, 17.826086076329368, 19.044665558145596
+02-26 22:37:01.298 32205 32205 I System.out: adjustTimes: 5.371529577780008, 6.521355547724317, 12.193649434267243, 16.202346500042, 17.87469486711905, 17.87469486711905, 19.024939938145597
+02-26 22:37:01.298 32205 32205 I System.out: adjustTimesFormat: 05:22, 06:31, 12:12, 16:12, 17:52, 17:52, 19:01
+02-26 22:37:01.313  1390  1390 D AOC     : A3:MSG: tmd3743_device.cc, 997: USF: TMD3743: C/G switch 1 -> 0 d_lux:29.98 w_lux: 17.65 C:0.64 G:0.27
+02-26 22:37:01.317  7369  9282 I AiAiSmartNotification: Exemption applied: Notification is newer than cutoffTime.
+02-26 22:37:01.319  7369  9282 I AiAiTranslate: C2T langIding: hi / 0.000522
+02-26 22:37:01.319  7369  9282 I AiAiTranslate: C2T langIding: ps / 0.000576
+02-26 22:37:01.319  7369  9282 I AiAiTranslate: C2T langIding: pt / 0.000219
+02-26 22:37:01.319  7369  9282 I AiAiTranslate: C2T langIding: fil / 0.027312
+02-26 22:37:01.319  7369  9282 I AiAiTranslate: C2T langIding: hmn / 0.000672
+02-26 22:37:01.319  7369  9282 I AiAiTranslate: C2T langIding: hr / 0.006257
+02-26 22:37:01.320  7369  9282 I AiAiTranslate: C2T langIding: ht / 0.000388
+02-26 22:37:01.320  7369  9282 I AiAiTranslate: C2T langIding: hu / 0.000425
+02-26 22:37:01.320  7369  9282 I AiAiTranslate: C2T langIding: yi / 0.000457
+02-26 22:37:01.320  7369  9282 I AiAiTranslate: C2T langIding: hy / 0.000410
+02-26 22:37:01.320  7369  9282 I AiAiTranslate: C2T langIding: yo / 0.006699
+02-26 22:37:01.320  7369  9282 I AiAiTranslate: C2T langIding: id / 0.001517
+02-26 22:37:01.320  7369  9282 I AiAiTranslate: C2T langIding: ig / 0.025986
+02-26 22:37:01.320  7369  9282 I AiAiTranslate: C2T langIding: af / 0.000550
+02-26 22:37:01.320  7369  9282 I AiAiTranslate: C2T langIding: is / 0.004362
+02-26 22:37:01.321  7369  9282 I AiAiTranslate: C2T langIding: it / 0.000847
+02-26 22:37:01.321  7369  9282 I AiAiTranslate: C2T langIding: am / 0.000058
+02-26 22:37:01.321  7369  9282 I AiAiTranslate: C2T langIding: iw / 0.000858
+02-26 22:37:01.321  7369  9282 I AiAiTranslate: C2T langIding: zh / 0.004315
+02-26 22:37:01.321  7369  9282 I AiAiTranslate: C2T langIding: ar / 0.001851
+02-26 22:37:01.321  7369  9282 I AiAiTranslate: C2T langIding: ja / 0.001150
+02-26 22:37:01.321  7369  9282 I AiAiTranslate: C2T langIding: az / 0.000039
+02-26 22:37:01.321  7369  9282 I AiAiTranslate: C2T langIding: zu / 0.004818
+02-26 22:37:01.321  7369  9282 I AiAiTranslate: C2T langIding: ro / 0.000844
+02-26 22:37:01.321  7369  9282 I AiAiTranslate: C2T langIding: ceb / 0.004145
+02-26 22:37:01.321  7369  9282 I AiAiTranslate: C2T langIding: be / 0.000117
+02-26 22:37:01.321  7369  9282 I AiAiTranslate: C2T langIding: ru / 0.001070
+02-26 22:37:01.322  7369  9282 I AiAiTranslate: C2T langIding: bg / 0.000741
+02-26 22:37:01.322  7369  9282 I AiAiTranslate: C2T langIding: hi-Latn / 0.470052
+02-26 22:37:01.322  7369  9282 I AiAiTranslate: C2T langIding: bn / 0.000030
+02-26 22:37:01.322  7369  9282 I AiAiTranslate: C2T langIding: jv / 0.004587
+02-26 22:37:01.322  7369  9282 I AiAiTranslate: C2T langIding: unknown / 0.002222
+02-26 22:37:01.322  7369  9282 I AiAiTranslate: C2T langIding: bs / 0.002627
+02-26 22:37:01.322  7369  9282 I AiAiTranslate: C2T langIding: sd / 0.000732
+02-26 22:37:01.322  7369  9282 I AiAiTranslate: C2T langIding: ka / 0.000111
+02-26 22:37:01.322  7369  9282 I AiAiTranslate: C2T langIding: si / 0.000013
+02-26 22:37:01.322  7369  9282 I AiAiTranslate: C2T langIding: sk / 0.000129
+02-26 22:37:01.322  7369  9282 I AiAiTranslate: C2T langIding: sl / 0.000473
+02-26 22:37:01.322  7369  9282 I AiAiTranslate: C2T langIding: sm / 0.001412
+02-26 22:37:01.322  7369  9282 I AiAiTranslate: C2T langIding: sn / 0.000938
+02-26 22:37:01.323  7369  9282 I AiAiTranslate: C2T langIding: so / 0.028460
+02-26 22:37:01.323  7369  9282 I AiAiTranslate: C2T langIding: ca / 0.003777
+02-26 22:37:01.323  7369  9282 I AiAiTranslate: C2T langIding: sq / 0.000096
+02-26 22:37:01.323  7369  9282 I AiAiTranslate: C2T langIding: sr / 0.001055
+02-26 22:37:01.323  7369  9282 I AiAiTranslate: C2T langIding: kk / 0.000094
+02-26 22:37:01.323  7369  9282 I AiAiTranslate: C2T langIding: st / 0.018716
+02-26 22:37:01.323  7369  9282 I AiAiTranslate: C2T langIding: km / 0.000235
+02-26 22:37:01.323  7369  9282 I AiAiTranslate: C2T langIding: su / 0.000948
+02-26 22:37:01.323  7369  9282 I AiAiTranslate: C2T langIding: kn / 0.000008
+02-26 22:37:01.323  7369  9282 I AiAiTranslate: C2T langIding: sv / 0.003051
+02-26 22:37:01.323  7369  9282 I AiAiTranslate: C2T langIding: ko / 0.000583
+02-26 22:37:01.323  7369  9282 I AiAiTranslate: C2T langIding: sw / 0.001834
+02-26 22:37:01.323  7369  9282 I AiAiTranslate: C2T langIding: ku / 0.000396
+02-26 22:37:01.323  7369  9282 I AiAiTranslate: C2T langIding: co / 0.000412
+02-26 22:37:01.323  7369  9282 I AiAiTranslate: C2T langIding: ta / 0.000018
+02-26 22:37:01.324  7369  9282 I AiAiTranslate: C2T langIding: ky / 0.000566
+02-26 22:37:01.324  7369  9282 I AiAiTranslate: C2T langIding: cs / 0.000035
+02-26 22:37:01.324  7369  9282 I AiAiTranslate: C2T langIding: te / 0.000188
+02-26 22:37:01.324  7369  9282 I AiAiTranslate: C2T langIding: tg / 0.000801
+02-26 22:37:01.324  7369  9282 I AiAiTranslate: C2T langIding: th / 0.000024
+02-26 22:37:01.324  7369  9282 I AiAiTranslate: C2T langIding: la / 0.000087
+02-26 22:37:01.324  7369  9282 I AiAiTranslate: C2T langIding: cy / 0.000684
+02-26 22:37:01.324  7369  9282 I AiAiTranslate: C2T langIding: lb / 0.000171
+02-26 22:37:01.324  7369  9282 I AiAiTranslate: C2T langIding: da / 0.022572
+02-26 22:37:01.324  7369  9282 I AiAiTranslate: C2T langIding: tr / 0.000720
+02-26 22:37:01.324  7369  9282 I AiAiTranslate: C2T langIding: de / 0.002962
+02-26 22:37:01.324  7369  9282 I AiAiTranslate: C2T langIding: lo / 0.000026
+02-26 22:37:01.324  7369  9282 I AiAiTranslate: C2T langIding: ar-Latn / 0.004826
+02-26 22:37:01.324  7369  9282 I AiAiTranslate: C2T langIding: lt / 0.000465
+02-26 22:37:01.326  7369  9282 I AiAiTranslate: C2T langIding: lv / 0.000052
+02-26 22:37:01.327  7369  9282 I AiAiTranslate: C2T langIding: el-Latn / 0.003125
+02-26 22:37:01.327  7369  9282 I AiAiTranslate: C2T langIding: uk / 0.000776
+02-26 22:37:01.327  7369  9282 I AiAiTranslate: C2T langIding: mg / 0.026244
+02-26 22:37:01.327  7369  9282 I AiAiTranslate: C2T langIding: mi / 0.007006
+02-26 22:37:01.327  7369  9282 I AiAiTranslate: C2T langIding: ur / 0.000321
+02-26 22:37:01.327  7369  9282 I AiAiTranslate: C2T langIding: mk / 0.002331
+02-26 22:37:01.327  7369  9282 I AiAiTranslate: C2T langIding: haw / 0.000109
+02-26 22:37:01.327  7369  9282 I AiAiTranslate: C2T langIding: ml / 0.000058
+02-26 22:37:01.327  7369  9282 I AiAiTranslate: C2T langIding: mn / 0.000385
+02-26 22:37:01.327  7369  9282 I AiAiTranslate: C2T langIding: mr / 0.002599
+02-26 22:37:01.327  7369  9282 I AiAiTranslate: C2T langIding: uz / 0.000355
+02-26 22:37:01.327  7369  9282 I AiAiTranslate: C2T langIding: ms / 0.007997
+02-26 22:37:01.328  7369  9282 I AiAiTranslate: C2T langIding: el / 0.000070
+02-26 22:37:01.328  7369  9282 I AiAiTranslate: C2T langIding: mt / 0.001629
+02-26 22:37:01.328  7369  9282 I AiAiTranslate: C2T langIding: en / 0.067639
+02-26 22:37:01.328  7369  9282 I AiAiTranslate: C2T langIding: eo / 0.000381
+02-26 22:37:01.328  7369  9282 I AiAiTranslate: C2T langIding: my / 0.000082
+02-26 22:37:01.328  7369  9282 I AiAiTranslate: C2T langIding: es / 0.001144
+02-26 22:37:01.328  7369  9282 I AiAiTranslate: C2T langIding: et / 0.000275
+02-26 22:37:01.328  7369  9282 I AiAiTranslate: C2T langIding: eu / 0.016028
+02-26 22:37:01.328  7369  9282 I AiAiTranslate: C2T langIding: vi / 0.002064
+02-26 22:37:01.328  7369  9282 I AiAiTranslate: C2T langIding: ne / 0.000791
+02-26 22:37:01.328  7369  9282 I AiAiTranslate: C2T langIding: fa / 0.001621
+02-26 22:37:01.328  7369  9282 I AiAiTranslate: C2T langIding: nl / 0.001860
+02-26 22:37:01.329  7369  9282 I AiAiTranslate: C2T langIding: zh-Latn / 0.000164
+02-26 22:37:01.329  7369  9282 I AiAiTranslate: C2T langIding: no / 0.047988
+02-26 22:37:01.329  7369  9282 I AiAiTranslate: C2T langIding: fi / 0.004618
+02-26 22:37:01.329  7369  9282 I AiAiTranslate: C2T langIding: ny / 0.000914
+02-26 22:37:01.329  7369  9282 I AiAiTranslate: C2T langIding: fr / 0.000301
+02-26 22:37:01.329  7369  9282 I AiAiTranslate: C2T langIding: ru-Latn / 0.000449
+02-26 22:37:01.329  7369  9282 I AiAiTranslate: C2T langIding: fy / 0.001029
+02-26 22:37:01.329  7369  9282 I AiAiTranslate: C2T langIding: bg-Latn / 0.004638
+02-26 22:37:01.329  7369  9282 I AiAiTranslate: C2T langIding: ga / 0.000372
+02-26 22:37:01.329  7369  9282 I AiAiTranslate: C2T langIding: gd / 0.009931
+02-26 22:37:01.330  7369  9282 I AiAiTranslate: C2T langIding: ja-Latn / 0.019465
+02-26 22:37:01.330  7369  9282 I AiAiTranslate: C2T langIding: gl / 0.004258
+02-26 22:37:01.330  7369  9282 I AiAiTranslate: C2T langIding: gu / 0.000061
+02-26 22:37:01.330  7369  9282 I AiAiTranslate: C2T langIding: xh / 0.002128
+02-26 22:37:01.330  7369  9282 I AiAiTranslate: C2T langIding: pa / 0.000680
+02-26 22:37:01.330  7369  9282 I AiAiTranslate: C2T langIding: ha / 0.083522
+02-26 22:37:01.330  7369  9282 I AiAiTranslate: C2T langIding: pl / 0.000192
+02-26 22:37:01.350  1390  1390 D AOC     : A3:MSG: tmd3743_device.cc, 997: USF: TMD3743: C/G switch 0 -> 1 d_lux:24.61 w_lux: 15.07 C:0.54 G:0.22
+02-26 22:37:01.379  1390  1390 D AOC     : A3:MSG: tmd3743_device.cc, 997: USF: TMD3743: C/G switch 1 -> 0 d_lux:29.91 w_lux: 17.79 C:0.65 G:0.27
+02-26 22:37:01.406  5582  6042 D IpClient/wlan0: addressUpdated: 2600:8802:5301:4800:b05a:8dff:fe06:3733/64 on ifindex 46 flags 0x00000100 scope 0
+02-26 22:37:01.407  1296  1306 I WPKTRT  : process_address_event: 2600:8802:5301:4800:b05a:8dff:fe06:3733 added to wlan0
+02-26 22:37:01.407  1296  1306 I WPKTRT  : process_address_event: 2600:8802:5301:4800:479a:4fda:eb4:b30e added to wlan0
+02-26 22:37:01.408  5582  6042 D IpClient/wlan0: addressUpdated: 2600:8802:5301:4800:479a:4fda:eb4:b30e/64 on ifindex 46 flags 0x00000001 scope 0
+02-26 22:37:01.408  5582  6042 W AlarmManager: Unrecognized alarm listener com.android.networkstack.android.net.ip.IpClientLinkObserver$Dhcp6PdPreferredPrefixAlarmListener@8ae5437
+02-26 22:37:01.411  5582  6042 D ApfFilter: (wlan0): Ignoring RA RA fe80::c650:9cff:fe61:f4f -> ff02::1 180s 2600:8802:5301:4800::/64 300s/300s DNS 180s 2001:578:3f::30 2001:578:3f:1::30 RIO 180s ::/0  which matches RA fe80::c650:9cff:fe61:f4f -> ff02::1 180s 2600:8802:5301:4800::/64 300s/300s DNS 180s 2001:578:3f::30 2001:578:3f:1::30 RIO 180s ::/0 
+02-26 22:37:01.417  1390  1390 D AOC     : A3:MSG: tmd3743_device.cc, 997: USF: TMD3743: C/G switch 0 -> 1 d_lux:24.83 w_lux: 14.97 C:0.54 G:0.22
+02-26 22:37:01.446  1390  1390 D AOC     : A3:MSG: tmd3743_device.cc, 997: USF: TMD3743: C/G switch 1 -> 0 d_lux:30.93 w_lux: 17.84 C:0.65 G:0.27
+02-26 22:37:01.485  1390  1390 D AOC     : A3:MSG: tmd3743_device.cc, 997: USF: TMD3743: C/G switch 0 -> 1 d_lux:24.59 w_lux: 14.94 C:0.54 G:0.22
+02-26 22:37:01.513  1390  1390 D AOC     : A3:MSG: tmd3743_device.cc, 997: USF: TMD3743: C/G switch 1 -> 0 d_lux:31.51 w_lux: 18.07 C:0.66 G:0.28
+02-26 22:37:01.548  1338  2419 W gnssd   : Warning: lal_router_disconnect: type=6 port=0
+02-26 22:37:01.557  1827  2241 I AppsFilter: interaction: PackageSetting{3118132 com.kyilmaz.neurocomet.debug/10528} -> PackageSetting{b171be6 com.masarat.salati/10336} BLOCKED
+02-26 22:37:01.561  1827  2241 I AppsFilter: interaction: PackageSetting{6103e95 com.google.android.microdroid.empty_payload/10304} -> PackageSetting{b171be6 com.masarat.salati/10336} BLOCKED
+02-26 22:37:01.561  1827  2241 I AppsFilter: interaction: PackageSetting{43a3baa com.kyilmaz.neurocomet/10555} -> PackageSetting{b171be6 com.masarat.salati/10336} BLOCKED
+02-26 22:37:01.561  1827  2241 I AppsFilter: interaction: PackageSetting{a75639b come.nanodata.armsx2.debug/10598} -> PackageSetting{b171be6 com.masarat.salati/10336} BLOCKED
+02-26 22:37:01.571  1390  1390 D AOC     : A3:MSG: tmd3743_device.cc, 997: USF: TMD3743: C/G switch 0 -> 1 d_lux:24.27 w_lux: 14.99 C:0.54 G:0.21
+02-26 22:37:01.580  1390  1390 D AOC     : A3:MSG: tmd3743_device.cc, 997: USF: TMD3743: C/G switch 1 -> 0 d_lux:31.37 w_lux: 18.27 C:0.66 G:0.28
+02-26 22:37:01.618  1390  1390 D AOC     : A3:MSG: tmd3743_device.cc, 997: USF: TMD3743: C/G switch 0 -> 1 d_lux:24.10 w_lux: 14.80 C:0.54 G:0.21
+02-26 22:37:01.620  7715  7715 I NotificationListener: [Service]v6.1.9-eap02 Received new notification
+02-26 22:37:01.623  7715  8328 I NotificationPipeline: Processing new notification: 0|com.masarat.salati|1020123|null|10336
+02-26 22:37:01.623  7715  8328 I Notification4WatchManager_NB: NotificationChecker.checkIgnoreCase - onGoing
+02-26 22:37:01.624  7715  8328 W Notification4WatchManager_NB: NotificationBridgeCallback.onNotificationPosted-Ignored package : [0] com.masarat.salati
+02-26 22:37:01.625  7715  8328 I NotificationPipeline: Discarding notification: 0|com.masarat.salati|1020123|null|10336
+02-26 22:37:01.641  7369  9067 I AiAiEcho: SmartspaceNotificationPredictor no parser can handle this notification or notification is invalid
+02-26 22:37:01.643  1160  1377 W PixelGnssChreClient: Failed to find the AR endpoint. Will not connect until it is available.
+02-26 22:37:01.643  1160  1377 W PixelGnssChreClient: GnssChreClient has already started
+02-26 22:37:01.648  1390  1390 D AOC     : A3:MSG: tmd3743_device.cc, 997: USF: TMD3743: C/G switch 1 -> 0 d_lux:32.20 w_lux: 18.44 C:0.67 G:0.29
+02-26 22:37:01.656  5992  8505 I NearbyUWB: (REDACTED) Client %s (%s) disconnecting %s
+02-26 22:37:01.656  5992  8456 I NearbyUWB: (REDACTED) Client %s (%s) disconnecting %s
+02-26 22:37:01.656  5992  8506 I NearbyUWB: (REDACTED) Client %s (%s) disconnecting %s
+02-26 22:37:01.661  5992 27341 I NearbyUWB: (REDACTED) User opted in for analytics reporting: %s.
+02-26 22:37:01.667  7369 27388 I AiAiEcho: AppIndexer Package:[com.masarat.salati] UserProfile:[0] Enabled:[true].
+02-26 22:37:01.668  7369 27388 I AiAiEcho: AppFetcherImplV2 updateApps package:[com.masarat.salati], userId:[0], reason:[package is updated.].
+02-26 22:37:01.673  5992 27341 I NearbyUWB: (REDACTED) User opted in for analytics reporting: %s.
+02-26 22:37:01.676  5992 27341 I NearbyUWB: clientSession Logged [CONTEXT service_id=49 ]
+02-26 22:37:01.676  5992 27341 I NearbyUWB: AnalyticsLogger is shutdown. [CONTEXT service_id=49 ]
+02-26 22:37:01.677  1827  5351 D AppWidgetServiceImpl: Trying to notify provider update
+02-26 22:37:01.677  1827  5351 D AppWidgetServiceImpl: Trying to notify widget providers changed
+02-26 22:37:01.681  5032  5032 I LauncherAppWidgetHostView: App widget created with id: 15
+02-26 22:37:01.687  1390  1390 D AOC     : A3:MSG: tmd3743_device.cc, 997: USF: TMD3743: C/G switch 0 -> 1 d_lux:24.05 w_lux: 14.84 C:0.53 G:0.21
+02-26 22:37:01.690  5992 27298 I NearbyUWB: stop ranging called. [CONTEXT service_id=49 ]
+02-26 22:37:01.690  5992 27351 I NearbyUWB: (REDACTED) User opted in for analytics reporting: %s.
+02-26 22:37:01.695  5992 27351 I NearbyUWB: (REDACTED) User opted in for analytics reporting: %s.
+02-26 22:37:01.696  5992 27351 I NearbyUWB: clientSession Logged [CONTEXT service_id=49 ]
+02-26 22:37:01.696  5992 27351 I NearbyUWB: AnalyticsLogger is shutdown. [CONTEXT service_id=49 ]
+02-26 22:37:01.697  5992 27298 I NearbyUWB: stop ranging called. [CONTEXT service_id=49 ]
+02-26 22:37:01.699  1827  5351 D AppWidgetServiceImpl: Trying to notify widget update for package com.masarat.salati with widget id: 15
+02-26 22:37:01.700  5992 27298 I NearbyUWB: stop ranging called. [CONTEXT service_id=49 ]
+02-26 22:37:01.706  5032  5032 I LauncherAppWidgetHostView: App widget with id: 15 loaded
+02-26 22:37:01.692  5992 27345 I NearbyUWB: (REDACTED) User opted in for analytics reporting: %s.
+02-26 22:37:01.707  5428  5451 I PermissionControllerServiceImpl: Updating user sensitive for uid 10336
+02-26 22:37:01.707  1827  5370 D ShortcutService: received package broadcast intent: Intent { act=android.intent.action.PACKAGE_CHANGED dat=package: flg=0x45000010 (has extras) }
+02-26 22:37:01.707  1827  5370 D ShortcutService: changing package: com.masarat.salati userId=0
+02-26 22:37:01.711  1827  5351 D AppWidgetServiceImpl: Trying to notify widget update for package com.masarat.salati with widget id: 15
+02-26 22:37:01.714  5992 27345 I NearbyUWB: (REDACTED) User opted in for analytics reporting: %s.
+02-26 22:37:01.714  1827  5351 D AppWidgetServiceImpl: Trying to notify widget update for package com.masarat.salati with widget id: 15
+02-26 22:37:01.715  1390  1390 D AOC     : A3:MSG: tmd3743_device.cc, 997: USF: TMD3743: C/G switch 1 -> 0 d_lux:32.75 w_lux: 18.52 C:0.68 G:0.29
+02-26 22:37:01.721  5992 27345 I NearbyUWB: clientSession Logged [CONTEXT service_id=49 ]
+02-26 22:37:01.721  5992 27345 I NearbyUWB: AnalyticsLogger is shutdown. [CONTEXT service_id=49 ]
+02-26 22:37:01.727  1827  5351 D AppWidgetServiceImpl: Trying to notify widget update for package com.masarat.salati with widget id: 15
+02-26 22:37:01.735  1827  5351 D AppWidgetServiceImpl: Trying to notify widget update for package com.masarat.salati with widget id: 15
+02-26 22:37:01.738  1827  5351 D AppWidgetServiceImpl: Trying to notify widget update for package com.masarat.salati with widget id: 15
+02-26 22:37:01.738  1827  2572 W AccessibilitySecurityPolicy: Skipping accessibility service com.myklarnamobile/io.cobrowse.CobrowseAccessibilityService: it does not require the permission android.permission.BIND_ACCESSIBILITY_SERVICE
+02-26 22:37:01.739  1827  5351 D AppWidgetServiceImpl: Trying to notify widget update for package com.masarat.salati with widget id: 15
+02-26 22:37:01.740  1827  2572 W AccessibilitySecurityPolicy: Skipping accessibility service com.tmobile.tuesdays/io.cobrowse.CobrowseAccessibilityService: it does not require the permission android.permission.BIND_ACCESSIBILITY_SERVICE
+02-26 22:37:01.743  1827  5351 D AppWidgetServiceImpl: Trying to notify widget update for package com.masarat.salati with widget id: 15
+02-26 22:37:01.745  1827  5351 D AppWidgetServiceImpl: Trying to notify widget update for package com.masarat.salati with widget id: 15
+02-26 22:37:01.751  1827  2572 V AccessibilityUserState: updateShortcutTargets: type:accessibility_shortcut_target_service, current:{}, new:{}
+02-26 22:37:01.751  1390  1390 D AOC     : A3:MSG: tmd3743_device.cc, 997: USF: TMD3743: C/G switch 0 -> 1 d_lux:23.99 w_lux: 14.56 C:0.53 G:0.21
+02-26 22:37:01.751  1827  2572 V AccessibilityUserState: updateShortcutTargets: type:accessibility_qs_targets, current:{}, new:{}
+02-26 22:37:01.751  1827  2572 V AccessibilityUserState: updateShortcutTargets: type:accessibility_button_targets, current:{}, new:{}
+02-26 22:37:01.751  1827  2572 V AccessibilityUserState: updateShortcutTargets: type:accessibility_gesture_targets, current:{}, new:{}
+02-26 22:37:01.751  1827  2572 V AccessibilityUserState: updateShortcutTargets: type:accessibility_key_gesture_targets, current:{}, new:{}
+02-26 22:37:01.751  1827  2572 V AccessibilityManagerService: onUserStateChangedLocked for userId: 0, forceUpdate: false
+02-26 22:37:01.752  1827  2572 V AccessibilityUserState: updateShortcutTargets: type:accessibility_shortcut_target_service, current:{}, new:{}
+02-26 22:37:01.752  1827  2572 V AccessibilityUserState: updateShortcutTargets: type:accessibility_button_targets, current:{}, new:{}
+02-26 22:37:01.752  1827  2572 V AccessibilityUserState: updateShortcutTargets: type:accessibility_gesture_targets, current:{}, new:{}
+02-26 22:37:01.752  1827  2572 V AccessibilityUserState: updateShortcutTargets: type:accessibility_qs_targets, current:{}, new:{}
+02-26 22:37:01.752  1827  2572 V AccessibilityUserState: updateShortcutTargets: type:accessibility_key_gesture_targets, current:{}, new:{}
+02-26 22:37:01.752  1827  2572 W MagnificationConnectionManager: requestConnection duplicated request: connect=false, mConnectionState=DISCONNECTED
+02-26 22:37:01.752  1827  1827 V AccessibilityManagerService: onUserStateChangedLocked for userId: 0, forceUpdate: false
+02-26 22:37:01.753  1827  7550 W ApplicationInfo: Large ApplicationInfo parcel: size=21740 package=com.carxtech.sr splits=65 sharedLibs=1 resDirs=3 overlayPaths=3
+02-26 22:37:01.753  1827  7550 W ParceledListSlice: Element #91 is 22000 bytes.
+02-26 22:37:01.753  1827  1827 V AccessibilityUserState: updateShortcutTargets: type:accessibility_shortcut_target_service, current:{}, new:{}
+02-26 22:37:01.753  1827  1827 V AccessibilityUserState: updateShortcutTargets: type:accessibility_button_targets, current:{}, new:{}
+02-26 22:37:01.753  1827  1827 V AccessibilityUserState: updateShortcutTargets: type:accessibility_gesture_targets, current:{}, new:{}
+02-26 22:37:01.753  1827  1827 V AccessibilityUserState: updateShortcutTargets: type:accessibility_qs_targets, current:{}, new:{}
+02-26 22:37:01.753  1827  1827 V AccessibilityUserState: updateShortcutTargets: type:accessibility_key_gesture_targets, current:{}, new:{}
+02-26 22:37:01.753  1827  1827 W MagnificationConnectionManager: requestConnection duplicated request: connect=false, mConnectionState=DISCONNECTED
+02-26 22:37:01.754  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.754  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.754  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.754  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.755  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.755  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.755  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.755  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.755  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.755  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.755  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.755  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.755  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.755  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.755  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.755  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.757  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.757  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.757  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.757  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.757  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.757  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.757  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.757  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.757  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.757  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.758  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.758  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.758  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.758  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.758  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.758  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.758  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.758  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.758  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.759  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.759  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.759  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.759  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.759  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.760  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.760  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.760  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.760  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.760  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.760  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.760  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.760  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.760  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.760  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.761  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.761  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.761  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.761  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.761  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.761  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.761  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.761  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.761  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.761  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.761  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.761  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.761  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.761  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.761  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.761  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.761  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.761  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.762  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.762  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.762  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.762  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.762  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.762  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.762  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.762  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.762  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.762  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.762  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.762  1827  1827 W libbinder.IPCThreadState: Sending oneway calls to frozen process.
+02-26 22:37:01.772  1827  7544 W ApplicationInfo: Large ApplicationInfo parcel: size=21196 package=com.google.android.googlequicksearchbox splits=3 sharedLibs=5 resDirs=3 overlayPaths=3
+02-26 22:37:01.772  1827  7544 W ParceledListSlice: Element #11 is 21520 bytes.
+02-26 22:37:01.772  1827  7544 W ApplicationInfo: Large ApplicationInfo parcel: size=30116 package=com.alibaba.aliexpresshd splits=18 sharedLibs=3 resDirs=3 overlayPaths=3
+02-26 22:37:01.772  1827  7544 W ParceledListSlice: Element #17 is 30372 bytes.
+02-26 22:37:01.772  1827  7544 W ParceledListSlice: Overly large reply size: 82472
+02-26 22:37:01.774  1827  7544 W ApplicationInfo: Large ApplicationInfo parcel: size=21752 package=com.amazon.mShop.android.shopping splits=2 sharedLibs=5 resDirs=3 overlayPaths=3
+02-26 22:37:01.774  1827  7544 W ParceledListSlice: Element #19 is 22004 bytes.
+02-26 22:37:01.774  1827  7544 W ApplicationInfo: Large ApplicationInfo parcel: size=21752 package=com.amazon.mShop.android.shopping splits=2 sharedLibs=5 resDirs=3 overlayPaths=3
+02-26 22:37:01.774  1827  7544 W ParceledListSlice: Element #20 is 22000 bytes.
+02-26 22:37:01.774  1827  7544 W ApplicationInfo: Large ApplicationInfo parcel: size=21752 package=com.amazon.mShop.android.shopping splits=2 sharedLibs=5 resDirs=3 overlayPaths=3
+02-26 22:37:01.774  1827  7544 W ParceledListSlice: Element #21 is 21988 bytes.
+02-26 22:37:01.774  5032  5051 D AlphabeticIndexCompat: computeSectionName: cs: Salatuk sectionName: S
+02-26 22:37:01.777  5032  5032 D AllAppsStore: setApps: apps.length=227
+02-26 22:37:01.777  5032  5032 D AllAppsStore: notifyUpdate: notifying listeners
+02-26 22:37:01.777  5032  5032 D AllAppsStore: setApps: apps.length=227
+02-26 22:37:01.777  5032  5032 D AllAppsStore: notifyUpdate: notifying listeners
+02-26 22:37:01.777  5032  5032 D ActivityAllAppsContainerView: onAppsUpdated; number of apps: 227
+02-26 22:37:01.778  5032  5032 D ActivityAllAppsContainerView: rebindAdapters: force: false
+02-26 22:37:01.778  5032  5032 D ActivityAllAppsContainerView: rebindAdapters: Not needed.
+02-26 22:37:01.778  5032  5032 D StatsLog: LAUNCHER_ALLAPPS_COUNT
+02-26 22:37:01.780  1390  1390 D AOC     : A3:MSG: tmd3743_device.cc, 997: USF: TMD3743: C/G switch 1 -> 0 d_lux:32.31 w_lux: 18.31 C:0.66 G:0.29
+02-26 22:37:01.781  5032  5032 D AlphabeticalAppsList: Clearing FastScrollerSections.
+02-26 22:37:01.781  5032  5032 D AlphabeticalAppsList: Adding apps with sections. HasPrivateApps: false
+02-26 22:37:01.781  5032  5032 D AlphabeticalAppsList: addAppsWithSections: adding sectionName: … with appInfoTitle: 100+ Fart sounds
+02-26 22:37:01.781  5032  5032 D AlphabeticalAppsList: addAppsWithSections: adding sectionName: A with appInfoTitle: Ace Of Fadez
+02-26 22:37:01.781  5032  5032 D AlphabeticalAppsList: addAppsWithSections: adding sectionName: B with appInfoTitle: Best Buy
+02-26 22:37:01.781  5032  5032 D AlphabeticalAppsList: addAppsWithSections: adding sectionName: C with appInfoTitle: Calculator
+02-26 22:37:01.781  5032  5032 D AlphabeticalAppsList: addAppsWithSections: adding sectionName: D with appInfoTitle: DB LEGENDS
+02-26 22:37:01.781  5032  5032 D AlphabeticalAppsList: addAppsWithSections: adding sectionName: E with appInfoTitle: eBay
+02-26 22:37:01.781  5032  5032 D AlphabeticalAppsList: addAppsWithSections: adding sectionName: F with appInfoTitle: F-Droid
+02-26 22:37:01.781  5032  5032 D AlphabeticalAppsList: addAppsWithSections: adding sectionName: G with appInfoTitle: Galaxy Wearable
+02-26 22:37:01.781  5032  5032 D AlphabeticalAppsList: addAppsWithSections: adding sectionName: H with appInfoTitle: Home
+02-26 22:37:01.781  5032  5032 D AlphabeticalAppsList: addAppsWithSections: adding sectionName: I with appInfoTitle: Indeed Job Search
+02-26 22:37:01.781  5032  5032 D AlphabeticalAppsList: addAppsWithSections: adding sectionName: J with appInfoTitle: Journal
+02-26 22:37:01.781  5032  5032 D AlphabeticalAppsList: addAppsWithSections: adding sectionName: K with appInfoTitle: Kanji Dojo
+02-26 22:37:01.781  5032  5032 D AlphabeticalAppsList: addAppsWithSections: adding sectionName: L with appInfoTitle: Lawnicons
+02-26 22:37:01.781  5032  5032 D AlphabeticalAppsList: addAppsWithSections: adding sectionName: M with appInfoTitle: M3 Expressive Widgets
+02-26 22:37:01.781  5032  5032 D AlphabeticalAppsList: addAppsWithSections: adding sectionName: N with appInfoTitle: Nboard
+02-26 22:37:01.781  5032  5032 D AlphabeticalAppsList: addAppsWithSections: adding sectionName: O with appInfoTitle: Obtainium
+02-26 22:37:01.782  5032  5032 D AlphabeticalAppsList: addAppsWithSections: adding sectionName: P with appInfoTitle: Passwords
+02-26 22:37:01.782  5032  5032 D AlphabeticalAppsList: addAppsWithSections: adding sectionName: Q with appInfoTitle: Qibla Compass
+02-26 22:37:01.782  5032  5032 D AlphabeticalAppsList: addAppsWithSections: adding sectionName: R with appInfoTitle: Ralphs
+02-26 22:37:01.782  5032  5032 D AlphabeticalAppsList: addAppsWithSections: adding sectionName: S with appInfoTitle: Safety
+02-26 22:37:01.782  5032  5032 D AlphabeticalAppsList: addAppsWithSections: adding sectionName: T with appInfoTitle: T-Life
+02-26 22:37:01.782  5032  5032 D AlphabeticalAppsList: addAppsWithSections: adding sectionName: U with appInfoTitle: Uber
+02-26 22:37:01.782  5032  5032 D AlphabeticalAppsList: addAppsWithSections: adding sectionName: V with appInfoTitle: Venmo
+02-26 22:37:01.782  5032  5032 D AlphabeticalAppsList: addAppsWithSections: adding sectionName: W with appInfoTitle: Wallet
+02-26 22:37:01.782  5032  5032 D AlphabeticalAppsList: addAppsWithSections: adding sectionName: Y with appInfoTitle: Yelp
+02-26 22:37:01.782  5032  5032 D AlphabeticalAppsList: addAppsWithSections: adding sectionName: Z with appInfoTitle: Zillow
+02-26 22:37:01.782  5032  5032 D AlphabeticalAppsList: addAppsWithSections: adding sectionName: … with appInfoTitle: β-Maniac
+02-26 22:37:01.782  5032  5032 D AlphabeticalAppsList: addAppsWithSections: adding sectionName: F with appInfoTitle: ​Folder
+02-26 22:37:01.782  5032  5032 D AlphabeticalAppsList: Adding FastScrollSection duplicate to scroll to the bottom.
+02-26 22:37:01.785  5032  5032 D AlphabeticalAppsList: Clearing FastScrollerSections.
+02-26 22:37:01.785  5032  5032 D AlphabeticalAppsList: Adding apps with sections. HasPrivateApps: false
+02-26 22:37:01.785  5032  5032 D AlphabeticalAppsList: addAppsWithSections: adding sectionName: … with appInfoTitle: 100+ Fart sounds
+02-26 22:37:01.785  5032  5032 D AlphabeticalAppsList: addAppsWithSections: adding sectionName: A with appInfoTitle: Ace Of Fadez
+02-26 22:37:01.785  5032  5032 D AlphabeticalAppsList: addAppsWithSections: adding sectionName: B with appInfoTitle: Best Buy
+02-26 22:37:01.785  5032  5032 D AlphabeticalAppsList: addAppsWithSections: adding sectionName: C with appInfoTitle: Calculator
+02-26 22:37:01.785  5032  5032 D AlphabeticalAppsList: addAppsWithSections: adding sectionName: D with appInfoTitle: DB LEGENDS
+02-26 22:37:01.786  5032  5032 D AlphabeticalAppsList: addAppsWithSections: adding sectionName: E with appInfoTitle: eBay
+02-26 22:37:01.786  5032  5032 D AlphabeticalAppsList: addAppsWithSections: adding sectionName: F with appInfoTitle: F-Droid
+02-26 22:37:01.786  5032  5032 D AlphabeticalAppsList: addAppsWithSections: adding sectionName: G with appInfoTitle: Galaxy Wearable
+02-26 22:37:01.786  5032  5032 D AlphabeticalAppsList: addAppsWithSections: adding sectionName: H with appInfoTitle: Home
+02-26 22:37:01.786  5032  5032 D AlphabeticalAppsList: addAppsWithSections: adding sectionName: I with appInfoTitle: Indeed Job Search
+02-26 22:37:01.786  5032  5032 D AlphabeticalAppsList: addAppsWithSections: adding sectionName: J with appInfoTitle: Journal
+02-26 22:37:01.786  5032  5032 D AlphabeticalAppsList: addAppsWithSections: adding sectionName: K with appInfoTitle: Kanji Dojo
+02-26 22:37:01.786  5032  5032 D AlphabeticalAppsList: addAppsWithSections: adding sectionName: L with appInfoTitle: Lawnicons
+02-26 22:37:01.786  5032  5032 D AlphabeticalAppsList: addAppsWithSections: adding sectionName: M with appInfoTitle: M3 Expressive Widgets
+02-26 22:37:01.786  5032  5032 D AlphabeticalAppsList: addAppsWithSections: adding sectionName: N with appInfoTitle: Nboard
+02-26 22:37:01.786  5032  5032 D AlphabeticalAppsList: addAppsWithSections: adding sectionName: O with appInfoTitle: Obtainium
+02-26 22:37:01.786  5032  5032 D AlphabeticalAppsList: addAppsWithSections: adding sectionName: P with appInfoTitle: Passwords
+02-26 22:37:01.786  5032  5032 D AlphabeticalAppsList: addAppsWithSections: adding sectionName: Q with appInfoTitle: Qibla Compass
+02-26 22:37:01.786  5032  5032 D AlphabeticalAppsList: addAppsWithSections: adding sectionName: R with appInfoTitle: Ralphs
+02-26 22:37:01.786  5032  5032 D AlphabeticalAppsList: addAppsWithSections: adding sectionName: S with appInfoTitle: Safety
+02-26 22:37:01.786  5032  5032 D AlphabeticalAppsList: addAppsWithSections: adding sectionName: T with appInfoTitle: T-Life
+02-26 22:37:01.786  5032  5032 D AlphabeticalAppsList: addAppsWithSections: adding sectionName: U with appInfoTitle: Uber
+02-26 22:37:01.786  5032  5032 D AlphabeticalAppsList: addAppsWithSections: adding sectionName: V with appInfoTitle: Venmo
+02-26 22:37:01.786  5032  5032 D AlphabeticalAppsList: addAppsWithSections: adding sectionName: W with appInfoTitle: Wallet
+02-26 22:37:01.786  5032  5032 D AlphabeticalAppsList: addAppsWithSections: adding sectionName: Y with appInfoTitle: Yelp
+02-26 22:37:01.786  5032  5032 D AlphabeticalAppsList: addAppsWithSections: adding sectionName: Z with appInfoTitle: Zillow
+02-26 22:37:01.786  5032  5032 D AlphabeticalAppsList: addAppsWithSections: adding sectionName: … with appInfoTitle: β-Maniac
+02-26 22:37:01.786  5032  5032 D AlphabeticalAppsList: addAppsWithSections: adding sectionName: F with appInfoTitle: ​Folder
+02-26 22:37:01.786  5032  5032 D AlphabeticalAppsList: Adding FastScrollSection duplicate to scroll to the bottom.
+02-26 22:37:01.818  1390  1390 D AOC     : A3:MSG: tmd3743_device.cc, 997: USF: TMD3743: C/G switch 0 -> 1 d_lux:23.82 w_lux: 14.26 C:0.52 G:0.21
+02-26 22:37:01.824  5424  5424 E NotificationService: R.id.notification_main_column view should not be null!
+02-26 22:37:01.835  1827  7539 W ApplicationInfo: Large ApplicationInfo parcel: size=21196 package=com.google.android.googlequicksearchbox splits=3 sharedLibs=5 resDirs=3 overlayPaths=3
+02-26 22:37:01.835  1827  7539 W ParceledListSlice: Element #34 is 22364 bytes.
+02-26 22:37:01.835  1827  7539 W ApplicationInfo: Large ApplicationInfo parcel: size=21196 package=com.google.android.googlequicksearchbox splits=3 sharedLibs=5 resDirs=3 overlayPaths=3
+02-26 22:37:01.835  1827  7539 W ParceledListSlice: Element #35 is 22544 bytes.
+02-26 22:37:01.836  1827  7539 W ParceledListSlice: Overly large reply size: 83664
+02-26 22:37:01.837  1827  7539 W ApplicationInfo: Large ApplicationInfo parcel: size=21196 package=com.google.android.googlequicksearchbox splits=3 sharedLibs=5 resDirs=3 overlayPaths=3
+02-26 22:37:01.837  1827  7544 W ApplicationInfo: Large ApplicationInfo parcel: size=21196 package=com.google.android.googlequicksearchbox splits=3 sharedLibs=5 resDirs=3 overlayPaths=3
+02-26 22:37:01.837  1827  7544 W ParceledListSlice: Element #36 is 22756 bytes.
+02-26 22:37:01.837  1827  7544 W ApplicationInfo: Large ApplicationInfo parcel: size=21196 package=com.google.android.googlequicksearchbox splits=3 sharedLibs=5 resDirs=3 overlayPaths=3
+02-26 22:37:01.838  1827  7544 W ParceledListSlice: Element #37 is 22268 bytes.
+02-26 22:37:01.838  5032  5050 W ApplicationInfo: Large ApplicationInfo parcel: size=21196 package=com.google.android.googlequicksearchbox splits=3 sharedLibs=5 resDirs=3 overlayPaths=3
+02-26 22:37:01.838  1827  7544 W ApplicationInfo: Large ApplicationInfo parcel: size=21196 package=com.google.android.googlequicksearchbox splits=3 sharedLibs=5 resDirs=3 overlayPaths=3
+02-26 22:37:01.839  5032  5050 W ApplicationInfo: Large ApplicationInfo parcel: size=21196 package=com.google.android.googlequicksearchbox splits=3 sharedLibs=5 resDirs=3 overlayPaths=3
+02-26 22:37:01.839  1827  7544 W ApplicationInfo: Large ApplicationInfo parcel: size=30116 package=com.alibaba.aliexpresshd splits=18 sharedLibs=3 resDirs=3 overlayPaths=3
+02-26 22:37:01.839  1827  7544 W ParceledListSlice: Element #43 is 30756 bytes.
+02-26 22:37:01.840  1827  7544 W ApplicationInfo: Large ApplicationInfo parcel: size=30116 package=com.alibaba.aliexpresshd splits=18 sharedLibs=3 resDirs=3 overlayPaths=3
+02-26 22:37:01.840  1827  7544 W ParceledListSlice: Element #44 is 30776 bytes.
+02-26 22:37:01.842  1827  7544 W ApplicationInfo: Large ApplicationInfo parcel: size=30116 package=com.alibaba.aliexpresshd splits=18 sharedLibs=3 resDirs=3 overlayPaths=3
+02-26 22:37:01.842  1827  7544 W ParceledListSlice: Element #45 is 30768 bytes.
+02-26 22:37:01.842  1827  7539 W ApplicationInfo: Large ApplicationInfo parcel: size=21196 package=com.google.android.googlequicksearchbox splits=3 sharedLibs=5 resDirs=3 overlayPaths=3
+02-26 22:37:01.842  1827  7544 W ApplicationInfo: Large ApplicationInfo parcel: size=30116 package=com.alibaba.aliexpresshd splits=18 sharedLibs=3 resDirs=3 overlayPaths=3
+02-26 22:37:01.842  1827  7544 W ParceledListSlice: Element #46 is 30752 bytes.
+02-26 22:37:01.842  1827  7544 W ApplicationInfo: Large ApplicationInfo parcel: size=30116 package=com.alibaba.aliexpresshd splits=18 sharedLibs=3 resDirs=3 overlayPaths=3
+02-26 22:37:01.842  1827  7544 W ParceledListSlice: Element #47 is 30752 bytes.
+02-26 22:37:01.842  5032  5050 W ApplicationInfo: Large ApplicationInfo parcel: size=21196 package=com.google.android.googlequicksearchbox splits=3 sharedLibs=5 resDirs=3 overlayPaths=3
+02-26 22:37:01.842  1827  7544 W ParceledListSlice: Overly large reply size: 92292
+02-26 22:37:01.844  1827  7544 W ApplicationInfo: Large ApplicationInfo parcel: size=30116 package=com.alibaba.aliexpresshd splits=18 sharedLibs=3 resDirs=3 overlayPaths=3
+02-26 22:37:01.844  1827  7544 W ParceledListSlice: Element #48 is 30768 bytes.
+02-26 22:37:01.844  1827  7544 W ApplicationInfo: Large ApplicationInfo parcel: size=21752 package=com.amazon.mShop.android.shopping splits=2 sharedLibs=5 resDirs=3 overlayPaths=3
+02-26 22:37:01.844  1827  7544 W ParceledListSlice: Element #53 is 22464 bytes.
+02-26 22:37:01.844  1827  7544 W ParceledListSlice: Overly large reply size: 85324
+02-26 22:37:01.846  1390  1390 D AOC     : A3:MSG: tmd3743_device.cc, 997: USF: TMD3743: C/G switch 1 -> 0 d_lux:32.52 w_lux: 18.29 C:0.66 G:0.29
+02-26 22:37:01.847  1827  7539 W ApplicationInfo: Large ApplicationInfo parcel: size=21752 package=com.amazon.mShop.android.shopping splits=2 sharedLibs=5 resDirs=3 overlayPaths=3
+02-26 22:37:01.847  1827  7539 W ParceledListSlice: Element #54 is 22460 bytes.
+02-26 22:37:01.852  1827  7544 W ApplicationInfo: Large ApplicationInfo parcel: size=21196 package=com.google.android.googlequicksearchbox splits=3 sharedLibs=5 resDirs=3 overlayPaths=3
+02-26 22:37:01.852  5032  5050 W ApplicationInfo: Large ApplicationInfo parcel: size=21196 package=com.google.android.googlequicksearchbox splits=3 sharedLibs=5 resDirs=3 overlayPaths=3
+02-26 22:37:01.853  1827  7544 W ApplicationInfo: Large ApplicationInfo parcel: size=21196 package=com.google.android.googlequicksearchbox splits=3 sharedLibs=5 resDirs=3 overlayPaths=3
+02-26 22:37:01.853  5032  5050 W ApplicationInfo: Large ApplicationInfo parcel: size=21196 package=com.google.android.googlequicksearchbox splits=3 sharedLibs=5 resDirs=3 overlayPaths=3
+02-26 22:37:01.856  1827  7544 W ApplicationInfo: Large ApplicationInfo parcel: size=21196 package=com.google.android.googlequicksearchbox splits=3 sharedLibs=5 resDirs=3 overlayPaths=3
+02-26 22:37:01.856   629   629 D SurfaceFlinger: setDesiredMode 4619827452008645888 {mode={fps=60.00 Hz, modePtr={id=0, vsyncRate=120.00 Hz, peakRefreshRate=120.00 Hz}}, emitEvent=false, force=false}
+02-26 22:37:01.856  5032  5050 W ApplicationInfo: Large ApplicationInfo parcel: size=21196 package=com.google.android.googlequicksearchbox splits=3 sharedLibs=5 resDirs=3 overlayPaths=3
+02-26 22:37:01.857  1827  1933 I DisplayDeviceRepository: Display device changed render timings: "Built-in Screen", renderFrameRate=60.000004, presentationDeadlineNanos=11500000, appVsyncOffsetNanos=6233332, frameRateOverrides=[{uid=10202 frameRateHz=60.000004}, {uid=10285 frameRateHz=60.000004}]
+02-26 22:37:01.858  1827  1922 D WindowManager: DeferredDisplayUpdater: partially applying DisplayInfo(1280 x 2856) immediately
+02-26 22:37:01.860  1144  1144 D DeviceHalAidl: [default] setParameters: parameters: "screen_state=on"
+02-26 22:37:01.861  1066 12955 D ASvc::Module: updateScreenState: 1
+02-26 22:37:01.861  1144  1144 D DeviceHalAidl: [r_submix] setParameters: parameters: "screen_state=on"
+02-26 22:37:01.861  1066 12955 D AHAL_Module: updateScreenState: r_submix: 1
+02-26 22:37:01.862  1144  1144 D DeviceHalAidl: [bluetooth] setParameters: parameters: "screen_state=on"
+02-26 22:37:01.862  1066 12955 D AHAL_Module: updateScreenState: bluetooth: 1
+02-26 22:37:01.885  1390  1390 D AOC     : A3:MSG: tmd3743_device.cc, 997: USF: TMD3743: C/G switch 0 -> 1 d_lux:22.77 w_lux: 13.89 C:0.50 G:0.20
+02-26 22:37:01.914  1390  1390 D AOC     : A3:MSG: tmd3743_device.cc, 997: USF: TMD3743: C/G switch 1 -> 0 d_lux:32.41 w_lux: 18.12 C:0.65 G:0.29
+02-26 22:37:01.951  1390  1390 D AOC     : A3:MSG: tmd3743_device.cc, 997: USF: TMD3743: C/G switch 0 -> 1 d_lux:22.84 w_lux: 13.75 C:0.50 G:0.20
+02-26 22:37:01.982  1390  1390 D AOC     : A3:MSG: tmd3743_device.cc, 997: USF: TMD3743: C/G switch 1 -> 0 d_lux:32.18 w_lux: 18.09 C:0.65 G:0.28
+02-26 22:37:02.018  1390  1390 D AOC     : A3:MSG: tmd3743_device.cc, 997: USF: TMD3743: C/G switch 0 -> 1 d_lux:22.56 w_lux: 13.57 C:0.49 G:0.20
+02-26 22:37:02.047  1390  1390 D AOC     : A3:MSG: tmd3743_device.cc, 997: USF: TMD3743: C/G switch 1 -> 0 d_lux:33.06 w_lux: 18.55 C:0.66 G:0.29
+02-26 22:37:02.076  1827  5680 W ApplicationInfo: Large ApplicationInfo parcel: size=17876 package=com.zhiliaoapp.musically splits=31 sharedLibs=8 resDirs=3 overlayPaths=3
+02-26 22:37:02.076  1827  5680 W ParceledListSlice: Element #989 is 18524 bytes.
+02-26 22:37:02.076  1827  5680 W ParceledListSlice: Overly large reply size: 83860
+02-26 22:37:02.078  1827  5680 W ApplicationInfo: Large ApplicationInfo parcel: size=17876 package=com.zhiliaoapp.musically splits=31 sharedLibs=8 resDirs=3 overlayPaths=3

@@ -1,0 +1,24 @@
+﻿
+Spanish (values-es) - 261 strings need translation:
+
+------------------------------------------------------------
+<string name="auth_2fa_code_placeholder">123456</string>
+<string name="create_story_url_label">URL</string>
+<string name="create_story_url_placeholder">https://à</string>
+python : Traceback (most recent call last):
+At line:1 char:59
++ ... omet\tools; python translate_strings.py export values-es 2>&1 | Out-F ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Traceback (most recent call last)::String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  File "C:\Users\bkyil\AndroidStudioProjects\NeuroComet\tools\translate_strings.py", line 165, in <module>
+    export_untranslated_for_language(lang)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\bkyil\AndroidStudioProjects\NeuroComet\tools\translate_strings.py", line 153, in export_untranslated_for_language
+    print(f'<string name="{name}">{text}</string>')
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\bkyil\AppData\Local\Python\pythoncore-3.14-64\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f44d' in position 31: character maps to <undefined>

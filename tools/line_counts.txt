@@ -1,0 +1,5 @@
+tr : 1601 lines
+es : 1689 lines
+de : 1601 lines
+fr : 1601 lines
+pt : 1601 lines

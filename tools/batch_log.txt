@@ -1,0 +1,1 @@
+C:\Users\bkyil\AppData\Local\Python\pythoncore-3.14-64\python.exe: can't open file 'C:\\Users\\bkyil\\AndroidStudioProjects\\NeuroComet\\tools\\tools\\complete_translations_batch.py': [Errno 2] No such file or directory

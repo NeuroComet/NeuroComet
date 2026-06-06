@@ -1,0 +1,2 @@
+02-26 22:37:01.557  1827  2241 I AppsFilter: interaction: PackageSetting{3118132 com.kyilmaz.neurocomet.debug/10528} -> PackageSetting{b171be6 com.masarat.salati/10336} BLOCKED
+02-26 22:37:01.561  1827  2241 I AppsFilter: interaction: PackageSetting{43a3baa com.kyilmaz.neurocomet/10555} -> PackageSetting{b171be6 com.masarat.salati/10336} BLOCKED

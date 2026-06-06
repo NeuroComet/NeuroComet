@@ -1,0 +1,198 @@
+Running Gradle task 'assembleDebug'...                          
+lib/screens/games/games_hub_screen.dart:139:20: Error: The getter 'gamePatternTap' isn't defined for the type 'AppLocalizations'.
+ - 'AppLocalizations' is from 'package:neuro_comet/l10n/app_localizations.dart' ('lib/l10n/app_localizations.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'gamePatternTap'.
+        name: l10n.gamePatternTap,
+                   ^^^^^^^^^^^^^^
+lib/screens/games/games_hub_screen.dart:140:27: Error: The getter 'gamePatternTapDesc' isn't defined for the type 'AppLocalizations'.
+ - 'AppLocalizations' is from 'package:neuro_comet/l10n/app_localizations.dart' ('lib/l10n/app_localizations.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'gamePatternTapDesc'.
+        description: l10n.gamePatternTapDesc,
+                          ^^^^^^^^^^^^^^^^^^
+lib/screens/games/games_hub_screen.dart:146:20: Error: The getter 'gameWorryJar' isn't defined for the type 'AppLocalizations'.
+ - 'AppLocalizations' is from 'package:neuro_comet/l10n/app_localizations.dart' ('lib/l10n/app_localizations.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'gameWorryJar'.
+        name: l10n.gameWorryJar,
+                   ^^^^^^^^^^^^
+lib/screens/games/games_hub_screen.dart:147:27: Error: The getter 'gameWorryJarDesc' isn't defined for the type 'AppLocalizations'.
+ - 'AppLocalizations' is from 'package:neuro_comet/l10n/app_localizations.dart' ('lib/l10n/app_localizations.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'gameWorryJarDesc'.
+        description: l10n.gameWorryJarDesc,
+                          ^^^^^^^^^^^^^^^^
+lib/screens/games/games_hub_screen.dart:153:20: Error: The getter 'gameMoodMixer' isn't defined for the type 'AppLocalizations'.
+ - 'AppLocalizations' is from 'package:neuro_comet/l10n/app_localizations.dart' ('lib/l10n/app_localizations.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'gameMoodMixer'.
+        name: l10n.gameMoodMixer,
+                   ^^^^^^^^^^^^^
+lib/screens/games/games_hub_screen.dart:154:27: Error: The getter 'gameMoodMixerDesc' isn't defined for the type 'AppLocalizations'.
+ - 'AppLocalizations' is from 'package:neuro_comet/l10n/app_localizations.dart' ('lib/l10n/app_localizations.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'gameMoodMixerDesc'.
+        description: l10n.gameMoodMixerDesc,
+                          ^^^^^^^^^^^^^^^^^
+lib/screens/games/games_hub_screen.dart:160:20: Error: The getter 'gameSafeSpace' isn't defined for the type 'AppLocalizations'.
+ - 'AppLocalizations' is from 'package:neuro_comet/l10n/app_localizations.dart' ('lib/l10n/app_localizations.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'gameSafeSpace'.
+        name: l10n.gameSafeSpace,
+                   ^^^^^^^^^^^^^
+lib/screens/games/games_hub_screen.dart:161:27: Error: The getter 'gameSafeSpaceDesc' isn't defined for the type 'AppLocalizations'.
+ - 'AppLocalizations' is from 'package:neuro_comet/l10n/app_localizations.dart' ('lib/l10n/app_localizations.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'gameSafeSpaceDesc'.
+        description: l10n.gameSafeSpaceDesc,
+                          ^^^^^^^^^^^^^^^^^
+lib/screens/games/games_hub_screen.dart:200:20: Error: The getter 'gameTextureTiles' isn't defined for the type 'AppLocalizations'.
+ - 'AppLocalizations' is from 'package:neuro_comet/l10n/app_localizations.dart' ('lib/l10n/app_localizations.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'gameTextureTiles'.
+        name: l10n.gameTextureTiles,
+                   ^^^^^^^^^^^^^^^^
+lib/screens/games/games_hub_screen.dart:201:27: Error: The getter 'gameTextureTilesDesc' isn't defined for the type 'AppLocalizations'.
+ - 'AppLocalizations' is from 'package:neuro_comet/l10n/app_localizations.dart' ('lib/l10n/app_localizations.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'gameTextureTilesDesc'.
+        description: l10n.gameTextureTilesDesc,
+                          ^^^^^^^^^^^^^^^^^^^^
+lib/screens/games/games_hub_screen.dart:207:20: Error: The getter 'gameSoundGarden' isn't defined for the type 'AppLocalizations'.
+ - 'AppLocalizations' is from 'package:neuro_comet/l10n/app_localizations.dart' ('lib/l10n/app_localizations.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'gameSoundGarden'.
+        name: l10n.gameSoundGarden,
+                   ^^^^^^^^^^^^^^^
+lib/screens/games/games_hub_screen.dart:208:27: Error: The getter 'gameSoundGardenDesc' isn't defined for the type 'AppLocalizations'.
+ - 'AppLocalizations' is from 'package:neuro_comet/l10n/app_localizations.dart' ('lib/l10n/app_localizations.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'gameSoundGardenDesc'.
+        description: l10n.gameSoundGardenDesc,
+                          ^^^^^^^^^^^^^^^^^^^
+lib/screens/games/games_hub_screen.dart:214:20: Error: The getter 'gameStimSequencer' isn't defined for the type 'AppLocalizations'.
+ - 'AppLocalizations' is from 'package:neuro_comet/l10n/app_localizations.dart' ('lib/l10n/app_localizations.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'gameStimSequencer'.
+        name: l10n.gameStimSequencer,
+                   ^^^^^^^^^^^^^^^^^
+lib/screens/games/games_hub_screen.dart:215:27: Error: The getter 'gameStimSequencerDesc' isn't defined for the type 'AppLocalizations'.
+ - 'AppLocalizations' is from 'package:neuro_comet/l10n/app_localizations.dart' ('lib/l10n/app_localizations.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'gameStimSequencerDesc'.
+        description: l10n.gameStimSequencerDesc,
+                          ^^^^^^^^^^^^^^^^^^^^^
+lib/screens/games/games_hub_screen.dart:221:20: Error: The getter 'gameConstellationConnect' isn't defined for the type 'AppLocalizations'.
+ - 'AppLocalizations' is from 'package:neuro_comet/l10n/app_localizations.dart' ('lib/l10n/app_localizations.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'gameConstellationConnect'.
+        name: l10n.gameConstellationConnect,
+                   ^^^^^^^^^^^^^^^^^^^^^^^^
+lib/screens/games/games_hub_screen.dart:222:27: Error: The getter 'gameConstellationConnectDesc' isn't defined for the type 'AppLocalizations'.
+ - 'AppLocalizations' is from 'package:neuro_comet/l10n/app_localizations.dart' ('lib/l10n/app_localizations.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'gameConstellationConnectDesc'.
+        description: l10n.gameConstellationConnectDesc,
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+lib/screens/feed/feed_screen.dart:632:19: Error: Can't find ')' to match '('.
+    return Tooltip(
+                  ^
+lib/screens/feed/feed_screen.dart:680:19: Error: Can't find ')' to match '('.
+    return Tooltip(
+                  ^
+lib/screens/feed/feed_screen.dart:1169:27: Error: Can't find ')' to match '('.
+    return GestureDetector(
+                          ^
+lib/screens/feed/feed_screen.dart:405:61: Error: The getter 'displayName' isn't defined for the type 'Post'.
+ - 'Post' is from 'package:neuro_comet/models/post.dart' ('lib/models/post.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'displayName'.
+    final String shareText = 'Check out this post by ${post.displayName} on NeuroComet: "${post.content.length > 100 ? '${post.content.substring(0, 100)}...' : post.content}"';
+                                                            ^^^^^^^^^^^
+lib/screens/auth/auth_screen.dart:679:16: Error: The getter 'authWelcomeTitle' isn't defined for the type 'AppLocalizations'.
+ - 'AppLocalizations' is from 'package:neuro_comet/l10n/app_localizations.dart' ('lib/l10n/app_localizations.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'authWelcomeTitle'.
+          l10n.authWelcomeTitle,
+               ^^^^^^^^^^^^^^^^
+lib/screens/auth/auth_screen.dart:691:16: Error: The getter 'authWelcomeBody' isn't defined for the type 'AppLocalizations'.
+ - 'AppLocalizations' is from 'package:neuro_comet/l10n/app_localizations.dart' ('lib/l10n/app_localizations.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'authWelcomeBody'.
+          l10n.authWelcomeBody,
+               ^^^^^^^^^^^^^^^
+lib/screens/auth/auth_screen.dart:706:31: Error: The getter 'authFeatureAccessibleTitle' isn't defined for the type 'AppLocalizations'.
+ - 'AppLocalizations' is from 'package:neuro_comet/l10n/app_localizations.dart' ('lib/l10n/app_localizations.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'authFeatureAccessibleTitle'.
+                  title: l10n.authFeatureAccessibleTitle,
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+lib/screens/auth/auth_screen.dart:707:30: Error: The getter 'authFeatureAccessibleBody' isn't defined for the type 'AppLocalizations'.
+ - 'AppLocalizations' is from 'package:neuro_comet/l10n/app_localizations.dart' ('lib/l10n/app_localizations.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'authFeatureAccessibleBody'.
+                  body: l10n.authFeatureAccessibleBody,
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^
+lib/screens/auth/auth_screen.dart:712:31: Error: The getter 'authFeaturePrivateTitle' isn't defined for the type 'AppLocalizations'.
+ - 'AppLocalizations' is from 'package:neuro_comet/l10n/app_localizations.dart' ('lib/l10n/app_localizations.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'authFeaturePrivateTitle'.
+                  title: l10n.authFeaturePrivateTitle,
+                              ^^^^^^^^^^^^^^^^^^^^^^^
+lib/screens/auth/auth_screen.dart:713:30: Error: The getter 'authFeaturePrivateBody' isn't defined for the type 'AppLocalizations'.
+ - 'AppLocalizations' is from 'package:neuro_comet/l10n/app_localizations.dart' ('lib/l10n/app_localizations.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'authFeaturePrivateBody'.
+                  body: l10n.authFeaturePrivateBody,
+                             ^^^^^^^^^^^^^^^^^^^^^^
+lib/screens/auth/auth_screen.dart:718:31: Error: The getter 'authFeatureFlexibleTitle' isn't defined for the type 'AppLocalizations'.
+ - 'AppLocalizations' is from 'package:neuro_comet/l10n/app_localizations.dart' ('lib/l10n/app_localizations.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'authFeatureFlexibleTitle'.
+                  title: l10n.authFeatureFlexibleTitle,
+                              ^^^^^^^^^^^^^^^^^^^^^^^^
+lib/screens/auth/auth_screen.dart:719:30: Error: The getter 'authFeatureFlexibleBody' isn't defined for the type 'AppLocalizations'.
+ - 'AppLocalizations' is from 'package:neuro_comet/l10n/app_localizations.dart' ('lib/l10n/app_localizations.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'authFeatureFlexibleBody'.
+                  body: l10n.authFeatureFlexibleBody,
+                             ^^^^^^^^^^^^^^^^^^^^^^^
+lib/screens/auth/auth_screen.dart:820:33: Error: The getter 'authSignIn' isn't defined for the type 'AppLocalizations'.
+ - 'AppLocalizations' is from 'package:neuro_comet/l10n/app_localizations.dart' ('lib/l10n/app_localizations.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'authSignIn'.
+                isSignIn ? l10n.authSignIn : l10n.authCreateAccount,
+                                ^^^^^^^^^^
+lib/screens/auth/auth_screen.dart:825:33: Error: The getter 'authSignInSubtitle' isn't defined for the type 'AppLocalizations'.
+ - 'AppLocalizations' is from 'package:neuro_comet/l10n/app_localizations.dart' ('lib/l10n/app_localizations.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'authSignInSubtitle'.
+                isSignIn ? l10n.authSignInSubtitle : l10n.authSignUpSubtitle,
+                                ^^^^^^^^^^^^^^^^^^
+lib/screens/auth/auth_screen.dart:825:59: Error: The getter 'authSignUpSubtitle' isn't defined for the type 'AppLocalizations'.
+ - 'AppLocalizations' is from 'package:neuro_comet/l10n/app_localizations.dart' ('lib/l10n/app_localizations.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'authSignUpSubtitle'.
+                isSignIn ? l10n.authSignInSubtitle : l10n.authSignUpSubtitle,
+                                                          ^^^^^^^^^^^^^^^^^^
+lib/screens/auth/auth_screen.dart:853:35: Error: The getter 'authEmailLabel' isn't defined for the type 'AppLocalizations'.
+ - 'AppLocalizations' is from 'package:neuro_comet/l10n/app_localizations.dart' ('lib/l10n/app_localizations.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'authEmailLabel'.
+                  labelText: l10n.authEmailLabel,
+                                  ^^^^^^^^^^^^^^
+lib/screens/auth/auth_screen.dart:869:35: Error: The getter 'authPasswordLabel' isn't defined for the type 'AppLocalizations'.
+ - 'AppLocalizations' is from 'package:neuro_comet/l10n/app_localizations.dart' ('lib/l10n/app_localizations.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'authPasswordLabel'.
+                  labelText: l10n.authPasswordLabel,
+                                  ^^^^^^^^^^^^^^^^^
+lib/screens/auth/auth_screen.dart:888:37: Error: The getter 'authConfirmPasswordLabel' isn't defined for the type 'AppLocalizations'.
+ - 'AppLocalizations' is from 'package:neuro_comet/l10n/app_localizations.dart' ('lib/l10n/app_localizations.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'authConfirmPasswordLabel'.
+                    labelText: l10n.authConfirmPasswordLabel,
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^
+lib/screens/auth/auth_screen.dart:919:46: Error: The getter 'authSignIn' isn't defined for the type 'AppLocalizations'.
+ - 'AppLocalizations' is from 'package:neuro_comet/l10n/app_localizations.dart' ('lib/l10n/app_localizations.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'authSignIn'.
+                      : Text(isSignIn ? l10n.authSignIn : l10n.authCreateAccount, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                                             ^^^^^^^^^^
+lib/screens/auth/auth_screen.dart:985:24: Error: The getter 'authSignIn' isn't defined for the type 'AppLocalizations'.
+ - 'AppLocalizations' is from 'package:neuro_comet/l10n/app_localizations.dart' ('lib/l10n/app_localizations.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'authSignIn'.
+                  l10n.authSignIn,
+                       ^^^^^^^^^^
+lib/screens/auth/auth_screen.dart:1005:24: Error: The getter 'authSignUp' isn't defined for the type 'AppLocalizations'.
+ - 'AppLocalizations' is from 'package:neuro_comet/l10n/app_localizations.dart' ('lib/l10n/app_localizations.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'authSignUp'.
+                  l10n.authSignUp,
+                       ^^^^^^^^^^
+Target kernel_snapshot_program failed: Exception
+
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:compileFlutterBuildDebug'.
+> Process 'command 'C:\flutter\bin\flutter.bat'' finished with non-zero exit value 1
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 13s
+Running Gradle task 'assembleDebug'...                             13.5s
+Gradle task assembleDebug failed with exit code 1

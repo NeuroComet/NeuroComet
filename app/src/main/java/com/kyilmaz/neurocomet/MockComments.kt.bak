@@ -1,0 +1,84 @@
+package com.kyilmaz.neurocomet
+
+import kotlin.random.Random
+
+/**
+ * Generates believable, deterministic fake comment threads for mock/local-only
+ * posts (those whose IDs are in `MOCK_POST_IDS`). This exists purely to make the
+ * Reddit-style post detail view feel alive during demos — real posts always pull
+ * their comments from Supabase instead.
+ *
+ * The output is deterministic per post ID (seeded `Random`), so a given mock post
+ * always shows the same thread across navigations and process restarts.
+ */
+object MockComments {
+
+    /** Commenter identities drawn from the existing mock user roster (never "me"). */
+    private val commenters: List<Pair<String, String>> = listOf(
+        "NeuroNaut" to "neuronaut",
+        "HyperFocusCode" to "hyperfocuscode",
+        "SensorySeeker" to "sensoryseeker",
+        "CalmObserver" to "calmobserver",
+        "DinoLover99" to "dinolover99",
+        "Alex_Stims" to "alexstims",
+        "SpoonCounter" to "spooncounter",
+        "RainbowNerd" to "rainbownerd",
+        "TransTechie" to "transtechie",
+        "NonBinaryNinja" to "nonbinaryninja",
+        "BiBookworm" to "bibookworm"
+    )
+
+    /** A pool of warm, community-flavored replies to draw from. */
+    private val commentPool: List<String> = listOf(
+        "This is so relatable, thank you for sharing 💜",
+        "Needed to read this today. You put it into words perfectly.",
+        "Saving this for the next time my brain decides to be chaos 😅",
+        "Honestly same. The struggle is real but we got this 💪",
+        "Wait this actually explains so much about how I work!",
+        "Sending you good vibes ✨ you're not alone in this.",
+        "I do the exact same thing and thought it was just me lol",
+        "Brilliant take. More people need to hear this.",
+        "The hyperfocus part hit different 👀",
+        "Bookmarking this immediately. So helpful!",
+        "My sensory system felt this on a spiritual level.",
+        "Solidarity 🤝 thanks for being so open about it.",
+        "This community always knows exactly what to say 🥹",
+        "Okay but the way you described it is *chef's kiss* 👌",
+        "Love this energy. Following for more!",
+        "Tried this tip last week and it genuinely helped 🙌",
+        "Reading the comments and feeling so seen right now.",
+        "You just described my entire week in one post 😂",
+        "Take all my upvotes. This deserves more attention.",
+        "Gentle reminder to be kind to yourself too 💛"
+    )
+
+    private val timeStamps = listOf("just now", "5m", "12m", "34m", "1h", "2h", "5h", "8h", "1d", "2d")
+
+    /**
+     * Returns a deterministic list of fake comments for the given mock [postId].
+     * Callers are responsible for only invoking this for mock/local-only posts.
+     */
+    fun forPost(postId: Long): List<Comment> {
+
+        val rng = Random(postId * 2654435761L.toInt())
+        val count = 3 + rng.nextInt(4) // 3..6 comments
+
+        val usedCommenters = commenters.shuffled(rng)
+        val usedComments = commentPool.shuffled(rng)
+        // Keep timestamps roughly descending (newest first) for realism.
+        val times = timeStamps.shuffled(rng).take(count).sortedBy { timeStamps.indexOf(it) }
+
+        return (0 until count).map { index ->
+            val (userId, avatarSeed) = usedCommenters[index % usedCommenters.size]
+            Comment(
+                id = "mock-c-$postId-$index",
+                postId = postId,
+                userId = userId,
+                userAvatar = avatarUrl(avatarSeed),
+                content = usedComments[index % usedComments.size],
+                timestamp = times.getOrElse(index) { timeStamps[index % timeStamps.size] }
+            )
+        }
+    }
+}
+

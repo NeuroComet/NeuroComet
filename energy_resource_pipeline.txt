@@ -1,0 +1,90 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/9.4.0-rc-1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+Warning: SDK processing. This version only understands SDK XML versions up to 3 but an SDK XML file of version 4 was encountered. This can happen if you use versions of Android Studio and the command-line tools that were released at different times.
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:generateDebugResources
+> Task :app:processDebugGoogleServices
+> Task :app:packageDebugResources
+> Task :app:mapDebugSourceSetPaths
+> Task :app:checkDebugAarMetadata
+> Task :app:processDebugNavigationResources
+> Task :app:compileDebugNavigationResources
+> Task :app:createDebugCompatibleScreenManifests
+> Task :app:extractDeepLinksDebug
+> Task :app:parseDebugLocalResources
+
+> Task :app:processDebugMainManifest
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\AndroidManifest.xml:76:9-42 Warning:
+	android:extractNativeLibs should not be specified in this source AndroidManifest.xml file. See https://d.android.com/guide/topics/manifest/application-element#extractNativeLibs for more information.
+The AGP Upgrade Assistant can remove the attribute from the AndroidManifest.xml file and update the build file accordingly. See https://d.android.com/studio/build/agp-upgrade-assistant for more information.
+
+> Task :app:processDebugManifest
+> Task :app:processDebugManifestForPackage
+> Task :app:mergeDebugResources
+error: string too large to encode using UTF-8 written instead as 'STRING_TOO_LARGE'.
+error: string too large to encode using UTF-8 written instead as 'STRING_TOO_LARGE'.
+error: string too large to encode using UTF-8 written instead as 'STRING_TOO_LARGE'.
+error: string too large to encode using UTF-8 written instead as 'STRING_TOO_LARGE'.
+error: string too large to encode using UTF-8 written instead as 'STRING_TOO_LARGE'.
+error: string too large to encode using UTF-8 written instead as 'STRING_TOO_LARGE'.
+error: string too large to encode using UTF-8 written instead as 'STRING_TOO_LARGE'.
+error: string too large to encode using UTF-8 written instead as 'STRING_TOO_LARGE'.
+error: string too large to encode using UTF-8 written instead as 'STRING_TOO_LARGE'.
+error: string too large to encode using UTF-8 written instead as 'STRING_TOO_LARGE'.
+error: string too large to encode using UTF-8 written instead as 'STRING_TOO_LARGE'.
+error: string too large to encode using UTF-8 written instead as 'STRING_TOO_LARGE'.
+
+error: string too large to encode using UTF-8 written instead as 'STRING_TOO_LARGE'.
+error: string too large to encode using UTF-8 written instead as 'STRING_TOO_LARGE'.
+error: string too large to encode using UTF-8 written instead as 'STRING_TOO_LARGE'.
+error: string too large to encode using UTF-8 written instead as 'STRING_TOO_LARGE'.
+error: string too large to encode using UTF-8 written instead as 'STRING_TOO_LARGE'.
+error: string too large to encode using UTF-8 written instead as 'STRING_TOO_LARGE'.
+error: string too large to encode using UTF-8 written instead as 'STRING_TOO_LARGE'.
+error: string too large to encode using UTF-8 written instead as 'STRING_TOO_LARGE'.
+error: string too large to encode using UTF-8 written instead as 'STRING_TOO_LARGE'.
+error: string too large to encode using UTF-8 written instead as 'STRING_TOO_LARGE'.
+error: string too large to encode using UTF-8 written instead as 'STRING_TOO_LARGE'.
+error: string too large to encode using UTF-8 written instead as 'STRING_TOO_LARGE'.
+
+error: string too large to encode using UTF-8 written instead as 'STRING_TOO_LARGE'.
+error: string too large to encode using UTF-8 written instead as 'STRING_TOO_LARGE'.
+error: string too large to encode using UTF-8 written instead as 'STRING_TOO_LARGE'.
+error: string too large to encode using UTF-8 written instead as 'STRING_TOO_LARGE'.
+error: string too large to encode using UTF-8 written instead as 'STRING_TOO_LARGE'.
+error: string too large to encode using UTF-8 written instead as 'STRING_TOO_LARGE'.
+error: string too large to encode using UTF-8 written instead as 'STRING_TOO_LARGE'.
+error: string too large to encode using UTF-8 written instead as 'STRING_TOO_LARGE'.
+
+error: string too large to encode using UTF-8 written instead as 'STRING_TOO_LARGE'.
+error: string too large to encode using UTF-8 written instead as 'STRING_TOO_LARGE'.
+error: string too large to encode using UTF-8 written instead as 'STRING_TOO_LARGE'.
+error: string too large to encode using UTF-8 written instead as 'STRING_TOO_LARGE'.
+error: string too large to encode using UTF-8 written instead as 'STRING_TOO_LARGE'.
+error: string too large to encode using UTF-8 written instead as 'STRING_TOO_LARGE'.
+error: string too large to encode using UTF-8 written instead as 'STRING_TOO_LARGE'.
+error: string too large to encode using UTF-8 written instead as 'STRING_TOO_LARGE'.
+error: string too large to encode using UTF-8 written instead as 'STRING_TOO_LARGE'.
+error: string too large to encode using UTF-8 written instead as 'STRING_TOO_LARGE'.
+error: string too large to encode using UTF-8 written instead as 'STRING_TOO_LARGE'.
+error: string too large to encode using UTF-8 written instead as 'STRING_TOO_LARGE'.
+
+error: string too large to encode using UTF-8 written instead as 'STRING_TOO_LARGE'.
+error: string too large to encode using UTF-8 written instead as 'STRING_TOO_LARGE'.
+error: string too large to encode using UTF-8 written instead as 'STRING_TOO_LARGE'.
+error: string too large to encode using UTF-8 written instead as 'STRING_TOO_LARGE'.
+error: string too large to encode using UTF-8 written instead as 'STRING_TOO_LARGE'.
+error: string too large to encode using UTF-8 written instead as 'STRING_TOO_LARGE'.
+error: string too large to encode using UTF-8 written instead as 'STRING_TOO_LARGE'.
+error: string too large to encode using UTF-8 written instead as 'STRING_TOO_LARGE'.
+error: string too large to encode using UTF-8 written instead as 'STRING_TOO_LARGE'.
+error: string too large to encode using UTF-8 written instead as 'STRING_TOO_LARGE'.
+error: string too large to encode using UTF-8 written instead as 'STRING_TOO_LARGE'.
+error: string too large to encode using UTF-8 written instead as 'STRING_TOO_LARGE'.
+
+> Task :app:processDebugResources
+
+BUILD SUCCESSFUL in 1m 1s
+15 actionable tasks: 15 executed
+Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.4.0-rc-1/userguide/configuration_cache_enabling.html

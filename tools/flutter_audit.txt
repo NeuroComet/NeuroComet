@@ -1,0 +1,21 @@
+en: 382 keys
+tr: 382 keys
+es: 382 keys
+de: 382 keys
+fr: 382 keys
+pt: 382 keys
+
+--- Detailed missing keys ---
+
+English base: 382 keys
+
+=== tr === 382/382 (missing: 0)
+
+=== es === 382/382 (missing: 0)
+
+=== de === 382/382 (missing: 0)
+
+=== fr === 382/382 (missing: 0)
+
+=== pt === 382/382 (missing: 0)
+

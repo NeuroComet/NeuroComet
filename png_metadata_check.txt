@@ -1,0 +1,4 @@
+icon_pride_foreground_fit.png	268286	563x563
+icon_pride_foreground_exact.png	450907	563x563
+icon_energy_foreground_fit.png	357165	563x563
+icon_energy_foreground_exact.png	501478	563x563

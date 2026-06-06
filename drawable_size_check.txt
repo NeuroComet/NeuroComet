@@ -1,0 +1,2 @@
+278	C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\drawable\neurodiversity_pride_foreground.xml
+283	C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\drawable\icon_energy_foreground.xml

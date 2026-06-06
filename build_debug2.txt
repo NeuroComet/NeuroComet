@@ -1,0 +1,106 @@
+Running Gradle task 'assembleDebug'...                          
+flutter : lib/screens/games/games_hub_screen.dart:139:20: Error: The getter 'gamePatternTap' isn't defined for the type 'AppLocalizations'.
+At line:1 char:78
++ ... ects\NeuroComet\flutter_app" ; flutter build apk --debug 2>&1 | Out-S ...
++                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (lib/screens/gam...Localizations'.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ - 'AppLocalizations' is from 'package:neuro_comet/l10n/app_localizations.dart' ('lib/l10n/app_localizations.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'gamePatternTap'.
+        name: l10n.gamePatternTap,
+                   ^^^^^^^^^^^^^^
+lib/screens/games/games_hub_screen.dart:140:27: Error: The getter 'gamePatternTapDesc' isn't defined for the type 'AppLocalizations'.
+ - 'AppLocalizations' is from 'package:neuro_comet/l10n/app_localizations.dart' ('lib/l10n/app_localizations.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'gamePatternTapDesc'.
+        description: l10n.gamePatternTapDesc,
+                          ^^^^^^^^^^^^^^^^^^
+lib/screens/games/games_hub_screen.dart:146:20: Error: The getter 'gameWorryJar' isn't defined for the type 'AppLocalizations'.
+ - 'AppLocalizations' is from 'package:neuro_comet/l10n/app_localizations.dart' ('lib/l10n/app_localizations.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'gameWorryJar'.
+        name: l10n.gameWorryJar,
+                   ^^^^^^^^^^^^
+lib/screens/games/games_hub_screen.dart:147:27: Error: The getter 'gameWorryJarDesc' isn't defined for the type 'AppLocalizations'.
+ - 'AppLocalizations' is from 'package:neuro_comet/l10n/app_localizations.dart' ('lib/l10n/app_localizations.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'gameWorryJarDesc'.
+        description: l10n.gameWorryJarDesc,
+                          ^^^^^^^^^^^^^^^^
+lib/screens/games/games_hub_screen.dart:153:20: Error: The getter 'gameMoodMixer' isn't defined for the type 'AppLocalizations'.
+ - 'AppLocalizations' is from 'package:neuro_comet/l10n/app_localizations.dart' ('lib/l10n/app_localizations.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'gameMoodMixer'.
+        name: l10n.gameMoodMixer,
+                   ^^^^^^^^^^^^^
+lib/screens/games/games_hub_screen.dart:154:27: Error: The getter 'gameMoodMixerDesc' isn't defined for the type 'AppLocalizations'.
+ - 'AppLocalizations' is from 'package:neuro_comet/l10n/app_localizations.dart' ('lib/l10n/app_localizations.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'gameMoodMixerDesc'.
+        description: l10n.gameMoodMixerDesc,
+                          ^^^^^^^^^^^^^^^^^
+lib/screens/games/games_hub_screen.dart:160:20: Error: The getter 'gameSafeSpace' isn't defined for the type 'AppLocalizations'.
+ - 'AppLocalizations' is from 'package:neuro_comet/l10n/app_localizations.dart' ('lib/l10n/app_localizations.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'gameSafeSpace'.
+        name: l10n.gameSafeSpace,
+                   ^^^^^^^^^^^^^
+lib/screens/games/games_hub_screen.dart:161:27: Error: The getter 'gameSafeSpaceDesc' isn't defined for the type 'AppLocalizations'.
+ - 'AppLocalizations' is from 'package:neuro_comet/l10n/app_localizations.dart' ('lib/l10n/app_localizations.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'gameSafeSpaceDesc'.
+        description: l10n.gameSafeSpaceDesc,
+                          ^^^^^^^^^^^^^^^^^
+lib/screens/games/games_hub_screen.dart:200:20: Error: The getter 'gameTextureTiles' isn't defined for the type 'AppLocalizations'.
+ - 'AppLocalizations' is from 'package:neuro_comet/l10n/app_localizations.dart' ('lib/l10n/app_localizations.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'gameTextureTiles'.
+        name: l10n.gameTextureTiles,
+                   ^^^^^^^^^^^^^^^^
+lib/screens/games/games_hub_screen.dart:201:27: Error: The getter 'gameTextureTilesDesc' isn't defined for the type 'AppLocalizations'.
+ - 'AppLocalizations' is from 'package:neuro_comet/l10n/app_localizations.dart' ('lib/l10n/app_localizations.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'gameTextureTilesDesc'.
+        description: l10n.gameTextureTilesDesc,
+                          ^^^^^^^^^^^^^^^^^^^^
+lib/screens/games/games_hub_screen.dart:207:20: Error: The getter 'gameSoundGarden' isn't defined for the type 'AppLocalizations'.
+ - 'AppLocalizations' is from 'package:neuro_comet/l10n/app_localizations.dart' ('lib/l10n/app_localizations.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'gameSoundGarden'.
+        name: l10n.gameSoundGarden,
+                   ^^^^^^^^^^^^^^^
+lib/screens/games/games_hub_screen.dart:208:27: Error: The getter 'gameSoundGardenDesc' isn't defined for the type 'AppLocalizations'.
+ - 'AppLocalizations' is from 'package:neuro_comet/l10n/app_localizations.dart' ('lib/l10n/app_localizations.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'gameSoundGardenDesc'.
+        description: l10n.gameSoundGardenDesc,
+                          ^^^^^^^^^^^^^^^^^^^
+lib/screens/games/games_hub_screen.dart:214:20: Error: The getter 'gameStimSequencer' isn't defined for the type 'AppLocalizations'.
+ - 'AppLocalizations' is from 'package:neuro_comet/l10n/app_localizations.dart' ('lib/l10n/app_localizations.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'gameStimSequencer'.
+        name: l10n.gameStimSequencer,
+                   ^^^^^^^^^^^^^^^^^
+lib/screens/games/games_hub_screen.dart:215:27: Error: The getter 'gameStimSequencerDesc' isn't defined for the type 'AppLocalizations'.
+ - 'AppLocalizations' is from 'package:neuro_comet/l10n/app_localizations.dart' ('lib/l10n/app_localizations.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'gameStimSequencerDesc'.
+        description: l10n.gameStimSequencerDesc,
+                          ^^^^^^^^^^^^^^^^^^^^^
+lib/screens/games/games_hub_screen.dart:221:20: Error: The getter 'gameConstellationConnect' isn't defined for the type 'AppLocalizations'.
+ - 'AppLocalizations' is from 'package:neuro_comet/l10n/app_localizations.dart' ('lib/l10n/app_localizations.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'gameConstellationConnect'.
+        name: l10n.gameConstellationConnect,
+                   ^^^^^^^^^^^^^^^^^^^^^^^^
+lib/screens/games/games_hub_screen.dart:222:27: Error: The getter 'gameConstellationConnectDesc' isn't defined for the type 'AppLocalizations'.
+ - 'AppLocalizations' is from 'package:neuro_comet/l10n/app_localizations.dart' ('lib/l10n/app_localizations.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'gameConstellationConnectDesc'.
+        description: l10n.gameConstellationConnectDesc,
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Target kernel_snapshot_program failed: Exception
+
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:compileFlutterBuildDebug'.
+> Process 'command 'C:\flutter\bin\flutter.bat'' finished with non-zero exit value 1
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 13s
+Running Gradle task 'assembleDebug'...                             13.8s
+Gradle task assembleDebug failed with exit code 1
+

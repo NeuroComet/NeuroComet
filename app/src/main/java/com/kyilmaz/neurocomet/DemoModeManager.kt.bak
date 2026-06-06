@@ -1,0 +1,174 @@
+package com.kyilmaz.neurocomet
+
+import android.content.Context
+import android.content.SharedPreferences
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+
+/**
+ * Demo Mode for NeuroComet.
+ *
+ * When demo mode is **on**, only the features explicitly marked as "demo-ready"
+ * remain usable. Everything else (work-in-progress / incomplete areas) is
+ * **completely disabled**: locked tabs disappear from the navigation bar and any
+ * attempt to navigate to a locked destination is blocked and bounced back to the
+ * feed. This lets you confidently demo the finished parts of the app without
+ * accidentally wandering into half-built screens.
+ *
+ * State is persisted in SharedPreferences and exposed via Compose `mutableStateOf`
+ * snapshot state (same pattern as [SettingsManager]) so the UI reacts immediately
+ * to changes.
+ */
+object DemoModeManager {
+
+    private const val PREFS_NAME = "demo_mode"
+    private const val KEY_ENABLED = "demo_mode_enabled"
+    private const val KEY_ALLOWED_ROUTES = "demo_allowed_routes"
+
+    /**
+     * Routes that can never be locked, so you can always reach Settings →
+     * Developer Options to turn demo mode back off and never get stuck.
+     */
+    private val ALWAYS_ALLOWED = setOf(
+        "feed",
+        "settings",
+        "dev_options"
+    )
+
+    /** A logical grouping for the demo-config UI. */
+    enum class DemoGroup(val title: String) {
+        CORE("Core Experience"),
+        SETTINGS("Settings & Personalization"),
+        SOCIAL("Social & Messaging"),
+        EXTRAS("Extras & Experimental")
+    }
+
+    /**
+     * A single feature that can be demoed or locked.
+     *
+     * [route] must match the navigation route pattern declared in
+     * `Screen` (e.g. `"conversation/{conversationId}"`).
+     */
+    data class DemoFeature(
+        val route: String,
+        val label: String,
+        val group: DemoGroup
+    )
+
+    /**
+     * Catalog of every feature that can be gated by demo mode. Routes that are
+     * NOT in this list (and not in [ALWAYS_ALLOWED]) are never locked, so demo
+     * mode can never block something it doesn't know about.
+     */
+    val ALL_FEATURES: List<DemoFeature> = listOf(
+        // ── Core ────────────────────────────────────────────────
+        DemoFeature("explore", "Explore", DemoGroup.CORE),
+        DemoFeature("wellness", "Wellness Dashboard", DemoGroup.CORE),
+        DemoFeature("notifications", "Notifications", DemoGroup.CORE),
+        DemoFeature("games_hub", "Games Hub", DemoGroup.CORE),
+        DemoFeature("game/{gameId}", "Game Play", DemoGroup.CORE),
+
+        // ── Social & Messaging ──────────────────────────────────
+        DemoFeature("messages", "Messages", DemoGroup.SOCIAL),
+        DemoFeature("conversation/{conversationId}", "Conversation", DemoGroup.SOCIAL),
+        DemoFeature("topic/{topicId}", "Topic Detail", DemoGroup.SOCIAL),
+        DemoFeature("profile/{userId}", "User Profile", DemoGroup.SOCIAL),
+        DemoFeature("my_profile", "My Profile", DemoGroup.SOCIAL),
+        DemoFeature("call_history", "Call History", DemoGroup.SOCIAL),
+        DemoFeature("practice_call_selection", "Practice Call Selection", DemoGroup.SOCIAL),
+        DemoFeature("practice_call/{personaId}", "Practice Call", DemoGroup.SOCIAL),
+
+        // ── Settings & Personalization ──────────────────────────
+        DemoFeature("theme_settings", "Theme Settings", DemoGroup.SETTINGS),
+        DemoFeature("animation_settings", "Animation Settings", DemoGroup.SETTINGS),
+        DemoFeature("icon_customization", "App Icon Customization", DemoGroup.SETTINGS),
+        DemoFeature("privacy_settings", "Privacy Settings", DemoGroup.SETTINGS),
+        DemoFeature("notification_settings", "Notification Settings", DemoGroup.SETTINGS),
+        DemoFeature("content_settings", "Content Filters", DemoGroup.SETTINGS),
+        DemoFeature("accessibility_settings", "Accessibility Settings", DemoGroup.SETTINGS),
+        DemoFeature("wellbeing_settings", "Wellbeing / Break Reminders", DemoGroup.SETTINGS),
+        DemoFeature("font_settings", "Text & Display", DemoGroup.SETTINGS),
+        DemoFeature("parental_controls", "Parental Controls", DemoGroup.SETTINGS),
+
+        // ── Extras & Experimental ───────────────────────────────
+        DemoFeature("subscription", "Premium / Subscription", DemoGroup.EXTRAS),
+        DemoFeature("backup_settings", "Backup & Restore", DemoGroup.EXTRAS),
+        DemoFeature("feedback_hub/{action}", "Feedback Hub", DemoGroup.EXTRAS),
+    )
+
+    private val allRoutes: Set<String> = ALL_FEATURES.map { it.route }.toSet()
+
+    // ─── Observable state ───────────────────────────────────────
+
+    private var _demoModeEnabled by mutableStateOf(false)
+    val demoModeEnabled: Boolean get() = _demoModeEnabled
+
+    /** The set of routes that remain available while demo mode is on. */
+    private var _allowedRoutes by mutableStateOf(allRoutes)
+    val allowedRoutes: Set<String> get() = _allowedRoutes
+
+    @Suppress("StaticFieldLeak") // applicationContext only
+    private var context: Context? = null
+    private var isInitialized = false
+
+    // ─── Lifecycle ──────────────────────────────────────────────
+
+    fun init(ctx: Context) {
+        if (isInitialized) return
+        context = ctx.applicationContext
+        reload()
+        isInitialized = true
+    }
+
+    fun reload() {
+        val prefs = getPrefs() ?: return
+        _demoModeEnabled = prefs.getBoolean(KEY_ENABLED, false)
+        // Default: everything demo-ready. The user then locks the incomplete bits.
+        _allowedRoutes = prefs.getStringSet(KEY_ALLOWED_ROUTES, allRoutes)?.toSet() ?: allRoutes
+    }
+
+    private fun getPrefs(): SharedPreferences? =
+        context?.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+
+    // ─── Queries ────────────────────────────────────────────────
+
+    /** Whether [route] is currently locked away by demo mode. */
+    fun isLocked(route: String?): Boolean {
+        if (!_demoModeEnabled || route == null) return false
+        if (route in ALWAYS_ALLOWED) return false
+        if (route !in allRoutes) return false // unknown route → never locked
+        return route !in _allowedRoutes
+    }
+
+    /** Whether [route] is marked demo-ready (independent of the master toggle). */
+    fun isRouteAllowed(route: String): Boolean =
+        route in ALWAYS_ALLOWED || route in _allowedRoutes
+
+    /** Number of catalog features currently locked (for UI summaries). */
+    val lockedCount: Int get() = allRoutes.count { it !in _allowedRoutes }
+
+    // ─── Mutations ──────────────────────────────────────────────
+
+    fun setDemoModeEnabled(enabled: Boolean) {
+        _demoModeEnabled = enabled
+        getPrefs()?.edit()?.putBoolean(KEY_ENABLED, enabled)?.apply()
+    }
+
+    fun setRouteAllowed(route: String, allowed: Boolean) {
+        if (route in ALWAYS_ALLOWED || route !in allRoutes) return
+        val updated = _allowedRoutes.toMutableSet().apply {
+            if (allowed) add(route) else remove(route)
+        }
+        _allowedRoutes = updated
+        getPrefs()?.edit()?.putStringSet(KEY_ALLOWED_ROUTES, updated)?.apply()
+    }
+
+    /** Mark every catalog feature demo-ready (true) or locked (false) at once. */
+    fun setAllAllowed(allowed: Boolean) {
+        val updated = if (allowed) allRoutes else emptySet()
+        _allowedRoutes = updated
+        getPrefs()?.edit()?.putStringSet(KEY_ALLOWED_ROUTES, updated)?.apply()
+    }
+}
+

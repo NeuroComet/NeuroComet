@@ -1,0 +1,102 @@
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:19: Password doesn\'t meet requirements
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:34: Perfect! You\'ve activated calm mode. Tap again whenever you
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:47: Let\'s Go! ✨
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:72: Let\'s celebrate you
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:78: Let\'s begin
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:88: Let\'s go! ⚡
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:93: You\'ve got this
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:106: You\'re safe here
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:139: You\'re okay
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:147: We\'ve got you
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:211: Gentle colors that don\'t strain the eyes
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:226: When someone messages you, you\'ll see it here.
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:231: Start a new conversation from someone\'s profile! 💬
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:238: You\'re filtering to Unread.
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:295: You\'re Awesome! 🙌
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:312: Triggers notification for \'%s\'.
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:339: What\'s on your mind?
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:355: What\'s on your mind?
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:363: %s\'s Story
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:481: What\'s on your mind?
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:497: You\'re a Lifetime Member!
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:498: You\'re Now Premium!
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:603: We\'re so glad you\'re here. This is a safe space designed f
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:617: Remember to take breaks! You\'ve been active for a while. 💙
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:619: We\'ve hidden some content that may not be suitable. You can
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:626: 📖 Reading time is the BEST! I\'m on chapter 10 of my favorit
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:636: PSA: Getting diagnosed as an adult is valid. Got mine at 34 
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:645: Pro tip: Create a \'launch pad\' by your door with everythin
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:646: Today\'s win: I remembered to eat lunch! 🎊 Setting phone ala
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:653: I\'m good, thanks! Just chilling.
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:654: Did you see that new scam post? Don\'t fall for it!
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:659: I\'ve heard of it but never tried. How does it work for you?
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:664: That\'s genius! Mind if I share that tip in my next post?
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:667: OMG I need to see it! You\'re so talented!
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:668: Thanks! It\'s all blues and purples - very calming colors. I
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:669: Those are my favorite colors too! They really help when I\'m
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:671: I\'m all ears! Been having a rough week with anxiety.
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:674: Anytime! We\'re all in this together. 🤗
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:677: Cherry MX Blues! The tactile feedback is *chef\'s kiss* for 
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:678: I\'ve been eyeing those! Do they help you focus while coding
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:683: That\'s smart! Self-care isn\'t selfish. Rest up! 💜
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:728: Icon applied! Restart your launcher if it doesn\'t update. 🎨
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:733: Manage users you\'ve blocked
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:847: Let others see when you\'re active
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:897: Spin to your heart\'s content - no limits, just vibes
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:1041: Anyone else use timers for EVERYTHING? I set 25-min work blo
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:1045: External scaffolding is my superpower! Visual reminders, app
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:1047: Started using \'implementation intentions\' - instead of \'I
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:1051: Reminder that \'safe foods\' are valid! Sometimes plain past
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:1055: Does anyone else have \'safe restaurants\'? Places where you
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:1059: Finally found a weighted blanket that doesn\'t make me overh
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:1063: Anyone else\'s brain do the \'remember every embarrassing mo
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:1065: White noise vs brown noise vs pink noise - which works for y
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:1071: Normalize stimming in public! I was rocking at the grocery s
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:1075: Movement is medicine! When I can\'t stim openly, I do toe-ta
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:1077: Built a \'stim kit\' for my bag: putty, textured cards, fidg
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:1087: Created a \'sensory map\' of my city - quiet cafes, low-stim
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:1089: Reminder: Meltdowns aren\'t \'bad behavior\' - they\'re nerv
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:1091: My meltdown kit: noise-canceling headphones, sunglasses, wei
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:1095: Created a \'calm corner\' in my home with dim lights, soft t
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:1099: Scripts for small talk! \'How\'s your day going?\' → \'Any f
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:1101: Quality over quantity. Having 2-3 close friends who \'get it
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:1103: It\'s okay to leave social events early! \'I had a great tim
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:1105: \'I need to think about that\' is a complete sentence. No pr
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:1109: Finally dropping the mask at home. It\'s exhausting pretendi
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:1111: Masking led to burnout. Now I\'m slowly learning who I am wi
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:1113: Found friends who accept the real me - stims, infodumps, and
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:1115: The price of masking: migraines, fatigue, identity confusion
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:1123: Fungi are INCREDIBLE. Did you know there\'s a mushroom that 
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:1131: Some days, just existing is an achievement. Be proud of the 
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:1133: Finally found a neurodivergent-affirming therapist! They und
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:1135: Journaling prompts for rough days: What\'s draining me? What
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:1137: Medication isn\'t a failure - it\'s a tool. Just like glasse
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:1145: Cameras off in meetings when I need them. Standing during ca
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:1149: Diagnosed at 35. Everything suddenly makes sense - the strug
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:1151: Spent decades thinking I was broken. Turns out I\'m just wir
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:1157: It\'s never too late to learn about yourself. Late-diagnosed
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:1167: Whether you\'re figuring out identity, already out, or just 
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:1169: Being trans AND autistic means processing identity on multip
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:1171: ND brains often experience gender differently. Our journeys 
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:1175: Navigating healthcare as trans AND ND can be extra challengi
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:1183: Remember: you don\'t need to \'prove\' your identity to anyo
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:1189: Asexual AND autistic - the \'double A\' club! Understanding 
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:1195: Not experiencing attraction the \'typical\' way doesn\'t mak
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:1199: Non-binary and neurodivergent! Gender is a construct I\'m ha
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:1201: They/them pronouns please! Our community respects everyone\'
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:1205: Finding gender-affirming clothing that\'s also sensory-frien
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:1211: This community is a safe space to explore. You don\'t have t
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:1213: Sharing coming out stories helps others feel less alone. Com
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:1215: Not sure about labels yet and that\'s okay! Questioning is p
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:1217: Chosen family when bio family doesn\'t understand. The ND+LG
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:1219: Welcome to this community! Share your experiences and suppor
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:1221: Remember: everyone\'s journey is different. What works for o
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:1223: Great resources in the pinned post! Check them out if you\'r
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:1225: This is a judgment-free zone. Ask questions, share struggles
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:1247: When you share photos or videos, they\'ll appear here.
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:1265: Check out %1$s\'s story! %2$s
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:1294: 🦄 You\'ve unlocked the Rainbow Brain theme!\nScroll down to 
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:1296: 🦄 You\'ve unlocked the Rainbow Brain theme!\nFind it in Them
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\values\strings.xml:1306: Today\'s Tasks
+
+Total issues: 3081

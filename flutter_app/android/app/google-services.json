@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "308474317532",
+    "project_id": "gen-lang-client-0654837179",
+    "storage_bucket": "gen-lang-client-0654837179.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:308474317532:android:839a5802ce8f317b578219",
+        "android_client_info": {
+          "package_name": "com.kyilmaz.neurocomet"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBRqpzzSaDFfR_t9V1Yd25CmESE9enkL6A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:308474317532:android:4e3885058479f696578219",
+        "android_client_info": {
+          "package_name": "com.kyilmaz.neuronetworkingtitle"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBRqpzzSaDFfR_t9V1Yd25CmESE9enkL6A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

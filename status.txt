@@ -1,0 +1,27 @@
+﻿Base English has 1487 strings
+
+============================================================
+[PARTIAL] Turkish              (values-tr      ): 1032/1487 ( 69.4%) - 455 need translation
+[PARTIAL] Hindi                (values-hi      ):  989/1487 ( 66.5%) - 498 need translation
+[PARTIAL] Urdu                 (values-ur      ):  979/1487 ( 65.8%) - 508 need translation
+[PARTIAL] Dutch                (values-nl      ):  958/1487 ( 64.4%) - 529 need translation
+[PARTIAL] Swedish              (values-sv      ):  856/1487 ( 57.6%) - 631 need translation
+[PARTIAL] French               (values-fr      ):  855/1487 ( 57.5%) - 632 need translation
+[NEEDS] Portuguese           (values-pt      ):  694/1487 ( 46.7%) - 793 need translation
+[NEEDS] Russian              (values-ru      ):  604/1487 ( 40.6%) - 883 need translation
+[NEEDS] Ukrainian            (values-uk      ):  440/1487 ( 29.6%) - 1047 need translation
+[NEEDS] Polish               (values-pl      ):  362/1487 ( 24.3%) - 1125 need translation
+[NEEDS] Chinese Simplified   (values-zh      ):  347/1487 ( 23.3%) - 1140 need translation
+[NEEDS] Japanese             (values-ja      ):  346/1487 ( 23.3%) - 1141 need translation
+[NEEDS] Italian              (values-it      ):  332/1487 ( 22.3%) - 1155 need translation
+[NEEDS] Korean               (values-ko      ):  325/1487 ( 21.9%) - 1162 need translation
+[NEEDS] Thai                 (values-th      ):  291/1487 ( 19.6%) - 1196 need translation
+[NEEDS] Vietnamese           (values-vi      ):  289/1487 ( 19.4%) - 1198 need translation
+[NEEDS] Finnish              (values-fi      ):  285/1487 ( 19.2%) - 1202 need translation
+[NEEDS] Norwegian Bokmσl     (values-nb      ):  280/1487 ( 18.8%) - 1207 need translation
+[NEEDS] Malay                (values-ms      ):  207/1487 ( 13.9%) - 1280 need translation
+[NEEDS] Indonesian           (values-in      ):  158/1487 ( 10.6%) - 1329 need translation
+[NEEDS] Hebrew               (values-iw      ):  155/1487 ( 10.4%) - 1332 need translation
+[NEEDS] Icelandic            (values-is      ):  153/1487 ( 10.3%) - 1334 need translation
+[NEEDS] Hungarian            (values-hu      ):  152/1487 ( 10.2%) - 1335 need translation
+[NEEDS] Romanian             (values-ro      ):  150/1487 ( 10.1%) - 1337 need translation

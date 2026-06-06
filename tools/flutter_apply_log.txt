@@ -1,0 +1,5 @@
+tr: Added 114 translations
+fr: Added 114 translations
+pt: Added 114 translations
+
+Done! File updated.

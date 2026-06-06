@@ -1,0 +1,25 @@
+﻿
+Name                      LastWriteTime          Length
+----                      -------------          ------
+app-arm64-v8a-debug.apk   3/11/2026 3:40:41 AM 61778472
+app-armeabi-v7a-debug.apk 3/11/2026 3:40:41 AM 56811454
+app-universal-debug.apk   3/11/2026 3:40:42 AM 93647039
+app-x86_64-debug.apk      3/11/2026 3:40:42 AM 63057319
+app-x86-debug.apk         3/11/2026 3:40:42 AM 62574486
+
+
+
+FullName                                                                                              LastWriteTime        Length
+--------                                                                                              -------------        ------
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\mipmap-hdpi\ic_launcher.png          3/11/2026 3:39:23 AM  11972
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\mipmap-hdpi\ic_launcher_round.png    3/11/2026 3:39:23 AM  11972
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\mipmap-mdpi\ic_launcher.png          3/11/2026 3:39:23 AM   6191
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\mipmap-mdpi\ic_launcher_round.png    3/11/2026 3:39:23 AM   6191
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\mipmap-xhdpi\ic_launcher.png         3/11/2026 3:39:23 AM  19769
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\mipmap-xhdpi\ic_launcher_round.png   3/11/2026 3:39:23 AM  19769
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\mipmap-xxhdpi\ic_launcher.png        3/11/2026 3:39:23 AM  41135
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\mipmap-xxhdpi\ic_launcher_round.png  3/11/2026 3:39:23 AM  41135
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\mipmap-xxxhdpi\ic_launcher.png       3/11/2026 3:39:23 AM  70508
+C:\Users\bkyil\AndroidStudioProjects\NeuroComet\app\src\main\res\mipmap-xxxhdpi\ic_launcher_round.png 3/11/2026 3:39:23 AM  70508
+
+

@@ -1,0 +1,6 @@
+﻿source=2816x1536 segWidth=563
+segment 0 avgRgb=176,189,201 avgSat=24 avgLum=187 sat50=2697 sat80=2603 dark180=4972 count=24062
+segment 1 avgRgb=189,187,205 avgSat=21 avgLum=189 sat50=3153 sat80=3032 dark180=5551 count=24063
+segment 2 avgRgb=196,182,205 avgSat=25 avgLum=187 sat50=3074 sat80=2944 dark180=5145 count=24059
+segment 3 avgRgb=179,198,199 avgSat=22 avgLum=194 sat50=2840 sat80=2768 dark180=4883 count=24060
+segment 4 avgRgb=184,187,189 avgSat=10 avgLum=186 sat50=741 sat80=695 dark180=4824 count=24062

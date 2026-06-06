@@ -1,0 +1,68 @@
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:generateDebugBuildConfig
+> Task :app:generateDebugResources
+> Task :app:processDebugGoogleServices
+> Task :app:packageDebugResources
+> Task :app:processDebugNavigationResources
+> Task :app:parseDebugLocalResources
+> Task :app:generateDebugRFile
+> Task :app:compileDebugKotlin
+w: file:///C:/Users/bkyil/AndroidStudioProjects/NeuroComet/app/src/main/java/com/kyilmaz/neurocomet/NeuroState.kt:13:5 This annotation is currently applied to the value parameter only, but in the future it will also be applied to field.
+- To opt in to applying to both value parameter and field, add '-Xannotation-default-target=param-property' to your compiler arguments.
+- To keep applying to the value parameter only, use the '@param:' annotation target.
+
+See https://youtrack.jetbrains.com/issue/KT-73255 for more details.
+w: file:///C:/Users/bkyil/AndroidStudioProjects/NeuroComet/app/src/main/java/com/kyilmaz/neurocomet/NeuroState.kt:14:5 This annotation is currently applied to the value parameter only, but in the future it will also be applied to field.
+- To opt in to applying to both value parameter and field, add '-Xannotation-default-target=param-property' to your compiler arguments.
+- To keep applying to the value parameter only, use the '@param:' annotation target.
+
+See https://youtrack.jetbrains.com/issue/KT-73255 for more details.
+w: file:///C:/Users/bkyil/AndroidStudioProjects/NeuroComet/app/src/main/java/com/kyilmaz/neurocomet/NeuroState.kt:79:5 This annotation is currently applied to the value parameter only, but in the future it will also be applied to field.
+- To opt in to applying to both value parameter and field, add '-Xannotation-default-target=param-property' to your compiler arguments.
+- To keep applying to the value parameter only, use the '@param:' annotation target.
+
+See https://youtrack.jetbrains.com/issue/KT-73255 for more details.
+w: file:///C:/Users/bkyil/AndroidStudioProjects/NeuroComet/app/src/main/java/com/kyilmaz/neurocomet/SplashConfigs.kt:11:5 This annotation is currently applied to the value parameter only, but in the future it will also be applied to field.
+- To opt in to applying to both value parameter and field, add '-Xannotation-default-target=param-property' to your compiler arguments.
+- To keep applying to the value parameter only, use the '@param:' annotation target.
+
+See https://youtrack.jetbrains.com/issue/KT-73255 for more details.
+w: file:///C:/Users/bkyil/AndroidStudioProjects/NeuroComet/app/src/main/java/com/kyilmaz/neurocomet/SplashConfigs.kt:12:5 This annotation is currently applied to the value parameter only, but in the future it will also be applied to field.
+- To opt in to applying to both value parameter and field, add '-Xannotation-default-target=param-property' to your compiler arguments.
+- To keep applying to the value parameter only, use the '@param:' annotation target.
+
+See https://youtrack.jetbrains.com/issue/KT-73255 for more details.
+w: file:///C:/Users/bkyil/AndroidStudioProjects/NeuroComet/app/src/main/java/com/kyilmaz/neurocomet/SplashScreen.kt:1515:84 Redundant call of conversion method.
+w: file:///C:/Users/bkyil/AndroidStudioProjects/NeuroComet/app/src/main/java/com/kyilmaz/neurocomet/SplashScreen.kt:1558:85 Redundant call of conversion method.
+w: file:///C:/Users/bkyil/AndroidStudioProjects/NeuroComet/app/src/main/java/com/kyilmaz/neurocomet/SplashScreen.kt:1596:70 Redundant call of conversion method.
+w: file:///C:/Users/bkyil/AndroidStudioProjects/NeuroComet/app/src/main/java/com/kyilmaz/neurocomet/calling/WebRTCCallManager.kt:312:64 This cast can never succeed.
+w: file:///C:/Users/bkyil/AndroidStudioProjects/NeuroComet/app/src/main/java/com/kyilmaz/neurocomet/games/NeuroGames.kt:133:4 This annotation is currently applied to the value parameter only, but in the future it will also be applied to field.
+- To opt in to applying to both value parameter and field, add '-Xannotation-default-target=param-property' to your compiler arguments.
+- To keep applying to the value parameter only, use the '@param:' annotation target.
+
+See https://youtrack.jetbrains.com/issue/KT-73255 for more details.
+w: file:///C:/Users/bkyil/AndroidStudioProjects/NeuroComet/app/src/main/java/com/kyilmaz/neurocomet/games/NeuroGames.kt:139:4 This annotation is currently applied to the value parameter only, but in the future it will also be applied to field.
+- To opt in to applying to both value parameter and field, add '-Xannotation-default-target=param-property' to your compiler arguments.
+- To keep applying to the value parameter only, use the '@param:' annotation target.
+
+See https://youtrack.jetbrains.com/issue/KT-73255 for more details.
+w: file:///C:/Users/bkyil/AndroidStudioProjects/NeuroComet/app/src/main/java/com/kyilmaz/neurocomet/games/NeuroGames.kt:140:4 This annotation is currently applied to the value parameter only, but in the future it will also be applied to field.
+- To opt in to applying to both value parameter and field, add '-Xannotation-default-target=param-property' to your compiler arguments.
+- To keep applying to the value parameter only, use the '@param:' annotation target.
+
+See https://youtrack.jetbrains.com/issue/KT-73255 for more details.
+w: file:///C:/Users/bkyil/AndroidStudioProjects/NeuroComet/app/src/main/java/com/kyilmaz/neurocomet/games/NeuroGames.kt:3222:4 This annotation is currently applied to the value parameter only, but in the future it will also be applied to field.
+- To opt in to applying to both value parameter and field, add '-Xannotation-default-target=param-property' to your compiler arguments.
+- To keep applying to the value parameter only, use the '@param:' annotation target.
+
+See https://youtrack.jetbrains.com/issue/KT-73255 for more details.
+w: file:///C:/Users/bkyil/AndroidStudioProjects/NeuroComet/app/src/main/java/com/kyilmaz/neurocomet/ui/HighRefreshRateUtils.kt:46:43 Elvis operator (?:) always returns the left operand of non-nullable type 'Display'.
+w: file:///C:/Users/bkyil/AndroidStudioProjects/NeuroComet/app/src/main/java/com/kyilmaz/neurocomet/ui/design/M3EPostCard.kt:190:63 Elvis operator (?:) always returns the left operand of non-nullable type 'Boolean'.
+w: file:///C:/Users/bkyil/AndroidStudioProjects/NeuroComet/app/src/main/java/com/kyilmaz/neurocomet/ui/design/M3EPostCard.kt:270:57 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///C:/Users/bkyil/AndroidStudioProjects/NeuroComet/app/src/main/java/com/kyilmaz/neurocomet/ui/design/M3EPostCard.kt:383:39 Elvis operator (?:) always returns the left operand of non-nullable type 'String'.
+w: file:///C:/Users/bkyil/AndroidStudioProjects/NeuroComet/app/src/main/java/com/kyilmaz/neurocomet/utils/StressTestUtils.kt:1251:51 No cast needed.
+
+BUILD SUCCESSFUL in 1m 24s
+8 actionable tasks: 8 executed
+Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.4.0/userguide/configuration_cache_enabling.html

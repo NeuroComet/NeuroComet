@@ -1,0 +1,16 @@
+e: file:///C:/Users/bkyil/AndroidStudioProjects/NeuroComet/app/src/main/java/com/kyilmaz/neurocomet/CheckApi2.kt:9:22 Initializer type mismatch: expected 'Long', actual 'Int'.
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:compileDebugKotlin'.
+> A failure occurred while executing org.jetbrains.kotlin.compilerRunner.GradleCompilerRunnerWithWorkers$GradleKotlinCompilerWorkAction
+   > Compilation error. See log for more details
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights from a Build Scan (powered by Develocity).
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 15s

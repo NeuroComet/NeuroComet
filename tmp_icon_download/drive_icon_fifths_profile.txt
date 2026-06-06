@@ -1,0 +1,6 @@
+﻿source=2816x1536 segWidth=563
+segment 0 range=0..562 sampledContent=54139 bounds=0,0->560,1532 avgRgb=176,189,201
+segment 1 range=563..1125 sampledContent=54082 bounds=563,0->1123,1532 avgRgb=189,187,206
+segment 2 range=1126..1688 sampledContent=54123 bounds=1126,0->1686,1532 avgRgb=196,182,205
+segment 3 range=1689..2251 sampledContent=54113 bounds=1689,0->2249,1532 avgRgb=179,198,199
+segment 4 range=2252..2815 sampledContent=54122 bounds=2252,0->2812,1532 avgRgb=184,187,189

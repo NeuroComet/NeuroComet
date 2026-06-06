@@ -1,0 +1,78 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/9.4.0-rc-1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+Warning: SDK processing. This version only understands SDK XML versions up to 3 but an SDK XML file of version 4 was encountered. This can happen if you use versions of Android Studio and the command-line tools that were released at different times.
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:generateDebugBuildConfig
+> Task :app:generateDebugResources
+> Task :app:processDebugGoogleServices
+> Task :app:packageDebugResources
+> Task :app:processDebugNavigationResources
+> Task :app:parseDebugLocalResources
+> Task :app:generateDebugRFile
+> Task :app:compileDebugKotlin
+w: The feature plugin:androidx.compose.compiler.plugins.kotlin:featureFlag=OptimizeNonSkippingGroups is enabled by default and specifying this option explicitly is not necessary.
+w: file:///C:/Users/bkyil/AndroidStudioProjects/NeuroComet/app/src/main/java/com/kyilmaz/neurocomet/BackupSettingsScreen.kt:816:84 'val Icons.Filled.Chat: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.Chat.
+w: file:///C:/Users/bkyil/AndroidStudioProjects/NeuroComet/app/src/main/java/com/kyilmaz/neurocomet/BackupSettingsScreen.kt:820:90 'val Icons.Filled.Article: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.Article.
+w: file:///C:/Users/bkyil/AndroidStudioProjects/NeuroComet/app/src/main/java/com/kyilmaz/neurocomet/DevOptionsScreen.kt:125:69 'val Icons.Filled.Chat: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.Chat.
+w: file:///C:/Users/bkyil/AndroidStudioProjects/NeuroComet/app/src/main/java/com/kyilmaz/neurocomet/ExploreViews.kt:1215:57 'val Icons.Filled.ArrowBack: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.ArrowBack.
+w: file:///C:/Users/bkyil/AndroidStudioProjects/NeuroComet/app/src/main/java/com/kyilmaz/neurocomet/IconCustomization.kt:1018:33 'static field EXTRA_SHORTCUT_INTENT: String' is deprecated. Deprecated in Java.
+w: file:///C:/Users/bkyil/AndroidStudioProjects/NeuroComet/app/src/main/java/com/kyilmaz/neurocomet/IconCustomization.kt:1019:33 'static field EXTRA_SHORTCUT_NAME: String' is deprecated. Deprecated in Java.
+w: file:///C:/Users/bkyil/AndroidStudioProjects/NeuroComet/app/src/main/java/com/kyilmaz/neurocomet/IconCustomization.kt:1020:33 'static field EXTRA_SHORTCUT_ICON: String' is deprecated. Deprecated in Java.
+w: file:///C:/Users/bkyil/AndroidStudioProjects/NeuroComet/app/src/main/java/com/kyilmaz/neurocomet/IconCustomization.kt:1036:33 'static field EXTRA_SHORTCUT_INTENT: String' is deprecated. Deprecated in Java.
+w: file:///C:/Users/bkyil/AndroidStudioProjects/NeuroComet/app/src/main/java/com/kyilmaz/neurocomet/IconCustomization.kt:1037:33 'static field EXTRA_SHORTCUT_NAME: String' is deprecated. Deprecated in Java.
+w: file:///C:/Users/bkyil/AndroidStudioProjects/NeuroComet/app/src/main/java/com/kyilmaz/neurocomet/IconCustomization.kt:1038:33 'static field EXTRA_SHORTCUT_ICON: String' is deprecated. Deprecated in Java.
+w: file:///C:/Users/bkyil/AndroidStudioProjects/NeuroComet/app/src/main/java/com/kyilmaz/neurocomet/ImageCustomization.kt:1277:17 'fun ScrollableTabRow(selectedTabIndex: Int, modifier: Modifier = ..., containerColor: Color = ..., contentColor: Color = ..., edgePadding: Dp = ..., indicator: ComposableFunction1<List<TabPosition>, Unit> = ..., divider: ComposableFunction0<Unit> = ..., tabs: ComposableFunction0<Unit>): Unit' is deprecated. Replaced with PrimaryScrollableTabRow and SecondaryScrollableTabRow tab variants.
+w: file:///C:/Users/bkyil/AndroidStudioProjects/NeuroComet/app/src/main/java/com/kyilmaz/neurocomet/LanguageStringChecker.kt:370:50 'val Icons.Outlined.Login: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Outlined.Login.
+w: file:///C:/Users/bkyil/AndroidStudioProjects/NeuroComet/app/src/main/java/com/kyilmaz/neurocomet/LanguageStringChecker.kt:374:48 'val Icons.Outlined.Message: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Outlined.Message.
+w: file:///C:/Users/bkyil/AndroidStudioProjects/NeuroComet/app/src/main/java/com/kyilmaz/neurocomet/NeuroState.kt:13:5 This annotation is currently applied to the value parameter only, but in the future it will also be applied to field.
+- To opt in to applying to both value parameter and field, add '-Xannotation-default-target=param-property' to your compiler arguments.
+- To keep applying to the value parameter only, use the '@param:' annotation target.
+
+See https://youtrack.jetbrains.com/issue/KT-73255 for more details.
+w: file:///C:/Users/bkyil/AndroidStudioProjects/NeuroComet/app/src/main/java/com/kyilmaz/neurocomet/NeuroState.kt:14:5 This annotation is currently applied to the value parameter only, but in the future it will also be applied to field.
+- To opt in to applying to both value parameter and field, add '-Xannotation-default-target=param-property' to your compiler arguments.
+- To keep applying to the value parameter only, use the '@param:' annotation target.
+
+See https://youtrack.jetbrains.com/issue/KT-73255 for more details.
+w: file:///C:/Users/bkyil/AndroidStudioProjects/NeuroComet/app/src/main/java/com/kyilmaz/neurocomet/NeuroState.kt:79:5 This annotation is currently applied to the value parameter only, but in the future it will also be applied to field.
+- To opt in to applying to both value parameter and field, add '-Xannotation-default-target=param-property' to your compiler arguments.
+- To keep applying to the value parameter only, use the '@param:' annotation target.
+
+See https://youtrack.jetbrains.com/issue/KT-73255 for more details.
+w: file:///C:/Users/bkyil/AndroidStudioProjects/NeuroComet/app/src/main/java/com/kyilmaz/neurocomet/ProfileScreen.kt:1543:5 'fun TabRow(selectedTabIndex: Int, modifier: Modifier = ..., containerColor: Color = ..., contentColor: Color = ..., indicator: ComposableFunction1<List<TabPosition>, Unit> = ..., divider: ComposableFunction0<Unit> = ..., tabs: ComposableFunction0<Unit>): Unit' is deprecated. Replaced with PrimaryTabRow and SecondaryTabRow.
+w: file:///C:/Users/bkyil/AndroidStudioProjects/NeuroComet/app/src/main/java/com/kyilmaz/neurocomet/SecurityManager.kt:261:19 'static field SERIAL: String!' is deprecated. Deprecated in Java.
+w: file:///C:/Users/bkyil/AndroidStudioProjects/NeuroComet/app/src/main/java/com/kyilmaz/neurocomet/ShortcutReceiver.kt:71:61 'static field EXTRA_SHORTCUT_NAME: String' is deprecated. Deprecated in Java.
+w: file:///C:/Users/bkyil/AndroidStudioProjects/NeuroComet/app/src/main/java/com/kyilmaz/neurocomet/SplashConfigs.kt:11:5 This annotation is currently applied to the value parameter only, but in the future it will also be applied to field.
+- To opt in to applying to both value parameter and field, add '-Xannotation-default-target=param-property' to your compiler arguments.
+- To keep applying to the value parameter only, use the '@param:' annotation target.
+
+See https://youtrack.jetbrains.com/issue/KT-73255 for more details.
+w: file:///C:/Users/bkyil/AndroidStudioProjects/NeuroComet/app/src/main/java/com/kyilmaz/neurocomet/SplashConfigs.kt:12:5 This annotation is currently applied to the value parameter only, but in the future it will also be applied to field.
+- To opt in to applying to both value parameter and field, add '-Xannotation-default-target=param-property' to your compiler arguments.
+- To keep applying to the value parameter only, use the '@param:' annotation target.
+
+See https://youtrack.jetbrains.com/issue/KT-73255 for more details.
+w: file:///C:/Users/bkyil/AndroidStudioProjects/NeuroComet/app/src/main/java/com/kyilmaz/neurocomet/SplashScreen.kt:1515:84 Redundant call of conversion method.
+w: file:///C:/Users/bkyil/AndroidStudioProjects/NeuroComet/app/src/main/java/com/kyilmaz/neurocomet/SplashScreen.kt:1558:85 Redundant call of conversion method.
+w: file:///C:/Users/bkyil/AndroidStudioProjects/NeuroComet/app/src/main/java/com/kyilmaz/neurocomet/SplashScreen.kt:1596:70 Redundant call of conversion method.
+w: file:///C:/Users/bkyil/AndroidStudioProjects/NeuroComet/app/src/main/java/com/kyilmaz/neurocomet/VideoPlayer.kt:30:26 'val LocalLifecycleOwner: ProvidableCompositionLocal<LifecycleOwner>' is deprecated. Moved to lifecycle-runtime-compose library in androidx.lifecycle.compose package.
+w: file:///C:/Users/bkyil/AndroidStudioProjects/NeuroComet/app/src/main/java/com/kyilmaz/neurocomet/calling/GeminiCallSimulator.kt:343:45 Unnecessary safe call on a non-null receiver of type 'ResponseBody'.
+w: file:///C:/Users/bkyil/AndroidStudioProjects/NeuroComet/app/src/main/java/com/kyilmaz/neurocomet/calling/GeminiCallSimulator.kt:356:78 Unnecessary safe call on a non-null receiver of type 'ResponseBody'.
+w: file:///C:/Users/bkyil/AndroidStudioProjects/NeuroComet/app/src/main/java/com/kyilmaz/neurocomet/calling/WebRTCCallManager.kt:310:64 This cast can never succeed.
+w: file:///C:/Users/bkyil/AndroidStudioProjects/NeuroComet/app/src/main/java/com/kyilmaz/neurocomet/calling/WebRTCCallManager.kt:982:22 'var isSpeakerphoneOn: Boolean' is deprecated. Deprecated in Java.
+w: file:///C:/Users/bkyil/AndroidStudioProjects/NeuroComet/app/src/main/java/com/kyilmaz/neurocomet/ui/HighRefreshRateUtils.kt:46:43 Elvis operator (?:) always returns the left operand of non-nullable type 'Display'.
+w: file:///C:/Users/bkyil/AndroidStudioProjects/NeuroComet/app/src/main/java/com/kyilmaz/neurocomet/ui/components/NeuroLinkedText.kt:115:5 'fun ClickableText(text: AnnotatedString, modifier: Modifier = ..., style: TextStyle = ..., softWrap: Boolean = ..., overflow: TextOverflow = ..., maxLines: Int = ..., onTextLayout: (TextLayoutResult) -> Unit = ..., onClick: (Int) -> Unit): Unit' is deprecated. Use Text or BasicText and pass an AnnotatedString that contains a LinkAnnotation. Check LinkAnnotation's documentation for more details and samples.
+w: file:///C:/Users/bkyil/AndroidStudioProjects/NeuroComet/app/src/main/java/com/kyilmaz/neurocomet/ui/design/M3ENavigation.kt:247:36 'fun largeTopAppBarColors(containerColor: Color = ..., scrolledContainerColor: Color = ..., navigationIconContentColor: Color = ..., titleContentColor: Color = ..., actionIconContentColor: Color = ...): TopAppBarColors' is deprecated. Use topAppBarColors instead.
+w: file:///C:/Users/bkyil/AndroidStudioProjects/NeuroComet/app/src/main/java/com/kyilmaz/neurocomet/ui/design/M3ENavigation.kt:308:5 'fun TabRow(selectedTabIndex: Int, modifier: Modifier = ..., containerColor: Color = ..., contentColor: Color = ..., indicator: ComposableFunction1<List<TabPosition>, Unit> = ..., divider: ComposableFunction0<Unit> = ..., tabs: ComposableFunction0<Unit>): Unit' is deprecated. Replaced with PrimaryTabRow and SecondaryTabRow.
+w: file:///C:/Users/bkyil/AndroidStudioProjects/NeuroComet/app/src/main/java/com/kyilmaz/neurocomet/ui/design/M3ENavigation.kt:316:41 'fun Modifier.tabIndicatorOffset(currentTabPosition: TabPosition): Modifier' is deprecated. Solely for use alongside deprecated TabRowDefaults.Indicator method. For recommended PrimaryIndicator and SecondaryIndicator methods, please use TabIndicatorScope.tabIndicatorOffset method.
+w: file:///C:/Users/bkyil/AndroidStudioProjects/NeuroComet/app/src/main/java/com/kyilmaz/neurocomet/ui/design/M3ENavigation.kt:341:5 'fun ScrollableTabRow(selectedTabIndex: Int, modifier: Modifier = ..., containerColor: Color = ..., contentColor: Color = ..., edgePadding: Dp = ..., indicator: ComposableFunction1<List<TabPosition>, Unit> = ..., divider: ComposableFunction0<Unit> = ..., tabs: ComposableFunction0<Unit>): Unit' is deprecated. Replaced with PrimaryScrollableTabRow and SecondaryScrollableTabRow tab variants.
+w: file:///C:/Users/bkyil/AndroidStudioProjects/NeuroComet/app/src/main/java/com/kyilmaz/neurocomet/ui/design/M3ENavigation.kt:350:41 'fun Modifier.tabIndicatorOffset(currentTabPosition: TabPosition): Modifier' is deprecated. Solely for use alongside deprecated TabRowDefaults.Indicator method. For recommended PrimaryIndicator and SecondaryIndicator methods, please use TabIndicatorScope.tabIndicatorOffset method.
+w: file:///C:/Users/bkyil/AndroidStudioProjects/NeuroComet/app/src/main/java/com/kyilmaz/neurocomet/ui/design/M3EPostCard.kt:186:28 'val LocalClipboardManager: ProvidableCompositionLocal<ClipboardManager>' is deprecated. Use LocalClipboard instead which supports suspend functions.
+w: file:///C:/Users/bkyil/AndroidStudioProjects/NeuroComet/app/src/main/java/com/kyilmaz/neurocomet/ui/design/M3EPostCard.kt:189:63 Elvis operator (?:) always returns the left operand of non-nullable type 'Boolean'.
+w: file:///C:/Users/bkyil/AndroidStudioProjects/NeuroComet/app/src/main/java/com/kyilmaz/neurocomet/ui/design/M3EPostCard.kt:277:57 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///C:/Users/bkyil/AndroidStudioProjects/NeuroComet/app/src/main/java/com/kyilmaz/neurocomet/ui/design/M3EPostCard.kt:390:39 Elvis operator (?:) always returns the left operand of non-nullable type 'String'.
+
+BUILD SUCCESSFUL in 2m 8s
+8 actionable tasks: 8 executed
+Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.4.0-rc-1/userguide/configuration_cache_enabling.html

@@ -1,0 +1,7 @@
+tr: Added 114 translations
+es: Added 42 translations
+de: Added 114 translations
+fr: Added 114 translations
+pt: Added 114 translations
+
+Done!

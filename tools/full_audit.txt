@@ -1,0 +1,12 @@
+Base English: 1702 entries
+
+=== tr === 1702/1702 (missing: 0)
+
+=== es === 1702/1702 (missing: 0)
+
+=== de === 1702/1702 (missing: 0)
+
+=== fr === 1702/1702 (missing: 0)
+
+=== pt === 1702/1702 (missing: 0)
+

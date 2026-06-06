@@ -1,0 +1,21 @@
+﻿Analyzing flutter_app...                                        
+
+   info - The 'child' argument should be last in widget constructor invocations - lib\screens\home\home_screen.dart:129:15 - sort_child_properties_last
+   info - Unnecessary constructor invocation - lib\screens\notifications\notifications_screen.dart:337:20 - prefer_collection_literals
+warning - The value of the local variable 'theme' isn't used - lib\screens\notifications\notifications_screen.dart:654:11 - unused_local_variable
+warning - Unused import: 'dev_options_screen.dart' - lib\screens\settings\settings_screen.dart:8:8 - unused_import
+   info - The private field _showEasterEggDialog could be 'final' - lib\screens\settings\settings_screen.dart:33:8 - prefer_final_fields
+   info - The private field _isPremium could be 'final' - lib\screens\settings\settings_screen.dart:37:8 - prefer_final_fields
+  error - The expression doesn't evaluate to a function, so it can't be invoked - lib\screens\settings\settings_screen.dart:64:7 - invocation_of_non_function_expression
+warning - The declaration '_showEasterEggDialog' isn't referenced - lib\screens\settings\settings_screen.dart:449:8 - unused_element
+  error - The name '_showEasterEggDialog' is already defined - lib\screens\settings\settings_screen.dart:449:8 - duplicate_definition
+warning - A value for optional parameter 'isActive' isn't ever given - lib\widgets\post\post_card.dart:851:10 - unused_element_parameter
+warning - A value for optional parameter 'activeColor' isn't ever given - lib\widgets\post\post_card.dart:852:10 - unused_element_parameter
+
+flutter : 11 issues found. (ran in 10.4s)
+At line:1 char:66
++ ... dStudioProjects\NeuroComet\flutter_app ; flutter analyze 2>&1 | Out-F ...
++                                              ~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (11 issues found. (ran in 10.4s):String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 

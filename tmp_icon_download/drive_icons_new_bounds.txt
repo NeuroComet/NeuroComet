@@ -1,0 +1,6 @@
+﻿source=2816x1536 segWidth=563
+segment 0 bg=105,107,108 contentCount=96255 bounds=0,0->561,1533
+segment 1 bg=108,110,111 contentCount=96255 bounds=563,0->1124,1533
+segment 2 bg=110,112,113 contentCount=96256 bounds=1126,0->1687,1533
+segment 3 bg=111,113,114 contentCount=95925 bounds=1689,0->2250,1533
+segment 4 bg=111,114,115 contentCount=96126 bounds=2252,0->2813,1533

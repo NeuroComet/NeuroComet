@@ -1,0 +1,38 @@
+﻿Running Gradle task 'assembleDebug'...                          
+flutter : lib/models/custom_avatar.g.dart:35:7: Error: The argument type 'DateTime?' can't be assigned to the parameter type 'DateTime'.
+At line:1 char:90
++ ... _app; $env:LANG='en_US.UTF-8'; flutter build apk --debug *>&1 | Out-F ...
++                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (lib/models/cust...ype 'DateTime'.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ - 'DateTime' is from 'dart:core'.
+      ? null
+      ^
+lib/screens/settings/social_settings_screen.dart:515:66: Error: Member not found: 'categoryKindness'.
+          secondary: const Icon(Icons.favorite, color: AppColors.categoryKindness),
+                                                                 ^^^^^^^^^^^^^^^^
+lib/screens/auth/stay_signed_in_screen.dart:16:19: Error: A value of type 'bool?' can't be assigned to a variable of type 'bool'.
+    return !prefs.getBool(_keyDontShowAgain) == true &&
+                  ^
+lib/screens/auth/stay_signed_in_screen.dart:17:16: Error: A value of type 'bool?' can't be assigned to a variable of type 'bool'.
+        !prefs.getBool(_keyShownOnce) == true;
+               ^
+Target kernel_snapshot_program failed: Exception
+
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:compileFlutterBuildDebug'.
+> Process 'command 'C:\flutter\bin\flutter.bat'' finished with non-zero exit value 1
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 11s
+Running Gradle task 'assembleDebug'...                             12.2s
+Gradle task assembleDebug failed with exit code 1

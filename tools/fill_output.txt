@@ -1,0 +1,5 @@
+﻿values-de: added 710 entries
+values-en-rAU: added 938 entries
+values-en-rCA: added 938 entries
+values-en-rGB: added 938 entries
+Done. Total added: 3524

@@ -1,0 +1,371 @@
+================================================================================
+DETAILED TRANSLATION STATUS REPORT
+================================================================================
+Base strings (values/strings.xml): 1527 translatable strings
+Non-translatable strings (skipped): 5
+================================================================================
+
+Language     Total    Missing    Untranslated   Translated   %       
+--------------------------------------------------------------------------------
+ar           1532     0          147            1385         90.7%
+cs           1532     0          465            1067         69.9%
+da           1532     0          700            832          54.5%
+de           1532     0          437            1095         71.7%
+el           1532     0          605            927          60.7%
+en-rAU       1532     0          1390           142          9.3%
+en-rCA       1532     0          1412           120          7.9%
+en-rGB       1532     0          1399           133          8.7%
+es           1532     0          91             1441         94.4%
+fi           1532     0          676            856          56.1%
+fr           1532     0          315            1217         79.7%
+hi           1532     0          336            1196         78.3%
+hu           1532     0          520            1012         66.3%
+in           1532     0          892            640          41.9%
+is           1532     0          741            791          51.8%
+it           1532     0          503            1029         67.4%
+iw           1532     0          988            544          35.6%
+ja           1532     0          472            1060         69.4%
+ko           1532     0          459            1073         70.3%
+ms           1532     0          270            1262         82.6%
+nb           1532     0          910            622          40.7%
+nl           1532     0          333            1199         78.5%
+pl           1532     0          638            894          58.5%
+pt           1532     0          397            1135         74.3%
+ro           1532     0          479            1053         69.0%
+ru           1532     0          292            1240         81.2%
+sv           1532     0          433            1099         72.0%
+th           1532     0          866            666          43.6%
+tr           1532     0          282            1250         81.9%
+uk           1532     0          753            779          51.0%
+ur           1532     0          428            1104         72.3%
+vi           1532     0          805            727          47.6%
+zh           1532     0          436            1096         71.8%
+
+================================================================================
+LANGUAGES REQUIRING ATTENTION (more than 100 untranslated strings)
+================================================================================
+
+
+AR - 147 strings need translation:
+----------------------------------------
+  [about]: about_tagline, about_version
+  [beta]: beta_feedback_button, beta_feedback_prompt, beta_version_notice, beta_welcome_title
+  [create]: create_story_choose_type, create_story_preview_content_description, create_story_understood, create_story_url_placeholder
+  [delete]: delete_post_message, delete_post_title
+  [explore]: explore_online_now
+  [game]: game_emotion_garden_hint, game_stim_sequencer_hint
+  [mood]: mood_calm, mood_celebrating, mood_happy, mood_inspired, mood_mind_blown ... +3 more
+  [neuro]: neuro_state_cinnamon_bun, neuro_state_cinnamon_bun_desc
+  [post]: post_action_comment, post_action_like, post_action_save, post_action_share, post_add_more_media ... +20 more
+
+CS - 465 strings need translation:
+----------------------------------------
+  [about]: about_tagline, about_version
+  [avatar]: avatar_style_pixel
+  [beta]: beta_feedback_prompt, beta_version_notice
+  [create]: create_story_choose_type, create_story_image_url_hint, create_story_preview_content_description, create_story_url_placeholder
+  [dm]: dm_flagged_badge, dm_flagged_explainer, dm_kids_disabled_body, dm_kids_disabled_title, dm_message_placeholder ... +10 more
+  [easter]: easter_egg_welcome_back
+  [expand]: expand_category
+  [explore]: explore_topic_stimming, explore_trans
+  [feedback]: feedback_bug_title_hint, feedback_bug_title_label, feedback_category_label, feedback_coming_soon, feedback_community_note ... +17 more
+
+DA - 700 strings need translation:
+----------------------------------------
+  [about]: about_tagline, about_version
+  [avatar]: avatar_background_gradient, avatar_style_pixel
+  [beta]: beta_feedback_button, beta_feedback_prompt, beta_version_notice, beta_welcome_title
+  [comments]: comments_send_button_description
+  [create]: create_post_chars_over, create_post_chars_remaining, create_post_how_feeling, create_post_image_url, create_post_image_url_hint ... +24 more
+  [delete]: delete_post_message, delete_post_title
+  [dm]: dm_block_confirm_body, dm_block_confirm_title, dm_blocked_banner, dm_conversation_count, dm_conversation_options ... +5 more
+
+DE - 437 strings need translation:
+----------------------------------------
+  [about]: about_tagline, about_version
+  [beta]: beta_feedback_prompt, beta_version_notice
+  [create]: create_story_choose_type, create_story_preview_content_description, create_story_url_placeholder
+  [event]: event_live
+  [explore]: explore_bipolar, explore_depression, explore_topic_gaming, explore_topic_queer_pride, explore_topic_stimming ... +3 more
+  [feed]: feed_title
+  [feedback]: feedback_roadmap_tab
+  [game]: game_color_flow_hint, game_constellation_connect, game_constellation_connect_desc, game_constellation_connect_hint, game_emotion_garden ... +24 more
+  [image]: image_edit_text, image_editor_enter_text, image_editor_type_text
+
+EL - 605 strings need translation:
+----------------------------------------
+  [about]: about_tagline, about_version
+  [auth]: auth_email_label
+  [avatar]: avatar_style_pixel
+  [beta]: beta_feedback_button, beta_feedback_prompt, beta_version_notice, beta_welcome_title
+  [create]: create_post_chars_over, create_post_chars_remaining, create_post_content_warning, create_post_content_warning_desc, create_post_discard ... +11 more
+  [easter]: easter_egg_rainbow_unlocked
+  [explore]: explore_members, explore_section_daily_living, explore_section_family, explore_section_health, explore_section_interests ... +20 more
+
+EN-RAU - 1390 strings need translation:
+----------------------------------------
+  [about]: about_tagline, about_version
+  [accessibility]: accessibility_not_selected, accessibility_selected
+  [action]: action_archive, action_copy, action_delete_chat, action_react, action_retry ... +1 more
+  [ads]: ads_disabled_kids, ads_error_load_failed, ads_loading, ads_rewarded_complete
+  [auth]: auth_2fa_code_label, auth_2fa_description, auth_2fa_title, auth_2fa_verify, auth_app_tagline ... +29 more
+  [avatar]: avatar_accessories_glasses, avatar_accessories_headphones
+
+EN-RCA - 1412 strings need translation:
+----------------------------------------
+  [about]: about_tagline, about_version
+  [accessibility]: accessibility_not_selected, accessibility_selected
+  [action]: action_archive, action_copy, action_delete_chat, action_react, action_retry ... +1 more
+  [ads]: ads_disabled_kids, ads_error_load_failed, ads_loading, ads_rewarded_complete
+  [auth]: auth_2fa_code_label, auth_2fa_description, auth_2fa_title, auth_2fa_verify, auth_app_tagline ... +29 more
+  [avatar]: avatar_accessories_glasses, avatar_accessories_headphones
+
+EN-RGB - 1399 strings need translation:
+----------------------------------------
+  [about]: about_tagline, about_version
+  [accessibility]: accessibility_not_selected, accessibility_selected
+  [action]: action_archive, action_copy, action_delete_chat, action_react, action_retry ... +1 more
+  [ads]: ads_disabled_kids, ads_error_load_failed, ads_loading, ads_rewarded_complete
+  [auth]: auth_2fa_code_label, auth_2fa_description, auth_2fa_title, auth_2fa_verify, auth_app_tagline ... +29 more
+  [avatar]: avatar_accessories_glasses, avatar_accessories_headphones
+
+FI - 676 strings need translation:
+----------------------------------------
+  [create]: create_post_chars_over, create_post_chars_remaining, create_post_image_url, create_post_image_url_hint, create_post_video_url ... +16 more
+  [delete]: delete_post_message, delete_post_title
+  [dm]: dm_block_confirm_body, dm_block_confirm_title, dm_blocked_banner, dm_conversation_count, dm_conversation_options ... +16 more
+  [easter]: easter_egg_secret_unlocked, easter_egg_welcome_back
+  [event]: event_live
+  [expand]: expand_category
+  [explore]: explore_section_daily_living, explore_section_family
+
+FR - 315 strings need translation:
+----------------------------------------
+  [about]: about_tagline, about_version
+  [avatar]: avatar_expression_title, avatar_style_photo, avatar_style_pixel
+  [beta]: beta_feedback_prompt, beta_version_notice
+  [community]: community_share, community_turn_on_notifications
+  [create]: create_post_image_url_hint, create_post_video_url_hint, create_story_choose_type, create_story_preview_content_description, create_story_text_preview ... +2 more
+  [dm]: dm_conversation_count, dm_conversations_count, dm_message_placeholder, dm_title
+  [explore]: explore_view_compact, explore_view_standard
+  [feedback]: feedback_description, feedback_feature_desc_label, feedback_votes
+  [filter]: filter_mentions
+  [game]: game_constellation_connect, game_constellation_connect_desc, game_constellation_connect_hint, game_emotion_garden_hint, game_fidget_spinner ... +12 more
+  [icon]: icon_applied, icon_customization_subtitle
+  [image]: image_edit_saturation, image_editor_enter_text, image_editor_type_text
+  [messages]: messages_empty_hint, messages_empty_subtitle
+
+HI - 336 strings need translation:
+----------------------------------------
+  [create]: create_story_choose_type, create_story_create_text, create_story_gradient_backgrounds, create_story_message_label, create_story_message_placeholder ... +7 more
+  [dm]: dm_reply_to_placeholder, dm_search_conversations_placeholder
+  [easter]: easter_egg_rainbow_unlocked
+  [explore]: explore_view_compact, explore_view_grid, explore_view_large, explore_view_standard
+  [icon]: icon_applied, icon_customization_subtitle, icon_customization_title, icon_style_calm, icon_style_calm_desc ... +9 more
+  [image]: image_edit_add_text, image_edit_adjust, image_edit_brightness, image_edit_contrast, image_edit_crop ... +11 more
+  [mock]: mock_dm_conv1_msg1
+
+HU - 520 strings need translation:
+----------------------------------------
+  [avatar]: avatar_style_pixel
+  [create]: create_post_image_url, create_post_image_url_hint, create_post_video_url, create_post_video_url_hint, create_story_choose_type ... +6 more
+  [explore]: explore_nonbinary, explore_people, explore_section_daily_living, explore_section_family, explore_section_health ... +33 more
+
+IN - 892 strings need translation:
+----------------------------------------
+  [auth]: auth_email_label
+  [avatar]: avatar_style_pixel
+  [button]: button_edit
+  [community]: community_reported_toast, community_rules_coming_soon, community_saved_toast, community_turn_on_notifications
+  [create]: create_post_add_image, create_post_add_video, create_post_cancel, create_post_chars_over, create_post_chars_remaining ... +30 more
+  [delete]: delete_post_message, delete_post_title
+  [dm]: dm_back, dm_block_confirm_body, dm_block_confirm_title, dm_block_user, dm_blocked_banner ... +1 more
+
+IS - 741 strings need translation:
+----------------------------------------
+  [about]: about_tagline, about_version
+  [avatar]: avatar_style_pixel
+  [beta]: beta_feedback_button, beta_feedback_prompt, beta_version_notice, beta_welcome_title
+  [comments]: comments_add_comment_placeholder, comments_send_button_description
+  [create]: create_post_add_media, create_post_cancel, create_post_chars_over, create_post_chars_remaining, create_post_close ... +30 more
+  [delete]: delete_post_message, delete_post_title
+  [dm]: dm_back, dm_block_confirm_body, dm_block_confirm_title, dm_block_user
+
+IT - 503 strings need translation:
+----------------------------------------
+  [auth]: auth_email_label, auth_password_label
+  [avatar]: avatar_style_pixel
+  [collapse]: collapse_category
+  [comments]: comments_add_comment_placeholder, comments_send_button_description
+  [create]: create_post_chars_over, create_post_hint, create_post_image_url_hint, create_post_share_thoughts, create_post_video_url_hint ... +18 more
+  [dm]: dm_block_confirm_body, dm_block_confirm_title, dm_blocked_banner, dm_conversation_count, dm_conversation_options ... +14 more
+  [easter]: easter_egg_rainbow_unlocked, easter_egg_secret_unlocked
+
+IW - 988 strings need translation:
+----------------------------------------
+  [auth]: auth_email_placeholder
+  [badges]: badges_back_button_description, badges_earned_section_title, badges_locked_section_title, badges_screen_title
+  [collapse]: collapse_category
+  [comments]: comments_add_comment_placeholder, comments_send_button_description, comments_view_all
+  [community]: community_more_options, community_mute_notifications, community_notifications_muted_toast, community_notifications_on_toast, community_report ... +7 more
+  [create]: create_post_add_image, create_post_add_video, create_post_cancel, create_post_chars_over, create_post_chars_remaining ... +24 more
+
+JA - 472 strings need translation:
+----------------------------------------
+  [create]: create_post_chars_over, create_post_image_url_hint, create_post_video_url_hint, create_story_add_button, create_story_cancel ... +7 more
+  [dm]: dm_block_confirm_body, dm_block_confirm_title, dm_blocked_banner, dm_conversation_count, dm_conversation_options ... +14 more
+  [easter]: easter_egg_rainbow_unlocked, easter_egg_secret_unlocked, easter_egg_welcome_back
+  [expand]: expand_category
+  [explore]: explore_view_compact, explore_view_grid, explore_view_large, explore_view_standard
+  [game]: game_constellation_connect, game_constellation_connect_desc, game_constellation_connect_hint, game_emotion_garden_hint, game_mood_mixer ... +6 more
+
+KO - 459 strings need translation:
+----------------------------------------
+  [auth]: auth_email_placeholder
+  [create]: create_post_chars_over, create_post_image_url_hint, create_post_video_url_hint, create_story_add_button, create_story_background_color ... +16 more
+  [dm]: dm_reply_to_placeholder
+  [easter]: easter_egg_rainbow_unlocked
+  [explore]: explore_view_compact, explore_view_grid, explore_view_large, explore_view_standard
+  [game]: game_constellation_connect, game_constellation_connect_desc, game_constellation_connect_hint, game_emotion_garden_hint, game_mood_mixer ... +11 more
+  [icon]: icon_applied, icon_customization_subtitle
+  [image]: image_edit_add_text, image_edit_adjust, image_edit_brightness, image_edit_contrast
+
+MS - 270 strings need translation:
+----------------------------------------
+  [avatar]: avatar_edit
+  [button]: button_edit
+  [create]: create_story_choose_type, create_story_preview_content_description, create_story_share_button, create_story_url_placeholder
+  [explore]: explore_bipolar, explore_popular, explore_topic_masking, explore_topic_stimming, explore_topic_trans_nd ... +4 more
+  [feedback]: feedback_community_note
+  [game]: game_fidget_spinner
+  [member]: member_role_moderator, member_role_veteran
+  [mock]: mock_dm_hey, mock_notif_badge_msg, mock_notif_badge_title, mock_notif_filtered_msg, mock_notif_filtered_title ... +26 more
+
+NB - 910 strings need translation:
+----------------------------------------
+  [avatar]: avatar_background_gradient
+  [comments]: comments_send_button_description
+  [community]: community_reported_toast
+  [create]: create_post_add_image, create_post_add_video, create_post_chars_over, create_post_chars_remaining, create_post_content_warning_desc ... +24 more
+  [delete]: delete_post_message, delete_post_title
+  [dm]: dm_block_confirm_body, dm_block_confirm_title, dm_blocked_banner, dm_conversation_count, dm_conversation_options ... +11 more
+
+NL - 333 strings need translation:
+----------------------------------------
+  [about]: about_tagline, about_version
+  [avatar]: avatar_style_abstract, avatar_style_pixel
+  [beta]: beta_feedback_button, beta_feedback_prompt, beta_version_notice, beta_welcome_title
+  [create]: create_post_add_media, create_post_chars_over, create_post_chars_remaining, create_post_close, create_post_content_warning ... +20 more
+  [debug]: debug_tools_title
+  [delete]: delete_post_message, delete_post_title
+  [dm]: dm_reply_to_placeholder, dm_search_conversations_placeholder
+  [easter]: easter_egg_rainbow_unlocked
+  [event]: event_live
+  [explore]: explore_communities, explore_online_now, explore_topic_ace_aro, explore_topic_gaming, explore_topic_queer_pride ... +5 more
+
+PL - 638 strings need translation:
+----------------------------------------
+  [avatar]: avatar_background_gradient, avatar_style_pixel
+  [create]: create_post_chars_over, create_post_chars_remaining, create_post_content_warning_desc, create_post_how_feeling, create_post_image_url ... +24 more
+  [delete]: delete_post_message, delete_post_title
+  [dm]: dm_block_confirm_body, dm_block_confirm_title, dm_blocked_banner, dm_conversation_count, dm_conversation_options ... +12 more
+
+PT - 397 strings need translation:
+----------------------------------------
+  [about]: about_tagline, about_version
+  [avatar]: avatar_style_pixel
+  [beta]: beta_feedback_button, beta_feedback_prompt, beta_version_notice, beta_welcome_title
+  [create]: create_story_choose_type, create_story_preview_content_description, create_story_url_placeholder
+  [dm]: dm_reply_to_placeholder
+  [easter]: easter_egg_rainbow_unlocked, easter_egg_secret_unlocked, easter_egg_welcome_back
+  [event]: event_book_club_time, event_game_night_time, event_mindfulness_time, event_qa, event_qa_time ... +1 more
+  [expand]: expand_category
+  [explore]: explore_bipolar, explore_members, explore_online_now, explore_popular, explore_posts ... +21 more
+  [feed]: feed_title
+  [feedback]: feedback_roadmap_tab
+  [game]: game_fidget_spinner
+
+RO - 479 strings need translation:
+----------------------------------------
+  [avatar]: avatar_background_gradient, avatar_expression_calm, avatar_style_abstract, avatar_style_pixel
+  [create]: create_story_choose_type, create_story_preview_content_description, create_story_url_placeholder
+  [explore]: explore_autism, explore_bipolar, explore_members, explore_section_family, explore_section_health ... +38 more
+
+RU - 292 strings need translation:
+----------------------------------------
+  [about]: about_tagline, about_version
+  [beta]: beta_feedback_button, beta_feedback_prompt, beta_version_notice, beta_welcome_title
+  [create]: create_story_choose_type, create_story_preview_content_description, create_story_url_placeholder
+  [mock]: mock_dm_conv1_msg1, mock_dm_conv1_msg2, mock_dm_conv2_msg1, mock_dm_conv2_msg2, mock_dm_conv3_msg1 ... +36 more
+
+SV - 433 strings need translation:
+----------------------------------------
+  [about]: about_tagline, about_version
+  [avatar]: avatar_background_gradient
+  [beta]: beta_feedback_prompt, beta_version_notice
+  [create]: create_post_add_media, create_post_chars_over, create_post_chars_remaining, create_post_close, create_post_content_warning ... +19 more
+  [delete]: delete_post_message, delete_post_title
+  [dm]: dm_reply_to_placeholder, dm_search_conversations_placeholder
+  [easter]: easter_egg_rainbow_unlocked
+  [event]: event_live, event_mindfulness
+  [explore]: explore_autism, explore_depression, explore_online_now, explore_topic_gaming, explore_topic_queer_pride ... +5 more
+  [feedback]: feedback_severity_medium
+  [game]: game_constellation_connect, game_constellation_connect_desc, game_constellation_connect_hint
+
+TH - 866 strings need translation:
+----------------------------------------
+  [auth]: auth_email_placeholder
+  [community]: community_notifications_muted_toast, community_notifications_on_toast, community_reported_toast, community_rules, community_rules_coming_soon ... +4 more
+  [create]: create_post_add_image, create_post_add_video, create_post_chars_over, create_post_chars_remaining, create_post_content_warning ... +26 more
+  [delete]: delete_post_message, delete_post_title
+  [dm]: dm_block_confirm_body, dm_block_confirm_title, dm_blocked_banner, dm_conversation_count, dm_conversation_options ... +2 more
+
+TR - 282 strings need translation:
+----------------------------------------
+  [create]: create_post_chars_over, create_post_chars_remaining, create_post_content_warning, create_post_content_warning_desc, create_post_image_url ... +4 more
+  [delete]: delete_post_message, delete_post_title
+  [easter]: easter_egg_rainbow_unlocked
+  [explore]: explore_bipolar, explore_nonbinary, explore_topic_stimming, explore_trans, explore_view_compact ... +3 more
+  [game]: game_infinity_draw_hint, game_pattern_tap_hint, game_sensory_rain_hint
+  [icon]: icon_applied, icon_customization_subtitle, icon_customization_title, icon_style_calm, icon_style_calm_desc ... +9 more
+  [image]: image_edit_add_text, image_edit_adjust, image_edit_brightness, image_edit_contrast, image_edit_crop ... +8 more
+
+UK - 753 strings need translation:
+----------------------------------------
+  [community]: community_notifications_muted_toast, community_notifications_on_toast, community_reported_toast, community_rules_coming_soon, community_save ... +2 more
+  [create]: create_post_add_image, create_post_add_video, create_post_chars_over, create_post_chars_remaining, create_post_content_warning ... +25 more
+  [delete]: delete_post_message, delete_post_title
+  [dm]: dm_message_placeholder
+  [easter]: easter_egg_rainbow_unlocked
+  [event]: event_book_club, event_book_club_time, event_game_night, event_game_night_time, event_join ... +4 more
+
+UR - 428 strings need translation:
+----------------------------------------
+  [about]: about_tagline, about_version
+  [beta]: beta_feedback_button, beta_feedback_prompt, beta_version_notice, beta_welcome_title
+  [create]: create_story_choose_type, create_story_create_text, create_story_gradient_backgrounds, create_story_message_label, create_story_message_placeholder ... +7 more
+  [dm]: dm_reply_to_placeholder, dm_search_conversations_placeholder
+  [easter]: easter_egg_rainbow_unlocked
+  [error]: error_content_unavailable, error_data_safe, error_empty_message, error_empty_title, error_feature_unavailable ... +7 more
+  [explore]: explore_view_compact, explore_view_grid, explore_view_large, explore_view_standard
+  [feedback]: feedback_bug_submitted_title, feedback_bug_title_hint, feedback_bug_title_label, feedback_category_label, feedback_coming_soon ... +8 more
+
+VI - 805 strings need translation:
+----------------------------------------
+  [auth]: auth_email_label
+  [avatar]: avatar_style_pixel
+  [community]: community_notifications_muted_toast, community_notifications_on_toast, community_reported_toast, community_rules, community_rules_coming_soon ... +4 more
+  [create]: create_post_add_image, create_post_add_video, create_post_chars_over, create_post_chars_remaining, create_post_content_warning ... +26 more
+  [delete]: delete_post_message, delete_post_title
+  [dm]: dm_block_confirm_body, dm_block_confirm_title, dm_blocked_banner, dm_conversation_count, dm_conversation_options ... +1 more
+
+ZH - 436 strings need translation:
+----------------------------------------
+  [auth]: auth_email_placeholder
+  [create]: create_post_image_url_hint, create_post_video_url_hint, create_story_choose_type, create_story_duration_hint, create_story_image_url_hint ... +2 more
+  [game]: game_constellation_connect, game_constellation_connect_desc, game_constellation_connect_hint, game_emotion_garden_hint, game_mood_mixer ... +11 more
+  [icon]: icon_applied, icon_customization_subtitle
+  [image]: image_edit_add_text, image_edit_adjust, image_edit_brightness, image_edit_contrast, image_edit_crop ... +11 more
+  [like]: like_button_content_description
+  [messages]: messages_empty_hint, messages_filtering_unread, messages_no_results_subtitle, messages_no_results_title
+  [mock]: mock_dm_conv1_msg1, mock_dm_conv1_msg2, mock_dm_conv2_msg1
