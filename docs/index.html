@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NeuroComet | A Universe Built for Your Mind</title>
+    <title>NeuroComet — A Safe, Sensory-Friendly Social Space</title>
 
     <script>
-        // Check Dark Mode
+        // Check local storage or preference for theme, using extremely soft dark/light profiles
         if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             document.documentElement.classList.add('dark');
         } else {
@@ -14,313 +14,260 @@
         }
     </script>
 
+    <!-- Google Fonts: Atkinson Hyperlegible for Low Vision & Dyslexia Legibility, Inter for Body -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons (calming and simple versions) -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
     <script>
         tailwind.config = {
             darkMode: 'class',
             theme: {
                 extend: {
-                    fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] },
-                    colors: { brand: { 50: '#f0f5ff', 500: '#3b82f6', 600: '#2563eb', 900: '#0f172a' } },
-                    animation: { 'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite' },
+                    fontFamily: {
+                        sans: ['"Atkinson Hyperlegible"', '"Inter"', 'sans-serif'],
+                        body: ['"Inter"', 'sans-serif']
+                    },
+                    colors: {
+                        // Highly intentional, calming, muted palette
+                        cream: {
+                            50: '#fcfbf9',
+                            100: '#faf9f5', // Main light background (soft warm ivory)
+                            200: '#f4f2ea', // Subtle borders & secondary panels
+                            900: '#1a1d24'  // Main dark background (soft dark slate)
+                        },
+                        slatecustom: {
+                            100: '#e2e8f0',
+                            300: '#94a3b8',
+                            600: '#526b80', // Muted blue accent
+                            700: '#3e5263',
+                            800: '#2d3135', // Main charcoal text (light mode)
+                            900: '#1a1d24'
+                        },
+                        sage: {
+                            50: '#f3f6f4',
+                            100: '#e7ede9',
+                            200: '#cedcd1',
+                            500: '#5e7364', // Calming sage accent
+                            600: '#4d5f52'
+                        }
+                    }
                 }
             }
         }
     </script>
+
     <style>
-        .glass-panel { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(229, 231, 235, 0.5); }
-        .dark .glass-panel { background: rgba(15, 23, 42, 0.8); border-bottom: 1px solid rgba(51, 65, 85, 0.5); }
-        .text-gradient { background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .bg-pride-gradient { background: linear-gradient(45deg, #ef4444, #f59e0b, #10b981, #3b82f6, #8b5cf6); }
-        .bento-card { transition: transform 0.3s ease, box-shadow 0.3s ease; }
-        .bento-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px -10px rgba(0,0,0,0.1); }
-        .dark .bento-card:hover { box-shadow: 0 20px 40px -10px rgba(0,0,0,0.4); }
-        .fade-text { transition: opacity 0.3s ease; }
+        /* General custom styles to enforce no-noise, generous spacing, and accessibility */
+        body {
+            font-size: 1.125rem; /* Large, readable baseline font size (18px) */
+            line-height: 1.8;    /* Generous line-spacing */
+            letter-spacing: 0.01em;
+        }
+        h1, h2, h3, h4 {
+            letter-spacing: -0.02em;
+            line-height: 1.3;
+        }
+        .focus-outline:focus-within {
+            outline: 2px solid #5e7364;
+            outline-offset: 2px;
+        }
+        /* Smooth transitions without motion triggering */
+        .fade-transition {
+            transition: opacity 0.25s ease-in-out, background-color 0.25s ease-in-out;
+        }
     </style>
 </head>
-<body class="font-sans text-gray-800 dark:text-gray-200 antialiased bg-[#f8fafc] dark:bg-gray-900 selection:bg-brand-500 selection:text-white overflow-x-hidden transition-colors duration-300">
+<body class="bg-cream-100 text-slatecustom-800 dark:bg-cream-900 dark:text-gray-200 antialiased overflow-x-hidden selection:bg-sage-200 selection:text-sage-600 transition-colors duration-300">
 
-<div id="translation-container" class="fade-text">
-
-    <nav class="fixed w-full z-50 glass-panel transition-all duration-300">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-20">
-                <div class="flex-shrink-0 flex items-center gap-3 cursor-pointer group">
-                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-brand-500 to-purple-600 flex items-center justify-center text-white shadow-lg group-hover:scale-105 transition-transform duration-300">
-                        <i class="fa-solid fa-meteor text-2xl"></i>
-                    </div>
-                    <span class="font-extrabold text-2xl tracking-tight text-gray-900 dark:text-white">NeuroComet</span>
-                </div>
-                <div class="hidden lg:flex space-x-8 items-center bg-gray-900/5 dark:bg-white/5 px-6 py-2.5 rounded-full border border-gray-900/10 dark:border-white/10">
-                    <a href="#ecosystem" class="text-sm font-semibold text-gray-600 dark:text-gray-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" data-i18n="nav_eco">Ecosystem</a>
-                    <a href="#safety" class="text-sm font-semibold text-gray-600 dark:text-gray-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" data-i18n="nav_safety">Safety</a>
-                    <a href="#global" class="text-sm font-semibold text-gray-600 dark:text-gray-300 hover:text-brand-600 dark:hover:text-brand-400 transition-colors" data-i18n="nav_global">Global</a>
-                </div>
-                <div class="flex items-center gap-4">
-                    <button id="theme-toggle" type="button" class="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full text-lg p-2.5 transition-colors">
-                        <i id="theme-toggle-dark-icon" class="fa-solid fa-moon hidden"></i>
-                        <i id="theme-toggle-light-icon" class="fa-solid fa-sun hidden"></i>
-                    </button>
-                    <a href="#download" class="hidden md:block bg-gray-900 dark:bg-brand-600 hover:bg-brand-600 dark:hover:bg-brand-500 text-white px-6 py-3 rounded-xl font-bold text-sm transition-all shadow-md hover:shadow-xl hover:-translate-y-0.5" data-i18n="nav_cta">Join Orbit (Soon)</a>
-                </div>
-            </div>
-        </div>
-    </nav>
-
-    <section class="relative pt-40 pb-20 lg:pt-52 lg:pb-32 overflow-hidden">
-        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full max-w-7xl pointer-events-none -z-10">
-            <div class="absolute top-20 left-0 w-[500px] h-[500px] bg-blue-400/20 dark:bg-brand-600/20 rounded-full blur-[100px] animate-pulse-slow"></div>
-            <div class="absolute top-40 right-0 w-[400px] h-[400px] bg-purple-400/20 dark:bg-purple-600/20 rounded-full blur-[100px] animate-pulse-slow" style="animation-delay: 2s;"></div>
-        </div>
-
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="text-center max-w-4xl mx-auto">
-                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 dark:bg-gray-800/80 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 font-semibold text-xs mb-8 shadow-sm backdrop-blur-sm">
-                        <span class="flex h-2 w-2 relative">
-                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                            <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-                        </span>
-                    <span data-i18n="hero_badge">Now expanding to iOS via Flutter</span>
-                </div>
-                <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-8 text-gray-900 dark:text-white leading-[1.1]" data-i18n="hero_title">
-                    Your Digital Environment,<br /><span class="text-gradient">Rewired for You.</span>
-                </h1>
-                <p class="text-xl text-gray-500 dark:text-gray-400 mb-12 max-w-2xl mx-auto leading-relaxed font-medium" data-i18n="hero_subtitle">
-                    Experience an adaptive ecosystem featuring dynamic sensory themes, AI-driven communication practice, and a secure social space.
-                </p>
-
-                <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
-                    <button class="w-64 h-16 flex items-center justify-center gap-4 bg-gray-900 dark:bg-black text-white border-2 border-gray-900 dark:border-black rounded-2xl transition-all shadow-xl hover:shadow-2xl hover:-translate-y-1 cursor-default">
-                        <i class="fa-brands fa-google-play text-3xl opacity-50"></i>
-                        <div class="text-start flex flex-col justify-center">
-                            <span class="text-[10px] font-normal opacity-80 uppercase tracking-wider leading-none mb-1 text-brand-400" data-i18n="btn_gp_sub">Hyperfixating soon on</span>
-                            <span class="text-lg font-bold leading-none">Google Play</span>
-                        </div>
-                    </button>
-                    <button class="w-64 h-16 flex items-center justify-center gap-4 bg-white dark:bg-gray-800 text-gray-900 dark:text-white border-2 border-gray-200 dark:border-gray-700 rounded-2xl transition-all shadow-sm hover:shadow-lg hover:-translate-y-1 cursor-default">
-                        <i class="fa-brands fa-apple text-3xl opacity-50"></i>
-                        <div class="text-start flex flex-col justify-center">
-                            <span class="text-[10px] font-bold text-brand-600 dark:text-brand-400 uppercase tracking-wider leading-none mb-1" data-i18n="btn_as_sub">Conserving spoons for</span>
-                            <span class="text-lg font-bold leading-none">App Store</span>
-                        </div>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="ecosystem" class="py-24 bg-white dark:bg-gray-900 relative rounded-[3rem] shadow-[0_-20px_60px_-15px_rgba(0,0,0,0.05)] dark:shadow-[0_-20px_60px_-15px_rgba(0,0,0,0.3)] transition-colors duration-300">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="mb-16">
-                <h2 class="text-4xl font-extrabold text-gray-900 dark:text-white mb-4 tracking-tight" data-i18n="eco_title">The NeuroComet Ecosystem</h2>
-                <p class="text-xl text-gray-500 dark:text-gray-400" data-i18n="eco_sub">Every feature is architected from the ground up for accessibility, safety, and growth.</p>
+<!-- Navigation Bar -->
+<nav class="border-b border-cream-200 dark:border-gray-800 bg-cream-50/80 dark:bg-cream-900/80 backdrop-blur-md fixed w-full z-50 transition-colors duration-300">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+        <a href="#" class="flex items-center gap-3 group focus:outline-none focus:ring-2 focus:ring-sage-500 rounded-lg p-1">
+            <span class="w-8 h-8 rounded-lg bg-sage-500 text-cream-100 flex items-center justify-center font-bold text-lg shadow-sm">
+                <i class="fa-solid fa-meteor text-sm"></i>
+            </span>
+            <span class="font-bold text-xl tracking-tight text-slatecustom-800 dark:text-gray-100">NeuroComet</span>
+        </a>
+        <div class="flex items-center gap-4">
+            <!-- Language Selector -->
+            <div class="relative inline-block text-left">
+                <select id="lang-select" aria-label="Select language" onchange="changeLanguage(this.value)" class="bg-cream-50 dark:bg-gray-800 text-sm font-medium text-slatecustom-800 dark:text-gray-200 border border-cream-200 dark:border-gray-700 rounded-lg px-2.5 py-1.5 cursor-pointer focus:outline-none focus:ring-2 focus:ring-sage-500">
+                    <option value="en">English</option>
+                    <option value="es">Español</option>
+                    <option value="fr">Français</option>
+                    <option value="de">Deutsch</option>
+                    <option value="ja">日本語</option>
+                    <option value="ko">한국어</option>
+                    <option value="ar">العربية</option>
+                    <option value="tr">Türkçe</option>
+                </select>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 auto-rows-[280px]">
-                <div class="bento-card bg-gray-50 dark:bg-gray-800 rounded-3xl p-8 border border-gray-100 dark:border-gray-700 col-span-1 md:col-span-2 lg:col-span-2 row-span-1 md:row-span-2 flex flex-col relative overflow-hidden group transition-colors">
-                    <div class="relative z-10 flex-grow">
-                        <div class="w-12 h-12 bg-white dark:bg-gray-700 rounded-xl shadow-sm flex items-center justify-center mb-6 transition-colors">
-                            <i class="fa-solid fa-palette text-xl text-brand-600 dark:text-brand-400"></i>
-                        </div>
-                        <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-3" data-i18n="bento1_title">Adaptive Sensory Themes</h3>
-                        <p class="text-gray-600 dark:text-gray-300 mb-6 max-w-sm" data-i18n="bento1_desc">Switch UI profiles seamlessly. We dynamically alter contrast, fonts, and motion to match your current cognitive state.</p>
-                    </div>
-                    <div class="w-full bg-white dark:bg-gray-900 rounded-t-2xl shadow-xl border border-gray-200 dark:border-gray-700 p-4 mt-auto transition-colors duration-500" id="theme-preview-box">
-                        <div class="flex gap-2 mb-4">
-                            <button onclick="setBentoTheme('calm')" class="w-8 h-8 rounded-full bg-teal-500 ring-2 ring-offset-2 dark:ring-offset-gray-900 ring-transparent hover:ring-teal-500 transition-all"></button>
-                            <button onclick="setBentoTheme('focus')" class="w-8 h-8 rounded-full bg-indigo-500 ring-2 ring-offset-2 dark:ring-offset-gray-900 ring-transparent hover:ring-indigo-500 transition-all"></button>
-                            <button onclick="setBentoTheme('energy')" class="w-8 h-8 rounded-full bg-amber-500 ring-2 ring-offset-2 dark:ring-offset-gray-900 ring-transparent hover:ring-amber-500 transition-all"></button>
-                            <button onclick="setBentoTheme('pride')" class="w-8 h-8 rounded-full bg-pride-gradient ring-2 ring-offset-2 dark:ring-offset-gray-900 ring-transparent hover:ring-pink-500 transition-all"></button>
-                        </div>
-                        <div class="h-4 w-3/4 rounded-md bg-gray-100 dark:bg-gray-800 mb-2 bento-element transition-colors"></div>
-                        <div class="h-4 w-1/2 rounded-md bg-gray-100 dark:bg-gray-800 bento-element transition-colors"></div>
-                    </div>
-                </div>
-
-                <div class="bento-card bg-orange-50 dark:bg-orange-900/20 rounded-3xl p-8 border border-orange-100 dark:border-orange-900/50 col-span-1 md:col-span-1 lg:col-span-1 row-span-1 flex flex-col relative overflow-hidden transition-colors">
-                    <i class="fa-solid fa-spoon absolute -right-4 -bottom-4 text-9xl text-orange-500/10 dark:text-orange-500/20 rotate-[-15deg]"></i>
-                    <div class="w-12 h-12 bg-white dark:bg-gray-800 rounded-xl shadow-sm flex items-center justify-center mb-6 relative z-10 transition-colors">
-                        <i class="fa-solid fa-battery-three-quarters text-xl text-orange-500"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2 relative z-10" data-i18n="bento2_title">Spoon Tracking</h3>
-                    <p class="text-gray-600 dark:text-gray-300 text-sm relative z-10" data-i18n="bento2_desc">Monitor daily energy levels with home screen widgets. Track stim breaks and mood fluctuations instantly.</p>
-                </div>
-
-                <div class="bento-card bg-emerald-50 dark:bg-emerald-900/20 rounded-3xl p-8 border border-emerald-100 dark:border-emerald-900/50 col-span-1 md:col-span-1 lg:col-span-1 row-span-1 flex flex-col relative overflow-hidden transition-colors">
-                    <i class="fa-solid fa-gamepad absolute -right-4 -top-4 text-9xl text-emerald-500/10 dark:text-emerald-500/20 rotate-[15deg]"></i>
-                    <div class="w-12 h-12 bg-white dark:bg-gray-800 rounded-xl shadow-sm flex items-center justify-center mb-6 relative z-10 transition-colors">
-                        <i class="fa-solid fa-puzzle-piece text-xl text-emerald-500"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2 relative z-10" data-i18n="bento3_title">NeuroGames</h3>
-                    <p class="text-gray-600 dark:text-gray-300 text-sm relative z-10" data-i18n="bento3_desc">Interactive tutorials and gamified coping mechanisms built natively to assist with focus and emotional regulation.</p>
-                </div>
-
-                <div class="bento-card bg-gray-900 dark:bg-black text-white rounded-3xl p-8 border border-gray-800 dark:border-gray-800 col-span-1 md:col-span-2 lg:col-span-2 row-span-1 relative overflow-hidden group">
-                    <div class="absolute right-0 top-0 w-64 h-full bg-gradient-to-l from-brand-600/30 to-transparent pointer-events-none"></div>
-                    <div class="flex items-center gap-4 mb-6">
-                        <div class="w-12 h-12 bg-gray-800 rounded-xl flex items-center justify-center border border-gray-700">
-                            <i class="fa-solid fa-phone-volume text-xl text-brand-400 animate-pulse"></i>
-                        </div>
-                        <div class="text-xs font-bold tracking-wider text-brand-400 uppercase bg-brand-400/10 px-3 py-1 rounded-full" data-i18n="bento4_badge">Gemini AI Powered</div>
-                    </div>
-                    <h3 class="text-2xl font-bold mb-2" data-i18n="bento4_title">Mock Call Simulator</h3>
-                    <p class="text-gray-400 max-w-md text-sm leading-relaxed" data-i18n="bento4_desc">Experiencing phone anxiety? Practice real-world conversations in a safe, AI-moderated WebRTC voice environment before making the real call.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="safety" class="py-24 bg-[#f8fafc] dark:bg-gray-900 overflow-hidden transition-colors duration-300">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-col lg:flex-row items-center gap-16">
-                <div class="w-full lg:w-1/2 relative">
-                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-gradient-to-tr from-green-200 to-brand-200 dark:from-green-900/40 dark:to-brand-900/40 rounded-full blur-3xl opacity-40 -z-10"></div>
-                    <div class="bg-white dark:bg-gray-800 p-6 rounded-[2rem] border border-gray-100 dark:border-gray-700 shadow-2xl relative z-10 transform -rotate-2 hover:rotate-0 transition-all duration-500">
-                        <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-100 dark:border-gray-700">
-                            <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-full flex items-center justify-center">
-                                    <i class="fa-solid fa-shield-halved"></i>
-                                </div>
-                                <div>
-                                    <h4 class="font-bold text-gray-900 dark:text-white" data-i18n="safe_dash_title">Safety Dashboard</h4>
-                                    <p class="text-xs text-gray-500 dark:text-gray-400" data-i18n="safe_dash_sub">SecurityUtils Active</p>
-                                </div>
-                            </div>
-                            <div class="w-12 h-6 bg-green-500 rounded-full relative">
-                                <div class="absolute right-1 top-1 w-4 h-4 bg-white rounded-full"></div>
-                            </div>
-                        </div>
-                        <div class="space-y-4">
-                            <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl transition-colors">
-                                <span class="font-medium text-sm text-gray-700 dark:text-gray-200" data-i18n="safe_item1">DM Privacy Filters</span>
-                                <i class="fa-solid fa-lock text-gray-400 dark:text-gray-500"></i>
-                            </div>
-                            <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl transition-colors">
-                                <span class="font-medium text-sm text-gray-700 dark:text-gray-200" data-i18n="safe_item2">Parental Controls</span>
-                                <i class="fa-solid fa-user-group text-gray-400 dark:text-gray-500"></i>
-                            </div>
-                            <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl border border-red-100 dark:border-red-900/50 transition-colors">
-                                <span class="font-medium text-sm text-red-600 dark:text-red-400" data-i18n="safe_item3">Trigger Word Blocking</span>
-                                <i class="fa-solid fa-ban text-red-400 dark:text-red-500"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="w-full lg:w-1/2">
-                    <h2 class="text-4xl lg:text-5xl font-extrabold text-gray-900 dark:text-white leading-tight mb-6" data-i18n="safe_title">
-                        Uncompromising End-to-End Safety.
-                    </h2>
-                    <p class="text-lg text-gray-600 dark:text-gray-300 leading-relaxed mb-8" data-i18n="safe_desc">
-                        Social interaction shouldn't mean exposure to harm. We’ve built custom robust content filtering to ensure the NeuroComet feed remains a strictly moderated, trigger-free sanctuary.
-                    </p>
-                    <ul class="space-y-6">
-                        <li class="flex items-start gap-4">
-                            <div class="w-10 h-10 rounded-full bg-blue-50 dark:bg-brand-900/30 text-brand-600 dark:text-brand-400 flex items-center justify-center shrink-0 transition-colors">
-                                <i class="fa-solid fa-layer-group"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-bold text-gray-900 dark:text-white text-lg" data-i18n="safe_feat1_title">Universal Scaffold Architecture</h4>
-                                <p class="text-gray-600 dark:text-gray-400 text-sm mt-1" data-i18n="safe_feat1_desc">Consistent, accessible layouts across Android and iOS, preventing cognitive fatigue when switching devices.</p>
-                            </div>
-                        </li>
-                        <li class="flex items-start gap-4">
-                            <div class="w-10 h-10 rounded-full bg-purple-50 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0 transition-colors">
-                                <i class="fa-solid fa-eye-slash"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-bold text-gray-900 dark:text-white text-lg" data-i18n="safe_feat2_title">Caregiver Screen Blocking</h4>
-                                <p class="text-gray-600 dark:text-gray-400 text-sm mt-1" data-i18n="safe_feat2_desc">Optional linked accounts with robust Parental Control modules, allowing trusted guardians to assist in navigating safely.</p>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="global" class="py-24 bg-gray-900 dark:bg-black text-white relative overflow-hidden transition-colors duration-300">
-        <div class="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-brand-500 via-transparent to-transparent"></div>
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-            <div class="w-16 h-16 bg-white/10 rounded-2xl mx-auto flex items-center justify-center mb-8 backdrop-blur-md border border-white/20">
-                <i class="fa-solid fa-earth-americas text-3xl text-brand-400"></i>
-            </div>
-            <h2 class="text-4xl md:text-5xl font-extrabold mb-6" data-i18n="global_title">Speak your mind.<br/><span class="text-brand-400">In your language.</span></h2>
-            <p class="text-xl text-gray-400 max-w-2xl mx-auto mb-12" data-i18n="global_sub">
-                Neurodiversity is global. Utilizing automated translation pipelines, NeuroComet is localized into over 15+ languages.
-            </p>
-
-            <div class="flex flex-wrap justify-center gap-3 max-w-3xl mx-auto" id="lang-buttons">
-                <button onclick="changeLanguage('en', this)" class="lang-btn px-4 py-2 rounded-full bg-brand-500 text-white border border-brand-400 text-sm font-bold transition-colors">English</button>
-                <button onclick="changeLanguage('es', this)" class="lang-btn px-4 py-2 rounded-full bg-white/5 border border-white/10 text-sm font-medium hover:bg-brand-500/50 transition-colors">Español</button>
-                <button onclick="changeLanguage('fr', this)" class="lang-btn px-4 py-2 rounded-full bg-white/5 border border-white/10 text-sm font-medium hover:bg-brand-500/50 transition-colors">Français</button>
-                <button onclick="changeLanguage('de', this)" class="lang-btn px-4 py-2 rounded-full bg-white/5 border border-white/10 text-sm font-medium hover:bg-brand-500/50 transition-colors">Deutsch</button>
-                <button onclick="changeLanguage('ja', this)" class="lang-btn px-4 py-2 rounded-full bg-white/5 border border-white/10 text-sm font-medium hover:bg-brand-500/50 transition-colors">日本語</button>
-                <button onclick="changeLanguage('ko', this)" class="lang-btn px-4 py-2 rounded-full bg-white/5 border border-white/10 text-sm font-medium hover:bg-brand-500/50 transition-colors">한국어</button>
-                <button onclick="changeLanguage('ar', this)" class="lang-btn px-4 py-2 rounded-full bg-white/5 border border-white/10 text-sm font-medium hover:bg-brand-500/50 transition-colors">العربية</button>
-                <button onclick="changeLanguage('tr', this)" class="lang-btn px-4 py-2 rounded-full bg-white/5 border border-white/10 text-sm font-medium hover:bg-brand-500/50 transition-colors">Türkçe</button>
-            </div>
-        </div>
-    </section>
-
-    <section id="download" class="py-24 bg-white dark:bg-gray-800 text-center transition-colors duration-300">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white mb-6" data-i18n="cta_title">Find your orbit today.</h2>
-            <p class="text-xl text-gray-500 dark:text-gray-400 mb-10 max-w-2xl mx-auto" data-i18n="cta_sub">
-                Download NeuroComet and experience a platform built explicitly for the way your mind works.
-            </p>
-            <button class="bg-brand-600 hover:bg-brand-700 text-white px-10 py-5 rounded-full font-bold text-lg transition-all shadow-[0_10px_30px_-10px_rgba(37,99,235,0.5)] hover:shadow-[0_20px_40px_-10px_rgba(37,99,235,0.7)] transform hover:-translate-y-1 cursor-default" data-i18n="cta_btn">
-                Prepare your spoons (Coming Soon)
+            <!-- Soft Dark/Light Mode Toggle -->
+            <button id="theme-toggle" type="button" aria-label="Toggle sensory color theme" class="text-slatecustom-600 dark:text-gray-400 hover:bg-cream-200 dark:hover:bg-gray-800 rounded-full p-2.5 transition-colors focus:outline-none focus:ring-2 focus:ring-sage-500">
+                <i id="theme-toggle-dark-icon" class="fa-solid fa-moon hidden"></i>
+                <i id="theme-toggle-light-icon" class="fa-solid fa-sun hidden"></i>
             </button>
-            <p class="text-gray-400 dark:text-gray-500 text-sm mt-6 font-medium" data-i18n="cta_powered">Powered by Kotlin, Flutter, and Supabase.</p>
+        </div>
+    </div>
+</nav>
+
+<!-- Main Wrapper with Lang Transition support -->
+<div id="main-content" class="fade-transition pt-24">
+
+    <!-- [ Section 1: Hero ] -->
+    <section class="max-w-4xl mx-auto px-6 pt-16 pb-20 text-center">
+        <!-- Badge indicator -->
+        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-sage-100 dark:bg-sage-500/10 text-sage-600 dark:text-sage-200 font-semibold text-xs mb-8">
+            <span class="w-1.5 h-1.5 rounded-full bg-sage-500"></span>
+            <span data-i18n="hero_badge">Waitlist Open for Android & iOS</span>
+        </div>
+
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-slatecustom-800 dark:text-gray-100 mb-6 max-w-3xl mx-auto" data-i18n="hero_title">
+            A Safe, Sensory-Friendly Social Space.
+        </h1>
+        <p class="text-lg md:text-xl text-slatecustom-600 dark:text-gray-300 mb-10 max-w-2xl mx-auto font-body leading-relaxed" data-i18n="hero_subtitle">
+            Built by and for neurodivergent minds. No clutter. No chaos. Just connection.
+        </p>
+
+        <!-- Waitlist Signup CTA -->
+        <div class="max-w-md mx-auto mb-6">
+            <form onsubmit="submitWaitlist(event, 'top-email', 'top-success', 'top-btn')" class="flex flex-col sm:flex-row gap-3 p-1.5 bg-cream-50 dark:bg-gray-800 border border-cream-200 dark:border-gray-700 rounded-xl focus-outline transition-all">
+                <input id="top-email" type="email" required placeholder="Enter your email address..." aria-label="Email address for waitlist" class="flex-grow px-4 py-3 bg-transparent text-sm text-slatecustom-800 dark:text-gray-100 border-0 focus:outline-none focus:ring-0 placeholder-slatecustom-300 dark:placeholder-gray-500 font-body">
+                <button id="top-btn" type="submit" class="bg-sage-500 hover:bg-sage-600 text-cream-50 font-bold px-6 py-3 rounded-lg text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-sage-500">
+                    <span data-i18n="cta_btn">Join the Waitlist</span>
+                </button>
+            </form>
+            <p id="top-success" class="text-sm text-sage-500 font-bold mt-3 hidden" data-i18n="success_msg">Thank you for joining our orbit. We've saved your spot.</p>
         </div>
     </section>
 
-    <footer class="bg-gray-50 dark:bg-gray-950 border-t border-gray-200 dark:border-gray-800 pt-16 pb-8 transition-colors duration-300">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
-                <div class="col-span-1 md:col-span-2">
-                    <div class="flex items-center gap-2 mb-6">
-                        <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-500 to-purple-600 flex items-center justify-center text-white">
-                            <i class="fa-solid fa-meteor text-sm"></i>
-                        </div>
-                        <span class="font-extrabold text-xl text-gray-900 dark:text-white tracking-tight">NeuroComet</span>
-                    </div>
-                    <p class="text-gray-500 dark:text-gray-400 max-w-md text-sm leading-relaxed" data-i18n="foot_desc">
-                        A dedicated, multi-platform environment giving the neurodivergent community the tools, safety, and customizable environment they deserve.
+    <!-- [ Section 2: The Core Problem ] -->
+    <section class="border-t border-b border-cream-200 dark:border-gray-800 bg-cream-200/30 dark:bg-cream-900/40 py-20 transition-colors">
+        <div class="max-w-4xl mx-auto px-6">
+            <div class="max-w-2xl mx-auto text-center md:text-left">
+                <h2 class="text-3xl font-bold text-slatecustom-800 dark:text-gray-100 mb-6" data-i18n="prob_title">The Noise of Traditional Social Media</h2>
+                <div class="space-y-6 text-slatecustom-600 dark:text-gray-300 font-body text-base md:text-lg leading-relaxed">
+                    <p data-i18n="prob_p1">
+                        Modern algorithms are intentionally engineered to overstimulate. They capitalize on infinite scrolls, blinky notification badges, and hyper-saturated visuals designed to hook attention by inducing subconscious anxiety.
+                    </p>
+                    <p data-i18n="prob_p2">
+                        For neurodivergent individuals, this creates sensory overload, intense mental fatigue, and social anxiety. Traditional feeds make it incredibly hard to filter noise and connect safely without feeling overwhelmed.
                     </p>
                 </div>
-                <div>
-                    <h4 class="font-bold text-gray-900 dark:text-white mb-4 tracking-wide" data-i18n="foot_col1">Platform</h4>
-                    <ul class="space-y-3 text-sm">
-                        <li><a href="#ecosystem" class="text-gray-500 dark:text-gray-400 hover:text-brand-600 transition-colors font-medium" data-i18n="foot_link1">Sensory Customization</a></li>
-                        <li><a href="#ecosystem" class="text-gray-500 dark:text-gray-400 hover:text-brand-600 transition-colors font-medium" data-i18n="foot_link2">Mock Call AI</a></li>
-                        <li><a href="#safety" class="text-gray-500 dark:text-gray-400 hover:text-brand-600 transition-colors font-medium" data-i18n="foot_link3">Safety Dashboard</a></li>
-                    </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- [ Section 3: The NeuroComet Solution ] -->
+    <section class="py-20">
+        <div class="max-w-4xl mx-auto px-6">
+            <h2 class="text-3xl font-bold text-slatecustom-800 dark:text-gray-100 mb-12 text-center" data-i18n="sol_title">How NeuroComet is Re-wired for You</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Block 1: Custom Sensory Controls -->
+                <div class="bg-cream-50 dark:bg-gray-800/50 p-8 rounded-2xl border border-cream-200 dark:border-gray-800 transition-all text-center md:text-left">
+                    <div class="w-12 h-12 bg-sage-500/10 text-sage-500 rounded-xl flex items-center justify-center mb-6 mx-auto md:mx-0">
+                        <i class="fa-solid fa-sliders text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slatecustom-800 dark:text-gray-100 mb-3" data-i18n="sol_b1_title">Custom Sensory Controls</h3>
+                    <p class="text-sm md:text-base text-slatecustom-600 dark:text-gray-300 font-body leading-relaxed" data-i18n="sol_b1_desc">
+                        Tailor your UI to match your mind. Toggle reduced motion, contrast profiles, adjustable font families, and soft sensory presets (Calm, Focus, Energy).
+                    </p>
                 </div>
-                <div>
-                    <h4 class="font-bold text-gray-900 dark:text-white mb-4 tracking-wide" data-i18n="foot_col2">Resources</h4>
-                    <ul class="space-y-3 text-sm">
-                        <li><a href="#safety" class="text-gray-500 dark:text-gray-400 hover:text-brand-600 transition-colors font-medium" data-i18n="foot_link4">Parental Guide</a></li>
-                        <li><a href="privacy.html" class="text-gray-900 dark:text-white font-bold hover:text-brand-600 transition-colors" data-i18n="foot_link5">Privacy Policy</a></li>
-                        <li><a href="delete-account/" class="text-gray-500 dark:text-gray-400 hover:text-brand-600 transition-colors font-medium">Delete Account</a></li>
-                        <li><a href="terms.html" class="text-gray-500 dark:text-gray-400 hover:text-brand-600 transition-colors font-medium" data-i18n="foot_link6">Terms of Service</a></li>
-                        <li><a href="https://github.com/songokufan1996/neurocomet" class="text-gray-500 dark:text-gray-400 hover:text-brand-600 transition-colors font-medium" data-i18n="foot_link7">GitHub Repository</a></li>
-                    </ul>
+
+                <!-- Block 2: Strict Safety & Verification -->
+                <div class="bg-cream-50 dark:bg-gray-800/50 p-8 rounded-2xl border border-cream-200 dark:border-gray-800 transition-all text-center md:text-left">
+                    <div class="w-12 h-12 bg-sage-500/10 text-sage-500 rounded-xl flex items-center justify-center mb-6 mx-auto md:mx-0">
+                        <i class="fa-solid fa-user-shield text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slatecustom-800 dark:text-gray-100 mb-3" data-i18n="sol_b2_title">Strict Safety & Verification</h3>
+                    <p class="text-sm md:text-base text-slatecustom-600 dark:text-gray-300 font-body leading-relaxed" data-i18n="sol_b2_desc">
+                        Interact in a community free from harassment. Benefit from robust content filter-guardrails, muted word blockers, parental support links, and optional verification.
+                    </p>
+                </div>
+
+                <!-- Block 3: Meaningful Micro-Communities -->
+                <div class="bg-cream-50 dark:bg-gray-800/50 p-8 rounded-2xl border border-cream-200 dark:border-gray-800 transition-all text-center md:text-left">
+                    <div class="w-12 h-12 bg-sage-500/10 text-sage-500 rounded-xl flex items-center justify-center mb-6 mx-auto md:mx-0">
+                        <i class="fa-solid fa-comments text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slatecustom-800 dark:text-gray-100 mb-3" data-i18n="sol_b3_title">Meaningful Micro-Communities</h3>
+                    <p class="text-sm md:text-base text-slatecustom-600 dark:text-gray-300 font-body leading-relaxed" data-i18n="sol_b3_desc">
+                        Connect on your own terms. Find your orbit through focused micro-communities with zero algorithmic pressure, no infinite scrolls, and no toxic metrics.
+                    </p>
                 </div>
             </div>
-            <div class="border-t border-gray-200 dark:border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-                <p class="text-gray-400 dark:text-gray-500 text-sm font-medium">
-                    &copy; <script>document.write(new Date().getFullYear())</script> <span data-i18n="foot_copy">NeuroComet. All rights reserved.</span>
+        </div>
+    </section>
+
+    <!-- [ Section 4: The Founders' Promise ] -->
+    <section class="border-t border-b border-cream-200 dark:border-gray-800 bg-cream-200/20 dark:bg-cream-900/30 py-20 transition-colors">
+        <div class="max-w-4xl mx-auto px-6 text-center">
+            <div class="max-w-xl mx-auto">
+                <div class="text-sage-500 text-3xl mb-4"><i class="fa-solid fa-quote-left"></i></div>
+                <h2 class="text-2xl font-bold text-slatecustom-800 dark:text-gray-100 mb-4" data-i18n="promise_title">The Founders' Promise</h2>
+                <p class="text-base md:text-lg text-slatecustom-600 dark:text-gray-300 font-body italic leading-relaxed mb-6" data-i18n="promise_desc">
+                    "My wife and I started building NeuroComet because we know firsthand how exhausting traditional digital spaces are. We promise to never implement endless algorithms, addictive mechanics, or attention-grabbing alerts. This will always remain a quiet, calm space built entirely to serve your zesty mind."
                 </p>
+                <div class="font-bold text-sm text-slatecustom-800 dark:text-gray-100 tracking-wide uppercase" data-i18n="promise_author">
+                    — Burhan & Wife, Co-founders
+                </div>
             </div>
+        </div>
+    </section>
+
+    <!-- [ Section 5: Final CTA ] -->
+    <section class="max-w-4xl mx-auto px-6 py-24 text-center">
+        <h2 class="text-3xl font-bold text-slatecustom-800 dark:text-gray-100 mb-6" data-i18n="final_cta_title">Ready to Find Your Orbit?</h2>
+        <p class="text-slatecustom-600 dark:text-gray-300 mb-10 max-w-lg mx-auto font-body text-base" data-i18n="final_cta_subtitle">
+            Join the waitlist today to be the first to experience NeuroComet when we launch beta access.
+        </p>
+
+        <!-- Final Waitlist Signup CTA (duplicate of Top Form for ease of use) -->
+        <div class="max-w-md mx-auto">
+            <form onsubmit="submitWaitlist(event, 'bottom-email', 'bottom-success', 'bottom-btn')" class="flex flex-col sm:flex-row gap-3 p-1.5 bg-cream-50 dark:bg-gray-800 border border-cream-200 dark:border-gray-700 rounded-xl focus-outline transition-all">
+                <input id="bottom-email" type="email" required placeholder="Enter your email address..." aria-label="Email address for waitlist duplicate" class="flex-grow px-4 py-3 bg-transparent text-sm text-slatecustom-800 dark:text-gray-100 border-0 focus:outline-none focus:ring-0 placeholder-slatecustom-300 dark:placeholder-gray-500 font-body">
+                <button id="bottom-btn" type="submit" class="bg-sage-500 hover:bg-sage-600 text-cream-50 font-bold px-6 py-3 rounded-lg text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-sage-500">
+                    <span data-i18n="cta_btn">Join the Waitlist</span>
+                </button>
+            </form>
+            <p id="bottom-success" class="text-sm text-sage-500 font-bold mt-3 hidden" data-i18n="success_msg">Thank you for joining our orbit. We've saved your spot.</p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-cream-200/50 dark:bg-cream-900/80 border-t border-cream-200 dark:border-gray-800 pt-12 pb-8 transition-colors">
+        <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="flex items-center gap-2">
+                <div class="w-6 h-6 rounded-md bg-sage-500 text-cream-100 flex items-center justify-center font-bold text-xs shadow-sm">
+                    <i class="fa-solid fa-meteor text-[10px]"></i>
+                </div>
+                <span class="font-extrabold text-base text-slatecustom-800 dark:text-gray-100">NeuroComet</span>
+            </div>
+
+            <div class="flex flex-wrap gap-6 text-sm text-slatecustom-600 dark:text-gray-400 font-body">
+                <a href="privacy.html" class="hover:text-sage-500 transition-colors focus:outline-none focus:underline">Privacy Policy</a>
+                <a href="terms.html" class="hover:text-sage-500 transition-colors focus:outline-none focus:underline">Terms of Service</a>
+                <a href="delete-account/" class="hover:text-sage-500 transition-colors focus:outline-none focus:underline">Delete Account</a>
+                <a href="https://github.com/songokufan1996/neurocomet" class="hover:text-sage-500 transition-colors focus:outline-none focus:underline"><i class="fa-brands fa-github mr-1"></i>GitHub</a>
+            </div>
+
+            <p class="text-xs text-slatecustom-300 dark:text-gray-500 font-body">
+                &copy; <script>document.write(new Date().getFullYear())</script> NeuroComet. All rights reserved.
+            </p>
         </div>
     </footer>
 </div>
 
 <script>
+    // Theme Management (calm and low contrast)
     const themeToggleBtn = document.getElementById('theme-toggle');
     const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
     const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
@@ -352,203 +299,215 @@
                 localStorage.setItem('color-theme', 'dark');
             }
         }
-        setBentoTheme('default'); // reset to match mode
     });
 
-    function setBentoTheme(theme) {
-        const previewBox = document.getElementById('theme-preview-box');
-        const elements = document.querySelectorAll('.bento-element');
-        const baseBoxClasses = "w-full rounded-t-2xl shadow-xl border p-4 mt-auto transition-colors duration-500";
-        previewBox.className = baseBoxClasses;
-        elements.forEach(el => el.className = "h-4 rounded-md transition-colors bento-element");
+    // Waitlist Form Submission Simulation (Calm inline update, no popups/reload)
+    function submitWaitlist(e, emailId, successId, buttonId) {
+        e.preventDefault();
+        const emailInput = document.getElementById(emailId);
+        const successText = document.getElementById(successId);
+        const button = document.getElementById(buttonId);
 
-        switch(theme) {
-            case 'calm':
-                previewBox.classList.add('bg-teal-50', 'border-teal-100', 'dark:bg-teal-900/30', 'dark:border-teal-800');
-                elements[0].classList.add('bg-teal-200', 'dark:bg-teal-700', 'w-3/4', 'mb-2');
-                elements[1].classList.add('bg-teal-300', 'dark:bg-teal-600', 'w-1/2');
-                break;
-            case 'focus':
-                previewBox.classList.add('bg-indigo-50', 'border-indigo-100', 'dark:bg-indigo-900/30', 'dark:border-indigo-800');
-                elements[0].classList.add('bg-indigo-200', 'dark:bg-indigo-700', 'w-3/4', 'mb-2');
-                elements[1].classList.add('bg-indigo-300', 'dark:bg-indigo-600', 'w-1/2');
-                break;
-            case 'energy':
-                previewBox.classList.add('bg-amber-50', 'border-amber-100', 'dark:bg-amber-900/30', 'dark:border-amber-800');
-                elements[0].classList.add('bg-amber-200', 'dark:bg-amber-700', 'w-3/4', 'mb-2');
-                elements[1].classList.add('bg-amber-300', 'dark:bg-amber-600', 'w-1/2');
-                break;
-            case 'pride':
-                previewBox.classList.add('bg-gray-900', 'border-gray-800', 'dark:bg-black', 'dark:border-gray-800');
-                elements[0].classList.add('bg-gradient-to-r', 'from-red-400', 'to-yellow-400', 'w-3/4', 'mb-2');
-                elements[1].classList.add('bg-gradient-to-r', 'from-green-400', 'to-blue-400', 'w-1/2');
-                break;
-            default:
-                previewBox.classList.add('bg-white', 'dark:bg-gray-900', 'border-gray-200', 'dark:border-gray-700');
-                elements[0].classList.add('bg-gray-100', 'dark:bg-gray-800', 'w-3/4', 'mb-2');
-                elements[1].classList.add('bg-gray-200', 'dark:bg-gray-700', 'w-1/2');
+        if (emailInput.value) {
+            button.disabled = true;
+            button.style.opacity = '0.5';
+
+            setTimeout(() => {
+                successText.classList.remove('hidden');
+                emailInput.value = '';
+                button.disabled = false;
+                button.style.opacity = '1';
+
+                // Hide success message after 5 seconds
+                setTimeout(() => {
+                    successText.classList.add('hidden');
+                }, 5000);
+            }, 500);
         }
     }
-    setBentoTheme('default');
 
-    // --- FULL DICTIONARY WITH ND-HYPE TERMINOLOGY ---
+    // --- FULL MULTI-LANGUAGE TRANSLATION DICTIONARY ---
     const translations = {
         en: {
-            nav_eco: "Ecosystem", nav_safety: "Safety", nav_global: "Global", nav_cta: "Join Orbit (Soon)",
-            hero_badge: "Now expanding to iOS via Flutter",
-            hero_title: "Your Digital Environment,<br /><span class=\"text-gradient\">Rewired for You.</span>",
-            hero_subtitle: "Experience an adaptive ecosystem featuring dynamic sensory themes, AI-driven communication practice, and a secure social space.",
-            btn_gp_sub: "Hyperfixating soon on", btn_as_sub: "Conserving spoons for",
-            eco_title: "The NeuroComet Ecosystem", eco_sub: "Every feature is architected from the ground up for accessibility, safety, and growth.",
-            bento1_title: "Adaptive Sensory Themes", bento1_desc: "Switch UI profiles seamlessly. We dynamically alter contrast, fonts, and motion to match your current cognitive state.",
-            bento2_title: "Spoon Tracking", bento2_desc: "Monitor daily energy levels with home screen widgets. Track stim breaks and mood fluctuations instantly.",
-            bento3_title: "NeuroGames", bento3_desc: "Interactive tutorials and gamified coping mechanisms built natively to assist with focus and emotional regulation.",
-            bento4_badge: "Gemini AI Powered", bento4_title: "Mock Call Simulator", bento4_desc: "Experiencing phone anxiety? Practice real-world conversations in a safe, AI-moderated WebRTC voice environment before making the real call.",
-            safe_dash_title: "Safety Dashboard", safe_dash_sub: "SecurityUtils Active", safe_item1: "DM Privacy Filters", safe_item2: "Parental Controls", safe_item3: "Trigger Word Blocking",
-            safe_title: "Uncompromising End-to-End Safety.", safe_desc: "Social interaction shouldn't mean exposure to harm. We’ve built custom robust content filtering to ensure the NeuroComet feed remains a strictly moderated, trigger-free sanctuary.",
-            safe_feat1_title: "Universal Scaffold Architecture", safe_feat1_desc: "Consistent, accessible layouts across Android and iOS, preventing cognitive fatigue when switching devices.",
-            safe_feat2_title: "Caregiver Screen Blocking", safe_feat2_desc: "Optional linked accounts with robust Parental Control modules, allowing trusted guardians to assist in navigating safely.",
-            global_title: "Speak your mind.<br/><span class=\"text-brand-400\">In your language.</span>", global_sub: "Neurodiversity is global. Utilizing automated translation pipelines, NeuroComet is localized into over 15+ languages.",
-            cta_title: "Find your orbit today.", cta_sub: "Download NeuroComet and experience a platform built explicitly for the way your mind works.", cta_btn: "Prepare your spoons (Coming Soon)", cta_powered: "Powered by Kotlin, Flutter, and Supabase.",
-            foot_desc: "A dedicated, multi-platform environment giving the neurodivergent community the tools, safety, and customizable environment they deserve.", foot_col1: "Platform", foot_link1: "Sensory Customization", foot_link2: "Mock Call AI", foot_link3: "Safety Dashboard", foot_col2: "Resources", foot_link4: "Parental Guide", foot_link5: "Privacy Policy", foot_link6: "Terms of Service", foot_link7: "GitHub Repository", foot_copy: "NeuroComet. All rights reserved."
+            hero_badge: "Waitlist Open for Android & iOS",
+            hero_title: "A Safe, Sensory-Friendly Social Space.",
+            hero_subtitle: "Built by and for neurodivergent minds. No clutter. No chaos. Just connection.",
+            cta_btn: "Join the Waitlist",
+            success_msg: "Thank you for joining our orbit. We've saved your spot.",
+            prob_title: "The Noise of Traditional Social Media",
+            prob_p1: "Modern algorithms are intentionally engineered to overstimulate. They capitalize on infinite scrolls, blinky notification badges, and hyper-saturated visuals designed to hook attention by inducing subconscious anxiety.",
+            prob_p2: "For neurodivergent individuals, this creates sensory overload, intense mental fatigue, and social anxiety. Traditional feeds make it incredibly hard to filter noise and connect safely without feeling overwhelmed.",
+            sol_title: "How NeuroComet is Re-wired for You",
+            sol_b1_title: "Custom Sensory Controls",
+            sol_b1_desc: "Tailor your UI to match your mind. Toggle reduced motion, contrast profiles, adjustable font families, and soft sensory presets (Calm, Focus, Energy).",
+            sol_b2_title: "Strict Safety & Verification",
+            sol_b2_desc: "Interact in a community free from harassment. Benefit from robust content filter-guardrails, muted word blockers, parental support links, and optional verification.",
+            sol_b3_title: "Meaningful Micro-Communities",
+            sol_b3_desc: "Connect on your own terms. Find your orbit through focused micro-communities with zero algorithmic pressure, no infinite scrolls, and no toxic metrics.",
+            promise_title: "The Founders' Promise",
+            promise_desc: "\"My wife and I started building NeuroComet because we know firsthand how exhausting traditional digital spaces are. We promise to never implement endless algorithms, addictive mechanics, or attention-grabbing alerts. This will always remain a quiet, calm space built entirely to serve your zesty mind.\"",
+            promise_author: "— Burhan & Wife, Co-founders",
+            final_cta_title: "Ready to Find Your Orbit?",
+            final_cta_subtitle: "Join the waitlist today to be the first to experience NeuroComet when we launch beta access."
         },
         es: {
-            nav_eco: "Ecosistema", nav_safety: "Seguridad", nav_global: "Global", nav_cta: "Únete a la órbita (Pronto)",
-            hero_badge: "Ahora expandiéndose a iOS con Flutter",
-            hero_title: "Tu Entorno Digital,<br /><span class=\"text-gradient\">Reconectado para Ti.</span>",
-            hero_subtitle: "Experimenta un ecosistema adaptativo con temas sensoriales dinámicos, práctica de comunicación por IA y un espacio social seguro.",
-            btn_gp_sub: "Hiperfijación pronto en", btn_as_sub: "Guardando cucharas para",
-            eco_title: "El Ecosistema NeuroComet", eco_sub: "Cada función está diseñada desde cero para la accesibilidad, seguridad y crecimiento.",
-            bento1_title: "Temas Sensoriales Adaptativos", bento1_desc: "Cambia de perfil sin problemas. Alteramos el contraste, las fuentes y el movimiento para adaptarnos a tu estado cognitivo.",
-            bento2_title: "Rastreo de Cucharas", bento2_desc: "Monitorea tus niveles de energía con widgets. Registra descansos sensoriales y cambios de humor al instante.",
-            bento3_title: "NeuroJuegos", bento3_desc: "Tutoriales interactivos y mecanismos de afrontamiento gamificados para ayudar con el enfoque y la regulación emocional.",
-            bento4_badge: "Impulsado por IA Gemini", bento4_title: "Simulador de Llamadas", bento4_desc: "¿Ansiedad telefónica? Practica conversaciones reales en un entorno de voz seguro y moderado por IA antes de hacer la llamada real.",
-            safe_dash_title: "Panel de Seguridad", safe_dash_sub: "SecurityUtils Activo", safe_item1: "Filtros de Privacidad", safe_item2: "Control Parental", safe_item3: "Bloqueo de Palabras",
-            safe_title: "Seguridad Integral Intransigente.", safe_desc: "La interacción social no debe significar exposición al daño. Hemos construido un filtrado de contenido robusto para asegurar un santuario libre de factores desencadenantes.",
-            safe_feat1_title: "Arquitectura de Andamiaje", safe_feat1_desc: "Diseños consistentes y accesibles en Android e iOS, evitando la fatiga cognitiva al cambiar de dispositivo.",
-            safe_feat2_title: "Bloqueo para Cuidadores", safe_feat2_desc: "Cuentas vinculadas opcionales con controles parentales, permitiendo a tutores ayudar a navegar con seguridad.",
-            global_title: "Exprésate.<br/><span class=\"text-brand-400\">En tu idioma.</span>", global_sub: "La neurodiversidad es global. Utilizando canales de traducción automática, NeuroComet está en más de 15 idiomas.",
-            cta_title: "Encuentra tu órbita hoy.", cta_sub: "Descarga NeuroComet y experimenta una plataforma construida explícitamente para cómo funciona tu mente.", cta_btn: "Prepara tus cucharas (Próximamente)", cta_powered: "Desarrollado por Kotlin, Flutter y Supabase.",
-            foot_desc: "Un entorno dedicado y multiplataforma que brinda a la comunidad neurodivergente las herramientas que merece.", foot_col1: "Plataforma", foot_link1: "Personalización Sensorial", foot_link2: "IA de Llamadas", foot_link3: "Panel de Seguridad", foot_col2: "Recursos", foot_link4: "Guía Parental", foot_link5: "Política de Privacidad", foot_link6: "Términos de Servicio", foot_link7: "Repositorio GitHub", foot_copy: "NeuroComet. Todos los derechos reservados."
+            hero_badge: "Lista de espera abierta para Android e iOS",
+            hero_title: "Un espacio social seguro y amigable con tus sentidos.",
+            hero_subtitle: "Construido por y para mentes neurodivergentes. Sin caos. Sin desorden. Solo conexión.",
+            cta_btn: "Unirse a la lista de espera",
+            success_msg: "Gracias por unirte a nuestra órbita. Hemos guardado tu lugar.",
+            prob_title: "El ruido de las redes sociales tradicionales",
+            prob_p1: "Los algoritmos modernos están diseñados intencionalmente para sobreestimular. Se aprovechan del scroll infinito, las notificaciones parpadeantes y las imágenes sobresaturadas creadas para atrapar tu atención induciendo ansiedad inconsciente.",
+            prob_p2: "Para las personas neurodivergentes, esto genera sobrecarga sensorial, fatiga mental intensa y ansiedad social. Los feeds tradicionales hacen que filtrar el ruido y conectarse de manera segura sea increíblemente difícil.",
+            sol_title: "Cómo NeuroComet está reconectado para ti",
+            sol_b1_title: "Controles sensoriales personalizados",
+            sol_b1_desc: "Adapta la interfaz a tu mente. Activa la reducción de movimiento, perfiles de contraste, fuentes legibles y preajustes sensoriales suaves (Calm, Focus, Energy).",
+            sol_b2_title: "Seguridad y verificación estrictas",
+            sol_b2_desc: "Interactúa en una comunidad libre de acoso. Disfruta de filtros de contenido robustos, bloqueadores de palabras, enlaces de soporte parental y verificación opcional.",
+            sol_b3_title: "Microcomunidades con propósito",
+            sol_b3_desc: "Conéctate bajo tus propios términos. Encuentra tu órbita a través de comunidades enfocadas con cero presión algorítmica y sin métricas tóxicas.",
+            promise_title: "La promesa de los fundadores",
+            promise_desc: "\"Mi esposa y yo comenzamos a construir NeuroComet porque sabemos de primera mano lo agotadores que son los espacios digitales tradicionales. Prometemos nunca implementar algoritmos sin fin, mecánicas adictivas o alertas molestas. Este siempre seguirá siendo un espacio tranquilo y calmado diseñado enteramente para servir a tu zesty mind.\"",
+            promise_author: "— Burhan y esposa, Co-fundadores",
+            final_cta_title: "¿Listo para encontrar tu órbita?",
+            final_cta_subtitle: "Únete a la lista de espera hoy para ser de los primeros en experimentar NeuroComet en la fase beta."
         },
         fr: {
-            nav_eco: "Écosystème", nav_safety: "Sécurité", nav_global: "Mondial", nav_cta: "Rejoindre l'orbite (Bientôt)",
-            hero_badge: "En expansion vers iOS via Flutter",
-            hero_title: "Votre Environnement Numérique,<br /><span class=\"text-gradient\">Recâblé pour Vous.</span>",
-            hero_subtitle: "Découvrez un écosystème adaptatif avec des thèmes sensoriels dynamiques, une pratique de l'IA et un espace social sécurisé.",
-            btn_gp_sub: "Hyperfixation bientôt sur", btn_as_sub: "Conservation des cuillères pour",
-            eco_title: "L'Écosystème NeuroComet", eco_sub: "Chaque fonctionnalité est conçue pour l'accessibilité, la sécurité et la croissance.",
-            bento1_title: "Thèmes Sensoriels Adaptatifs", bento1_desc: "Changez de profil facilement. Nous modifions le contraste, les polices et les mouvements selon votre état cognitif.",
-            bento2_title: "Suivi de l'Énergie", bento2_desc: "Surveillez votre énergie avec des widgets. Suivez vos pauses sensorielles et votre humeur instantanément.",
-            bento3_title: "NeuroJeux", bento3_desc: "Tutoriels interactifs et mécanismes d'adaptation ludiques pour aider à la concentration et à la régulation émotionnelle.",
-            bento4_badge: "Propulsé par IA Gemini", bento4_title: "Simulateur d'Appels", bento4_desc: "Anxiété téléphonique ? Pratiquez des conversations réelles dans un environnement vocal modéré par IA.",
-            safe_dash_title: "Tableau de Bord de Sécurité", safe_dash_sub: "SecurityUtils Actif", safe_item1: "Filtres de Confidentialité", safe_item2: "Contrôle Parental", safe_item3: "Blocage de Mots",
-            safe_title: "Sécurité de Bout en Bout.", safe_desc: "L'interaction sociale ne devrait pas signifier une exposition au danger. Nous avons conçu un filtrage de contenu robuste pour un sanctuaire sûr.",
-            safe_feat1_title: "Architecture Universelle", safe_feat1_desc: "Mises en page cohérentes et accessibles sur Android et iOS, prévenant la fatigue cognitive.",
-            safe_feat2_title: "Blocage d'Écran par le Tuteur", safe_feat2_desc: "Comptes liés avec contrôles parentaux permettant aux tuteurs d'aider à naviguer en toute sécurité.",
-            global_title: "Exprimez-vous.<br/><span class=\"text-brand-400\">Dans votre langue.</span>", global_sub: "La neurodiversité est mondiale. Grâce à la traduction automatique, NeuroComet est localisé dans 15+ langues.",
-            cta_title: "Trouvez votre orbite aujourd'hui.", cta_sub: "Téléchargez NeuroComet et découvrez une plateforme construite explicitement pour votre esprit.", cta_btn: "Préparez vos cuillères (Bientôt)", cta_powered: "Propulsé par Kotlin, Flutter et Supabase.",
-            foot_desc: "Un environnement multiplateforme dédié donnant à la communauté neurodivergente les outils qu'elle mérite.", foot_col1: "Plateforme", foot_link1: "Personnalisation Sensorielle", foot_link2: "IA d'Appels", foot_link3: "Tableau de Sécurité", foot_col2: "Ressources", foot_link4: "Guide Parental", foot_link5: "Confidentialité", foot_link6: "Conditions d'Utilisation", foot_link7: "Dépôt GitHub", foot_copy: "NeuroComet. Tous droits réservés."
+            hero_badge: "Liste d'attente ouverte pour Android & iOS",
+            hero_title: "Un espace social sécurisé et sensoriel.",
+            hero_subtitle: "Conçu par et pour les esprits neuroatypiques. Pas d'encombrement. Pas de chaos. Juste de la connexion.",
+            cta_btn: "Rejoindre la liste d'attente",
+            success_msg: "Merci de nous rejoindre. Votre place a été réservée.",
+            prob_title: "Le bruit des réseaux sociaux traditionnels",
+            prob_p1: "Les algorithmes modernes sont conçus intentionnellement pour surstimuler. Ils capitalisent sur le défilement infini, les badges clignotants et les visuels saturés pour capter votre attention en générant de l'anxiété.",
+            prob_p2: "Pour les personnes neuroatypiques, cela crée une surcharge sensorielle, une fatigue mentale intense et de l'anxiété sociale. Les flux traditionnels compliquent le filtrage du bruit pour se connecter en toute sérénité.",
+            sol_title: "Comment NeuroComet se réinvente pour vous",
+            sol_b1_title: "Contrôles sensoriels sur mesure",
+            sol_b1_desc: "Adaptez l'interface à votre zénitude. Activez la réduction de mouvement, les profils de contraste, des polices adaptées et des thèmes doux (Calme, Focus, Énergie).",
+            sol_b2_title: "Sécurité et modération strictes",
+            sol_b2_desc: "Interagissez dans un environnement bienveillant. Bénéficiez de filtres de contenu robustes, de bloqueurs de mots, de contrôles parentaux et d'une vérification optionnelle.",
+            sol_b3_title: "Micro-communautés saines",
+            sol_b3_desc: "Connectez-vous à votre rythme. Trouvez votre orbite via des communautés ciblées sans pression d'algorithme, sans défilement infini et sans métriques anxiogènes.",
+            promise_title: "La promesse des fondateurs",
+            promise_desc: "\"Mon épouse et moi-même avons lancé NeuroComet car nous connaissons trop bien l'épuisement causé par les espaces numériques actuels. Nous nous engageons à ne jamais intégrer de défilement infini, de relances addictives ou de notifications intrusives. Ce sera toujours un havre de paix dédié à votre zesty mind.\"",
+            promise_author: "— Burhan & son épouse, Co-fondateurs",
+            final_cta_title: "Prêt à trouver votre orbite ?",
+            final_cta_subtitle: "Inscrivez-vous dès maintenant pour être parmi les premiers à accéder à la bêta."
         },
         de: {
-            nav_eco: "Ökosystem", nav_safety: "Sicherheit", nav_global: "Global", nav_cta: "Umlaufbahn beitreten (Bald)",
-            hero_badge: "Jetzt auch für iOS über Flutter",
-            hero_title: "Deine digitale Umgebung,<br /><span class=\"text-gradient\">Neu vernetzt für dich.</span>",
-            hero_subtitle: "Erlebe ein adaptives Ökosystem mit dynamischen sensorischen Themen, KI-gesteuerter Kommunikation und einem sicheren sozialen Raum.",
-            btn_gp_sub: "Bald hyperfixiert auf", btn_as_sub: "Löffel sparen für",
-            eco_title: "Das NeuroComet Ökosystem", eco_sub: "Jede Funktion wurde von Grund auf für Zugänglichkeit, Sicherheit und Wachstum entwickelt.",
-            bento1_title: "Adaptive Sensorische Themen", bento1_desc: "Wechsle Profile nahtlos. Wir ändern dynamisch Kontrast, Schriftarten und Bewegung passend zu deinem kognitiven Zustand.",
-            bento2_title: "Löffel-Tracking", bento2_desc: "Überwache deine Energie mit Widgets. Verfolge Stim-Pausen und Stimmungsschwankungen sofort.",
-            bento3_title: "NeuroGames", bento3_desc: "Interaktive Tutorials und spielerische Bewältigungsmechanismen zur Unterstützung von Fokus und emotionaler Regulation.",
-            bento4_badge: "Angetrieben von Gemini KI", bento4_title: "Anruf-Simulator", bento4_desc: "Telefonangst? Übe reale Gespräche in einer sicheren, KI-moderierten Sprachumgebung, bevor du wirklich anrufst.",
-            safe_dash_title: "Sicherheits-Dashboard", safe_dash_sub: "SecurityUtils Aktiv", safe_item1: "DM-Privatsphäre-Filter", safe_item2: "Kindersicherung", safe_item3: "Triggerwort-Blockierung",
-            safe_title: "Kompromisslose Sicherheit.", safe_desc: "Soziale Interaktion sollte nicht bedeuten, Schaden ausgesetzt zu sein. Wir haben einen robusten Inhaltsfilter entwickelt, um einen sicheren Zufluchtsort zu gewährleisten.",
-            safe_feat1_title: "Universelle Architektur", safe_feat1_desc: "Konsistente, zugängliche Layouts auf Android und iOS verhindern kognitive Ermüdung beim Gerätewechsel.",
-            safe_feat2_title: "Betreuer-Bildschirmsperre", safe_feat2_desc: "Verknüpfte Konten mit Kindersicherungsmodulen ermöglichen es vertrauenswürdigen Personen, beim sicheren Navigieren zu helfen.",
-            global_title: "Sag, was du denkst.<br/><span class=\"text-brand-400\">In deiner Sprache.</span>", global_sub: "Neurodiversität ist global. Mithilfe automatisierter Pipelines wird NeuroComet in über 15 Sprachen übersetzt.",
-            cta_title: "Finde noch heute deinen Orbit.", cta_sub: "Lade NeuroComet herunter und erlebe eine Plattform, die speziell für deinen Verstand entwickelt wurde.", cta_btn: "Bereite deine Löffel vor (Bald)", cta_powered: "Angetrieben von Kotlin, Flutter und Supabase.",
-            foot_desc: "Eine dedizierte Multi-Plattform-Umgebung, die der neurodivergenten Gemeinschaft die Tools gibt, die sie verdient.", foot_col1: "Plattform", foot_link1: "Sensorische Anpassung", foot_link2: "Mock Call KI", foot_link3: "Sicherheits-Dashboard", foot_col2: "Ressourcen", foot_link4: "Elternratgeber", foot_link5: "Datenschutzrichtlinie", foot_link6: "Nutzungsbedingungen", foot_link7: "GitHub-Repository", foot_copy: "NeuroComet. Alle Rechte vorbehalten."
+            hero_badge: "Warteliste offen für Android & iOS",
+            hero_title: "Ein sicherer, reizarm gestalteter Raum.",
+            hero_subtitle: "Entwickelt von und für neurodivergente Menschen. Kein Ballast. Kein Chaos. Einfach Verbindung.",
+            cta_btn: "Auf die Warteliste setzen",
+            success_msg: "Vielen Dank für deine Anmeldung! Dein Platz ist reserviert.",
+            prob_title: "Die Reizüberflutung traditioneller Netzwerke",
+            prob_p1: "Moderne Algorithmen sind bewusst so konzipiert, dass sie überstimulieren. Unendliches Scrollen, blinkende Benachrichtigungen und knallige Farben sollen Aufmerksamkeit durch das Erzeugen von unterbewusstem Stress binden.",
+            prob_p2: "Für neurodivergente Personen führt dies rasch zu Reizüberflutung, mentaler Erschöpfung und sozialem Unbehagen. Herkömmliche Feeds erschweren das Filtern von störendem Lärm ungemein.",
+            sol_title: "Wie NeuroComet sich für dich anpasst",
+            sol_b1_title: "Einstellbare Reizkontrolle",
+            sol_b1_desc: "Passe die Oberfläche deinem Befinden an. Reduziere Bewegungen, verändere Kontraste, wähle optimierte Schriftarten und sanfte Farbstile (Ruhig, Fokus, Energie).",
+            sol_b2_title: "Umfassender Schutz",
+            sol_b2_desc: "Bewege dich in einer Gemeinschaft frei von Belästigungen. Nutze robuste Inhaltsfilter, Wortblocker, Eltern-Verbindungen und optionale Verifizierungen.",
+            sol_b3_title: "Wertvolle Kleinst-Communitys",
+            sol_b3_desc: "Tausche dich nach deinen Regeln aus. Finde deine Nische in fokussierten Gruppen ohne algorithmischen Druck oder manipulative Statistiken.",
+            promise_title: "Das Versprechen der Gründer",
+            promise_desc: "\"Meine Frau und ich haben NeuroComet ins Leben gerufen, weil wir selbst wissen, wie anstrengend moderne soziale Medien sind. Wir versprechen, niemals endlose Feeds, Suchtschleifen oder laute Alarme zu verwenden. Dies wird immer ein leiser, friedlicher Ort bleiben, der deinem zesty mind dient.\"",
+            promise_author: "— Burhan & Ehefrau, Mitgründer",
+            final_cta_title: "Bereit, deine Nische zu finden?",
+            final_cta_subtitle: "Trage dich noch heute in die Warteliste ein, um beim Start der geschlossenen Beta dabei zu sein."
         },
         ja: {
-            nav_eco: "エコシステム", nav_safety: "安全性", nav_global: "グローバル", nav_cta: "軌道に参加 (間もなく)",
-            hero_badge: "FlutterでiOSにも対応",
-            hero_title: "あなたのデジタル環境、<br /><span class=\"text-gradient\">あなたのために再構築。</span>",
-            hero_subtitle: "ダイナミックな感覚テーマ、AIによるコミュニケーション練習、安全なソーシャルスペースを備えた適応型エコシステムを体験してください。",
-            btn_gp_sub: "もうすぐ過集中", btn_as_sub: "スプーンを温存中",
-            eco_title: "NeuroComet エコシステム", eco_sub: "すべての機能はアクセシビリティ、安全性、成長のために一から設計されています。",
-            bento1_title: "適応型感覚テーマ", bento1_desc: "UIプロファイルをシームレスに切り替え。現在の認知状態に合わせてコントラスト、フォント、動きを動的に変更します。",
-            bento2_title: "スプーントラッキング", bento2_desc: "ウィジェットで毎日のエネルギーを監視。刺激の休憩や気分の変動を即座に記録します。",
-            bento3_title: "ニューロゲーム", bento3_desc: "集中力と感情の調整を支援するためにネイティブに構築されたインタラクティブなチュートリアルとゲーム化された対処メカニズム。",
-            bento4_badge: "Gemini AI 搭載", bento4_title: "模擬通話シミュレーター", bento4_desc: "電話不安がありますか？実際の電話をかける前に、安全なAIモデレートの音声環境で会話を練習しましょう。",
-            safe_dash_title: "安全ダッシュボード", safe_dash_sub: "SecurityUtils アクティブ", safe_item1: "DM プライバシーフィルター", safe_item2: "ペアレンタルコントロール", safe_item3: "トリガーワードのブロック",
-            safe_title: "妥協のないエンドツーエンドの安全性", safe_desc: "社会的交流は害にさらされることを意味するべきではありません。厳密にモデレートされたトリガーのない聖域を確保するために、強力なコンテンツフィルタリングを構築しました。",
-            safe_feat1_title: "ユニバーサルスキャフォールド", safe_feat1_desc: "AndroidとiOSで一貫したアクセス可能なレイアウトにより、デバイス切り替え時の認知的疲労を防ぎます。",
-            safe_feat2_title: "保護者の画面ブロック", safe_feat2_desc: "保護者管理モジュールを備えたオプションのリンクされたアカウント。信頼できる保護者が安全なナビゲーションを支援できます。",
-            global_title: "あなたの言葉で、<br/><span class=\"text-brand-400\">思いを伝えよう。</span>", global_sub: "ニューロダイバーシティは世界的なものです。自動翻訳を活用し、15以上の言語にローカライズされています。",
-            cta_title: "今日、あなたの軌道を見つけてください。", cta_sub: "NeuroCometをダウンロードして、あなたの心のために明示的に構築されたプラットフォームを体験してください。", cta_btn: "スプーンの準備を (近日公開)", cta_powered: "Kotlin、Flutter、Supabaseを活用",
-            foot_desc: "ニューロダイバージェントコミュニティに、彼らがふさわしいツール、安全性、カスタマイズ可能な環境を提供する専用のマルチプラットフォーム環境。", foot_col1: "プラットフォーム", foot_link1: "感覚のカスタマイズ", foot_link2: "模擬通話 AI", foot_link3: "安全ダッシュボード", foot_col2: "リソース", foot_link4: "保護者向けガイド", foot_link5: "プライバシーポリシー", foot_link6: "利用規約", foot_link7: "GitHub リポジトリ", foot_copy: "NeuroComet. 無断転載を禁じます。"
+            hero_badge: "Android & iOS ウェイティングリスト受付中",
+            hero_title: "刺激を抑えた、感覚にやさしい安全な居場所。",
+            hero_subtitle: "ニューロダイバージェントの当事者が、当事者のために構築。雑音もなく、混沌もない。ただ純粋なつながりを。",
+            cta_btn: "ウェイティングリストに登録",
+            success_msg: "ご登録ありがとうございます。リストに保存されました。",
+            prob_title: "従来のソーシャルメディアがもたらす過剰なノイズ",
+            prob_p1: "現代のアルゴリズムは、意図的に脳を過剰刺激するように設計されています。無限スクロール、点滅する通知、過度に鮮やかな色彩は、無意識の不安をあおることで注意を引きつけるためのものです。",
+            prob_p2: "ニューロダイバージェントの人々にとって、これは感覚過負荷、深刻な脳疲労、そして社交不安を誘発します。従来のタイムラインではノイズを遮断し、安心して過ごすことが非常に困難です。",
+            sol_title: "NeuroComet があなたのために再配線された理由",
+            sol_b1_title: "パーソナル感覚調整",
+            sol_b1_desc: "自分の心の状態に合わせてUIをカスタマイズ。アニメーションの削減、コントラスト、読みやすいフォント、落ち着いたカラーテーマを切り替えることができます。",
+            sol_b2_title: "厳格なセーフティガード",
+            sol_b2_desc: "嫌がらせのない優しいコミュニティ。強力なコンテンツフィルター、特定の単語の非表示、保護者アカウント連携、安心できる認証機能を提供します。",
+            sol_b3_title: "心地よい小規模コミュニティ",
+            sol_b3_desc: "自分のペースでつながる。過剰なアルゴリズムや無限スクロール、数値を競う指標のない、安心できる小さな居場所を見つけましょう。",
+            promise_title: "創設者の約束",
+            promise_desc: "「私たち夫婦がNeuroCometを作り始めたのは、現代のインターネットがいかに心を消耗させるかを身をもって知っているからです。私たちは、依存をあおる仕組みや、射幸心をそそる無限スクロール、うるさい通知は決して導入しないことを約束します。ここは常に、あなたの zesty mind のための静かで穏やかな場所です」",
+            promise_author: "— 創設者 Burhan ＆ 妻より",
+            final_cta_title: "あなたの居場所を見つけませんか？",
+            final_cta_subtitle: "ベータテスト開始時にいち早く体験するために、今すぐウェイティングリストにご登録ください。"
         },
         ko: {
-            nav_eco: "에코시스템", nav_safety: "안전", nav_global: "글로벌", nav_cta: "궤도 진입 (곧)",
-            hero_badge: "이제 Flutter를 통해 iOS 지원",
-            hero_title: "당신의 디지털 환경,<br /><span class=\"text-gradient\">당신을 위해 재구성됩니다.</span>",
-            hero_subtitle: "동적 감각 테마, AI 기반 커뮤니케이션 연습 및 안전한 소셜 공간을 특징으로 하는 적응형 에코시스템을 경험하세요.",
-            btn_gp_sub: "곧 과몰입 예정", btn_as_sub: "스푼을 아끼는 중",
-            eco_title: "NeuroComet 에코시스템", eco_sub: "모든 기능은 접근성, 안전 및 성장을 위해 기초부터 설계되었습니다.",
-            bento1_title: "적응형 감각 테마", bento1_desc: "UI 프로필을 매끄럽게 전환하세요. 현재 인지 상태에 맞게 대비, 글꼴 및 모션을 동적으로 변경합니다.",
-            bento2_title: "스푼 트래킹", bento2_desc: "위젯으로 일일 에너지를 모니터링하세요. 자극 휴식과 감정 변화를 즉시 추적합니다.",
-            bento3_title: "뉴로게임", bento3_desc: "집중력과 감정 조절을 돕기 위해 기본적으로 구축된 대화형 튜토리얼 및 게임화된 대처 메커니즘.",
-            bento4_badge: "Gemini AI 기반", bento4_title: "모의 통화 시뮬레이터", bento4_desc: "전화 불안증이 있나요? 실제 통화를 하기 전에 안전한 AI 조정 음성 환경에서 실제 대화를 연습하세요.",
-            safe_dash_title: "안전 대시보드", safe_dash_sub: "SecurityUtils 활성", safe_item1: "DM 개인정보 필터", safe_item2: "자녀 보호 기능", safe_item3: "트리거 단어 차단",
-            safe_title: "타협 없는 종단간 안전.", safe_desc: "사회적 상호 작용이 피해 노출을 의미해서는 안 됩니다. 엄격하게 조정되고 트리거가 없는 피드를 보장하기 위해 강력한 콘텐츠 필터링을 구축했습니다.",
-            safe_feat1_title: "범용 스캐폴드 아키텍처", safe_feat1_desc: "Android 및 iOS 전반에 걸친 일관되고 접근 가능한 레이아웃으로 기기 전환 시 인지 피로를 방지합니다.",
-            safe_feat2_title: "보호자 화면 차단", safe_feat2_desc: "자녀 보호 모듈이 포함된 선택적 연결 계정으로, 신뢰할 수 있는 보호자가 안전하게 탐색하도록 도울 수 있습니다.",
-            global_title: "당신의 언어로,<br/><span class=\"text-brand-400\">생각을 표현하세요.</span>", global_sub: "신경 다양성은 전 세계적인 것입니다. 자동 번역 파이프라인을 활용하여 15개 이상의 언어로 현지화되었습니다.",
-            cta_title: "오늘 당신의 궤도를 찾으세요.", cta_sub: "NeuroComet을 다운로드하고 마음이 작동하는 방식에 맞게 명시적으로 구축된 플랫폼을 경험하세요.", cta_btn: "스푼을 준비하세요 (출시 예정)", cta_powered: "Kotlin, Flutter 및 Supabase로 구동",
-            foot_desc: "신경 다양성 커뮤니티에 그들이 마땅히 누려야 할 도구, 안전 및 사용자 정의 가능한 환경을 제공하는 전용 다중 플랫폼 환경입니다.", foot_col1: "플랫폼", foot_link1: "감각 사용자 정의", foot_link2: "모의 통화 AI", foot_link3: "안전 대시보드", foot_col2: "리소스", foot_link4: "부모 가이드", foot_link5: "개인정보 보호정책", foot_link6: "서비스 약관", foot_link7: "GitHub 리포지토리", foot_copy: "NeuroComet. 판권 소유."
+            hero_badge: "Android 및 iOS 대기자 명단 모집 중",
+            hero_title: "자극을 줄인, 감각 친화적인 안전한 소셜 공간.",
+            hero_subtitle: "신경다양인을 위해 신경다양인이 직접 만든 공간. 복잡함도, 혼란도 없이 오직 편안한 연결만 존재합니다.",
+            cta_btn: "대기자 명단 등록하기",
+            success_msg: "등록해 주셔서 감사합니다. 명단에 성공적으로 보관되었습니다.",
+            prob_title: "기존 소셜 미디어가 가득 채운 피로감",
+            prob_p1: "대부분의 소셜 플랫폼은 무의식적인 불안을 자극하여 주의를 뺏도록 정밀하게 조작되어 있습니다. 끊임없는 스크롤, 번쩍이는 알림, 눈을 피로하게 하는 색상이 그 예입니다.",
+            prob_p2: "신경다양인에게 이러한 자극은 감각 과부하, 극심한 정신적 고갈, 대인 관계 불안을 유발합니다. 기존 피드 안에서 소음만 걸러내고 편안하게 소통하는 것은 거의 불가능에 가깝습니다.",
+            sol_title: "NeuroComet이 당신을 위해 존재하는 방식",
+            sol_b1_title: "개인화된 감각 제어",
+            sol_b1_desc: "정신 피로를 낮추는 UI. 애니메이션 축소, 명도 최적화, 읽기 쉬운 글꼴 설정, 그리고 눈이 편안한 감각 테마(Calm, Focus, Energy)를 지원합니다.",
+            sol_b2_title: "엄격한 안전 조치",
+            sol_b2_desc: "유해 행위가 없는 청정 공간. 정밀한 유해 단어 차단, 강력한 인공지능 모더레이션, 그리고 가족 연동을 지원하여 안심하고 소통할 수 있습니다.",
+            sol_b3_title: "의미 있는 소규모 공간",
+            sol_b3_desc: "가장 나다운 속도로 소통하세요. 과도한 알고리즘 경쟁이나 무한 스크롤, 해로운 지표가 없이 서로를 지지하는 소규모 모임만 존재합니다.",
+            promise_title: "창립자의 약속",
+            promise_desc: "\"저와 제 아내는 기존 소셜 플랫폼들이 사람의 정신을 얼마나 피폐하게 만드는지 뼈저리게 느꼈기에 NeuroComet을 만들기로 결심했습니다. 중독을 유발하는 무한 스크롤이나 알림 폭탄을 절대 도입하지 않겠습니다. 이곳은 언제나 당신의 zesty mind를 위해 고요하고 평온하게 지켜질 것입니다.\"",
+            promise_author: "— 공동 창립자 Burhan 부부 올림",
+            final_cta_title: "당신의 새로운 궤도를 만나보세요",
+            final_cta_subtitle: "베ータ 서비스 오픈 시 가장 빠르게 소식을 받아보시려면 대기자 명단에 지금 등록하세요."
         },
         tr: {
-            nav_eco: "Ekosistem", nav_safety: "Güvenlik", nav_global: "Küresel", nav_cta: "Yörüngeye Katıl (Yakında)",
-            hero_badge: "Şimdi Flutter ile iOS'ta",
-            hero_title: "Dijital Dünyanız,<br /><span class=\"text-gradient\">Zihniniz İçin Yeniden Tasarlandı.</span>",
-            hero_subtitle: "Dinamik duyusal temalar, yapay zeka destekli iletişim pratikleri ve güvenli bir sosyal alan sunan adaptif ekosistemi keşfedin.",
-            btn_gp_sub: "Yakında hiperfokus oluyoruz:", btn_as_sub: "Kaşıkları şunun için saklıyoruz:",
-            eco_title: "NeuroComet Ekosistemi", eco_sub: "Her özellik erişilebilirlik, güvenlik ve gelişim için temelden tasarlandı.",
-            bento1_title: "Adaptif Duyusal Temalar", bento1_desc: "Kullanıcı arayüzü profillerini sorunsuzca değiştirin. Mevcut bilişsel durumunuza uyması için kontrastı, yazı tiplerini ve hareketleri dinamik olarak değiştiriyoruz.",
-            bento2_title: "Kaşık (Enerji) Takibi", bento2_desc: "Ana ekran araç takımlarıyla günlük enerji seviyenizi izleyin. Rahatlama molalarını ve ruh hali dalgalanmalarını anında takip edin.",
-            bento3_title: "NöroOyunlar", bento3_desc: "Odaklanma ve duygu düzenlemesine yardımcı olmak için yerel olarak oluşturulmuş etkileşimli eğitimler ve oyunlaştırılmış başa çıkma mekanizmaları.",
-            bento4_badge: "Gemini AI Destekli", bento4_title: "Örnek Çağrı Simülatörü", bento4_desc: "Telefon kaygısı mı yaşıyorsunuz? Gerçek aramayı yapmadan önce güvenli, yapay zeka tarafından yönetilen bir ses ortamında gerçek dünya görüşmelerini pratik yapın.",
-            safe_dash_title: "Güvenlik Panosu", safe_dash_sub: "SecurityUtils Aktif", safe_item1: "DM Gizlilik Filtreleri", safe_item2: "Ebeveyn Kontrolleri", safe_item3: "Tetikleyici Kelime Engelleme",
-            safe_title: "Tavizsiz Uçtan Uca Güvenlik.", safe_desc: "Sosyal etkileşim zarar görme anlamına gelmemelidir. NeuroComet akışının sıkı bir şekilde denetlenen, tetikleyicisiz bir sığınak olarak kalmasını sağlamak için sağlam içerik filtrelemesi oluşturduk.",
-            safe_feat1_title: "Evrensel İskelet Mimarisi", safe_feat1_desc: "Cihaz değiştirirken bilişsel yorgunluğu önleyen, Android ve iOS'ta tutarlı, erişilebilir düzenler.",
-            safe_feat2_title: "Bakıcı Ekran Engelleme", safe_feat2_desc: "Güvenilir vasilerin güvenli bir şekilde gezinmeye yardımcı olmasını sağlayan ebeveyn kontrol modüllerine sahip isteğe bağlı bağlı hesaplar.",
-            global_title: "Düşüncelerinizi ifade edin.<br/><span class=\"text-brand-400\">Kendi dilinizde.</span>", global_sub: "Nöroçeşitlilik küreseldir. Otomatik çeviri hatlarını kullanan NeuroComet, 15'ten fazla dilde yerelleştirilmiştir.",
-            cta_title: "Yörüngenizi bugün bulun.", cta_sub: "NeuroComet'i indirin ve zihninizin çalışma şekli için özel olarak oluşturulmuş bir platformu deneyimleyin.", cta_btn: "Kaşıklarını hazırla (Yakında)", cta_powered: "Kotlin, Flutter ve Supabase tarafından desteklenmektedir.",
-            foot_desc: "Nöroçeşitli topluluğa hak ettikleri araçları, güvenliği ve özelleştirilebilir ortamı sunan özel, çok platformlu bir ortam.", foot_col1: "Platform", foot_link1: "Duyusal Özelleştirme", foot_link2: "Yapay Zeka Çağrıları", foot_link3: "Güvenlik Panosu", foot_col2: "Kaynaklar", foot_link4: "Ebeveyn Rehberi", foot_link5: "Gizlilik Politikası", foot_link6: "Hizmet Şartları", foot_link7: "GitHub Deposu", foot_copy: "NeuroComet. Tüm hakları saklıdır."
+            hero_badge: "Android & iOS için Bekleme Listesi Açık",
+            hero_title: "Güvenli, Duyusal Açıdan Sakin Bir Sosyal Alan.",
+            hero_subtitle: "Nöroçeşitli zihinler tarafından nöroçeşitli zihinler için oluşturuldu. Karmaşa yok, kaos yok. Sadece huzurlu bir bağ.",
+            cta_btn: "Bekleme Listesine Katıl",
+            success_msg: "Yörüngemize katıldığınız için teşekkürler. Yerinizi ayırdık.",
+            prob_title: "Geleneksel Sosyal Medyanın Yarattığı Gürültü",
+            prob_p1: "Modern algoritmalar zihni kasıtlı olarak aşırı uyarmak üzere tasarlanmıştır. Sonsuz kaydırmalar, sürekli parlayan bildirim rozetleri ve aşırı doygun görsellerle bilinçaltı kaygıyı tetikleyerek dikkatinizi tutsak alırlar.",
+            prob_p2: "Bu durum, nöroçeşitli bireyler için duyusal aşırı yüklenme, yoğun zihinsel yorgunluk ve sosyal kaygı yaratır. Geleneksel akışlar içerisinde güvenle ve yorulmadan bağ kurmak neredeyse imkansızdır.",
+            sol_title: "NeuroComet Sizin İçin Nasıl Yeniden Tasarlandı?",
+            sol_b1_title: "Duyusal Kontrol Paneli",
+            sol_b1_desc: "Arayüzü zihninize uydurun. Azaltılmış hareket modunu, kontrast seviyelerini, özel okuma fontlarını ve yumuşak duyusal ön ayarları (Calm, Focus, Energy) kolayca açın.",
+            sol_b2_title: "Sıkı Güvenlik ve Doğrulama",
+            sol_b2_desc: "Rahatsız edilmeyeceğiniz bir toplulukta yer alın. Gelişmiş içerik filtreleri, sessize alınmış kelime engelleyiciler, ebeveyn koruma bağlantıları ve isteğe bağlı doğrulamadan yararlanın.",
+            sol_b3_title: "Sakin ve Anlamlı Topluluklar",
+            sol_b3_desc: "Kendi şartlarınızla iletişim kurun. Algoritmik baskı, sonsuz kaydırma veya toksik etkileşim sayıları olmadan, sadece odaklanmış mikro topluluklarda yerinizi bulun.",
+            promise_title: "Kurucuların Sözü",
+            promise_desc: "\"Eşim ve ben, günümüz dijital dünyasının ne kadar yıpratıcı olduğunu bizzat bildiğimiz için NeuroComet'i inşa etmeye başladık. Söz veriyoruz ki asla sonu gelmeyen algoritmalar, bağımlılık yapıcı döngüler veya gürültülü bildirimler kullanmayacağız. Burası her zaman zesty mind'ınızı korumak için sessiz, sakin bir liman kalacak.\"",
+            promise_author: "— Burhan ve Eşi, Kurucu Ortaklar",
+            final_cta_title: "Kendi Yörüngeni Bulmaya Hazır mısın?",
+            final_cta_subtitle: "Beta erişimimiz açıldığında ilk deneyimleyenlerden olmak için bugün bekleme listemize katılın."
         },
         ar: {
-            nav_eco: "النظام البيئي", nav_safety: "الأمان", nav_global: "عالمي", nav_cta: "انضم للمدار (قريباً)",
-            hero_badge: "يتوسع الآن إلى نظام iOS عبر Flutter",
-            hero_title: "بيئتك الرقمية،<br /><span class=\"text-gradient\">أُعيد تصميمها من أجلك.</span>",
-            hero_subtitle: "جرب نظامًا بيئيًا تكيفيًا يتميز بسمات حسية ديناميكية، وممارسة اتصال مدفوعة بالذكاء الاصطناعي، ومساحة اجتماعية آمنة.",
-            btn_gp_sub: "التركيز المفرط قريباً على", btn_as_sub: "نحفظ طاقة الملاعق لـ",
-            eco_title: "نظام NeuroComet البيئي", eco_sub: "تم تصميم كل ميزة من الألف إلى الياء من أجل إمكانية الوصول والسلامة والنمو.",
-            bento1_title: "السمات الحسية التكيفية", bento1_desc: "قم بتبديل ملفات تعريف واجهة المستخدم بسلاسة. نقوم بتغيير التباين والخطوط والحركة ديناميكيًا لمطابقة حالتك المعرفية الحالية.",
-            bento2_title: "تتبع الطاقة (الملاعق)", bento2_desc: "راقب مستويات الطاقة اليومية باستخدام عناصر واجهة الشاشة الرئيسية. تتبع فترات الراحة والتقلبات المزاجية على الفور.",
-            bento3_title: "ألعاب الأعصاب", bento3_desc: "برامج تعليمية تفاعلية وآليات تأقلم مبنية بشكل أصلي للمساعدة في التركيز والتنظيم العاطفي.",
-            bento4_badge: "مدعوم من Gemini AI", bento4_title: "محاكي المكالمات الوهمية", bento4_desc: "هل تعاني من قلق الهاتف؟ تدرب على المحادثات في بيئة صوتية آمنة يديرها الذكاء الاصطناعي قبل إجراء المكالمة الحقيقية.",
-            safe_dash_title: "لوحة تحكم الأمان", safe_dash_sub: "أدوات الأمان نشطة", safe_item1: "فلاتر خصوصية الرسائل", safe_item2: "الرقابة الأبوية", safe_item3: "حظر الكلمات المزعجة",
-            safe_title: "أمان شامل لا هوادة فيه.", safe_desc: "التفاعل الاجتماعي لا ينبغي أن يعني التعرض للضرر. لقد صممنا تصفية قوية للمحتوى لضمان بقاء مجتمعنا ملاذًا آمنًا وخاليًا من المحفزات.",
-            safe_feat1_title: "بنية هندسية عالمية", safe_feat1_desc: "تخطيطات متسقة يسهل الوصول إليها عبر Android و iOS، مما يمنع الإرهاق المعرفي عند تبديل الأجهزة.",
-            safe_feat2_title: "حظر الشاشة لمقدمي الرعاية", safe_feat2_desc: "حسابات مرتبطة اختيارية مع وحدات رقابة أبوية، مما يسمح للأوصياء الموثوق بهم بالمساعدة في التنقل بأمان.",
-            global_title: "عبر عن أفكارك.<br/><span class=\"text-brand-400\">بلغتك.</span>", global_sub: "التنوع العصبي عالمي. باستخدام خطوط الترجمة الآلية، تم توطين NeuroComet إلى أكثر من 15 لغة.",
-            cta_title: "ابحث عن مدارك اليوم.", cta_sub: "قم بتنزيل NeuroComet واختبر منصة مصممة خصيصًا للطريقة التي يعمل بها عقلك.", cta_btn: "جهز ملاعقك (قريباً)", cta_powered: "مدعوم من Kotlin و Flutter و Supabase.",
-            foot_desc: "بيئة مخصصة متعددة المنصات تمنح مجتمع التنوع العصبي الأدوات والأمان والبيئة القابلة للتخصيص التي يستحقونها.", foot_col1: "المنصة", foot_link1: "التخصيص الحسي", foot_link2: "الذكاء الاصطناعي للمكالمات", foot_link3: "لوحة الأمان", foot_col2: "الموارد", foot_link4: "دليل الآباء", foot_link5: "سياسة الخصوصية", foot_link6: "شروط الخدمة", foot_link7: "مستودع GitHub", foot_copy: "NeuroComet. جميع الحقوق محفوظة."
+            hero_badge: "قائمة الانتظار مفتوحة لنظامي Android و iOS",
+            hero_title: "مساحة اجتماعية آمنة، ومريحة لحواسك.",
+            hero_subtitle: "بُنيت بأيدي وعقول ذوي التنوع العصبي ولأجلهم. لا فوضى. لا تشتيت. فقط تواصل هادئ.",
+            cta_btn: "انضم لقائمة الانتظار",
+            success_msg: "نشكرك لانضمامك إلى مدارنا، لقد حفظنا مكانك.",
+            prob_title: "ضوضاء وسائل التواصل الاجتماعي التقليدية",
+            prob_p1: "تم تصميم الخوارزميات الحديثة عمدًا لإثارة الدماغ بشكل مفرط. فهي تعتمد على التمرير اللانهائي، والإشعارات الوامضة، والألوان الفاقعة لجذب انتباهك من خلال إثارة القلق اللاواعي.",
+            prob_p2: "بالنسبة لذوي التنوع العصبي، يسبب هذا تشتتًا حسيًا شديدًا، وإرهاقًا ذهنيًا حادًا، وقلقًا اجتماعيًا. تجعل الواجهات التقليدية من الصعب جدًا تصفية هذا الضجيج والتواصل بأمان.",
+            sol_title: "كيف أعدنا تصميم NeuroComet من أجلك",
+            sol_b1_title: "أدوات تحكم حسية مخصصة",
+            sol_b1_desc: "قم بتخصيص الواجهة لتلائم راحة عقلك. تحكم في تقليل الحركة، ودرجة التباين، والخطوط المصممة لتسهيل القراءة، والسمات الحسية الهادئة (Calm, Focus, Energy).",
+            sol_b2_title: "أمان وفلاتر صارمة",
+            sol_b2_desc: "تواصل في مجتمع هادئ خالٍ من الإزعاج. استفد من فلاتر المحتوى القوية، وحظر الكلمات والمصطلحات المزعجة، وحسابات أولياء الأمور المترابطة.",
+            sol_b3_title: "مجتمعات صغيرة هادفة",
+            sol_b3_desc: "تواصل بشروطك الخاصة. اعثر على مجتمعك الهادئ دون أي ضغوط من خوارزميات الإدمان، أو تمرير لانهائي، أو أرقام وتفاعلات سامة.",
+            promise_title: "عهد المؤسسين",
+            promise_desc: "\"لقد بدأنا أنا وزوجتي في بناء NeuroComet لأننا نعرف جيدًا كم هي مرهقة ومستنزفة للروح تلك المنصات الاجتماعية التقليدية. نعدك بأننا لن نضع أبدًا تمريرًا لانهائيًا، أو آليات إدمانية، أو تنبيهات مزعجة. ستبقى هذه دائمًا مساحة هادئة وساكنة تخدم zesty mind الخاص بك.\"",
+            promise_author: "— برهان وزوجته، الشركاء المؤسسون",
+            final_cta_title: "هل أنت مستعد لتجد مدارك الخاص؟",
+            final_cta_subtitle: "انضم إلى قائمة الانتظار اليوم لتكون أول من يجرب بيئتنا الهادئة عند إطلاق النسخة التجريبية."
         }
     };
 
-    function changeLanguage(langCode, clickedBtn) {
-        const container = document.getElementById('translation-container');
+    function changeLanguage(langCode) {
+        const container = document.getElementById('main-content');
         container.style.opacity = '0';
 
         setTimeout(() => {
@@ -559,23 +518,37 @@
                 }
             });
 
+            // Handle RTL layout for Arabic
             if(langCode === 'ar') {
                 document.documentElement.setAttribute('dir', 'rtl');
             } else {
                 document.documentElement.setAttribute('dir', 'ltr');
             }
 
-            document.querySelectorAll('.lang-btn').forEach(btn => {
-                btn.className = "lang-btn px-4 py-2 rounded-full bg-white/5 border border-white/10 text-sm font-medium hover:bg-brand-500/50 transition-colors";
-            });
-
-            if(clickedBtn) {
-                clickedBtn.className = "lang-btn px-4 py-2 rounded-full bg-brand-500 text-white border border-brand-400 text-sm font-bold transition-colors";
-            }
-
             container.style.opacity = '1';
-        }, 300);
+            // Save preferred language
+            localStorage.setItem('preferred-lang', langCode);
+        }, 250);
     }
+
+    // Auto-detect browser preferred language or restore saved
+    window.addEventListener('DOMContentLoaded', () => {
+        const savedLang = localStorage.getItem('preferred-lang');
+        const langSelect = document.getElementById('lang-select');
+
+        if (savedLang && translations[savedLang]) {
+            langSelect.value = savedLang;
+            changeLanguage(savedLang);
+        } else {
+            const browserLang = navigator.language.substring(0, 2);
+            if (translations[browserLang]) {
+                langSelect.value = browserLang;
+                changeLanguage(browserLang);
+            } else {
+                changeLanguage('en');
+            }
+        }
+    });
 </script>
 </body>
 </html>

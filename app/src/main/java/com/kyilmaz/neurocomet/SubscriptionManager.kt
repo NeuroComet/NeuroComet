@@ -193,10 +193,10 @@ object SubscriptionManager {
         }
     }
 
-    fun isBillingConfigured(): Boolean = isBillingConfigured
+    fun isBillingConfigured(): Boolean = testMode || isBillingConfigured
 
     private fun requireBillingConfigured(onError: ((String) -> Unit)? = null): Boolean {
-        if (!isBillingConfigured) {
+        if (!isBillingConfigured()) {
             Log.e(TAG, BILLING_UNAVAILABLE_MESSAGE)
             onError?.invoke(BILLING_UNAVAILABLE_MESSAGE)
             return false
@@ -208,6 +208,21 @@ object SubscriptionManager {
      * Fetches available products from RevenueCat
      */
     fun fetchOfferings() {
+        if (testMode) {
+            _subscriptionState.value = _subscriptionState.value.copy(isLoading = true, error = null)
+            scope.launch {
+                kotlinx.coroutines.delay(1000)
+                _subscriptionState.value = _subscriptionState.value.copy(
+                    isLoading = false,
+                    offerings = null,
+                    currentOffering = null,
+                    monthlyPackage = null,
+                    lifetimePackage = null
+                )
+            }
+            return
+        }
+
         if (!requireBillingConfigured()) return
 
         _subscriptionState.value = _subscriptionState.value.copy(isLoading = true, error = null)
@@ -531,6 +546,21 @@ object SubscriptionManager {
      * Restore purchases
      */
     fun restorePurchases(onSuccess: (Boolean) -> Unit, onError: (String) -> Unit) {
+        if (testMode) {
+            _subscriptionState.value = _subscriptionState.value.copy(isLoading = true, error = null)
+            scope.launch {
+                kotlinx.coroutines.delay(1000)
+                val isPremium = isTestPremium
+                _subscriptionState.value = _subscriptionState.value.copy(
+                    isLoading = false,
+                    purchaseSuccess = isPremium,
+                    purchaseType = if (isPremium) "restored" else null
+                )
+                onSuccess(isPremium)
+            }
+            return
+        }
+
         if (!requireBillingConfigured(onError)) return
 
         _subscriptionState.value = _subscriptionState.value.copy(isLoading = true, error = null)
@@ -564,7 +594,7 @@ object SubscriptionManager {
 
     // ── Test Mode Helpers ─────────────────────────────────────
 
-    fun simulateTestSuccess(type: String = "debug") {
+    fun simulateTestSuccess(type: String = "monthly") {
         simulateTestPurchase(type) {}
     }
 
@@ -607,16 +637,18 @@ object SubscriptionManager {
         _subscriptionState.value = _subscriptionState.value.copy(isLoading = true, error = null)
         scope.launch {
             kotlinx.coroutines.delay(3000)
-            _subscriptionState.value = _subscriptionState.value.copy(isLoading = false)
+            _subscriptionState.value = _subscriptionState.value.copy(isLoading = true)
             Log.d(TAG, "🧪 TEST: Simulated TIMED_OUT (no response)")
         }
     }
 
     fun resetTestPurchase() {
+        if (!testMode) return
         isTestPremium = false
         _subscriptionState.value = _subscriptionState.value.copy(
             isPremium = false,
             purchaseSuccess = false,
+            purchaseType = null,
             error = null
         )
         Log.d(TAG, "🧪 TEST: Simulated Premium RESET")
@@ -629,7 +661,10 @@ object SubscriptionManager {
     }
 
     fun clearPurchaseSuccess() {
-        _subscriptionState.value = _subscriptionState.value.copy(purchaseSuccess = false)
+        _subscriptionState.value = _subscriptionState.value.copy(
+            purchaseSuccess = false,
+            purchaseType = null
+        )
     }
 
     fun clearError() {

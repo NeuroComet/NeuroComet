@@ -225,6 +225,7 @@ class SubscriptionManagerTest {
 
     @Test
     fun restorePurchases_testMode_restoresNothing_whenFree() = runTest {
+        SubscriptionManager.setTestMode(true)
         var restoredPremium: Boolean? = null
         var restoreError: String? = null
 
@@ -295,6 +296,7 @@ class SubscriptionManagerTest {
 
     @Test
     fun billingConfigured_truthy_inTestMode() {
+        SubscriptionManager.setTestMode(true)
         assertTrue(
             "In test mode, billing should always report configured",
             SubscriptionManager.isBillingConfigured()
