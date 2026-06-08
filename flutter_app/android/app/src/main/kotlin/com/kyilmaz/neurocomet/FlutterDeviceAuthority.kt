@@ -18,7 +18,7 @@ object FlutterDeviceAuthority {
     private val HOUSEHOLD_DEVICE_HASHES: Set<String> = setOf(
         // bkyil — Pixel 10 Pro
         "f9f1daddf36b9338c062cf2fd763cd4955511be1a01663d6483f7b25f3f94c46",
-        // bkyil's wife — Pixel 9
+        // Betul's device — Pixel 9
         "de12283e154b9760bace05816922ee650effddd56a25abf134bd96716b79e04e",
     )
 

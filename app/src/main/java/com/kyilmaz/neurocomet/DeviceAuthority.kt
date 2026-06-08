@@ -39,13 +39,13 @@ object DeviceAuthority {
     //   Build.FINGERPRINT + "|" + Build.BOARD + "|" + Build.BRAND +
     //   "|" + Build.MODEL + "|" + ANDROID_ID
     //
-    // Only the user's device and the wife's device belong here.
+    // Only the user's device and Betul's device belong here.
     // ──────────────────────────────────────────────────────────
     private val HOUSEHOLD_DEVICE_HASHES: Set<String> = setOf(
         // ── bkyil — Pixel 10 Pro (Android 17 / CP21.260306.017) ─
         "f9f1daddf36b9338c062cf2fd763cd4955511be1a01663d6483f7b25f3f94c46",
 
-        // ── bkyil's wife — Pixel 9 (Android 17 / CP21.260306.017)
+        // ── Betul's device — Pixel 9 (Android 17 / CP21.260306.017)
         "4d18ac796abdb71814159e41a7e5fdd5b63b4ba659d3a5be66cea9ee8dcef1b3",
     )
 
