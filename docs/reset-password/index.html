@@ -178,21 +178,35 @@
     window.addEventListener('DOMContentLoaded', async () => {
         // Supabase-js automatically parses the #access_token fragment from email links
         // and establishes a session in local storage.
-        const { data: { session }, error } = await supabase.auth.getSession();
-
-        if (error || !session) {
+    // Listen for auth state changes instead of checking synchronously
+    supabase.auth.onAuthStateChange(async (event, session) => {
+        if (event === 'PASSWORD_RECOVERY' || (event === 'SIGNED_IN' && window.location.hash.includes('type=recovery'))) {
+            // Session found! Show the password entry form
+            statusText.innerText = "Please enter your new password.";
+            resetForm.classList.remove('hidden');
+        } else if (event === 'SIGNED_OUT') {
+             // Ignore
+        } else if (!session) {
             // Check if there is an error in the hash fragment itself
             const hashParams = new URLSearchParams(window.location.hash.substring(1));
             if (hashParams.get('error_description')) {
                 showError(decodeURIComponent(hashParams.get('error_description')));
-            } else {
-                showError("No valid recovery session found. This link may have expired. Please request a new reset link from the app.");
+            } else if (!resetForm.classList.contains('hidden') && !successBox.classList.contains('flex')) {
+               // Only show general error if we didn't just successfully reset it
             }
-        } else {
-            // Session found! Show the password entry form
-            statusText.innerText = "Please enter your new password.";
-            resetForm.classList.remove('hidden');
         }
+    });
+
+    // Fallback error check if nothing happens after 2 seconds
+    window.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+            if (resetForm.classList.contains('hidden') && !successBox.classList.contains('flex') && !errorBox.classList.contains('hidden') == false) {
+                 const hashParams = new URLSearchParams(window.location.hash.substring(1));
+                 if (!hashParams.get('access_token')) {
+                      showError("No valid recovery session found. This link may have expired. Please request a new reset link from the app.");
+                 }
+            }
+        }, 2000);
     });
 
     resetForm.addEventListener('submit', async (e) => {
