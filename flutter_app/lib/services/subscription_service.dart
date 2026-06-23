@@ -7,7 +7,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 ///
 /// Products:
 /// - Monthly: $2/month ad-free subscription
-/// - Lifetime: $60 one-time purchase for lifetime ad-free
 ///
 /// Entitlement: "premium" — grants ad-free experience
 ///
@@ -21,11 +20,20 @@ class SubscriptionService {
 
   /// Product IDs configured in Play Console / App Store Connect
   static const String monthlyProductId = 'monthly_subscription';
-  static const String lifetimeProductId = 'lifetime_purchase';
-  static const Set<String> _productIds = {monthlyProductId, lifetimeProductId};
+  static const Set<String> _productIds = {monthlyProductId};
 
   /// Whether we are in debug / test mode.
-  static final bool testMode = kDebugMode;
+  static bool testMode = kDebugMode;
+
+  /// Set test mode enabled/disabled.
+  void setTestMode(bool enabled) {
+    testMode = enabled;
+    if (!enabled) resetTestPurchase();
+    debugPrint('$_tag 🧪 TEST: Test mode ${enabled ? "ENABLED" : "DISABLED"}');
+  }
+
+  /// Whether billing/IAP is configured or we are in testMode.
+  bool isBillingConfigured() => testMode || _iapAvailable;
 
   // ── IAP ────────────────────────────────────────────────────────
   final InAppPurchase _iap = InAppPurchase.instance;
@@ -34,7 +42,6 @@ class SubscriptionService {
 
   /// Resolved product details from the store
   ProductDetails? _monthlyProduct;
-  ProductDetails? _lifetimeProduct;
 
   // Pending callbacks stored during purchase flow
   VoidCallback? _pendingOnSuccess;
@@ -94,7 +101,7 @@ class SubscriptionService {
       return;
     }
 
-    if (!_iapAvailable) {
+    if (!isBillingConfigured()) {
       _update(state.copyWith(
         isLoading: false,
         error: 'Purchases are temporarily unavailable. Please try again later.',
@@ -120,15 +127,12 @@ class SubscriptionService {
       for (final product in response.productDetails) {
         if (product.id == monthlyProductId) {
           _monthlyProduct = product;
-        } else if (product.id == lifetimeProductId) {
-          _lifetimeProduct = product;
         }
       }
 
       _update(state.copyWith(
         isLoading: false,
         monthlyPackage: _monthlyProduct,
-        lifetimePackage: _lifetimeProduct,
       ));
       debugPrint('$_tag Fetched ${response.productDetails.length} products');
     } catch (e) {
@@ -152,7 +156,7 @@ class SubscriptionService {
     // If not premium locally, or if forced, try to check with the store (restore logic)
     if (!isPremium || forceStoreCheck) {
       debugPrint('$_tag Local premium false or forced. Checking store for past purchases...');
-      if (_iapAvailable) {
+      if (isBillingConfigured()) {
         try {
           // This is a lightweight way to check for active purchases without a full restore UI
           await _iap.restorePurchases();
@@ -183,19 +187,6 @@ class SubscriptionService {
         product: _monthlyProduct, onSuccess: onSuccess, onError: onError);
   }
 
-  /// Purchase the lifetime subscription.
-  Future<void> purchaseLifetime({
-    VoidCallback? onSuccess,
-    ValueChanged<String>? onError,
-  }) async {
-    if (testMode) {
-      await _simulateTestPurchase('lifetime', onSuccess);
-      return;
-    }
-    await _purchasePackage('lifetime',
-        product: _lifetimeProduct, onSuccess: onSuccess, onError: onError);
-  }
-
   /// Restore purchases.
   Future<void> restorePurchases({
     ValueChanged<bool>? onSuccess,
@@ -204,18 +195,20 @@ class SubscriptionService {
     _update(state.copyWith(isLoading: true, error: null));
     if (testMode) {
       await Future.delayed(const Duration(milliseconds: 800));
-      _update(state.copyWith(
+      final nextState = state.copyWith(
         isLoading: false,
         isPremium: _isTestPremium,
         purchaseSuccess: _isTestPremium,
-        purchaseType: _isTestPremium ? 'restored' : null,
-      ));
+      );
+      _update(_isTestPremium
+          ? nextState.copyWith(purchaseType: 'restored')
+          : nextState.copyWithClear(clearPurchaseType: true));
       debugPrint('$_tag 🧪 TEST MODE: Restore — premium = $_isTestPremium');
       onSuccess?.call(_isTestPremium);
       return;
     }
 
-    if (!_iapAvailable) {
+    if (!isBillingConfigured()) {
       _update(state.copyWith(isLoading: false, error: 'Store not available'));
       onError?.call('Store not available');
       return;
@@ -235,7 +228,7 @@ class SubscriptionService {
 
   /// Clear the [purchaseSuccess] flag (call after the UI has shown the result).
   void clearPurchaseSuccess() {
-    _update(state.copyWith(purchaseSuccess: false, purchaseType: null));
+    _update(state.copyWith(purchaseSuccess: false).copyWithClear(clearPurchaseType: true));
   }
 
   /// Clear the error message.
@@ -247,7 +240,7 @@ class SubscriptionService {
   void resetTestPurchase() {
     if (!testMode) return;
     _isTestPremium = false;
-    _stateNotifier.value = const SubscriptionState();
+    _update(const SubscriptionState());
     debugPrint('$_tag 🧪 TEST MODE: Premium status reset to FREE');
   }
 
@@ -285,6 +278,7 @@ class SubscriptionService {
     if (!testMode) return;
     _update(state.copyWith(isLoading: true, error: null));
     await Future.delayed(const Duration(milliseconds: 600));
+    _update(state.copyWith(isLoading: true));
     debugPrint('$_tag 🧪 TEST: Simulated TIMED_OUT (no response)');
   }
 
@@ -302,7 +296,7 @@ class SubscriptionService {
   }) async {
     _update(state.copyWith(isLoading: true, error: null));
 
-    if (!_iapAvailable || product == null) {
+    if (!isBillingConfigured() || product == null) {
       // Fallback: if store not available, show error
       const msg = 'Purchases are temporarily unavailable. Please try again later.';
       _update(state.copyWith(isLoading: false, error: msg));
@@ -317,7 +311,7 @@ class SubscriptionService {
 
       final purchaseParam = PurchaseParam(productDetails: product);
 
-      // Lifetime is non-consumable, monthly is non-consumable (subscription)
+      // monthly is non-consumable (subscription)
       final success = await _iap.buyNonConsumable(purchaseParam: purchaseParam);
       if (!success) {
         _update(state.copyWith(isLoading: false, error: 'Purchase could not be initiated'));
@@ -354,7 +348,7 @@ class SubscriptionService {
 
           final type = purchase.status == PurchaseStatus.restored
               ? 'restored'
-              : (purchase.productID == monthlyProductId ? 'monthly' : 'lifetime');
+              : 'monthly';
 
           _update(state.copyWith(
             isLoading: false,
@@ -427,7 +421,6 @@ class SubscriptionState {
   // Offerings placeholders (will be populated by IAP)
   final dynamic offerings;
   final dynamic monthlyPackage;
-  final dynamic lifetimePackage;
 
   const SubscriptionState({
     this.isLoading = false,
@@ -437,7 +430,6 @@ class SubscriptionState {
     this.error,
     this.offerings,
     this.monthlyPackage,
-    this.lifetimePackage,
   });
 
   SubscriptionState copyWith({
@@ -448,7 +440,6 @@ class SubscriptionState {
     String? error,
     dynamic offerings,
     dynamic monthlyPackage,
-    dynamic lifetimePackage,
   }) {
     return SubscriptionState(
       isLoading: isLoading ?? this.isLoading,
@@ -458,7 +449,6 @@ class SubscriptionState {
       error: error ?? this.error,
       offerings: offerings ?? this.offerings,
       monthlyPackage: monthlyPackage ?? this.monthlyPackage,
-      lifetimePackage: lifetimePackage ?? this.lifetimePackage,
     );
   }
 
@@ -475,7 +465,6 @@ class SubscriptionState {
       error: clearError ? null : error,
       offerings: offerings,
       monthlyPackage: monthlyPackage,
-      lifetimePackage: lifetimePackage,
     );
   }
 
@@ -490,8 +479,7 @@ class SubscriptionState {
           purchaseType == other.purchaseType &&
           error == other.error &&
           offerings == other.offerings &&
-          monthlyPackage == other.monthlyPackage &&
-          lifetimePackage == other.lifetimePackage;
+          monthlyPackage == other.monthlyPackage;
 
   @override
   int get hashCode =>
@@ -501,8 +489,7 @@ class SubscriptionState {
       purchaseType.hashCode ^
       error.hashCode ^
       offerings.hashCode ^
-      monthlyPackage.hashCode ^
-      lifetimePackage.hashCode;
+      monthlyPackage.hashCode;
 
   @override
   String toString() =>

@@ -9,6 +9,8 @@ import '../../widgets/common/neuro_loading.dart';
 import '../../widgets/post/post_card.dart';
 import '../../widgets/profile/neuro_traits.dart';
 import '../../l10n/app_localizations.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../providers/feed_provider.dart';
 
 /// Profile tab options matching Kotlin version
 enum ProfileTab {
@@ -746,14 +748,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
   }
 
   void _toggleFollow(String userId) {
-    // Optimistic toggle – fire-and-forget backend call
     try {
-      SupabaseService.isFollowing(userId).then((following) {
-        if (following) {
-          SupabaseService.unfollowUser(userId);
-        } else {
-          SupabaseService.followUser(userId);
-        }
+      ref.read(followingUserIdsProvider.notifier).toggleFollow(userId).then((_) {
+        ref.invalidate(feedProvider);
       });
     } catch (e) {
       debugPrint('Follow toggle error: $e');

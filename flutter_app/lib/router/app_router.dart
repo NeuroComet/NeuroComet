@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../screens/auth/auth_screen.dart';
+import '../screens/auth/reset_password_screen.dart';
 import '../screens/home/home_screen.dart';
 import '../screens/feed/feed_screen.dart';
 import '../screens/feed/create_post_screen.dart';
@@ -73,13 +74,13 @@ class AppRouter {
     initialLocation: _initialLocation,
     redirect: (context, state) {
       final isAuthenticated = SupabaseService.isAuthenticated;
-      final isAuthRoute = state.matchedLocation == '/auth';
+      final isAuthRoute = state.matchedLocation == '/auth' || state.matchedLocation.startsWith('/reset-password');
 
       if (!isAuthenticated && !isAuthRoute) {
         return '/auth';
       }
 
-      if (isAuthenticated && isAuthRoute) {
+      if (isAuthenticated && state.matchedLocation == '/auth') {
         return _initialLocation;
       }
 
@@ -90,6 +91,10 @@ class AppRouter {
       GoRoute(
         path: '/auth',
         builder: (context, state) => const AuthScreen(),
+      ),
+      GoRoute(
+        path: '/reset-password',
+        builder: (context, state) => const ResetPasswordScreen(),
       ),
 
       // Main Shell Route with Bottom Navigation - matches Android: Feed, Explore, Messages, Notifications, Settings

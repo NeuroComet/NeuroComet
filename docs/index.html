@@ -85,8 +85,22 @@
 </head>
 <body class="bg-cream-100 text-slatecustom-800 dark:bg-cream-900 dark:text-gray-200 antialiased overflow-x-hidden selection:bg-sage-200 selection:text-sage-600 transition-colors duration-300">
 
+<!-- App Banners -->
+<div id="app-banner" class="bg-sage-500 text-white text-center py-2 px-4 hidden md:hidden flex justify-between items-center z-50 relative">
+    <div class="flex items-center gap-3">
+        <i class="fa-solid fa-meteor text-xl"></i>
+        <div class="text-left">
+            <p class="font-bold text-sm m-0 leading-tight">NeuroComet</p>
+            <p class="text-xs m-0 opacity-80 leading-tight">A Safe, Sensory-Friendly Social Space</p>
+        </div>
+    </div>
+    <a href="intent://getneurocomet.com/#Intent;scheme=https;package=com.kyilmaz.neurocomet;end" class="bg-white text-sage-600 text-xs font-bold py-1 px-3 rounded-full hover:bg-cream-100 transition-colors">
+        OPEN IN APP
+    </a>
+</div>
+
 <!-- Navigation Bar -->
-<nav class="border-b border-cream-200 dark:border-gray-800 bg-cream-50/80 dark:bg-cream-900/80 backdrop-blur-md fixed w-full z-50 transition-colors duration-300">
+<nav class="border-b border-cream-200 dark:border-gray-800 bg-cream-50/80 dark:bg-cream-900/80 backdrop-blur-md fixed w-full z-40 transition-colors duration-300" id="main-nav">
     <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
         <a href="#" class="flex items-center gap-3 group focus:outline-none focus:ring-2 focus:ring-sage-500 rounded-lg p-1">
             <span class="w-8 h-8 rounded-lg bg-sage-500 text-cream-100 flex items-center justify-center font-bold text-lg shadow-sm">
@@ -202,6 +216,56 @@
                     <p class="text-sm md:text-base text-slatecustom-600 dark:text-gray-300 font-body leading-relaxed" data-i18n="sol_b3_desc">
                         Connect on your own terms. Find your orbit through focused micro-communities with zero algorithmic pressure, no infinite scrolls, and no toxic metrics.
                     </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- [ Section 3.5: Security & Privacy ] -->
+    <section class="border-t border-cream-200 dark:border-gray-800 bg-cream-100 dark:bg-cream-900 py-20 transition-colors">
+        <div class="max-w-4xl mx-auto px-6">
+            <h2 class="text-3xl font-bold text-slatecustom-800 dark:text-gray-100 mb-6 text-center" data-i18n="sec_title">State-of-the-Art Security</h2>
+            <p class="text-center text-slatecustom-600 dark:text-gray-300 mb-12 max-w-2xl mx-auto" data-i18n="sec_desc">Your account and data are protected by the latest authentication standards. We believe peace of mind is essential for a safe social space.</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+                <div class="flex gap-4 items-start p-6 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-cream-200 dark:border-gray-700">
+                    <div class="w-10 h-10 bg-sage-500/10 text-sage-600 rounded-lg flex items-center justify-center shrink-0">
+                        <i class="fa-solid fa-fingerprint"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-slatecustom-800 dark:text-gray-100 mb-1" data-i18n="sec_bio_title">Biometric Login</h4>
+                        <p class="text-sm text-slatecustom-600 dark:text-gray-400" data-i18n="sec_bio_desc">Use your fingerprint or face scan to securely log in without remembering passwords.</p>
+                    </div>
+                </div>
+
+                <div class="flex gap-4 items-start p-6 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-cream-200 dark:border-gray-700">
+                    <div class="w-10 h-10 bg-sage-500/10 text-sage-600 rounded-lg flex items-center justify-center shrink-0">
+                        <i class="fa-solid fa-key"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-slatecustom-800 dark:text-gray-100 mb-1" data-i18n="sec_fido_title">Passkey Support</h4>
+                        <p class="text-sm text-slatecustom-600 dark:text-gray-400" data-i18n="sec_fido_desc">Next-generation phishing-resistant FIDO2 hardware keys and passkeys supported natively.</p>
+                    </div>
+                </div>
+
+                <div class="flex gap-4 items-start p-6 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-cream-200 dark:border-gray-700">
+                    <div class="w-10 h-10 bg-sage-500/10 text-sage-600 rounded-lg flex items-center justify-center shrink-0">
+                        <i class="fa-solid fa-mobile-screen"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-slatecustom-800 dark:text-gray-100 mb-1" data-i18n="sec_mfa_title">Authenticator Apps (2FA)</h4>
+                        <p class="text-sm text-slatecustom-600 dark:text-gray-400" data-i18n="sec_mfa_desc">Link your favorite authenticator app (Google Authenticator, Authy, etc.) for robust two-factor security.</p>
+                    </div>
+                </div>
+
+                <div class="flex gap-4 items-start p-6 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-cream-200 dark:border-gray-700">
+                    <div class="w-10 h-10 bg-sage-500/10 text-sage-600 rounded-lg flex items-center justify-center shrink-0">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-slatecustom-800 dark:text-gray-100 mb-1" data-i18n="sec_backup_title">Backup Codes</h4>
+                        <p class="text-sm text-slatecustom-600 dark:text-gray-400" data-i18n="sec_backup_desc">Never lose access to your account with secure, one-time-use backup codes.</p>
+                    </div>
                 </div>
             </div>
         </div>

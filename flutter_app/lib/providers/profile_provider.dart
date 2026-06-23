@@ -5,6 +5,39 @@ import '../models/post.dart';
 import '../models/custom_avatar.dart';
 import '../widgets/profile/neuro_traits.dart';
 import '../services/supabase_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+final followingUserIdsProvider = NotifierProvider<FollowingUserIdsNotifier, Set<String>>(
+  FollowingUserIdsNotifier.new,
+);
+
+class FollowingUserIdsNotifier extends Notifier<Set<String>> {
+  @override
+  Set<String> build() {
+    _load();
+    return const {};
+  }
+
+  Future<void> _load() async {
+    final prefs = await SharedPreferences.getInstance();
+    state = (prefs.getStringList('following_users') ?? []).toSet();
+  }
+
+  Future<void> toggleFollow(String userId) async {
+    final prefs = await SharedPreferences.getInstance();
+    final currentSet = state.contains(userId) 
+        ? (Set<String>.from(state)..remove(userId)) 
+        : (Set<String>.from(state)..add(userId));
+    
+    if (state.contains(userId)) {
+      await SupabaseService.unfollowUser(userId);
+    } else {
+      await SupabaseService.followUser(userId);
+    }
+    await prefs.setStringList('following_users', currentSet.toList());
+    state = currentSet;
+  }
+}
 
 final currentUserProfileProvider = FutureProvider<User>((ref) async {
   debugPrint('[ProfileProvider] Checking Supabase state: '
@@ -1064,6 +1097,11 @@ final fakeProfileDataProvider = Provider.family<FakeProfileData?, String>((ref, 
 });
 
 final profileProvider = FutureProvider.family<User, String>((ref, userId) async {
+  final followingSet = ref.watch(followingUserIdsProvider);
+  final locallyFollowing = followingSet.contains(userId);
+
+  User baseUser;
+
   // Use Supabase when initialized (regardless of whether current user is authenticated,
   // since public profiles can be fetched with anon key).
   if (SupabaseService.isInitialized) {
@@ -1071,32 +1109,54 @@ final profileProvider = FutureProvider.family<User, String>((ref, userId) async 
       final profile = await SupabaseService.getUserProfile(userId);
       if (profile != null) {
         debugPrint('[profileProvider] ✅ Loaded $userId from Supabase: ${profile.displayName}');
-        return profile;
+        baseUser = profile;
+      } else {
+        debugPrint('[profileProvider] No Supabase row for $userId, trying fake profiles');
+        final fakeProfile = _fakeProfiles[userId];
+        baseUser = fakeProfile?.user ?? User(
+          id: userId,
+          displayName: 'User $userId',
+          username: 'user_$userId',
+          avatarUrl: 'https://i.pravatar.cc/150?u=user_$userId',
+          bio: 'Hello! I\'m a NeuroComet user.',
+          postCount: 15,
+          followerCount: 234,
+          followingCount: 89,
+          isFollowing: false,
+        );
       }
-      debugPrint('[profileProvider] No Supabase row for $userId, trying fake profiles');
     } catch (e) {
       debugPrint('[profileProvider] ❌ Supabase fetch failed for $userId: $e');
+      final fakeProfile = _fakeProfiles[userId];
+      baseUser = fakeProfile?.user ?? User(
+        id: userId,
+        displayName: 'User $userId',
+        username: 'user_$userId',
+        avatarUrl: 'https://i.pravatar.cc/150?u=user_$userId',
+        bio: 'Hello! I\'m a NeuroComet user.',
+        postCount: 15,
+        followerCount: 234,
+        followingCount: 89,
+        isFollowing: false,
+      );
     }
+  } else {
+    // Fallback: Check the fake-profile database (only when not authenticated)
+    final fakeProfile = _fakeProfiles[userId];
+    baseUser = fakeProfile?.user ?? User(
+      id: userId,
+      displayName: 'User $userId',
+      username: 'user_$userId',
+      avatarUrl: 'https://i.pravatar.cc/150?u=user_$userId',
+      bio: 'Hello! I\'m a NeuroComet user.',
+      postCount: 15,
+      followerCount: 234,
+      followingCount: 89,
+      isFollowing: false,
+    );
   }
 
-  // Fallback: Check the fake-profile database (only when not authenticated)
-  final fakeProfile = _fakeProfiles[userId];
-  if (fakeProfile != null) {
-    return fakeProfile.user;
-  }
-
-  // Fallback for unknown user IDs
-  return User(
-    id: userId,
-    displayName: 'User $userId',
-    username: 'user_$userId',
-    avatarUrl: 'https://i.pravatar.cc/150?u=user_$userId',
-    bio: 'Hello! I\'m a NeuroComet user.',
-    postCount: 15,
-    followerCount: 234,
-    followingCount: 89,
-    isFollowing: false,
-  );
+  return baseUser.copyWith(isFollowing: locallyFollowing || baseUser.isFollowing);
 });
 
 final userPostsProvider = FutureProvider.family<List<Post>, String>((ref, userId) async {

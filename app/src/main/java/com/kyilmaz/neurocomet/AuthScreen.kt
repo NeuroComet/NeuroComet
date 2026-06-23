@@ -74,7 +74,8 @@ fun AuthScreen(
     error: String?,
     animationSettings: AnimationSettings = AnimationSettings(),
     showDevBypass: Boolean = false,
-    onSkip: (() -> Unit)? = null
+    onSkip: (() -> Unit)? = null,
+    onForgotPassword: (String) -> Unit = {}
 ) {
     val canonicalLayout = LocalCanonicalLayout.current
     val focusManager = LocalFocusManager.current
@@ -98,6 +99,37 @@ fun AuthScreen(
     var showAgeDialog by remember { mutableStateOf(false) }
     var pendingEmail by remember { mutableStateOf("") }
     var pendingPassword by remember { mutableStateOf("") }
+
+    var showForgotDialog by remember { mutableStateOf(false) }
+    var forgotEmail by remember { mutableStateOf("") }
+
+    if (showForgotDialog) {
+        androidx.compose.material3.AlertDialog(
+            onDismissRequest = { showForgotDialog = false },
+            title = { Text("Reset Password") },
+            text = {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text("Enter your email address and we'll send you a link to reset your password.")
+                    OutlinedTextField(
+                        value = forgotEmail,
+                        onValueChange = { forgotEmail = it },
+                        label = { Text("Email Address") },
+                        singleLine = true,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    showForgotDialog = false
+                    onForgotPassword(forgotEmail)
+                }) { Text("Send Reset Link") }
+            },
+            dismissButton = {
+                TextButton(onClick = { showForgotDialog = false }) { Text("Cancel") }
+            }
+        )
+    }
 
     val isSignIn = selectedTabIndex == 0
     val resolvedError = error ?: localError
@@ -202,7 +234,11 @@ fun AuthScreen(
                             }
                         },
                         onSkip = if (!is2FARequired) onSkip else null,
-                        showDevBypass = showDevBypass
+                        showDevBypass = showDevBypass,
+                        onForgotPasswordClick = {
+                            forgotEmail = email
+                            showForgotDialog = true
+                        }
                     )
                     AuthHeroPanel(
                         modifier = Modifier.weight(1f),
@@ -269,7 +305,11 @@ fun AuthScreen(
                             }
                         },
                         onSkip = if (!is2FARequired) onSkip else null,
-                        showDevBypass = showDevBypass
+                        showDevBypass = showDevBypass,
+                        onForgotPasswordClick = {
+                            forgotEmail = email
+                            showForgotDialog = true
+                        }
                     )
                 }
             }
@@ -436,7 +476,8 @@ private fun AuthFormCard(
     onPrimaryAction: () -> Unit,
     onVerify2FA: () -> Unit,
     onSkip: (() -> Unit)?,
-    showDevBypass: Boolean
+    showDevBypass: Boolean,
+    onForgotPasswordClick: () -> Unit = {}
 ) {
     Card(
         modifier = modifier,
@@ -541,6 +582,22 @@ private fun AuthFormCard(
                     onTogglePasswordVisibility = onTogglePasswordVisibility,
                     imeAction = if (isSignIn) ImeAction.Done else ImeAction.Next
                 )
+
+                if (isSignIn) {
+                    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterEnd) {
+                        Text(
+                            text = "Forgot Password?",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.primary,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier
+                                .clickable { 
+                                    onForgotPasswordClick()
+                                }
+                                .padding(vertical = 4.dp)
+                        )
+                    }
+                }
 
                 AnimatedVisibility(
                     visible = !isSignIn,

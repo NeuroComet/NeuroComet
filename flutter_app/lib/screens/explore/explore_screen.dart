@@ -5,6 +5,8 @@ import 'package:share_plus/share_plus.dart';
 import '../../widgets/common/neuro_avatar.dart';
 import '../../l10n/app_localizations.dart';
 import '../../core/theme/app_colors.dart';
+import '../feed/feed_screen.dart' show CommentsSheet;
+import '../../services/privacy_service.dart';
 
 /// Premium Explore Screen - Discover content with beautiful animations
 class ExploreScreen extends ConsumerStatefulWidget {
@@ -28,6 +30,9 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen>
   void initState() {
     super.initState();
     _tabController = TabController(length: 4, vsync: this);
+    _tabController.addListener(() {
+      if (mounted) setState(() {});
+    });
     _searchController.addListener(_onSearchChanged);
 
     _headerAnimController = AnimationController(
@@ -947,6 +952,24 @@ class _ForYouTabState extends State<_ForYouTab> {
             return false; // hide if it doesn't match
           }).toList();
 
+    final privacy = PrivacyService();
+    final blocked = privacy.blockedUsers.value;
+    final muted = privacy.mutedUsers.value;
+    final hidden = privacy.hiddenPosts.value;
+    final words = privacy.mutedWords.value;
+
+    final filteredForYouPosts = forYouPosts.where((post) {
+      final author = post.username;
+      if (blocked.contains(author)) return false;
+      if (muted.contains(author)) return false;
+      if (hidden.contains(post.id.toString())) return false;
+      if (words.isNotEmpty) {
+        final contentLower = post.content.toLowerCase();
+        if (words.any((w) => contentLower.contains(w))) return false;
+      }
+      return true;
+    }).toList();
+
     return RefreshIndicator(
       onRefresh: () async => HapticFeedback.mediumImpact(),
       color: theme.colorScheme.primary,
@@ -976,7 +999,7 @@ class _ForYouTabState extends State<_ForYouTab> {
           _SectionHeader(title: 'Curated For You', icon: Icons.favorite_rounded),
           const SizedBox(height: 12),
 
-          if (forYouPosts.isEmpty)
+          if (filteredForYouPosts.isEmpty)
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 48),
               child: Center(
@@ -992,7 +1015,7 @@ class _ForYouTabState extends State<_ForYouTab> {
               ),
             )
           else
-            ...forYouPosts.map((post) => _ExplorePostCard(post: post)),
+            ...filteredForYouPosts.map((post) => _ExplorePostCard(post: post)),
         ],
       ),
     );
@@ -1698,6 +1721,15 @@ class _ExplorePostCardState extends State<_ExplorePostCard> with AutomaticKeepAl
     _likeCount = widget.post.likes;
   }
 
+  @override
+  void didUpdateWidget(covariant _ExplorePostCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.post.id != widget.post.id) {
+      _isLiked = widget.post.isLiked;
+      _likeCount = widget.post.likes;
+    }
+  }
+
   void _handleShare() async {
     try {
       final box = context.findRenderObject() as RenderBox?;
@@ -1937,7 +1969,12 @@ class _ExplorePostCardState extends State<_ExplorePostCard> with AutomaticKeepAl
                 GestureDetector(
                   onTap: () {
                     HapticFeedback.lightImpact();
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Comments feature coming soon!'), behavior: SnackBarBehavior.floating));
+                    showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      backgroundColor: Colors.transparent,
+                      builder: (context) => CommentsSheet(postId: post.id.toString()),
+                    );
                   },
                   behavior: HitTestBehavior.opaque,
                   child: Padding(

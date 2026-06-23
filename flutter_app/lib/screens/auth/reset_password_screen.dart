@@ -35,7 +35,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
 
     try {
       await SupabaseService.client.auth.updateUser(
-        // @ts-ignore
+        // ignore: undefined_identifier
         org.supabase.supabase_flutter.UserAttributes(
           password: _passwordController.text,
         ),

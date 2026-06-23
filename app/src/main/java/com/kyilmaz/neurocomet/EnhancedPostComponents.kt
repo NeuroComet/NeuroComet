@@ -909,8 +909,8 @@ fun EnhancedCreatePostDialog(
                 if (resolved == null) {
                     Toast.makeText(
                         context,
-                        "Unable to get your current location right now.",
-                        Toast.LENGTH_SHORT
+                        "Location unavailable. Please check if device location services are turned on.",
+                        Toast.LENGTH_LONG
                     ).show()
                 } else {
                     locationTag = resolved

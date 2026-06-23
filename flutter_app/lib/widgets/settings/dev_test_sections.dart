@@ -69,6 +69,11 @@ const _requiredSupabaseTables = <String>[
   'call_signals',
   'call_history',
   'stories',
+  'feedback',
+  'user_game_achievements',
+  'practice_call_logs',
+  'user_preferences',
+  'ab_test_assignments',
 ];
 
 String _normalizeDevRoute(String route) {
@@ -5269,9 +5274,15 @@ class _SupabaseDbTestingDevSectionState
     try {
       for (final table in _tables) {
         try {
+          final selectCol = (table == 'user_game_achievements' ||
+                  table == 'user_preferences' ||
+                  table == 'ab_test_assignments' ||
+                  table == 'practice_call_logs')
+              ? 'user_id'
+              : 'id';
           final response = await SupabaseService.client
               .from(table)
-              .select('id')
+              .select(selectCol)
               .count(CountOption.exact);
           if (!mounted) return;
           setState(() => _tableCounts[table] = response.count);

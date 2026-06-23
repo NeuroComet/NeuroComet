@@ -9,8 +9,8 @@ class GeminiEnv {
 
   // Encrypted with SecurityUtils XOR key
   static const String _obfuscatedApiKey =
-      '2f2c0f133c1a2b5824423c5100382d3a250d0a0b'
-      '1c310a43083e303a08041f0b18035378521e51';
+      '2f345b330d5b3d23533f353f0842110a00053d1930260401421b3718285d5c48'
+      '0f5a4159420d372d463e11573924326f3d0f3d0623';
 
   /// Decrypted Gemini API key.
   static String get apiKey => SecurityUtils.decrypt(_obfuscatedApiKey);

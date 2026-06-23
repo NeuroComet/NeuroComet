@@ -7,6 +7,7 @@ import '../../models/dev_options.dart';
 import '../../providers/feed_provider.dart';
 import '../../providers/messages_provider.dart';
 import '../../providers/notifications_provider.dart';
+import '../../providers/feed_provider.dart';
 import '../../providers/stories_provider.dart';
 import '../../services/device_authorization_service.dart';
 import '../../services/supabase_service.dart';

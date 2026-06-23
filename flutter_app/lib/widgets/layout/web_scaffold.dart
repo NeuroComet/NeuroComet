@@ -313,7 +313,7 @@ class WebScaffold extends StatelessWidget {
               ),
             ),
           const Spacer(),
-          if (actions != null) ...actions!,
+          ...?actions,
         ],
       ),
     );

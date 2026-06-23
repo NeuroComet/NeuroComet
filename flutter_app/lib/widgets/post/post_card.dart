@@ -248,7 +248,15 @@ class _PostCardState extends ConsumerState<PostCard>
 
     // Compact variant: Infinity-for-Reddit style flat list item
     if (isCompact) {
-      return _buildCompactLayout(context, theme, emotionalTone);
+      return GestureDetector(
+        onTap: () {
+          // Add onTap for compact variant to view post
+          if (widget.onComment != null) {
+            widget.onComment!();
+          }
+        },
+        child: _buildCompactLayout(context, theme, emotionalTone),
+      );
     }
 
     // Normal card layout for control / liquidGlass / boldTypography
@@ -263,7 +271,14 @@ class _PostCardState extends ConsumerState<PostCard>
     );
     final shape = BorderRadius.circular(isFullSkeumorphic ? 28 : 24);
 
-    final cardWidget = Card(
+    final cardWidget = GestureDetector(
+      onTap: () {
+        // Add onTap to view post
+        if (widget.onComment != null) {
+          widget.onComment!();
+        }
+      },
+      child: Card(
       margin: EdgeInsets.symmetric(
         horizontal: cardMarginH,
         vertical: cardMarginV,
@@ -373,6 +388,7 @@ class _PostCardState extends ConsumerState<PostCard>
           ),
         ),
       ), // DecoratedBox
+    ), // Card
     );
 
     if (reducedMotion || _animationController == null) {

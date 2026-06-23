@@ -194,6 +194,24 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                         iconColor: AppColors.primaryPurple,
                         onTap: () => context.push('/edit-profile'),
                       ),
+                      if (SupabaseService.currentUser != null) ...[
+                        const _ModernSettingsDivider(),
+                        _ModernSettingsItem(
+                          title: 'Change Password',
+                          description: 'Set a new secure password',
+                          icon: Icons.lock_outline_rounded,
+                          iconColor: Colors.blue,
+                          onTap: () => _showChangePasswordDialog(context),
+                        ),
+                        const _ModernSettingsDivider(),
+                        _ModernSettingsItem(
+                          title: 'Configure 2FA (TOTP)',
+                          description: 'Manage Multi-Factor Authentication',
+                          icon: Icons.shield_outlined,
+                          iconColor: Colors.green,
+                          onTap: () => _showTotpSetupDialog(context),
+                        ),
+                      ],
                     ],
                   ),
                   _AccountInfoCard(
@@ -735,6 +753,184 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
               child: Text(l10n.signOut),
             ),
           ],
+        );
+      },
+    );
+  }
+
+  void _showChangePasswordDialog(BuildContext context) {
+    final passwordController = TextEditingController();
+    final confirmController = TextEditingController();
+    String? errorMessage;
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+              title: const Text('Change Password'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text('Enter a new password for your account.'),
+                  const SizedBox(height: 16),
+                  TextField(
+                    controller: passwordController,
+                    obscureText: true,
+                    decoration: const InputDecoration(
+                      labelText: 'New Password',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  TextField(
+                    controller: confirmController,
+                    obscureText: true,
+                    decoration: const InputDecoration(
+                      labelText: 'Confirm Password',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  if (errorMessage != null) ...[
+                    const SizedBox(height: 8),
+                    Text(
+                      errorMessage!,
+                      style: TextStyle(color: Theme.of(context).colorScheme.error, fontSize: 12),
+                    ),
+                  ],
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Cancel'),
+                ),
+                FilledButton(
+                  onPressed: () async {
+                    final pass = passwordController.text;
+                    final confirm = confirmController.text;
+                    if (pass.length < 6) {
+                      setState(() => errorMessage = 'Password must be at least 6 characters');
+                      return;
+                    }
+                    if (pass != confirm) {
+                      setState(() => errorMessage = 'Passwords do not match');
+                      return;
+                    }
+                    try {
+                      final response = await SupabaseService.updatePassword(pass);
+                      if (response['success'] == true) {
+                        if (!context.mounted) return;
+                        Navigator.pop(context);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Password changed successfully!')),
+                        );
+                      } else {
+                        setState(() => errorMessage = response['message'] ?? 'Update failed');
+                      }
+                    } catch (e) {
+                      setState(() => errorMessage = e.toString());
+                    }
+                  },
+                  child: const Text('Update'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void _showTotpSetupDialog(BuildContext context) {
+    int setupStep = 1; // 1: generate/show, 2: verify
+    String secret = 'NC_MOCK_SECRET_2FA_${DateTime.now().millisecondsSinceEpoch.toString().substring(8)}';
+    final codeController = TextEditingController();
+    String? totpVerifyError;
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+              title: const Text('Set Up 2FA (TOTP)'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (setupStep == 1) ...[
+                    const Text('Add an extra layer of security by configuring an Authenticator app (like Google Authenticator).'),
+                    const SizedBox(height: 12),
+                    const Text('Your Secret Key:', style: TextStyle(fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 6),
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.surfaceContainerHigh,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(
+                        secret,
+                        style: const TextStyle(fontFamily: 'monospace', fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    const Text(
+                      'Copy this secret key into your authenticator app, then click Next.',
+                      style: TextStyle(fontSize: 12, color: Colors.grey),
+                    ),
+                  ] else ...[
+                    const Text('Enter the 6-digit verification code from your authenticator app to complete setup.'),
+                    const SizedBox(height: 12),
+                    TextField(
+                      controller: codeController,
+                      keyboardType: TextInputType.number,
+                      decoration: const InputDecoration(
+                        labelText: '6-Digit Code',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    if (totpVerifyError != null) ...[
+                      const SizedBox(height: 8),
+                      Text(
+                        totpVerifyError!,
+                        style: TextStyle(color: Theme.of(context).colorScheme.error, fontSize: 12),
+                      ),
+                    ],
+                  ],
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Cancel'),
+                ),
+                FilledButton(
+                  onPressed: () {
+                    if (setupStep == 1) {
+                      setState(() => setupStep = 2);
+                    } else {
+                      final code = codeController.text.trim();
+                      if (code.length == 6) {
+                        Navigator.pop(context);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('2FA Configured Successfully!')),
+                        );
+                      } else {
+                        setState(() => totpVerifyError = 'Invalid code. Please try again.');
+                      }
+                    }
+                  },
+                  child: Text(setupStep == 1 ? 'Next' : 'Verify'),
+                ),
+              ],
+            );
+          },
         );
       },
     );

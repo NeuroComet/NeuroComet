@@ -102,6 +102,8 @@
                 <data android:scheme="https" android:host="www.getneurocomet.com" android:pathPrefix="/post/" />
                 <data android:scheme="https" android:host="getneurocomet.com" android:pathPrefix="/u/" />
                 <data android:scheme="https" android:host="www.getneurocomet.com" android:pathPrefix="/u/" />
+                <data android:scheme="https" android:host="getneurocomet.com" android:pathPrefix="/reset-password" />
+                <data android:scheme="https" android:host="www.getneurocomet.com" android:pathPrefix="/reset-password" />
             </intent-filter>
         </activity>
 

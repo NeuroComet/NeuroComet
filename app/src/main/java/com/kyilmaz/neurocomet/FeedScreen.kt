@@ -438,11 +438,11 @@ fun FeedScreen(
     var showPostingBlockedMessage by remember { mutableStateOf(false) }
     var selectedFilter by remember { mutableStateOf(FeedFilter.FOR_YOU) }
     val visibleStories = remember(feedUiState.stories, feedUiState.blockedUserIds) { feedUiState.stories.filterNot { story -> story.userId.isNotBlank() && feedUiState.blockedUserIds.contains(story.userId) } }
-    val filteredPosts = remember(feedUiState.posts, feedUiState.blockedUserIds, selectedFilter, safetyState.audience) {
+    val filteredPosts = remember(feedUiState.posts, feedUiState.blockedUserIds, feedUiState.followingUserIds, selectedFilter, safetyState.audience) {
         val basePosts = feedUiState.posts.filterNot { post -> post.userId != null && feedUiState.blockedUserIds.contains(post.userId) }
         val categoryFiltered = when (selectedFilter) {
             FeedFilter.FOR_YOU -> basePosts
-            FeedFilter.FOLLOWING -> basePosts.take(5)
+            FeedFilter.FOLLOWING -> basePosts.filter { post -> post.userId != null && feedUiState.followingUserIds.contains(post.userId) }
             FeedFilter.TRENDING -> basePosts.sortedByDescending { it.likes + it.comments }
             FeedFilter.SUPPORT -> basePosts.filter { post -> val lower = post.content.lowercase(); lower.contains("support") || lower.contains("help") || lower.contains("reminder") }.ifEmpty { emptyList() }
             FeedFilter.WINS -> basePosts.filter { post -> val lower = post.content.lowercase(); lower.contains("win") || lower.contains("celebration") || lower.contains("achievement") || post.content.contains("🎉") || post.content.contains("✨") }.ifEmpty { emptyList() }

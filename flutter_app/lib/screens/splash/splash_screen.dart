@@ -57,7 +57,6 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     }
 
     if (!mounted) return;
-    setState(() => _isVisible = false);
     await _fadeController.reverse();
     widget.onComplete();
   }

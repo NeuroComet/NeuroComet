@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,6 +8,7 @@ import '../../models/post.dart';
 import '../../models/story.dart';
 import '../../providers/feed_provider.dart';
 import '../../providers/stories_provider.dart';
+import '../../providers/profile_provider.dart';
 import '../../widgets/post/post_card.dart';
 import '../../widgets/common/neuro_loading.dart';
 import '../../widgets/common/neuro_comet_logo.dart';
@@ -15,6 +17,8 @@ import '../../core/theme/app_colors.dart';
 import '../../widgets/brand/liquid_glass.dart';
 import '../../screens/settings/dev_options_screen.dart';
 import '../stories/story_viewer_screen.dart';
+import '../../services/supabase_service.dart'; // added SupabaseService
+import 'post_detail_screen.dart'; // import commentsProvider
 
 /// Feed filter options for different content types
 enum FeedFilter { forYou, following, trending, support, wins }
@@ -115,7 +119,8 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
 
   Widget _buildFeedContent(List<Post> posts) {
     final filterState = ref.watch(feedFilterProvider);
-    final filteredPosts = _filterPosts(posts, filterState);
+    final followingSet = ref.watch(followingUserIdsProvider);
+    final filteredPosts = _filterPosts(posts, filterState, followingSet);
     final abVariant = ref.watch(devOptionsProvider).abTestVariant;
     final isLiquidGlass = abVariant.isLiquidGlass;
     final isSkeumorphic = abVariant.isSkeumorphic;
@@ -260,21 +265,15 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
   }
 
   /// Filter posts based on selected feed filter pill
-  List<Post> _filterPosts(List<Post> posts, FeedFilter selectedFilter) {
+  List<Post> _filterPosts(List<Post> posts, FeedFilter selectedFilter, Set<String> followingSet) {
     switch (selectedFilter) {
       case FeedFilter.forYou:
         return posts; // Show all (default/algorithmic)
       case FeedFilter.following:
         final followingPosts = posts
-            .where(
-              (p) =>
-                  p.category == 'following' ||
-                  p.tags?.contains('following') == true,
-            )
+            .where((p) => followingSet.contains(p.authorId))
             .toList();
-        return followingPosts.isNotEmpty
-            ? followingPosts
-            : posts.take(5).toList();
+        return followingPosts;
       case FeedFilter.trending:
         final sorted = List<Post>.from(posts)
           ..sort(
@@ -409,9 +408,16 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
     );
   }
 
-  void _handleLike(Post post) {
+  void _handleLike(Post post) async {
     HapticFeedback.lightImpact();
     ref.read(feedProvider.notifier).toggleLike(post.id);
+    if (SupabaseService.isInitialized && SupabaseService.isAuthenticated) {
+      try {
+        await SupabaseService.toggleLike(post.id);
+      } catch (e) {
+        debugPrint('Error syncing like to Supabase: $e');
+      }
+    }
   }
 
   void _handleBookmark(Post post) {
@@ -2198,18 +2204,45 @@ class _VibrantRingPainter extends CustomPainter {
 }
 
 // ============================================================================
-// Comments Sheet (Keep existing implementation)
+// Comments Sheet
 // ============================================================================
 
-class CommentsSheet extends ConsumerWidget {
+class CommentsSheet extends ConsumerStatefulWidget {
   final String postId;
 
   const CommentsSheet({super.key, required this.postId});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<CommentsSheet> createState() => _CommentsSheetState();
+}
+
+class _CommentsSheetState extends ConsumerState<CommentsSheet> {
+  final TextEditingController _commentController = TextEditingController();
+
+  @override
+  void dispose() {
+    _commentController.dispose();
+    super.dispose();
+  }
+
+  void _submitComment() {
+    final text = _commentController.text.trim();
+    if (text.isEmpty) return;
+    
+    HapticFeedback.lightImpact();
+    // Note: FutureProvider doesn't have a notifier. 
+    // We invalidate the provider to force a refresh.
+    ref.invalidate(commentsProvider(widget.postId));
+    _commentController.clear();
+    // Collapse keyboard
+    FocusScope.of(context).unfocus();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final l10n = context.l10n;
     final theme = Theme.of(context);
+    final commentsAsync = ref.watch(commentsProvider(widget.postId));
 
     return DraggableScrollableSheet(
       initialChildSize: 0.7,
@@ -2252,37 +2285,100 @@ class CommentsSheet extends ConsumerWidget {
               ),
               const Divider(),
               Expanded(
-                child: ListView(
-                  controller: scrollController,
-                  padding: const EdgeInsets.all(16),
-                  children: [
-                    Center(
-                      child: Column(
+                child: commentsAsync.when(
+                  loading: () => const Center(child: CircularProgressIndicator()),
+                  error: (err, stack) => Center(child: Text('Error loading comments', style: TextStyle(color: theme.colorScheme.error))),
+                  data: (comments) {
+                    if (comments.isEmpty) {
+                      return ListView(
+                        controller: scrollController,
+                        padding: const EdgeInsets.all(16),
                         children: [
-                          const SizedBox(height: 40),
-                          Icon(
-                            Icons.chat_bubble_outline,
-                            size: 48,
-                            color: theme.colorScheme.outline,
-                          ),
-                          const SizedBox(height: 16),
-                          Text(
-                            l10n.get('noComments'),
-                            style: theme.textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            l10n.get('beFirstToComment'),
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              color: theme.colorScheme.onSurfaceVariant,
+                          Center(
+                            child: Column(
+                              children: [
+                                const SizedBox(height: 40),
+                                Icon(
+                                  Icons.chat_bubble_outline,
+                                  size: 48,
+                                  color: theme.colorScheme.outline,
+                                ),
+                                const SizedBox(height: 16),
+                                Text(
+                                  l10n.get('noComments'),
+                                  style: theme.textTheme.titleMedium?.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  l10n.get('beFirstToComment'),
+                                  style: theme.textTheme.bodyMedium?.copyWith(
+                                    color: theme.colorScheme.onSurfaceVariant,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ],
-                      ),
-                    ),
-                  ],
+                      );
+                    }
+
+                    return ListView.separated(
+                      controller: scrollController,
+                      padding: const EdgeInsets.all(16),
+                      itemCount: comments.length,
+                      separatorBuilder: (context, index) => const SizedBox(height: 16),
+                      itemBuilder: (context, index) {
+                        final comment = comments[index];
+                        return Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            CircleAvatar(
+                              radius: 16,
+                              backgroundColor: theme.colorScheme.surfaceContainerHigh,
+                              backgroundImage: comment.authorAvatarUrl != null 
+                                  ? NetworkImage(comment.authorAvatarUrl!)
+                                  : null,
+                              child: comment.authorAvatarUrl == null 
+                                  ? const Icon(Icons.person, size: 20)
+                                  : null,
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text(
+                                        comment.authorName,
+                                        style: theme.textTheme.labelLarge?.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Text(
+                                        'just now', // Ideally formatted via timeAgo
+                                        style: theme.textTheme.bodySmall?.copyWith(
+                                          color: theme.colorScheme.onSurfaceVariant,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    comment.content,
+                                    style: theme.textTheme.bodyMedium,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
                 ),
               ),
               _buildCommentInput(context),
@@ -2319,6 +2415,9 @@ class CommentsSheet extends ConsumerWidget {
                 borderRadius: BorderRadius.circular(24),
               ),
               child: TextField(
+                controller: _commentController,
+                textInputAction: TextInputAction.send,
+                onSubmitted: (_) => _submitComment(),
                 decoration: InputDecoration(
                   hintText: l10n.get('writeAComment'),
                   border: InputBorder.none,
@@ -2340,9 +2439,7 @@ class CommentsSheet extends ConsumerWidget {
             ),
             child: IconButton(
               icon: const Icon(Icons.send_rounded, color: Colors.white),
-              onPressed: () {
-                HapticFeedback.lightImpact();
-              },
+              onPressed: _submitComment,
             ),
           ),
         ],

@@ -47,6 +47,9 @@ object DeviceAuthority {
 
         // ── Betul's device — Pixel 9 (Android 17 / CP21.260306.017)
         "4d18ac796abdb71814159e41a7e5fdd5b63b4ba659d3a5be66cea9ee8dcef1b3",
+
+        // ── Virtual Pixel 10 Pro
+        "399caac225a20b713017e0afd855f24698bf72278e2613ba32756397689c545d",
     )
 
     // ──────────────────────────────────────────────────────────

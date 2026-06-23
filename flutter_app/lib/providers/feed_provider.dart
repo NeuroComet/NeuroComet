@@ -4,6 +4,7 @@ import '../models/post.dart';
 import '../screens/settings/dev_options_screen.dart';
 import '../services/supabase_service.dart';
 import 'profile_provider.dart';
+import '../services/privacy_service.dart';
 
 final feedProvider = NotifierProvider<FeedNotifier, AsyncValue<List<Post>>>(
   FeedNotifier.new,
@@ -489,6 +490,25 @@ class FeedNotifier extends Notifier<AsyncValue<List<Post>>> {
   /// Feature flag: apply content safety filtering based on forcedAudience and isKidsMode
   List<Post> _applyContentSafetyFilters(List<Post> posts, DevOptions opts) {
     var filtered = posts;
+
+    // Apply PrivacyService filters (blocks, mutes, hidden, muted words)
+    final privacy = PrivacyService();
+    final blocked = privacy.blockedUsers.value;
+    final muted = privacy.mutedUsers.value;
+    final hidden = privacy.hiddenPosts.value;
+    final words = privacy.mutedWords.value;
+
+    filtered = filtered.where((p) {
+      final authorId = p.authorId;
+      if (blocked.contains(authorId)) return false;
+      if (muted.contains(authorId)) return false;
+      if (hidden.contains(p.id)) return false;
+      if (words.isNotEmpty) {
+        final contentLower = p.content.toLowerCase();
+        if (words.any((w) => contentLower.contains(w))) return false;
+      }
+      return true;
+    }).toList();
 
     // When isKidsMode is on, remove posts with mature keywords
     if (opts.isKidsMode) {

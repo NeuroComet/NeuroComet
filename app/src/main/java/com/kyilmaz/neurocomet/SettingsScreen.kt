@@ -166,8 +166,162 @@ fun SettingsScreen(
     var versionTapCount by remember { mutableStateOf(0) }
     var lastVersionTapTime by remember { mutableStateOf(0L) }
     val devOptions by devOptionsViewModel.options.collectAsState()
+    val isTotpEnabled by authViewModel.is2FAEnabled.collectAsState()
 
     var showPinPromptForKidsToggle by remember { mutableStateOf(false) }
+
+    var showChangePasswordDialog by remember { mutableStateOf(false) }
+    var newPasswordEntry by remember { mutableStateOf("") }
+    var confirmNewPasswordEntry by remember { mutableStateOf("") }
+    var changePasswordError by remember { mutableStateOf<String?>(null) }
+
+    var showTotpSetupDialog by remember { mutableStateOf(false) }
+    var totpSetupStep by remember { mutableStateOf(1) }
+    val pendingTotpSecret by authViewModel.pendingTotpSecret.collectAsState()
+    var totpCodeEntry by remember { mutableStateOf("") }
+    var totpVerifyError by remember { mutableStateOf<String?>(null) }
+
+    if (showChangePasswordDialog) {
+        AlertDialog(
+            onDismissRequest = {
+                showChangePasswordDialog = false
+                newPasswordEntry = ""
+                confirmNewPasswordEntry = ""
+                changePasswordError = null
+            },
+            title = { Text("Change Password") },
+            text = {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text("Enter a new password for your account.")
+                    OutlinedTextField(
+                        value = newPasswordEntry,
+                        onValueChange = { newPasswordEntry = it; changePasswordError = null },
+                        label = { Text("New Password") },
+                        singleLine = true,
+                        visualTransformation = PasswordVisualTransformation(),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    OutlinedTextField(
+                        value = confirmNewPasswordEntry,
+                        onValueChange = { confirmNewPasswordEntry = it; changePasswordError = null },
+                        label = { Text("Confirm Password") },
+                        singleLine = true,
+                        visualTransformation = PasswordVisualTransformation(),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    changePasswordError?.let {
+                        Text(it, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
+                    }
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    if (newPasswordEntry.length < 6) {
+                        changePasswordError = "Password must be at least 6 characters"
+                        return@TextButton
+                    }
+                    if (newPasswordEntry != confirmNewPasswordEntry) {
+                        changePasswordError = "Passwords do not match"
+                        return@TextButton
+                    }
+                    authViewModel.updatePassword(
+                        newPassword = newPasswordEntry,
+                        onSuccess = {
+                            Toast.makeText(context, "Password changed successfully!", Toast.LENGTH_SHORT).show()
+                            showChangePasswordDialog = false
+                            newPasswordEntry = ""
+                            confirmNewPasswordEntry = ""
+                            changePasswordError = null
+                        },
+                        onError = { err ->
+                            changePasswordError = err
+                        }
+                    )
+                }) { Text("Update") }
+            },
+            dismissButton = {
+                TextButton(onClick = {
+                    showChangePasswordDialog = false
+                    newPasswordEntry = ""
+                    confirmNewPasswordEntry = ""
+                    changePasswordError = null
+                }) { Text("Cancel") }
+            }
+        )
+    }
+
+    if (showTotpSetupDialog) {
+        AlertDialog(
+            onDismissRequest = {
+                showTotpSetupDialog = false
+                totpSetupStep = 1
+                totpCodeEntry = ""
+                totpVerifyError = null
+            },
+            title = { Text("Set Up 2FA (TOTP)") },
+            text = {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    if (totpSetupStep == 1) {
+                        Text("Add an extra layer of security by configuring an Authenticator app (like Google Authenticator).")
+                        Spacer(Modifier.height(4.dp))
+                        Text("Your Secret Key:", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.bodyMedium)
+                        Card(
+                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(
+                                text = pendingTotpSecret?.secret ?: "UNKNOWN",
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontWeight = FontWeight.SemiBold,
+                                modifier = Modifier.padding(12.dp)
+                            )
+                        }
+                        Text("Copy this secret key into your authenticator app, then click Next.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    } else {
+                        Text("Enter the 6-digit verification code from your authenticator app to complete setup.")
+                        OutlinedTextField(
+                            value = totpCodeEntry,
+                            onValueChange = { totpCodeEntry = it.filter { c -> c.isDigit() }.take(6); totpVerifyError = null },
+                            label = { Text("6-Digit Code") },
+                            singleLine = true,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                        totpVerifyError?.let {
+                            Text(it, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
+                        }
+                    }
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    if (totpSetupStep == 1) {
+                        totpSetupStep = 2
+                    } else {
+                        authViewModel.completeTotpSetup(totpCodeEntry) { result ->
+                            if (result is com.kyilmaz.neurocomet.auth.AuthResult.Success) {
+                                showTotpSetupDialog = false
+                                totpSetupStep = 1
+                                totpCodeEntry = ""
+                                totpVerifyError = null
+                                Toast.makeText(context, "2FA enabled successfully!", Toast.LENGTH_SHORT).show()
+                            } else {
+                                val msg = (result as? com.kyilmaz.neurocomet.auth.AuthResult.Error)?.message ?: "Invalid code"
+                                totpVerifyError = msg
+                            }
+                        }
+                    }
+                }) { Text(if (totpSetupStep == 1) "Next" else "Verify") }
+            },
+            dismissButton = {
+                TextButton(onClick = {
+                    showTotpSetupDialog = false
+                    totpSetupStep = 1
+                    totpCodeEntry = ""
+                    totpVerifyError = null
+                }) { Text("Cancel") }
+            }
+        )
+    }
     var pinEntry by remember { mutableStateOf("") }
     var pinError by remember { mutableStateOf<String?>(null) }
     var showLanguageDialog by remember { mutableStateOf(false) }
@@ -386,6 +540,35 @@ fun SettingsScreen(
                                 title = accountPrimaryTitle,
                                 subtitle = accountPrimarySubtitle,
                                 onClick = if (isGuestAccount) onRequireAuth else onOpenMyProfile
+                            )
+                        }
+                    }
+                    if (!isGuestAccount) {
+                        item(key = "account_change_password") {
+                            SettingsNavRow(
+                                icon = Icons.Default.Lock,
+                                title = "Change Password",
+                                subtitle = "Set a new secure password",
+                                onClick = { showChangePasswordDialog = true }
+                            )
+                        }
+                    }
+                    if (!isGuestAccount) {
+                        item(key = "account_configure_2fa") {
+                            SettingsNavRow(
+                                icon = Icons.Default.Shield,
+                                title = "Configure 2FA (TOTP)",
+                                subtitle = if (isTotpEnabled) "Enabled (Tap to disable)" else "Disabled (Tap to configure)",
+                                onClick = {
+                                    if (isTotpEnabled) {
+                                        authViewModel.disableTotp()
+                                        Toast.makeText(context, "2FA Disabled", Toast.LENGTH_SHORT).show()
+                                    } else {
+                                        authViewModel.startTotpSetup(authUser?.name ?: "user")
+                                        totpSetupStep = 1
+                                        showTotpSetupDialog = true
+                                    }
+                                }
                             )
                         }
                     }

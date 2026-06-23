@@ -34,21 +34,7 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
       'price': 4.99,
       'period': 'month',
       'savings': null,
-    },
-    {
-      'id': 'annual',
-      'name': 'Annual',
-      'price': 39.99,
-      'period': 'year',
-      'savings': '33% off',
-    },
-    {
-      'id': 'lifetime',
-      'name': 'Lifetime',
-      'price': 99.99,
-      'period': 'once',
-      'savings': 'Best value',
-    },
+    }
   ];
 
   final List<Map<String, dynamic>> _features = [
@@ -171,25 +157,6 @@ class _SubscriptionScreenState extends ConsumerState<SubscriptionScreen> {
 
     try {
       if (planId == 'monthly') {
-        await _subscriptionService.purchaseMonthly(
-          onSuccess: () {
-            if (mounted) setState(() => _purchaseInFlight = false);
-          },
-          onError: (_) {
-            if (mounted) setState(() => _purchaseInFlight = false);
-          },
-        );
-      } else if (planId == 'lifetime') {
-        await _subscriptionService.purchaseLifetime(
-          onSuccess: () {
-            if (mounted) setState(() => _purchaseInFlight = false);
-          },
-          onError: (_) {
-            if (mounted) setState(() => _purchaseInFlight = false);
-          },
-        );
-      } else {
-        // Annual plan
         await _subscriptionService.purchaseMonthly(
           onSuccess: () {
             if (mounted) setState(() => _purchaseInFlight = false);

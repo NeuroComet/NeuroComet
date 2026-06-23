@@ -43,7 +43,6 @@ void main() {
     expect(s.purchaseType, isNull, reason: 'Default: no purchase type');
     expect(s.offerings, isNull, reason: 'Default: no offerings');
     expect(s.monthlyPackage, isNull, reason: 'Default: no monthly package');
-    expect(s.lifetimePackage, isNull, reason: 'Default: no lifetime package');
   });
 
   // ═══════════════════════════════════════════════════════════════
@@ -57,13 +56,6 @@ void main() {
     expect(s.isLoading, isFalse, reason: 'Success: isLoading must be false');
     expect(s.error, isNull, reason: 'Success: error must be null');
     expect(s.purchaseType, equals('monthly'), reason: 'Success: purchaseType recorded');
-  });
-
-  test('successState_lifetimePurchaseType_isTrackedCorrectly', () {
-    final s = state(isPremium: true, purchaseSuccess: true, purchaseType: 'lifetime');
-    expect(s.purchaseSuccess, isTrue);
-    expect(s.isPremium, isTrue);
-    expect(s.purchaseType, equals('lifetime'));
   });
 
   test('successState_restoredPurchaseType_isTrackedCorrectly', () {
@@ -175,7 +167,7 @@ void main() {
       isLoading: true,
       isPremium: true,
       purchaseSuccess: true,
-      purchaseType: 'lifetime',
+      purchaseType: 'monthly',
       error: 'leftover',
     );
     // This is exactly what SubscriptionService.resetTestPurchase() does
@@ -257,12 +249,12 @@ void main() {
       isLoading: false,
       isPremium: true,
       purchaseSuccess: true,
-      purchaseType: 'lifetime',
+      purchaseType: 'monthly',
     );
     expect(retrySuccess.isLoading, isFalse);
     expect(retrySuccess.purchaseSuccess, isTrue);
     expect(retrySuccess.isPremium, isTrue);
-    expect(retrySuccess.purchaseType, equals('lifetime'));
+    expect(retrySuccess.purchaseType, equals('monthly'));
   });
 
   test('loadingToDeclined_thenRetryTimesOut_fullLifecycle', () {

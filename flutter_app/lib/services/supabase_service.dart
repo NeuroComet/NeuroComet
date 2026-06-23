@@ -406,21 +406,27 @@ class SupabaseService {
     final userId = currentUser?.id;
     if (userId == null) throw Exception('Not logged in');
 
+    final parsedPostId = int.tryParse(postId);
+    if (parsedPostId == null) {
+      debugPrint('[SupabaseService] Ignoring toggleLike for mock post: $postId');
+      return;
+    }
+
     // Check if already liked
     final existing = await client
         .from('post_likes')
         .select()
-        .eq('post_id', postId)
+        .eq('post_id', parsedPostId)
         .eq('user_id', userId)
         .maybeSingle();
 
     if (existing != null) {
       await client.from('post_likes').delete()
-          .eq('post_id', postId)
+          .eq('post_id', parsedPostId)
           .eq('user_id', userId);
     } else {
       await client.from('post_likes').insert({
-        'post_id': postId,
+        'post_id': parsedPostId,
         'user_id': userId,
       });
     }
@@ -430,15 +436,33 @@ class SupabaseService {
 
   static Future<List<Comment>> getComments(String postId) async {
     try {
+      // In the real DB, the author relationship is usually handled via joining 'users' or 'profiles' table.
+      // We do a joined select to populate authorName and authorAvatarUrl.
       final response = await client
           .from('post_comments')
-          .select('*')
+          .select('*, users!post_comments_user_id_fkey(id, display_name, username, avatar_url)')
           .eq('post_id', postId)
           .order('created_at', ascending: true);
 
-      return (response as List).map((json) => Comment.fromJson(json)).toList();
+      return (response as List).map((json) {
+        final row = Map<String, dynamic>.from(json);
+        final authorData = row['users'] as Map<String, dynamic>?;
+        
+        return Comment(
+          id: _string(row['id']) ?? '',
+          postId: _string(row['post_id']) ?? '',
+          authorId: _string(row['user_id']) ?? '',
+          authorName: _profileName(authorData, 'User'),
+          authorAvatarUrl: _string(authorData?['avatar_url']),
+          content: _string(row['content']) ?? '',
+          likeCount: (row['likes_count'] as num?)?.toInt() ?? 0,
+          isLiked: false, // Would require a separate query/join for current user's like status
+          parentCommentId: _string(row['parent_comment_id']),
+          createdAt: _dateTime(row['created_at']),
+        );
+      }).toList();
     } on PostgrestException catch (e) {
-      debugPrint('getComments failed (table may not exist): ${e.message}');
+      debugPrint('getComments failed: ${e.message}');
       return [];
     }
   }
@@ -448,14 +472,29 @@ class SupabaseService {
     required String content,
     String? parentCommentId,
   }) async {
+    final uid = currentUser?.id;
+    if (uid == null) throw Exception('Not authenticated');
+
     final response = await client.from('post_comments').insert({
       'post_id': postId,
-      'user_id': currentUser?.id,
+      'user_id': uid,
       'content': content,
       'parent_comment_id': parentCommentId,
-    }).select().single();
+      'created_at': DateTime.now().toUtc().toIso8601String(),
+    }).select('*, users!post_comments_user_id_fkey(id, display_name, username, avatar_url)').single();
 
-    return Comment.fromJson(response);
+    final row = Map<String, dynamic>.from(response);
+    final authorData = row['users'] as Map<String, dynamic>?;
+
+    return Comment(
+      id: _string(row['id']) ?? '',
+      postId: _string(row['post_id']) ?? '',
+      authorId: _string(row['user_id']) ?? '',
+      authorName: _profileName(authorData, 'User'),
+      authorAvatarUrl: _string(authorData?['avatar_url']),
+      content: _string(row['content']) ?? '',
+      createdAt: _dateTime(row['created_at']),
+    );
   }
 
   // ============ Conversations & Messages ============

@@ -37,19 +37,34 @@ object LocationHelper {
     @SuppressLint("MissingPermission")
     @Suppress("MissingPermission")
     private suspend fun getCurrentLocation(context: Context): Location? =
-        suspendCancellableCoroutine { continuation ->
-            if (!hasForegroundLocationPermission(context)) {
-                continuation.resume(null)
-                return@suspendCancellableCoroutine
-            }
+        withContext(Dispatchers.Main) {
+            if (!hasForegroundLocationPermission(context)) return@withContext null
+
             val client = LocationServices.getFusedLocationProviderClient(context)
-            client.getCurrentLocation(Priority.PRIORITY_BALANCED_POWER_ACCURACY, null)
-                .addOnSuccessListener { location ->
-                    if (continuation.isActive) continuation.resume(location)
+            
+            // Try to get fresh high-accuracy location with a 5-second timeout
+            val freshLocation = kotlinx.coroutines.withTimeoutOrNull(5000L) {
+                suspendCancellableCoroutine { continuation ->
+                    client.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
+                        .addOnSuccessListener { location ->
+                            if (continuation.isActive) continuation.resume(location)
+                        }
+                        .addOnFailureListener {
+                            if (continuation.isActive) continuation.resume(null)
+                        }
                 }
-                .addOnFailureListener {
-                    if (continuation.isActive) continuation.resume(null)
-                }
+            }
+            
+            // Fall back to last known location if fresh location fails or times out
+            freshLocation ?: suspendCancellableCoroutine { continuation ->
+                client.lastLocation
+                    .addOnSuccessListener { location ->
+                        if (continuation.isActive) continuation.resume(location)
+                    }
+                    .addOnFailureListener {
+                        if (continuation.isActive) continuation.resume(null)
+                    }
+            }
         }
 
     private suspend fun reverseGeocode(context: Context, location: Location): String? =

@@ -78,6 +78,7 @@ sealed class Screen(val route: String, val labelId: Int, val iconFilled: ImageVe
         fun route(topicId: String) = "topic/$topicId"
     }
     data object Subscription : Screen("subscription", R.string.settings_go_premium, Icons.Filled.Star, Icons.Outlined.Star)
+    data object ResetPassword : Screen("reset_password", R.string.auth_password_label, Icons.Filled.Lock, Icons.Outlined.Lock)
     data object CallHistory : Screen("call_history", R.string.nav_messages, Icons.Filled.Phone, Icons.Outlined.Phone)
     data object PracticeCallSelection : Screen("practice_call_selection", R.string.nav_messages, Icons.Filled.Headset, Icons.Outlined.Headset)
     data object PracticeCall : Screen("practice_call/{personaId}", R.string.nav_messages, Icons.Filled.Phone, Icons.Outlined.Phone) {
@@ -602,7 +603,14 @@ fun NeuroCometApp(
             error = authError,
             animationSettings = themeState.animationSettings,
             // Only allow skipping auth in debug builds to prevent unauthorized access
-            onSkip = if (BuildConfig.DEBUG) {{ authViewModel.skipAuth() }} else null
+            onSkip = if (BuildConfig.DEBUG) { { authViewModel.skipAuth() } } else null,
+            onForgotPassword = { email ->
+                authViewModel.resetPassword(
+                    email = email,
+                    onSuccess = { android.widget.Toast.makeText(context, "Password reset email sent!", android.widget.Toast.LENGTH_LONG).show() },
+                    onError = { err -> android.widget.Toast.makeText(context, "Error: $err", android.widget.Toast.LENGTH_LONG).show() }
+                )
+            }
         )
     } else if (showSignInAgeGate) {
         // Mandatory age verification for returning users who lack a persisted audience
@@ -1041,14 +1049,26 @@ fun NeuroCometApp(
                 primary = {
                     ExploreScreen(
                         posts = feedState.posts,
+                        stories = feedState.stories,
+                        bookmarkedPostIds = feedState.bookmarkedPostIds,
+                        followingUserIds = feedState.followingUserIds,
+                        blockedUserIds = feedState.blockedUserIds,
+                        mutedUserIds = feedState.mutedUserIds,
                         safetyState = safetyState,
+                        onTopicClick = ::openTopicRoute,
                         onLikePost = { postId -> feedViewModel.toggleLike(postId) },
                         onSharePost = { ctx, post -> feedViewModel.sharePost(ctx, post) },
                         onCommentPost = { post -> feedViewModel.openCommentSheet(post) },
-                        onTopicClick = ::openTopicRoute,
                         onProfileClick = { userId ->
                             navController.navigate(Screen.Profile.route(userId))
-                        }
+                        },
+                        onViewStory = { story -> feedViewModel.viewStory(story) },
+                        onAddStoryClick = { feedViewModel.requestOpenComposer() },
+                        onBookmarkToggle = { postId -> feedViewModel.toggleBookmark(postId) },
+                        onFollowToggle = { userId -> feedViewModel.toggleFollow(userId) },
+                        onReportPost = { postId, reason -> feedViewModel.submitReport("post", postId.toString(), reason) },
+                        onHidePost = { postId -> feedViewModel.hidePost(postId) },
+                        onBlockUser = { userId -> feedViewModel.blockUser(userId) }
                     )
                 },
                 secondary = {
@@ -1166,6 +1186,21 @@ fun NeuroCometApp(
                             .fillMaxSize()
                             .background(MaterialTheme.colorScheme.background)
                     ) {
+                composable(
+                    route = Screen.ResetPassword.route,
+                    deepLinks = listOf(
+                        navDeepLink { uriPattern = "https://getneurocomet.com/reset-password" },
+                        navDeepLink { uriPattern = "https://www.getneurocomet.com/reset-password" }
+                    )
+                ) {
+                    ResetPasswordScreen(
+                        onPasswordResetSuccess = {
+                            navController.navigate(Screen.Feed.route) {
+                                popUpTo(navController.graph.startDestinationId) { inclusive = true }
+                            }
+                        }
+                    )
+                }
                 composable(Screen.Feed.route) {
                     FeedScreen(
                         feedUiState = feedState,
@@ -1215,11 +1250,26 @@ fun NeuroCometApp(
                                 onStoryViewed = { viewedStory ->
                                     feedViewModel.markStoryAsViewed(viewedStory.id)
                                 },
-                                onReply = { _, _ ->
-                                    // TODO: wire to feedViewModel.sendStoryReply() when messaging backend is ready
+                                onReply = { storyObj, replyText ->
+                                    val conversationId = messagesViewModel.sendStoryReply(
+                                        storyAuthorId = storyObj.userId.ifBlank { storyObj.userName },
+                                        storyAuthorName = storyObj.userName,
+                                        replyText = replyText
+                                    )
+                                    feedViewModel.dismissStory()
+                                    navController.navigate(Screen.Conversation.route(conversationId)) {
+                                        popUpTo(Screen.Feed.route)
+                                    }
                                     android.widget.Toast.makeText(
                                         navController.context,
-                                        "Story replies coming soon!",
+                                        "Story reply sent!",
+                                        android.widget.Toast.LENGTH_SHORT
+                                    ).show()
+                                },
+                                onReaction = { storyObj, emoji ->
+                                    android.widget.Toast.makeText(
+                                        navController.context,
+                                        "Reacted with $emoji to ${storyObj.userName}'s story!",
                                         android.widget.Toast.LENGTH_SHORT
                                     ).show()
                                 },
@@ -1235,14 +1285,26 @@ fun NeuroCometApp(
                     } else {
                         ExploreScreen(
                             posts = feedState.posts,
+                            stories = feedState.stories,
+                            bookmarkedPostIds = feedState.bookmarkedPostIds,
+                            followingUserIds = feedState.followingUserIds,
+                            blockedUserIds = feedState.blockedUserIds,
+                            mutedUserIds = feedState.mutedUserIds,
                             safetyState = safetyState,
+                            onTopicClick = ::openTopicRoute,
                             onLikePost = { postId -> feedViewModel.toggleLike(postId) },
                             onSharePost = { ctx, post -> feedViewModel.sharePost(ctx, post) },
                             onCommentPost = { post -> feedViewModel.openCommentSheet(post) },
-                            onTopicClick = ::openTopicRoute,
                             onProfileClick = { userId ->
                                 navController.navigate(Screen.Profile.route(userId))
-                            }
+                            },
+                            onViewStory = { story -> feedViewModel.viewStory(story) },
+                            onAddStoryClick = { feedViewModel.requestOpenComposer() },
+                            onBookmarkToggle = { postId -> feedViewModel.toggleBookmark(postId) },
+                            onFollowToggle = { userId -> feedViewModel.toggleFollow(userId) },
+                            onReportPost = { postId, reason -> feedViewModel.submitReport("post", postId.toString(), reason) },
+                            onHidePost = { postId -> feedViewModel.hidePost(postId) },
+                            onBlockUser = { userId -> feedViewModel.blockUser(userId) }
                         )
                     }
                 }

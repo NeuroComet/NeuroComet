@@ -851,6 +851,62 @@ class AuthViewModel : ViewModel() {
             ?.edit()?.remove(KEY_GUEST_SKIP)?.apply()
     }
 
+    /**
+     * Sends a password reset email via Supabase Auth
+     */
+    fun resetPassword(email: String, onSuccess: () -> Unit, onError: (String) -> Unit) {
+        viewModelScope.launch {
+            try {
+                val trimmedEmail = email.trim()
+                if (trimmedEmail.isBlank()) {
+                    onError("Email is required")
+                    return@launch
+                }
+                val client = AppSupabaseClient.client
+                if (client != null) {
+                    client.auth.resetPasswordForEmail(
+                        email = trimmedEmail,
+                        redirectUrl = "https://getneurocomet.com/reset-password"
+                    )
+                    onSuccess()
+                } else {
+                    // Mock mode
+                    delay(1000)
+                    onSuccess()
+                }
+            } catch (e: Exception) {
+                onError(e.message ?: "Failed to send reset link")
+            }
+        }
+    }
+
+    /**
+     * Updates the password for the currently logged in user
+     */
+    fun updatePassword(newPassword: String, onSuccess: () -> Unit, onError: (String) -> Unit) {
+        viewModelScope.launch {
+            try {
+                if (newPassword.isBlank() || newPassword.length < 6) {
+                    onError("Password must be at least 6 characters")
+                    return@launch
+                }
+                val client = AppSupabaseClient.client
+                if (client != null) {
+                    client.auth.updateUser {
+                        password = newPassword
+                    }
+                    onSuccess()
+                } else {
+                    // Mock mode
+                    delay(1000)
+                    onSuccess()
+                }
+            } catch (e: Exception) {
+                onError(e.message ?: "Failed to update password")
+            }
+        }
+    }
+
     companion object {
         private const val GUEST_PREFS = "guest_auth_prefs"
         private const val KEY_GUEST_SKIP = "guest_skip_enabled"

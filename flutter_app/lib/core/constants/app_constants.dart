@@ -8,7 +8,7 @@ class AppConstants {
   static const String appBuildNumber = '145';
 
   // API Endpoints
-  static const String supabaseCallbackUrl = 'io.neurocomet.app://callback';
+  static const String supabaseCallbackUrl = 'https://getneurocomet.com/reset-password';
 
   // Storage Keys
   static const String keyThemeMode = 'theme_mode';

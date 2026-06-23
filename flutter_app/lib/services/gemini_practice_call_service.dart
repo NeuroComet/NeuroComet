@@ -9,7 +9,7 @@ class GeminiPracticeCallService {
         'You are a professional language practice assistant. Keep your responses short, natural, and helpful for a user practicing conversation.';
 
     _model = GenerativeModel(
-      model: 'gemini-2.0-flash',
+      model: 'gemini-2.5-flash',
       apiKey: apiKey,
       systemInstruction: Content.system(prompt),
     );

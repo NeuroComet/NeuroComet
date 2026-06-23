@@ -897,7 +897,15 @@ class FeedViewModel(application: Application) : AndroidViewModel(application) {
                     } else post
                 }
 
-            _uiState.update { it.copy(posts = combinedPosts, isLoading = false) }
+            val privacySettings = SocialSettingsManager.getPrivacySettings(getApplication())
+            val filteredPosts = PrivacyManager.filterPosts(
+                context = getApplication(),
+                posts = combinedPosts,
+                privacySettings = privacySettings,
+                includeMuted = false
+            )
+
+            _uiState.update { it.copy(posts = filteredPosts, isLoading = false) }
         }
     }
 
